@@ -3131,3 +3131,215 @@ def test_task72_directional_visibility_has_ceiling_below_one():
     rate = seen / total
     # 稠密布局仍有盲区（朝区域外辐射的定向源看不见）→ 可见率严格 < 1.0。
     assert rate < 1.0, f"稠密站位定向可见率应 < 1.0（存在天花板），实得 {rate:.3f}"
+
+
+
+# ---------------------------------------------------------------------------
+# 任务 7.3：核对盲清除与射线盲清除（R4.6 / R4.7）
+# Feature: b-radio-interference-locate-clear
+#
+# 本节为「验证/加固」任务的回归测试。核对项：
+#   (a) _grid_cover_points：以 (cx,cy) 为心、边长 120 m 的网格内任意点，距至少一个
+#       生成清除点 ≤ 20 m（CLEAR_RADIUS_M）——保证盲清除能覆盖整格（R4.6）；
+#   (b) _blind_clear_sweep：belief 候选集较小 + 真源落在某候选格内时，逐格按
+#       _grid_cover_points 布点直接 /clear，最终清除该源（fake arena，20 m 内判成功）（R4.6）；
+#   (c) _ray_blind_clear：沿示向度射线以间距 <40 m 铺点，超过 r·rad(1°)>lateral 的
+#       远处补 ±lateral 两侧点，受独立 ray_clear_max_attempts 约束，且清除落在射线上的
+#       源（fake arena）；ray_swept 幂等（第二次调用不再重扫）（R4.7）。
+#
+# 阈值口径差异（实测调优值，按任务要求"记录而非强改"）：
+#   * R4.6 需求文字写"候选 ≤ 8 时"逐格盲清除，但当前实现（且 design.md §4.8 一致）
+#     用的是 _blind_clear_sweep(max_targets=24) 的加权取前 N 上限，而非 ≤8 的触发门槛：
+#     只要 belief 存活即逐格盲清除，仅当候选位置 >24 时按候选密度加权保留前 24 个。
+#     这些常量为经验调优所得（design 与 code 一致），本测试断言"实际行为"，不改常量。
+#   * R4.7 需求文字写射线盲清除独立 /clear 调用 ≤40 次，但当前实现为
+#     ray_clear_max_attempts=120（经验调优：窄走廊源需铺更长射线）。本测试断言实际的
+#     120 上限被独立遵守（与 _home_channel 的 max_clear_attempts=9 无关），不改常量。
+# ---------------------------------------------------------------------------
+
+import math as _math73
+
+from src.b_sim.directional import DirectionalBelief as _DirectionalBelief73
+from src.b_sim.geometry import Bearing as _Bearing73
+from src.b_sim.strategy import (
+    CLEAR_RADIUS_M as _CLEAR_RADIUS_M73,
+    DogStrategy as _DogStrategy73,
+    StrategyConfig as _StrategyConfig73,
+)
+
+
+# ---- (a) R4.6：_grid_cover_points 覆盖整格 ----
+
+def test_grid_cover_points_covers_entire_120m_cell_within_clear_radius():
+    """R4.6：120 m 网格内任意采样点距某生成清除点 ≤ CLEAR_RADIUS_M(20 m)。
+
+    在偏移中心 (cx,cy) 上稠密网格化采样整格，验证最坏"到最近清除点"距离 ≤ 20 m。
+    这保证任何落在该格内的真源都在某清除点 20 m 内（/clear 仅看距离即判成功）。
+    """
+    cx, cy = 300.0, -450.0
+    cell = 120.0
+    pts = _DogStrategy73._grid_cover_points(cx, cy, cell=cell, radius=_CLEAR_RADIUS_M73)
+    assert pts, "_grid_cover_points 未生成任何点"
+    half = cell / 2.0
+    n = 41  # 41×41 采样格，步长 3 m，足够密
+    worst = 0.0
+    for i in range(n):
+        for j in range(n):
+            x = cx - half + (cell * i) / (n - 1)
+            y = cy - half + (cell * j) / (n - 1)
+            nearest = min(_math73.hypot(x - px, y - py) for px, py in pts)
+            worst = max(worst, nearest)
+    assert worst <= _CLEAR_RADIUS_M73 + 1e-9, (
+        f"格内最坏到最近清除点距离 {worst:.3f} m 超出清除半径 {_CLEAR_RADIUS_M73} m")
+    # 生成点按到中心距离升序（最可能命中的中心点优先）
+    dists = [_math73.hypot(px - cx, py - cy) for px, py in pts]
+    assert dists == sorted(dists)
+
+
+def _make_belief_with_candidates(positions):
+    """构造一个受控 belief：给定候选位置列表，每个位置附一个朝向候选（存活、非空）。"""
+    belief = _DirectionalBelief73.__new__(_DirectionalBelief73)
+    belief.positions = list(positions)
+    belief.headings = [0.0]
+    belief._pos_index = {}
+    belief.candidates = {(pi, 0, 0) for pi in range(len(positions))}
+    return belief
+
+
+# ---- (b) R4.6：_blind_clear_sweep 逐格盲清除并清除真源 ----
+
+def test_blind_clear_sweep_clears_source_in_small_candidate_cell():
+    """R4.6：候选集较小 + 真源落在某候选格内时，逐格布点盲清除，最终清除该源。
+
+    构造两个候选格点，真源落在第二个候选格中心偏 40 m 处（仍在 120 m 格内）。
+    fake arena 对距真源 ≤20 m 的 /clear 判成功。验证：
+      * 逐格调用 _grid_cover_points 布点直接 /clear（无需先看见目标）；
+      * 该源被清除（state.cleared 由 _clear_at 置真）。
+    """
+    source = (1000.0, 40.0)
+    # 候选格 1 在别处（不含源），候选格 2 中心 (1000,0)，源在其 120 m 格内。
+    positions = [(500.0, 500.0), (1000.0, 0.0)]
+    arena = _FakeArena62(source=source, clear_radius=20.0)
+    strat = _make_strategy62(arena)
+    state = strat.channels[1]
+    state.belief = _make_belief_with_candidates(positions)
+    state.cleared = False
+
+    # 候选数（2）远小于 max_targets(24)：全部逐格盲清除，无加权裁剪。
+    assert len(state.belief.candidate_positions()) <= 24
+    strat._blind_clear_sweep()
+
+    assert arena.clear_calls, "_blind_clear_sweep 未发起任何 /clear"
+    assert state.cleared is True, "真源应被盲清除覆盖并清除"
+    # 命中点必在真源 20 m 内。
+    hit = arena.clear_calls[-1]
+    assert _math73.hypot(hit[0] - source[0], hit[1] - source[1]) <= 20.0 + 1e-9
+    # 布点确实落在含源的候选格 (1000,0) 周围（而非仅在无关格）。
+    near_cell2 = [c for c in arena.clear_calls
+                  if _math73.hypot(c[0] - 1000.0, c[1] - 0.0) <= 90.0]
+    assert near_cell2, "未在含源候选格内布点"
+
+
+def test_blind_clear_sweep_skips_channels_without_alive_belief():
+    """R4.6：belief 为空/已死或频道已清除时不发起盲清除（只对存活 belief 逐格清除）。"""
+    arena = _FakeArena62(source=(1000.0, 0.0), clear_radius=20.0)
+    strat = _make_strategy62(arena)
+    # 所有频道：无 belief（默认 None）→ 不应产生任何 /clear。
+    strat._blind_clear_sweep()
+    assert arena.clear_calls == []
+
+
+# ---- (c) R4.7：_ray_blind_clear 沿射线盲清除 ----
+
+def _ray_config73():
+    cfg = _StrategyConfig73()
+    # 断言实测调优常量口径（记录差异，不强改）。
+    assert cfg.ray_clear_step_m == 32.0 and cfg.ray_clear_step_m < 40.0
+    assert cfg.ray_clear_lateral_m == 22.0
+    assert cfg.ray_clear_max_range_m == 1600.0
+    # 需求文字写 ≤40，实测实现为 120（独立于 _home_channel 的 max_clear_attempts=9）。
+    assert cfg.ray_clear_max_attempts == 120
+    assert cfg.max_clear_attempts == 9
+    return cfg
+
+
+def test_ray_blind_clear_spacing_and_lateral_offsets_and_cap():
+    """R4.7：沿射线间距 <40 m 铺点，远处（r·rad(1°)>lateral）补 ±lateral 两侧点，
+    调用受独立 ray_clear_max_attempts 约束。使用不含源的 arena 让其铺满整条射线。"""
+    cfg = _ray_config73()
+    arena = _FakeArena62(source=None, clear_radius=20.0)  # 永不命中 → 铺满
+    strat = _make_strategy62(arena, cfg)
+    state = strat.channels[1]
+    # 已知方位（正东 0°），距离未知；last bearing 起点在原点。
+    state.bearings = [_Bearing73(x=0.0, y=0.0, svd_deg=0.0)]
+
+    result = strat._ray_blind_clear(state)
+    assert result is False  # 无源 → 未清除
+    calls = arena.clear_calls
+    assert calls, "_ray_blind_clear 未铺任何点"
+
+    # 独立调用上限被遵守（不因 max_clear_attempts=9 提前掐死）。
+    assert len(calls) <= cfg.ray_clear_max_attempts
+    assert len(calls) > cfg.max_clear_attempts, "应突破 max_clear_attempts(9) 的独立铺点"
+
+    # 中心线点（|off|≈0，横向分量≈0，即 y≈0）沿 x 轴的相邻间距 == step < 40 m。
+    centerline_x = sorted(x for x, y, _ in calls if abs(y) < 1e-6)
+    assert len(centerline_x) >= 2
+    gaps = [b - a for a, b in zip(centerline_x, centerline_x[1:])]
+    assert max(gaps) <= cfg.ray_clear_step_m + 1e-9
+    assert max(gaps) < 40.0  # 间距 < 2×20 m 清除直径
+
+    # 近处只打中心线；远处（r > lateral/rad(1°) ≈ 1260.6 m）补 ±lateral 两侧点。
+    r_thresh = cfg.ray_clear_lateral_m / _math73.radians(1.0)
+    near_lateral = [(x, y) for x, y, _ in calls if x < r_thresh - cfg.ray_clear_step_m and abs(y) > 1e-6]
+    assert near_lateral == [], "近处不应有横向偏移点"
+    far_lateral = [(x, y) for x, y, _ in calls if x > r_thresh + cfg.ray_clear_step_m and abs(y) > 1e-6]
+    assert far_lateral, "远处应补 ±lateral 横向偏移点"
+    assert any(_math73.isclose(abs(y), cfg.ray_clear_lateral_m, rel_tol=1e-6) for _, y in far_lateral)
+
+
+def test_ray_blind_clear_clears_source_on_the_ray():
+    """R4.7：真源落在示向度射线上（距离未知）时，射线铺点命中并清除该源。"""
+    cfg = _ray_config73()
+    # 源在正东 800 m 射线上，偏 5 m（在 20 m 清除半径内的铺点可命中）。
+    source = (800.0, 0.0)
+    arena = _FakeArena62(source=source, clear_radius=20.0)
+    strat = _make_strategy62(arena, cfg)
+    state = strat.channels[1]
+    state.bearings = [_Bearing73(x=0.0, y=0.0, svd_deg=0.0)]
+
+    result = strat._ray_blind_clear(state)
+    assert result is True
+    assert state.cleared is True
+    hit = arena.clear_calls[-1]
+    assert _math73.hypot(hit[0] - source[0], hit[1] - source[1]) <= 20.0 + 1e-9
+    # 命中即停：铺点数应远小于铺满整条射线（1600 m）所需。
+    assert len(arena.clear_calls) < cfg.ray_clear_max_attempts
+
+
+def test_ray_blind_clear_is_idempotent_via_ray_swept():
+    """R4.7：ray_swept 防重入——第二次调用直接返回，不再重扫（幂等）。"""
+    cfg = _ray_config73()
+    arena = _FakeArena62(source=None, clear_radius=20.0)
+    strat = _make_strategy62(arena, cfg)
+    state = strat.channels[1]
+    state.bearings = [_Bearing73(x=0.0, y=0.0, svd_deg=0.0)]
+
+    strat._ray_blind_clear(state)
+    assert state.ray_swept is True
+    calls_after_first = len(arena.clear_calls)
+
+    result2 = strat._ray_blind_clear(state)
+    assert result2 is False
+    assert len(arena.clear_calls) == calls_after_first, "第二次调用不应再铺点"
+
+
+def test_ray_blind_clear_without_bearing_returns_false():
+    """R4.7：无示向度（方向未知）时射线盲清除不可用，直接返回 False。"""
+    cfg = _ray_config73()
+    arena = _FakeArena62(source=(800.0, 0.0), clear_radius=20.0)
+    strat = _make_strategy62(arena, cfg)
+    state = strat.channels[1]
+    assert not state.bearings
+    assert strat._ray_blind_clear(state) is False
+    assert arena.clear_calls == []
