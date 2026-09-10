@@ -130,6 +130,19 @@ class RobotClient:
         }
 
     def _post(self, path: str, payload: dict) -> dict:
+        """发送一个已生成 request_id 的动作请求并解析响应。
+
+        协议错误处理（R5.2/R5.4/R5.5/R5.9）：
+        - 网络异常（URLError/Timeout/ConnectionError）退避重试至多
+          `max_network_retries` 次，逐字节复用同一请求体与 `request_id`；
+          耗尽仍失败则抛 `TestEnded`（触发上层优雅 `/exit`）。**不重试** HTTP 错误。
+        - HTTP 400（无效请求）/ 409（状态冲突）等非 2xx 响应：不重试、不推进
+          虚拟时刻；仍先把完整 `(request, http_status, response)` 记录入 `self.log`
+          再抛 `ProtocolError`。
+        - 双重校验 `http_status == 200 且 accepted is True`；任一失败（4xx/5xx、
+          缺 `accepted`、响应体非法 JSON）抛 `ProtocolError` 且不记账。
+        - 每条日志附 `request_id` 与时间戳（`ts`），供离线复盘（R5.9）。
+        """
         raw = json.dumps(payload, ensure_ascii=False).encode("utf-8")
         last_error: Exception | None = None
         for attempt in range(1, self.max_network_retries + 1):
@@ -141,11 +154,12 @@ class RobotClient:
             )
             try:
                 with urllib.request.urlopen(request, timeout=self.timeout_s) as response:
-                    body = json.loads(response.read().decode("utf-8"))
+                    body = self._decode_body(path, response.read(), response.status)
                     status = response.status
                 break
-            except urllib.error.HTTPError as exc:  # 有 JSON 体的错误
-                body = json.loads(exc.read().decode("utf-8") or "{}")
+            except urllib.error.HTTPError as exc:  # 有响应体的 HTTP 错误（含 400/409）
+                # HTTP 错误不重试；即便错误体非法 JSON 也不因解码异常而崩溃。
+                body = self._decode_body(path, exc.read(), exc.code, allow_empty=True)
                 status = exc.code
                 break
             except (urllib.error.URLError, TimeoutError, ConnectionError) as exc:
@@ -156,10 +170,42 @@ class RobotClient:
         else:  # pragma: no cover
             raise TestEnded(f"{path} 重试耗尽: {last_error}")
 
-        self.log.append({"path": path, "request": payload, "http_status": status, "response": body})
+        # 无论成功或失败，都完整保留 (request, http_status, response) 记录（R5.4/R5.9）。
+        self.log.append(
+            {
+                "ts": time.time(),
+                "path": path,
+                "request_id": payload.get("request_id"),
+                "request": payload,
+                "http_status": status,
+                "response": body,
+            }
+        )
         if status != 200 or body.get("accepted") is not True:
+            # 400/409 及其它非 200、缺失/为假的 accepted：不重试、不推进虚拟时刻。
             raise ProtocolError(f"{path} 未执行 http={status} body={body}")
         self.virtual_time_s = float(body["virtual_time_s"])
+        return body
+
+    def _decode_body(self, path: str, raw: bytes, status: int, *, allow_empty: bool = False) -> dict:
+        """解析响应体为 dict；非法 JSON 视为协议违规抛 `ProtocolError`（R5.2）。
+
+        `allow_empty=True` 时（HTTP 错误路径）空响应体降级为 `{}`，以便记录 status
+        并按非 200 走 `ProtocolError`，而不是因解码异常掩盖真实的 HTTP 错误码。
+        """
+        text = raw.decode("utf-8", errors="replace") if raw else ""
+        if not text:
+            if allow_empty:
+                return {}
+            raise ProtocolError(f"{path} 响应体为空（http={status}），非合法 JSON")
+        try:
+            body = json.loads(text)
+        except (json.JSONDecodeError, ValueError) as exc:
+            if allow_empty:
+                return {}
+            raise ProtocolError(f"{path} 响应体非合法 JSON（http={status}）: {exc}") from exc
+        if not isinstance(body, dict):
+            raise ProtocolError(f"{path} 响应体不是 JSON 对象（http={status}）: {body!r}")
         return body
 
     def dump_log(self, path: str) -> None:
