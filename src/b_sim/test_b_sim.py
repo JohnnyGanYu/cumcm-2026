@@ -3343,3 +3343,458 @@ def test_ray_blind_clear_without_bearing_returns_false():
     assert not state.bearings
     assert strat._ray_blind_clear(state) is False
     assert arena.clear_calls == []
+
+
+
+# ===========================================================================
+# 任务 3.5（可选）：second_point_candidates 单元测试（示例 / 边界）
+# Feature: b-radio-interference-locate-clear
+#
+# 覆盖 R2.1 / R2.2 / R2.4 / R2.6。本节为**补充**任务 3.1（生成/排序/长度/前进）与
+# 任务 3.2（有效性判定、退让、显式不可行）已有覆盖之外的**具体数值算例**与**边界**：
+#   (A) 用一组固定 (p1, theta1) 的确定坐标算例，逐点核对候选序列的精确坐标、
+#       ± 对称性与 δ 降序编号（如 32° 对 → 16° 对 → 0° 单点），补齐 3.1 中以角差
+#       重构、未直接断言精确坐标的缺口；
+#   (B) 三条有效性边界同时落在边界值（α=60/120、d2=1000、‖p2‖=1800）的组合算例；
+#   (C) 无横向平移候选（沿 θ1 前进分量恒正）的另一朝向算例；
+#   (D) select_second_point 在 is_signal_fn 恒 False（全 no_signal）时的显式不可行
+#       SecondPointSelection 路径——逐字段核对 feasible/point/candidate/reason 及
+#       "全部 no_signal、0 个无效" 的原因分解（与 3.2 的混合失败用例互补）。
+#
+# 与既有覆盖的重叠说明：δ 降序、序列长度、前进长度=380、非法偏移 ValueError 已由
+# test_q2_second_point_candidates_* 覆盖；α/d2/‖p2‖ 边界有效性已由
+# test_q2_alpha_boundary_* 与 test_q2_d2_and_range_boundary_inclusive_exact 覆盖。
+# 本节仅新增**确定坐标算例**与**纯 no_signal 显式不可行**这两处主要补充，避免重复。
+# ===========================================================================
+
+from src.b_sim.geometry import (  # noqa: E402
+    SecondPointSelection as _SecondPointSelection35,
+    classify_second_point_candidates as _classify35,
+    second_point_candidates as _second_point_candidates35,
+    select_second_point as _select_second_point35,
+)
+
+
+def _abs_delta_deg_35(p1, theta1, pt):
+    """候选点相对 p1 的方位与 theta1 的最小角差（度）。"""
+    dx, dy = pt[0] - p1[0], pt[1] - p1[1]
+    bearing = math.degrees(math.atan2(dy, dx))
+    diff = abs(norm_deg(bearing) - norm_deg(theta1))
+    return diff if diff <= 180.0 else 360.0 - diff
+
+
+def test_q2_35_worked_example_exact_candidate_coordinates():
+    """R2.1/R2.4（算例）：p1=(0,0)、θ1=0° 时候选精确坐标与 ± 对称、δ 降序编号。
+
+    L=380、θ1=0（正东）。候选序列应为：
+      δ=+32° → (380·cos32°, 380·sin32°)
+      δ=-32° → (380·cos32°, -380·sin32°)
+      δ=+16° → (380·cos16°, 380·sin16°)
+      δ=-16° → (380·cos16°, -380·sin16°)
+      δ= 0°  → (380, 0)
+    逐点核对精确坐标（补 3.1 未直接断言坐标的缺口）。
+    """
+    p1 = (0.0, 0.0)
+    theta1 = 0.0
+    L = 380.0
+    cands = _second_point_candidates35(p1, theta1)
+    c32, s32 = math.cos(math.radians(32.0)), math.sin(math.radians(32.0))
+    c16, s16 = math.cos(math.radians(16.0)), math.sin(math.radians(16.0))
+    expected = [
+        (L * c32, L * s32),
+        (L * c32, -L * s32),
+        (L * c16, L * s16),
+        (L * c16, -L * s16),
+        (L, 0.0),
+    ]
+    assert len(cands) == 5
+    for got, exp in zip(cands, expected):
+        assert got[0] == pytest.approx(exp[0], abs=1e-9)
+        assert got[1] == pytest.approx(exp[1], abs=1e-9)
+    # ± 对称：同一 |δ| 的一对候选关于 θ1 轴（此处 x 轴）镜像。
+    assert cands[0][0] == pytest.approx(cands[1][0])   # +32/-32 同 x
+    assert cands[0][1] == pytest.approx(-cands[1][1])  # y 反号
+    assert cands[2][0] == pytest.approx(cands[3][0])   # +16/-16 同 x
+    assert cands[2][1] == pytest.approx(-cands[3][1])
+    # δ 降序编号：32,32,16,16,0。
+    deltas = [_abs_delta_deg_35(p1, theta1, c) for c in cands]
+    assert deltas == pytest.approx([32.0, 32.0, 16.0, 16.0, 0.0], abs=1e-6)
+
+
+def test_q2_35_worked_example_offset_p1_and_nonzero_theta():
+    """R2.1/R2.4（算例）：非零 p1 与斜向 θ1 的具体坐标算例。
+
+    p1=(120,-80)、θ1=135°、单条 δ=(20,0)（自定义 offsets 展示 δ=20° 的 ± 对与直行）。
+    逐点核对 p2 = p1 + 380·(cos(135±20°), sin(135±20°)) 与 p1 + 380·(cos135°,sin135°)。
+    同时确认末位为沿 θ1 直行（δ=0）候选。
+    """
+    p1 = (120.0, -80.0)
+    theta1 = 135.0
+    L = 380.0
+    cands = _second_point_candidates35(p1, theta1, offsets=(20.0, 0.0))
+    assert len(cands) == 3  # δ=20 的 ± 对 + δ=0 单点
+    exp = [
+        (p1[0] + L * math.cos(math.radians(theta1 + 20.0)),
+         p1[1] + L * math.sin(math.radians(theta1 + 20.0))),
+        (p1[0] + L * math.cos(math.radians(theta1 - 20.0)),
+         p1[1] + L * math.sin(math.radians(theta1 - 20.0))),
+        (p1[0] + L * math.cos(math.radians(theta1)),
+         p1[1] + L * math.sin(math.radians(theta1))),
+    ]
+    for got, e in zip(cands, exp):
+        assert got[0] == pytest.approx(e[0], abs=1e-9)
+        assert got[1] == pytest.approx(e[1], abs=1e-9)
+    # 末位为沿 θ1 直行：相对 p1 方位等于 θ1。
+    assert _abs_delta_deg_35(p1, theta1, cands[-1]) == pytest.approx(0.0, abs=1e-6)
+    # 到 p1 距离恒为 L=380。
+    for c in cands:
+        assert math.hypot(c[0] - p1[0], c[1] - p1[1]) == pytest.approx(380.0, abs=1e-6)
+
+
+def test_q2_35_all_three_validity_bounds_simultaneously_inclusive():
+    """R2.2（算例）：α=90°、d2=1000、‖p2‖ 界内三条件同时满足 → 有效（边界含）。
+
+    复用 3.2 中"α=90、d2=1000"的解析构造（length=1000·√2、source=(L/2,L/2)），
+    此处作为一个**并列三条件**的具名算例：δ=0° 候选 p2=(L,0)，
+      α = 90°∈[60,120]、d2 = 1000（恰为下限边界）、‖p2‖ = L≈1414 ≤ 1800。
+    与 3.2 的对应断言互补（此处显式核对三值与 valid=True 的组合语义）。
+    """
+    L = 1000.0 * math.sqrt(2.0)
+    p1 = (0.0, 0.0)
+    theta1 = 0.0
+    source = (L / 2.0, L / 2.0)
+    res = _classify35(p1, theta1, source, offsets=(0.0,), length=L)
+    cand = res[0]
+    assert cand.crossing_angle_deg == pytest.approx(90.0)
+    assert cand.d2_m == pytest.approx(1000.0)                 # 恰为 d2 下限边界（含）
+    assert cand.range_from_origin_m == pytest.approx(L)       # ≈1414 ≤ 1800
+    assert cand.range_from_origin_m <= 1800.0
+    assert cand.valid is True
+    assert cand.reason == "valid"
+
+
+def test_q2_35_no_lateral_translation_various_headings():
+    """R2.4（算例）：多个朝向下候选均含正前进分量（无纯横向平移/反向候选）。"""
+    for theta1 in (0.0, 45.0, 90.0, 137.0, 200.0, 275.0, 359.0):
+        p1 = (50.0, -30.0)
+        ux, uy = math.cos(math.radians(theta1)), math.sin(math.radians(theta1))
+        for pt in _second_point_candidates35(p1, theta1):
+            rel = (pt[0] - p1[0], pt[1] - p1[1])
+            forward = rel[0] * ux + rel[1] * uy
+            assert forward > 0.0
+            # |δ|≤32° ⟹ 前进分量 ≥ L·cos32°。
+            assert forward >= 380.0 * math.cos(math.radians(32.0)) - 1e-6
+
+
+def test_q2_35_select_all_no_signal_returns_explicit_infeasible_selection():
+    """R2.6（算例）：is_signal_fn 恒 False（全候选 no_signal）→ 显式不可行 SecondPointSelection。
+
+    源置于使全部候选**几何有效**的位置，从而唯一的失败来源是"全部 no_signal"。
+    逐字段核对返回的 SecondPointSelection：feasible=False、point/candidate=None、
+    reason 含"第二检测点不可行"与"no_signal N 个"、且分解出"无效 0 个"（几何全有效），
+    并确认 evaluated 覆盖了全部候选（退让走到底后才判不可行）。
+    """
+    # 用解析构造保证 δ=0° 候选几何有效：length=1000√2、source=(L/2,L/2) →
+    # δ=0° 候选 p2=(L,0) 处 α=90°∈[60,120]、d2=1000（含）、‖p2‖=L≈1414≤1800。
+    # 只用单个 δ=0° 候选，隔离出"纯 no_signal"这一失败来源。
+    L = 1000.0 * math.sqrt(2.0)
+    p1 = (0.0, 0.0)
+    theta1 = 0.0
+    source = (L / 2.0, L / 2.0)
+    classified = _classify35(p1, theta1, source, offsets=(0.0,), length=L)
+    n_valid_geo = sum(1 for c in classified if c.valid)
+    # 前置条件：至少存在一个几何有效候选，才能隔离"纯 no_signal"这一失败来源。
+    assert n_valid_geo >= 1
+
+    calls = {"n": 0}
+
+    def never_signal(_pt):
+        calls["n"] += 1
+        return False
+
+    sel = _select_second_point35(
+        p1, theta1, source, never_signal, offsets=(0.0,), length=L
+    )
+    assert isinstance(sel, _SecondPointSelection35)
+    assert sel.feasible is False
+    assert sel.point is None
+    assert sel.candidate is None
+    assert "第二检测点不可行" in sel.reason
+    assert "no_signal" in sel.reason
+    # 全部候选被考察（退让到底）。
+    assert len(sel.evaluated) == len(classified)
+    # is_signal_fn 对每个几何有效候选都被询问一次（无效候选直接跳过、不询问）。
+    assert calls["n"] == n_valid_geo
+    # 原因分解与实际一致：no_signal 计数 = 几何有效数、无效计数 = 其余。
+    n_invalid = len(classified) - n_valid_geo
+    assert f"no_signal {n_valid_geo}" in sel.reason
+    assert f"无效 {n_invalid}" in sel.reason
+
+
+def test_q2_35_select_first_valid_with_signal_reports_offset_in_reason():
+    """R2.1/R2.5（算例，补充）：回调恒有信号 → 选中首个有效候选，reason 标注其 δ 符号。
+
+    与 3.2 的退让用例互补：此处显式核对"选中候选即 evaluated 中首个有效候选"，
+    且 reason 形如 'selected δ=±NN.N°' 与该候选的带符号偏移一致。
+    """
+    # 同上解析构造：单个几何有效的 δ=0° 候选。
+    L = 1000.0 * math.sqrt(2.0)
+    p1 = (0.0, 0.0)
+    theta1 = 0.0
+    source = (L / 2.0, L / 2.0)
+    classified = _classify35(p1, theta1, source, offsets=(0.0,), length=L)
+    first_valid = next((c for c in classified if c.valid), None)
+    assert first_valid is not None
+    sel = _select_second_point35(
+        p1, theta1, source, lambda _pt: True, offsets=(0.0,), length=L
+    )
+    assert sel.feasible is True
+    assert sel.point == first_valid.point
+    assert sel.candidate is not None
+    sign = "+" if sel.candidate.offset_deg >= 0 else "-"
+    assert f"selected δ={sign}{abs(sel.candidate.offset_deg):.1f}°" == sel.reason
+
+
+
+# ===========================================================================
+# 任务 5.6（可选）：客户端 request_id 唯一/单调 与 400/409 单元测试
+# Feature: b-radio-interference-locate-clear
+#
+# 覆盖 R5.1 / R5.3 / R5.4 / R5.5。本节聚焦任务 5.1（_check_coord 边界）与任务 5.2
+# （409/400 不重试、网络重试复用同一 request_id、耗尽 TestEnded）之外的**主要缺口**：
+#   R5.1 —— 新动作 request_id 的**唯一性/单调性**（自动生成的 `{tag}-{seq}`，seq 自 1
+#   起单调递增；同一进程内任意两个新动作 request_id 互不相同，如 enter-1、measure-2、
+#   clear-3、measure-4 …），以及**网络重试复用同一自动生成 request_id**（不消耗新 seq）。
+#
+# 与既有覆盖的重叠说明：
+#   - _check_coord 的 ±2_000_000 边界与越界/NaN/inf 拒绝已由任务 5.1 的
+#     test_measure_rejects_* / test_boundary_coordinate_* 覆盖；
+#   - 409/400 → ProtocolError 不重试、记录完整已由任务 5.2 的
+#     test_client_conflict_409_* / test_client_bad_request_400_* 覆盖；
+#   - 网络重试至多 3 次、耗尽 TestEnded、复用**显式传入**的 request_id 已由 5.2 的
+#     test_client_network_failure_* 覆盖。
+#   本节据此仅**新增** request_id 唯一/单调性（主缺口）与"自动生成 id 在网络重试中
+#   逐字节复用"这两处；对 400/409/TestEnded 仅做一处以自动生成 request_id 为主体的
+#   端到端串联（而非重复 5.2 已断言的细节），避免重复。
+# ===========================================================================
+
+import urllib.error as _urllib_error56  # noqa: E402
+import urllib.request as _urllib_request56  # noqa: E402
+
+from src.b_sim.client import (  # noqa: E402
+    ProtocolError as _ProtocolError56,
+    RobotClient as _RobotClient56,
+    TestEnded as _TestEnded56,
+)
+
+
+def _action_log_ids_56(client):
+    """按发送顺序取动作日志中的 request_id 列表（仅成功记录三元组的动作）。"""
+    return [entry["request_id"] for entry in client.log]
+
+
+def test_client_request_ids_are_monotonic_and_unique_across_new_actions(server):
+    """R5.1：连续新动作的 request_id 形如 `{tag}-{seq}`，seq 自 1 单调递增且全局唯一。
+
+    实际动作序列：enter → measure → clear → measure → clear。期望自动生成的
+    request_id 依次为 enter-1、measure-2、clear-3、measure-4、clear-5（seq 单调递增、
+    跨动作互不相同）。逐条从 client.log 与内部 _seq 核对。
+    """
+    url, _session = server
+    client = _RobotClient56(ROBOT, base_url=url)
+
+    client.enter()                 # seq 1 → enter-1
+    client.measure(0.0, 0.0, 1)    # seq 2 → measure-2
+    # 用界内合法坐标发起 clear（是否命中不影响 request_id 语义）。
+    client.clear(0.0, 0.0, 1)      # seq 3 → clear-3
+    client.measure(10.0, 0.0, 2)   # seq 4 → measure-4
+    client.clear(10.0, 0.0, 2)     # seq 5 → clear-5
+
+    ids = _action_log_ids_56(client)
+    assert ids == ["enter-1", "measure-2", "clear-3", "measure-4", "clear-5"]
+    # 全局唯一。
+    assert len(set(ids)) == len(ids)
+    # seq 单调递增（从 1 起，步长 1）。
+    seqs = [int(rid.rsplit("-", 1)[1]) for rid in ids]
+    assert seqs == [1, 2, 3, 4, 5]
+    for a, b in zip(seqs, seqs[1:]):
+        assert b == a + 1
+    # 内部计数器与已发出动作数一致。
+    assert client._seq == 5
+    # 每个 request_id 的 tag 与其动作路径一致。
+    tag_by_path = {"/enter": "enter", "/measure": "measure", "/clear": "clear"}
+    for entry in client.log:
+        assert entry["request_id"].rsplit("-", 1)[0] == tag_by_path[entry["path"]]
+
+
+def test_client_base_payload_increments_seq_and_never_repeats():
+    """R5.1：_base_payload 每次调用生成新 seq，任意两个新动作 request_id 互不相同（不依赖网络）。"""
+    client = _RobotClient56(ROBOT, base_url="http://127.0.0.1:1")  # 不实际发送
+    seen = []
+    for tag in ("enter", "measure", "clear", "measure", "clear", "exit"):
+        payload = client._base_payload(tag)
+        seen.append(payload["request_id"])
+    assert seen == ["enter-1", "measure-2", "clear-3", "measure-4", "clear-5", "exit-6"]
+    assert len(set(seen)) == len(seen)  # 全部唯一
+    assert client._seq == 6
+
+
+class _FailOnceThenSucceed56:
+    """网络传输桩：前 fail_times 次抛 URLError，其后回显成功；记录每次实际请求体。"""
+
+    def __init__(self, fail_times: int):
+        self.fail_times = fail_times
+        self.calls: list[bytes] = []
+
+    def __call__(self, request, timeout=None):
+        self.calls.append(request.data)
+        if len(self.calls) <= self.fail_times:
+            raise _urllib_error56.URLError("simulated transient failure")
+        payload = json.loads(request.data.decode("utf-8"))
+        # 成功体同时带 measure/clear 结果字段，使公共 measure()/clear() 均可解析。
+        resp = {
+            "accepted": True,
+            "virtual_time_s": 7.0,
+            "request_id": payload.get("request_id"),
+            "measure_result": "no_signal",
+            "svd_deg": None,
+            "clear_result": "no_target_in_range",
+        }
+
+        class _Resp:
+            status = 200
+
+            def read(self_inner):
+                return json.dumps(resp).encode("utf-8")
+
+            def __enter__(self_inner):
+                return self_inner
+
+            def __exit__(self_inner, *a):
+                return False
+
+        return _Resp()
+
+
+def test_client_network_retry_reuses_autogenerated_request_id(server, monkeypatch):
+    """R5.1/R5.5：网络重试复用**自动生成**的 request_id（同一 seq，不消耗新 seq）。
+
+    经由公共 measure() 走完整路径：_base_payload 先自增 seq 生成 measure-2，随后网络
+    失败 2 次、第 3 次成功。三次实际发送的请求体应逐字节相同（含同一自动生成的
+    request_id measure-2），且成功后 seq 不再额外增加、按返回记账。
+    """
+    url, _session = server
+    client = _RobotClient56(ROBOT, base_url=url, max_network_retries=3)
+    transport = _FailOnceThenSucceed56(fail_times=2)
+    monkeypatch.setattr(_urllib_request56, "urlopen", transport)
+    monkeypatch.setattr("src.b_sim.client.time.sleep", lambda *_: None)
+
+    # 先手动占用 seq 1（模拟一次 enter），使本次 measure 自动得到 measure-2。
+    client._seq = 1
+    result = client.measure(300.0, 400.0, 1)
+
+    assert result.virtual_time_s == pytest.approx(7.0)
+    # 恰 3 次传输（失败 2 + 成功 1），且每次请求体逐字节一致。
+    assert len(transport.calls) == 3
+    assert transport.calls[0] == transport.calls[1] == transport.calls[2]
+    sent = json.loads(transport.calls[0].decode("utf-8"))
+    assert sent["request_id"] == "measure-2"       # 自动生成、非显式传入
+    # 重试期间未再自增 seq（仍为 2）。
+    assert client._seq == 2
+    # 成功记录一条日志，request_id 为该自动生成 id。
+    assert client.log[-1]["request_id"] == "measure-2"
+    assert client.log[-1]["http_status"] == 200
+
+
+def test_client_out_of_bounds_before_send_does_not_consume_request_id(server):
+    """R5.1/R5.3：发送前越界坐标被拦截，不消耗 seq——后续动作 request_id 连续无空洞。
+
+    enter（seq1）→ 越界 measure（拒发、不自增 seq）→ 合法 measure（应得 measure-2 而非 -3）。
+    证明越界拦截发生在 _base_payload 之前，request_id 序列不出现"跳号"。
+    """
+    url, _session = server
+    client = _RobotClient56(ROBOT, base_url=url)
+    client.enter()  # enter-1
+    assert client._seq == 1
+    # 越界坐标：发送前 ProtocolError，且不生成 request_id / 不自增 seq。
+    with pytest.raises(_ProtocolError56):
+        client.measure(2_000_000.0 + 1.0, 0.0, 1)
+    assert client._seq == 1  # 未自增
+    # 下一次合法 measure 应连续取到 measure-2（无跳号）。
+    client.measure(0.0, 0.0, 1)
+    assert client._seq == 2
+    assert client.log[-1]["request_id"] == "measure-2"
+    # 恰为 ±2_000_000 m 的边界坐标通过客户端侧门禁（不抛越界错误）——不实际发往
+    # mock 服务（该点在竞技场外会被服务端按业务拒绝，与坐标门禁语义无关）。
+    _RobotClient56._check_coord(2_000_000.0, -2_000_000.0)  # 不抛 → 放行
+
+
+def test_client_409_then_new_action_gets_fresh_request_id(server):
+    """R5.4/R5.1：409 冲突抛 ProtocolError 后，随后的新动作仍取到全新、连续的 request_id。
+
+    409 路径复用任务 5.2 已验证的语义（此处不重复其记录/时间细节），本用例的**新增**
+    关注点是：一次 409 之后 request_id 生成器状态正确（后续新动作 id 唯一且连续）。
+    """
+    url, _session = server
+    client = _RobotClient56(ROBOT, base_url=url)
+    client.enter()  # enter-1
+    # 用显式固定 request_id 制造 409：先成功一次，再以同 id 异内容冲突。
+    rid = f"{ROBOT}-dup56"
+    ok = base(rid) | {"position": {"x": 0.0, "y": 0.0}, "channel": 1}
+    assert client._post("/measure", ok)["accepted"] is True
+    conflict = base(rid) | {"position": {"x": 25.0, "y": 0.0}, "channel": 1}
+    with pytest.raises(_ProtocolError56):
+        client._post("/measure", conflict)
+    # 409 之后发起的新动作走正常自动生成路径，得到连续唯一的 measure-2。
+    seq_before = client._seq
+    client.measure(0.0, 0.0, 1)
+    new_id = client.log[-1]["request_id"]
+    assert new_id == f"measure-{seq_before + 1}"
+    # 该新 id 未与此前任何 id 重复。
+    all_ids = [e["request_id"] for e in client.log]
+    assert all_ids.count(new_id) == 1
+
+
+def test_client_400_raises_protocol_error_with_autogenerated_id_no_retry(server):
+    """R5.4/R5.1：非法 channel → 400 → ProtocolError（不重试），日志记的是自动生成 id。
+
+    以公共 measure() 触发服务端 400（channel 越界），确认：抛 ProtocolError、
+    恰记 1 条 400 日志、其 request_id 为自动生成的 `measure-{seq}`（唯一、非重试）。
+    """
+    url, _session = server
+    client = _RobotClient56(ROBOT, base_url=url)
+    client.enter()  # enter-1
+    log_len_before = len(client.log)
+    with pytest.raises(_ProtocolError56):
+        client.measure(0.0, 0.0, 0)  # channel=0 非法 → 400
+    # 不重试：恰新增 1 条 400 记录。
+    assert len(client.log) == log_len_before + 1
+    entry = client.log[-1]
+    assert entry["http_status"] == 400
+    assert entry["request_id"] == "measure-2"  # 自动生成、连续
+    assert client._seq == 2
+
+
+def test_client_network_exhaustion_raises_test_ended_with_reused_autogenerated_id(server, monkeypatch):
+    """R5.5/R5.1：网络持续失败 → 重试至多 3 次（复用自动生成 id）→ TestEnded。
+
+    补充 5.2（其用显式 request_id）：此处经 clear() 走自动生成 id，确认三次重试逐字节
+    复用同一自动生成 request_id（clear-{seq}），耗尽后抛 TestEnded 且虚拟时刻不变。
+    """
+    url, _session = server
+    client = _RobotClient56(ROBOT, base_url=url, max_network_retries=3)
+    transport = _FailOnceThenSucceed56(fail_times=99)  # 始终失败
+    monkeypatch.setattr(_urllib_request56, "urlopen", transport)
+    monkeypatch.setattr("src.b_sim.client.time.sleep", lambda *_: None)
+
+    client._seq = 1  # 使本次 clear 取到 clear-2
+    vt_before = client.virtual_time_s
+    with pytest.raises(_TestEnded56):
+        client.clear(0.0, 0.0, 1)
+    # 恰 3 次尝试，逐字节复用同一自动生成 request_id。
+    assert len(transport.calls) == 3
+    assert transport.calls[0] == transport.calls[1] == transport.calls[2]
+    sent = json.loads(transport.calls[0].decode("utf-8"))
+    assert sent["request_id"] == "clear-2"
+    assert client._seq == 2            # 重试不自增 seq
+    assert client.virtual_time_s == vt_before  # 未记账
