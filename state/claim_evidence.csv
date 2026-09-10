@@ -1,1 +1,42 @@
 ﻿claim_id,paper_location,claim,value,evidence_file,code_entry,verification,status,owner
+B-INFO-01,问题3/4 信息论下界,单个干扰源定位到20m清除半径所需信息量,12.98 bit,results/b_info_bound.json,src/b_info_bound.py,解析式 2*log2(1800/20)，脚本实算,待核实,Leo
+B-INFO-02,问题3/4 信息论下界,12个源完整辨识（位置+频道子集+源数）所需信息量,175.55 bit,results/b_info_bound.json,src/b_info_bound.py,脚本实算，组合数+微分熵离散化,待核实,Leo
+B-INFO-03,问题4 信息论下界,含定向讨厌参数的总需求（12源/5定向）,222.64 bit,results/b_info_bound.json,src/b_info_bound.py,脚本实算,待核实,Leo
+B-INFO-04,问题3/4 单次检测容量,单次 /measure 的噪声受限容量,7.4919 bit,results/b_info_bound.json,src/b_info_bound.py,log2(36002)-log2(200)，与 log2(180) 交叉核对一致,待核实,Leo
+B-INFO-05,问题3/4 单次检测互信息,最优站位(圆心)单次检测互信息，全向源,4.6551 bit,results/b_info_bound.json,src/b_info_bound.py,蒙特卡洛 4e5 样本,待核实,Leo
+B-INFO-06,问题4 实测信息量,官方 run1 的 610 次检测供给信息量（容量口径上界）,4570.1 bit,results/b_info_bound.json,src/b_info_bound.py,610 × 7.4919，检测数由协议日志去重实算,待核实,Leo
+B-INFO-07,问题4 实测信息量,610 次检测供给信息量（实测输出分布经验上界）,820.7 bit,results/b_info_bound.json,src/b_info_bound.py,官方日志 no_signal 88.4%/direction 11.6% 实算,待核实,Leo
+B-INFO-08,问题4 信息效率,信息效率比（核心需求/容量供给）,3.84%,results/b_info_bound.json,src/b_info_bound.py,175.55/4570.1,待核实,Leo
+B-INFO-09,问题4 信息效率,信息效率比（核心需求/实测分布供给）,21.39%,results/b_info_bound.json,src/b_info_bound.py,175.55/820.7,待核实,Leo
+B-INFO-10,问题3 信息效率,问题3 效率 9.59%，为问题4 的 2.50 倍,9.59%,results/b_info_bound.json,src/b_info_bound.py,150.14/(209×7.4919),待核实,Leo
+B-INFO-11,问题3/4 下界可达性,"理论最少检测次数 24 次，与构造性下界 max(20频道,2×12交会)=24 一致",24 次,results/b_info_bound.json,src/b_info_bound.py,两条独立下界交叉核对,待核实,Leo
+B-INFO-12,问题4 优化方向,实测 610 次为下界的 25.4 倍；88.4% 检测为 no_signal，单次仅 0.179 bit,25.4 倍,results/b_info_bound.json,src/b_info_bound.py,官方日志类型分布实算,待核实,Leo
+B-GEOM-01,问题2/3/4 定位精度,示向度±1°在距离r处的横向不确定度,0.0349 r,-,解析式 2*r*tan(1°),解析推导,待核实,Leo
+B-GEOM-02,问题3/4 策略设计,单条示向度即可满足20m清除半径的最大距离阈值,573 m,-,解析式 20/(2*tan(1°)),解析推导；573m内无需交会即可直接归航清除,待核实,Leo
+B-TIME-01,问题3/4 时间预算,官方四局虚拟时间构成：移动占比,77.4%,results/b_tsp_bound.json,src/b_tsp_bound.py,"新成本模型逐调用残差反解: measure5s+切频道1s, clear成功5s; 对账误差<3.2e-6s。旧值81.0%因漏计切频道与清除成功耗时",已核实,Leo
+B-TIME-02,问题3/4 时间预算,官方四局虚拟时间构成：检测占比,21.7%,results/b_tsp_bound.json,src/b_tsp_bound.py,同上；含切频道1s/次(每局约560s=3.4%),已核实,Leo
+B-TIME-03,问题3/4 时间预算,官方四局虚拟时间构成：清除占比,0.91%,results/b_tsp_bound.json,src/b_tsp_bound.py,同上；清除成功实为5s非3s,已核实,Leo
+B-TIME-04,问题3/4 优化取舍,"消除""清除成功后仍打完整圈螺旋""的收益",-0.5%,results/b_time_budget.json,src/b_time_budget.py,"按官方日志重算；初估4.7%系用""省下秒数÷均值""忽略分母稀释，已更正",已核实,Leo
+B-COV-01,问题3 覆盖设计,目标区域内在原点收不到信号的源比例,51.4%,results/b_coverage_design.json,src/b_sim/coverage_design.py,网格扫描1281个位置×接收半径下限,已核实,Leo
+B-COV-02,问题3 覆盖设计,原点+1250m×12站位的最坏覆盖间隙,670.1 m,results/b_coverage_design.json,src/b_sim/coverage_design.py,低于接收半径下限1000m，保证发现,已核实,Leo
+B-COV-03,问题4 覆盖设计,盲扫加密站位的可见率天花板（37站位）,98.7%,results/b_coverage_design.json,src/b_sim/coverage_design.py,300次抽样；成本翻倍仍不达100%，故改用推理+盲清除,已核实,Leo
+B-Q1-01,问题1 第二问,以定位区域直径为直径的圆不覆盖该区域的严格反例超出量,0.3837 m,-,src/b_q1_counterexample.py,mpmath高精度：R=14.3097714689 > d/2=14.3019282673,已核实,Leo
+B-Q1-02,问题1 第二问,最小外接圆半径与直径半长之比的Jung上界,1.1547,-,src/b_q1_counterexample.py,Jung定理 R<=d/sqrt(3)，正三角形取等,已核实,Leo
+B-Q2-01,问题2 检测点策略,最优交会夹角,90°,results/b_q2_results.json,src/b_q2.py,网格扫描+2000次蒙特卡洛，直径与面积同时最小,已核实,Leo
+B-Q2-02,问题2 检测点策略,可用交会夹角带,32°-150°,results/b_q2_results.json,src/b_q2.py,带内指标退化可接受,已核实,Leo
+B-Q2-03,问题2 候选区域,第二检测点候选区面积（源位于区域中心）,38800 m²,results/b_q2_results.json,src/b_q2.py,网格步长20m统计,已核实,Leo
+B-CAL-01,问题3 仿真校准,离线仿真与官方实测的平均定位清除时间偏差（问题3）,5.4%,official_runs/,src/b_sim/rehearse.py,离线464.3s vs 官方489.4s,已核实,Leo
+B-CAL-02,问题4 仿真校准,离线仿真与官方实测的平均定位清除时间偏差（问题4）,9.6%,official_runs/,src/b_sim/rehearse.py,离线1274.9s vs 官方四局均值1397.4s,已核实,Leo
+B-BOUND-L0,问题3/4 优化空间,L0 全知零检测下界（预知位置只走TSP清除）,149.0 s,results/b_tsp_bound.json,src/b_tsp_bound.py,精确Held-Karp；不可达，仅作绝对参照,已核实,Leo
+B-BOUND-L1,问题3/4 优化空间,L1 全知只摸源下界,459.4 s,results/b_tsp_bound.json,src/b_tsp_bound.py,精确Held-Karp n=13,已核实,Leo
+B-BOUND-L3,问题3/4 优化空间,L3 完美覆盖+摸源下界,673.6 s,results/b_tsp_bound.json,src/b_tsp_bound.py,启发式；启发式/MST下界=1.064，贴近真最优,已核实,Leo
+B-BOUND-L4,问题3/4 优化空间,L4 仅改访问顺序的下界（全局路径规划真实收益上限）,1004.1 s,results/b_tsp_bound.json,src/b_tsp_bound.py,实际轨迹本身是该排序问题可行解故最优<=实际；item分解重构误差<1e-6m,已核实,Leo
+B-BOUND-04,问题3/4 优化取舍,全局路径规划可兑现收益上限,-28.1%,results/b_tsp_bound.json,src/b_tsp_bound.py,"1397.4->1004.1s；实际是L0的9.4倍但其中约39个百分点是信息获取代价, TSP拿不到",已核实,Leo
+B-RING-01,问题3/4 实现缺陷,环内站位未按方位角顺扫导致的跨场弦跳损失,10846 m/局,results/b_tsp_bound.json,src/b_tsp_bound.py,= 2169 s/局；顺扫每步647m vs 实际弦跳2.5-2.9km,已核实,Leo
+B-RING-02,问题3/4 实现缺陷,环序损失的局间差异（同一份代码）,3.2%-58%,results/b_tsp_bound.json,src/b_tsp_bound.py,run2环序单调仅损失3.2%; run1/3/4非单调损失54-58%,已核实,Leo
+B-RING-03,问题3/4 实现核对,实际站位结构与strategy_config声明不符,31-47站/3-4层环,results/b_tsp_bound.json,src/b_tsp_bound.py,"实际12@1250+18@1750+12@1800+内圈, 非声称的12站单环, 待查代码",待核实,Leo
+B-MOVE-01,问题3/4 移动构成,移动距离拆分：站位空驶占比,60.2%,results/b_tsp_bound.json,src/b_tsp_bound.py,归航38.8% 清除微调0.9%,已核实,Leo
+B-RING-04,问题3/4 优化实测,环内站位按方位角单调排序的实测收益（隔离实验，12局Q4）,-2.4%,results/b_ringsort_ablation.json,src/b_sim/strategy.py::_order_ring,同案例同种子对照: 贪心1321.6s vs 顺扫1290.2s; 移动-3.4%; 两组均12/12全清,已核实,Leo
+B-RING-05,问题3/4 归因更正,跨场弦跳的主体是批量归航往返而非环内乱序,长跳仅-2.4%,results/b_ringsort_ablation.json,src/b_sim/strategy.py::_order_ring,"排序后>2km长跳16971->16567m几乎不变; 子agent估算的10846m环序损失含归航接入跳, 排序无法消除",已核实,Leo
+B-RING-06,问题3 优化实测,环序排序对问题3的收益,-0.5%,results/b_q3_ringsort.json,src/b_sim/rehearse.py,"40局: 464.3->462.1s, 保持40/40全清",已核实,Leo
+B-RING-07,问题4 优化实测,环序排序对问题4的收益（40局全量）,-1.5%,results/b_q4_ringsort.json,src/b_sim/rehearse.py,"40局: 1274.9->1255.4s, 保持40/40全清",已核实,Leo

@@ -305,6 +305,36 @@ class DogStrategy:
                 return
             self._walk_ring(ring)
 
+    def _order_ring(self, ring: list[tuple[float, float]]) -> list[tuple[float, float]]:
+        """把一层环的站位按方位角单调排序，并从离当前位置最近的那个开始。
+
+        为什么不用最近邻贪心：环上站位近似等距分布在圆周上，顺扫相邻两站
+        距离约 2*pi*R/n（R=1250 m, n=12 时约 647 m）。而贪心每次取全局最近，
+        一旦因归航离开环再回来，"最近"的未访问站常在环对面，产生一次
+        约 2R 的跨场弦跳。按方位角单调走可消除这类弦跳。
+
+        方向选择：比较顺时针与逆时针两种顺扫的首段接入代价，取较小者。
+        """
+        if len(ring) <= 2:
+            return ring[:]
+        cx = sum(p[0] for p in ring) / len(ring)
+        cy = sum(p[1] for p in ring) / len(ring)
+        by_angle = sorted(ring, key=lambda p: math.atan2(p[1] - cy, p[0] - cx))
+        # 找离当前位置最近的站位作为切入点
+        start = min(range(len(by_angle)),
+                    key=lambda i: math.hypot(by_angle[i][0] - self.pos[0],
+                                             by_angle[i][1] - self.pos[1]))
+        ccw = by_angle[start:] + by_angle[:start]
+        cw = [ccw[0]] + list(reversed(ccw[1:]))
+
+        def tour_len(seq: list[tuple[float, float]]) -> float:
+            total = math.hypot(seq[0][0] - self.pos[0], seq[0][1] - self.pos[1])
+            for a, b in zip(seq, seq[1:]):
+                total += math.hypot(b[0] - a[0], b[1] - a[1])
+            return total
+
+        return ccw if tour_len(ccw) <= tour_len(cw) else cw
+
     def _walk_ring(self, ring: list[tuple[float, float]]) -> None:
         """就近串行访问环上站位，每扫过 batch 个站位再统一归航清除。
 
@@ -315,13 +345,17 @@ class DogStrategy:
         批量归航把多个目标凑一起、按就近顺序处理，减少往返。
         batch=1 等价于原来的逐站归航。
         """
-        remaining = ring[:]
+        remaining = self._order_ring(ring)
         since_home = 0
         while remaining and not self._stop():
             todo = [st for st in self.channels.values() if self._probe_target(st)]
             if not todo:
                 break
-            remaining.sort(key=lambda p: math.hypot(p[0] - self.pos[0], p[1] - self.pos[1]))
+            # 站位顺序已在 _order_ring 里按方位角单调排好，直接顺序取用。
+            # 不再用"最近邻"重排：环形几何下贪心最近邻会在归航返回后
+            # 跳到环对面（跨场弦跳 2.5-2.9 km，顺扫每步仅约 647 m）。
+            # 官方日志实测该缺陷均值浪费 10,846 m = 2,169 s/局；
+            # run2 恰好单调仅损失 3.2%，run1/3/4 乱序损失 54-58%。
             station = remaining.pop(0)
             for state in sorted(todo, key=lambda s: s.channel):
                 if self._stop(): return
