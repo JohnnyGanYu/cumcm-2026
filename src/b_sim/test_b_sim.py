@@ -2796,3 +2796,164 @@ def test_summary_raw_mean_is_rounded_by_reporting_layer_not_summary():
     assert round(raw, 3) == pytest.approx(333.333)
     # 两位小数报告口径亦由报告层完成。
     assert round(raw, 2) == pytest.approx(333.33)
+
+
+
+# =============================================================================
+# 任务 7.1：核对候选网格初始化与约束更新（VERIFY，回归测试）
+#
+# 对照 requirements.md R4.1 / R4.2 / R4.3 与 design.md §3.4，固定
+# directional.py 的 DirectionalBelief 三项行为：
+#   - fresh() 生成全域 (x, y, φ) 候选网格：位置步长 120 m、朝向步长 30°
+#     （φ ∈ {0,30,…,330}，12 个朝向），初始候选非空且规模 = 位置数 × 12（R4.1）
+#   - apply_silence(p)：删除 dist(p,s) ≤ 1000 m 且 p 在源 ±90° 扇区内的候选（R4.2）
+#   - apply_bearing(p, svd)：仅保留源方位与 svd 角差 ≤ 7°（1°+6° 离散容差）
+#     且 p 在源扇区内的候选（R4.3）
+#
+# 结论：现有实现三项行为均正确，本次为验证性回归，未改动 directional.py。
+# =============================================================================
+
+from src.b_sim.arena import ARENA_RADIUS as _ARENA_RADIUS  # noqa: E402
+from src.b_sim.arena import RECEPTION_MIN_M as _RECEPTION_MIN_M  # noqa: E402
+from src.b_sim.directional import (  # noqa: E402
+    DirectionalBelief,
+    _grid_positions,
+    _headings,
+    in_beam,
+)
+
+
+def test_task71_fresh_headings_are_twelve_multiples_of_30():
+    """R4.1：朝向步长 30° → φ ∈ {0,30,…,330}，恰 12 个朝向值。"""
+    headings = _headings()
+    assert headings == [float(k * 30) for k in range(12)]
+    assert len(headings) == 12
+    # 相邻朝向间隔恒为 30°，且不含 360（半开区间）。
+    assert all(headings[i + 1] - headings[i] == 30.0 for i in range(11))
+    assert 360.0 not in headings
+
+
+def test_task71_fresh_positions_within_radius_and_step_120():
+    """R4.1：位置步长 120 m 的格点全部落在半径 1800 m 圆域内，且集合非空。"""
+    positions = _grid_positions()
+    assert len(positions) > 0
+    # 全部在圆域内（含边界）。
+    assert all(math.hypot(x, y) <= _ARENA_RADIUS + 1e-9 for x, y in positions)
+    # 步长为 120 m：所有坐标都是 120 的整数倍，且原点在网格上。
+    assert all(
+        abs(x % 120.0) < 1e-9 or abs(x % 120.0 - 120.0) < 1e-9 for x, y in positions
+    )
+    assert (0.0, 0.0) in positions
+
+
+def test_task71_fresh_candidate_set_nonempty_and_full_domain():
+    """R4.1：初始候选 = 位置数 × 12 个朝向，非空，且每个候选朝向标签为 0。"""
+    belief = DirectionalBelief.fresh()
+    positions = _grid_positions()
+    assert belief.alive is True
+    assert len(belief.candidates) > 0
+    assert len(belief.candidates) == len(positions) * 12
+    # 位置索引覆盖全部格点、朝向索引覆盖 0..11、tag 恒为 0。
+    pos_idx = {pi for pi, _, _ in belief.candidates}
+    head_idx = {hi for _, hi, _ in belief.candidates}
+    assert pos_idx == set(range(len(positions)))
+    assert head_idx == set(range(12))
+    assert all(tag == 0 for _, _, tag in belief.candidates)
+
+
+def test_task71_apply_silence_removes_in_sector_within_1000():
+    """R4.2：p 距源 ≤ 1000 m 且落在源 ±90° 扇区内 → 该 (位置,朝向) 候选被删除。
+
+    源置于原点、朝向 0°（波束指向 +x）。观测点 (600,0) 在 +x 扇区内、距源 600 m。
+    """
+    belief = DirectionalBelief.fresh()
+    idx0 = belief.positions.index((0.0, 0.0))
+    h0 = belief.headings.index(0.0)
+    obs = (600.0, 0.0)
+    # 前置条件：观测点在扇区内且在 1000 m 内。
+    assert in_beam(0.0, 0.0, 0.0, *obs) is True
+    assert math.hypot(*obs) <= _RECEPTION_MIN_M
+    belief.apply_silence(*obs)
+    assert (idx0, h0, 0) not in belief.candidates
+
+
+def test_task71_apply_silence_retains_out_of_sector_candidate():
+    """R4.2：同一沉默观测点对「朝向使其落在扇区外」的候选不删除。
+
+    源在原点、朝向 180°（波束指向 -x）。观测点 (600,0) 在其扇区外 → 候选保留。
+    """
+    belief = DirectionalBelief.fresh()
+    idx0 = belief.positions.index((0.0, 0.0))
+    h180 = belief.headings.index(180.0)
+    obs = (600.0, 0.0)
+    assert in_beam(0.0, 0.0, 180.0, *obs) is False
+    belief.apply_silence(*obs)
+    assert (idx0, h180, 0) in belief.candidates
+
+
+def test_task71_apply_silence_retains_candidate_beyond_1000():
+    """R4.2：p 在扇区内但距源 > 1000 m（保守下限之外）→ 候选保留。"""
+    belief = DirectionalBelief.fresh()
+    idx0 = belief.positions.index((0.0, 0.0))
+    h0 = belief.headings.index(0.0)
+    far = (1500.0, 0.0)  # 在 +x 扇区内，但距原点 1500 m > 1000 m
+    assert in_beam(0.0, 0.0, 0.0, *far) is True
+    assert math.hypot(*far) > _RECEPTION_MIN_M
+    belief.apply_silence(*far)
+    assert (idx0, h0, 0) in belief.candidates
+
+
+def test_task71_apply_bearing_keeps_true_state_on_correct_observation():
+    """R4.3：与 svd 一致且 p 在扇区内的候选保留（真值近邻格点存活）。
+
+    源在原点、朝向 0°；观测点 (600,0)，源相对该点的方位角为 180°。svd=180°
+    的正确观测应保留原点候选。
+    """
+    belief = DirectionalBelief.fresh()
+    idx0 = belief.positions.index((0.0, 0.0))
+    h0 = belief.headings.index(0.0)
+    obs = (600.0, 0.0)
+    # bearing(source from p) = atan2(0-0, 0-600) = 180°
+    belief.apply_bearing(*obs, svd_deg=180.0)
+    assert (idx0, h0, 0) in belief.candidates
+
+
+def test_task71_apply_bearing_drops_inconsistent_bearing():
+    """R4.3：源方位与 svd 角差超出容差（> 7°）的候选被删除。"""
+    belief_wrong = DirectionalBelief.fresh()
+    idx0 = belief_wrong.positions.index((0.0, 0.0))
+    h0 = belief_wrong.headings.index(0.0)
+    obs = (600.0, 0.0)  # 真实方位 180°
+    belief_wrong.apply_bearing(*obs, svd_deg=90.0)  # 差 90° ≫ 7°
+    assert (idx0, h0, 0) not in belief_wrong.candidates
+
+
+def test_task71_apply_bearing_tolerance_boundary_7deg():
+    """R4.3：容差为 ±1° + 6° 离散 = 7°。真实方位 180°：185°（差 5°）保留，
+    188°（差 8°）删除，固定 7° 边界语义。"""
+    obs = (600.0, 0.0)  # 真实方位 180°
+
+    keep = DirectionalBelief.fresh()
+    idx0 = keep.positions.index((0.0, 0.0))
+    h0 = keep.headings.index(0.0)
+    keep.apply_bearing(*obs, svd_deg=185.0)
+    assert (idx0, h0, 0) in keep.candidates
+
+    drop = DirectionalBelief.fresh()
+    drop.apply_bearing(*obs, svd_deg=188.0)
+    assert (idx0, h0, 0) not in drop.candidates
+
+
+def test_task71_apply_bearing_drops_out_of_sector_even_if_bearing_matches():
+    """R4.3：即使方位与 svd 一致，若 p 不在候选源扇区内，候选仍被删除。
+
+    源在原点、朝向 180°（波束 -x），观测点 (600,0) 在其扇区外；svd=180° 方位一致
+    但因扇区约束仍应删除该候选。
+    """
+    belief = DirectionalBelief.fresh()
+    idx0 = belief.positions.index((0.0, 0.0))
+    h180 = belief.headings.index(180.0)
+    obs = (600.0, 0.0)
+    assert in_beam(0.0, 0.0, 180.0, *obs) is False
+    belief.apply_bearing(*obs, svd_deg=180.0)
+    assert (idx0, h180, 0) not in belief.candidates
