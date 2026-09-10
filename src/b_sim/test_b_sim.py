@@ -1368,3 +1368,325 @@ def test_lateral_error_strictly_increasing():
         assert b > a
     # 显式两两抽样再确认严格性。
     assert lateral_error_at(1500.0) > lateral_error_at(1000.0) > lateral_error_at(100.0) > lateral_error_at(0.0)
+
+
+# ---------------------------------------------------------------------------
+# 任务 6.1：核对情节循环、原点普扫、覆盖站位与就近贪心路由（R3.1 / R3.2 / R3.11）
+# Feature: b-radio-interference-locate-clear
+#
+# 本节为「验证/加固」任务的回归测试。核对项：
+#   (a) DogStrategy.run 在离开原点前，对频道 1–20 各执行至少一次原点普扫检测（R3.1）；
+#   (b) 覆盖站位集合 = {原点} ∪ Ring(1250, 12)（13 站位），coverage_design 计算的最坏
+#       覆盖间隙 ≈ 670 m 且严格 < 1000 m（R3.2）；
+#   (c) _home_all / _walk_ring 采用就近贪心排序（每步选到当前位置最近者）（R3.11）。
+# ---------------------------------------------------------------------------
+
+import threading as _threading61
+
+from src.b_sim.arena import (
+    ARENA_RADIUS as _ARENA_RADIUS_61,
+    Arena as _Arena61,
+    Case as _Case61,
+    Jammer as _Jammer61,
+    CHANNEL_MIN as _CH_MIN_61,
+    CHANNEL_MAX as _CH_MAX_61,
+    RECEPTION_MIN_M as _RECEPTION_MIN_61,
+)
+from src.b_sim.client import RobotClient as _RobotClient61
+from src.b_sim.coverage_design import ring as _cov_ring, worst_coverage_gap as _worst_gap
+from src.b_sim.server import Session as _Session61, make_server as _make_server61
+from src.b_sim.strategy import (
+    ChannelState as _ChannelState61,
+    DogStrategy as _DogStrategy61,
+    StrategyConfig as _StrategyConfig61,
+)
+
+
+def _run_strategy_against_mock(case, config=None):
+    """在本地 mock 服务上跑一局策略，返回 (summary, client)，便于检查 client.log。"""
+    arena = _Arena61(case)
+    session = _Session61("t61", arena)
+    httpd = _make_server61(session, port=0)
+    port = httpd.server_address[1]
+    thread = _threading61.Thread(target=httpd.serve_forever, daemon=True)
+    thread.start()
+    try:
+        client = _RobotClient61("t61", base_url=f"http://127.0.0.1:{port}")
+        strategy = _DogStrategy61(client, config)
+        summary = strategy.run()
+    finally:
+        httpd.shutdown()
+        httpd.server_close()
+    return summary, client, arena
+
+
+def _is_origin(pos, tol=1e-9):
+    return math.hypot(pos["x"], pos["y"]) <= tol
+
+
+# ---- (a) R3.1：原点普扫 1–20，离开原点前每频道 ≥1 次 /measure ----
+
+def test_run_sweeps_all_channels_at_origin_before_leaving_origin():
+    """R3.1：run() 在离开原点前对频道 1–20 各普扫至少一次 /measure。
+
+    构造一个所有源都远离原点（原点不可见）的小案例，使原点普扫全部 no_signal，
+    从而不会在原点触发 clear，也不会因近距离源提前进入归航；随后检查 client.log 中
+    第一段位于原点的 /measure 恰好覆盖频道 1–20 各一次，且这些普扫全部先于任何
+    非原点动作（measure 或 clear）。
+    """
+    # 三个源，均在距原点 > 其接收半径处（原点收不到信号）。频道 1/2/3。
+    jammers = [
+        _Jammer61(channel=1, x=1600.0, y=0.0, reception_radius_m=1000.0),
+        _Jammer61(channel=2, x=-1500.0, y=200.0, reception_radius_m=1000.0),
+        _Jammer61(channel=3, x=0.0, y=-1700.0, reception_radius_m=1000.0),
+    ]
+    case = _Case61(jammers=jammers, error_salt="t61", seed=0)
+    _summary, client, _arena = _run_strategy_against_mock(case)
+
+    # 找出第一个非原点动作（measure 或 clear）在日志中的下标。
+    first_non_origin_idx = None
+    for i, entry in enumerate(client.log):
+        if entry["path"] not in ("/measure", "/clear"):
+            continue
+        if not _is_origin(entry["request"]["position"]):
+            first_non_origin_idx = i
+            break
+    if first_non_origin_idx is None:
+        first_non_origin_idx = len(client.log)
+
+    # 原点普扫阶段的 /measure：位于第一个非原点动作之前，且位置恰为原点。
+    origin_measure_channels = [
+        entry["request"]["channel"]
+        for entry in client.log[:first_non_origin_idx]
+        if entry["path"] == "/measure" and _is_origin(entry["request"]["position"])
+    ]
+    # 频道 1–20 每个至少被普扫一次（离开原点前）。
+    for ch in range(_CH_MIN_61, _CH_MAX_61 + 1):
+        assert ch in origin_measure_channels, f"频道 {ch} 未在离开原点前普扫"
+    # 恰好 20 次原点普扫（每频道 1 次），无重复/遗漏。
+    assert sorted(origin_measure_channels) == list(range(_CH_MIN_61, _CH_MAX_61 + 1))
+
+
+def test_sweep_at_origin_measures_each_channel_exactly_once():
+    """R3.1：_sweep_at 从初始状态（无示向度、未清除）对给定频道各测一次。"""
+    jammers = [_Jammer61(channel=5, x=1650.0, y=0.0, reception_radius_m=1000.0)]
+    case = _Case61(jammers=jammers, error_salt="t61b", seed=0)
+    arena = _Arena61(case)
+    session = _Session61("t61b", arena)
+    httpd = _make_server61(session, port=0)
+    port = httpd.server_address[1]
+    thread = _threading61.Thread(target=httpd.serve_forever, daemon=True)
+    thread.start()
+    try:
+        client = _RobotClient61("t61b", base_url=f"http://127.0.0.1:{port}")
+        client.enter()
+        strategy = _DogStrategy61(client)
+        strategy._sweep_at((0.0, 0.0), range(_CH_MIN_61, _CH_MAX_61 + 1))
+        client.exit()
+    finally:
+        httpd.shutdown()
+        httpd.server_close()
+    measured = [e["request"]["channel"] for e in client.log if e["path"] == "/measure"]
+    assert sorted(measured) == list(range(_CH_MIN_61, _CH_MAX_61 + 1))
+    # 全部位于原点。
+    assert all(_is_origin(e["request"]["position"]) for e in client.log if e["path"] == "/measure")
+
+
+def test_run_order_origin_sweep_precedes_ring_and_retry():
+    """R3.1：run() 的默认阶段顺序为「原点普扫 → 归航/环补扫 → 内圈重测」。
+
+    通过在 DogStrategy 上打桩记录各阶段调用次序，确认 _sweep_at 首个被调用，
+    且 _probe_ring / _inner_retry 均在其之后。
+    """
+    jammers = [_Jammer61(channel=1, x=1600.0, y=0.0, reception_radius_m=1000.0)]
+    case = _Case61(jammers=jammers, error_salt="t61c", seed=0)
+    arena = _Arena61(case)
+    session = _Session61("t61c", arena)
+    httpd = _make_server61(session, port=0)
+    port = httpd.server_address[1]
+    thread = _threading61.Thread(target=httpd.serve_forever, daemon=True)
+    thread.start()
+    calls: list[str] = []
+    try:
+        client = _RobotClient61("t61c", base_url=f"http://127.0.0.1:{port}")
+        strategy = _DogStrategy61(client)
+        orig_sweep = strategy._sweep_at
+        orig_home = strategy._home_all
+        orig_ring = strategy._probe_ring
+        orig_revive = strategy._revive_exhausted
+        orig_retry = strategy._inner_retry
+
+        def rec(name, fn):
+            def wrapper(*a, **k):
+                calls.append(name)
+                return fn(*a, **k)
+            return wrapper
+
+        strategy._sweep_at = rec("sweep", orig_sweep)          # type: ignore[assignment]
+        strategy._home_all = rec("home", orig_home)            # type: ignore[assignment]
+        strategy._probe_ring = rec("ring", orig_ring)          # type: ignore[assignment]
+        strategy._revive_exhausted = rec("revive", orig_revive)  # type: ignore[assignment]
+        strategy._inner_retry = rec("retry", orig_retry)       # type: ignore[assignment]
+        strategy.run()
+    finally:
+        httpd.shutdown()
+        httpd.server_close()
+
+    assert calls, "策略未执行任何阶段"
+    assert calls[0] == "sweep", f"首阶段应为原点普扫，实际 {calls[0]}"
+    sweep_i = calls.index("sweep")
+    # 归航、环补扫、复活、内圈重测均在原点普扫之后。
+    for phase in ("home", "ring", "revive", "retry"):
+        assert phase in calls, f"缺少阶段 {phase}"
+        assert calls.index(phase) > sweep_i, f"阶段 {phase} 早于原点普扫"
+    # 具体子序列：sweep → home → ring → revive → home → retry。
+    assert calls.index("ring") > calls.index("home")
+    assert calls.index("revive") > calls.index("ring")
+    assert calls.index("retry") > calls.index("revive")
+
+
+# ---- (b) R3.2：覆盖站位 {原点} ∪ Ring(1250,12) 最坏间隙 ≈670 m < 1000 m ----
+
+def test_coverage_stations_are_origin_plus_ring_1250_x12():
+    """R3.2：策略配置的覆盖环参数即 Ring(1250 m, 12)，合计 13 站位（含原点）。"""
+    cfg = _StrategyConfig61()
+    assert cfg.probe_ring_radius == pytest.approx(1250.0)
+    assert cfg.probe_ring_stations == 12
+    # 单环情形（全向 Q3）不启用外环。
+    assert cfg.use_outer_ring is False
+    assert cfg.directional_probe is False
+    stations = [(0.0, 0.0)] + _cov_ring(cfg.probe_ring_radius, cfg.probe_ring_stations)
+    assert len(stations) == 13
+    # 环站位均在半径 1250 m 上。
+    for px, py in stations[1:]:
+        assert math.hypot(px, py) == pytest.approx(1250.0, abs=1e-6)
+
+
+def test_worst_coverage_gap_is_about_670m_and_below_reception_min():
+    """R3.2：coverage_design.worst_coverage_gap({原点}∪Ring(1250,12)) ≈ 670 m 且 < 1000 m。"""
+    stations = [(0.0, 0.0)] + _cov_ring(1250.0, 12)
+    gap, worst_point = _worst_gap(stations, grid=300)
+    # 设计文档 §2.4 / coverage_design 结论表载明最坏间隙 = 670 m。
+    assert gap == pytest.approx(670.0, abs=6.0), f"最坏间隙 {gap:.1f} m 偏离 670 m"
+    # 严格小于全向源最小有效接收半径 → 保证发现任一全向源。
+    assert gap < _RECEPTION_MIN_61
+    # 最坏点应落在竞技场内。
+    assert math.hypot(*worst_point) <= _ARENA_RADIUS_61 + 1e-6
+
+
+def test_probe_stations_single_ring_for_omni_case():
+    """R3.2：全向情形 _probe_stations 只产生一层内环（12 站位），不含外环。"""
+    strategy = _DogStrategy61(client=None, config=_StrategyConfig61())  # 不触网，仅算站位
+    rings = strategy._probe_stations()
+    assert len(rings) == 1, "全向情形应只有内环一层"
+    assert len(rings[0]) == 12
+    for px, py in rings[0]:
+        assert math.hypot(px, py) == pytest.approx(1250.0, abs=1e-6)
+
+
+# ---- (c) R3.11：_home_all / _walk_ring 就近贪心排序 ----
+
+def test_home_all_visits_nearest_channel_first():
+    """R3.11：_home_all 每步选取到当前位置估计最近的频道优先归航。
+
+    构造三个已带估计位置的频道，用打桩的 _home_channel 记录被处理的顺序，
+    断言其按到当前位置（原点）的距离升序被选取。
+    """
+    strategy = _DogStrategy61(client=None, config=_StrategyConfig61())
+    strategy.pos = (0.0, 0.0)
+    # 手工装配三个"已可定位"的频道，estimate 距原点分别为 300 / 100 / 700。
+    specs = {
+        1: (300.0, 0.0),
+        2: (0.0, 100.0),
+        3: (700.0, 0.0),
+    }
+    for ch, est in specs.items():
+        st = strategy.channels[ch]
+        st.bearings = [_bearing_from(est)]  # 让 active=True
+        st.estimate = est
+        st.diameter = 10.0
+    # 其余频道无观测（inactive），不参与。
+    visited_order: list[int] = []
+
+    def fake_home_channel(state):
+        visited_order.append(state.channel)
+        state.cleared = True  # 处理完即清除，退出 active 集合
+        return True
+
+    strategy._home_channel = fake_home_channel  # type: ignore[assignment]
+    strategy._stop = lambda: False              # type: ignore[assignment]
+    strategy._home_all()
+    # 按到原点距离升序：ch2 (100) → ch1 (300) → ch3 (700)。
+    assert visited_order == [2, 1, 3]
+
+
+def _bearing_from(est):
+    from src.b_sim.geometry import Bearing as _B
+    return _B(0.0, 0.0, math.degrees(math.atan2(est[1], est[0])))
+
+
+def test_walk_ring_pops_nearest_station_first():
+    """R3.11：_walk_ring 每步弹出到当前位置最近的站位（就近贪心压缩空驶）。"""
+    strategy = _DogStrategy61(client=None, config=_StrategyConfig61())
+    strategy.pos = (0.0, 0.0)
+    # 让至少一个频道成为补扫对象（未清除、无示向度），使 _walk_ring 有事可做。
+    target = strategy.channels[1]
+    target.cleared = False
+    target.bearings = []
+    strategy._stop = lambda: False  # type: ignore[assignment]
+
+    visited_stations: list[tuple[float, float]] = []
+
+    def fake_probe(point, state):
+        visited_stations.append(point)
+        # 处理后清除该频道，使 _probe_target 变 False，循环终止。
+        state.cleared = True
+
+    def fake_home_all():
+        return None
+
+    strategy._probe_channel_at = fake_probe  # type: ignore[assignment]
+    strategy._home_all = fake_home_all       # type: ignore[assignment]
+
+    # 站位到原点距离：A=1000, B=200, C=1500 → 应先访问 B（最近）。
+    ring_stations = [(1000.0, 0.0), (0.0, 200.0), (1500.0, 0.0)]
+    strategy._walk_ring(ring_stations)
+    assert visited_stations, "未访问任何站位"
+    assert visited_stations[0] == (0.0, 200.0), "首站应为距当前位置最近者"
+
+
+def test_walk_ring_reorders_by_current_position_each_step():
+    """R3.11：就近排序基于「当前位置」而非固定原点——移动后重新按最近选取。
+
+    保留两个补扫对象，令处理首站后位置移动到该站，验证下一站按新位置最近选取。
+    """
+    strategy = _DogStrategy61(client=None, config=_StrategyConfig61())
+    strategy.pos = (0.0, 0.0)
+    # 两个频道待补扫。
+    for ch in (1, 2):
+        st = strategy.channels[ch]
+        st.cleared = False
+        st.bearings = []
+    strategy._stop = lambda: False  # type: ignore[assignment]
+
+    # 记录被访问的「站位序列」（同一站位内可能对多个频道各测一次，只记站位本身，
+    # 且只在站位变化时追加，得到去重后的到访顺序）。
+    station_seq: list[tuple[float, float]] = []
+    # 每访问一个「新」站位就清除一个频道，使 _walk_ring 恰好访问两个不同站位后终止。
+    pending_clear = [1, 2]
+
+    def fake_probe(point, state):
+        if not station_seq or station_seq[-1] != point:
+            station_seq.append(point)
+            strategy.pos = point  # 移动到该站位
+            if pending_clear:
+                strategy.channels[pending_clear.pop(0)].cleared = True
+
+    strategy._probe_channel_at = fake_probe  # type: ignore[assignment]
+    strategy._home_all = lambda: None        # type: ignore[assignment]
+
+    # 三站：A=(0,300) d=300, B=(0,400) d=400, C=(0,-100) d=100。
+    # 首步从原点选最近 C=(0,-100)；移动到 C 后，A 距 C=400、B 距 C=500 → 选 A（不是 B）。
+    strategy._walk_ring([(0.0, 300.0), (0.0, 400.0), (0.0, -100.0)])
+    assert station_seq[0] == (0.0, -100.0)
+    assert station_seq[1] == (0.0, 300.0)
