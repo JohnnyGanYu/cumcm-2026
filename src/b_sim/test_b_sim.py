@@ -30,6 +30,7 @@ from src.b_sim.geometry import (
     localization_polygon,
     localization_region,
     polygon_diameter,
+    second_point_candidates,
 )
 from src.b_sim.server import Session, make_server
 
@@ -600,3 +601,60 @@ def test_boundary_coordinate_exactly_two_million_is_allowed_by_client_gate():
     with pytest.raises(ProtocolError):
         RobotClient._check_coord(2_000_000.0 + 1e-3, 0.0)  # 略超 → 拒绝
 
+
+
+
+# ---------- 任务 9.2：批量彩排统计与官方校准记录（R6.3 / R6.4 / R6.5）----------
+# Feature: b-radio-interference-locate-clear
+# 核对 rehearse.py 能对本地 mock 服务批量彩排并汇总 T̄、清除率、程序运行时长。
+# 批量规模保持小（少量局）以确保测试快速；上限（Q3≥60/Q4≥40）在 rehearse.main 由
+# --episodes 控制，此处只验证聚合契约与量值合理性。
+
+from src.b_sim.rehearse import aggregate as _rehearse_aggregate
+from src.b_sim.rehearse import run_episode as _rehearse_run_episode
+
+
+def test_rehearse_small_batch_aggregates_scoring_fields():
+    """R6.3：批量彩排（此处用小批量保证快速）应汇总清除个数、清除率、T̄、运行时长。
+
+    对本地 mock 服务连跑几局，aggregate() 返回的字典须含全部评分项字段且量值合理：
+      - cleared_total：累计已清除个数（整数，0 ≤ 值 ≤ 真实源总数）
+      - clear_rate / full_clear_rate：清除率 ∈ [0, 1]
+      - mean_clear_time_s_mean：平均定位清除时间 T̄（> 0）
+      - program_wall_s_mean / _max：程序运行时长（≥ 0 现实秒）
+    正式 Q3≥60 / Q4≥40 的批量规模由 rehearse.main 的 --episodes 控制，聚合逻辑同此。
+    """
+    episodes = [_rehearse_run_episode(2000 + i, count=10) for i in range(3)]
+    agg = _rehearse_aggregate(episodes)
+
+    # 局数与清除个数
+    assert agg["episodes"] == 3
+    assert isinstance(agg["cleared_total"], int)
+    assert 0 <= agg["cleared_total"] <= agg["total_jammers_total"]
+    assert agg["total_jammers_total"] == sum(e["total_jammers"] for e in episodes)
+
+    # 清除率
+    assert 0.0 <= agg["clear_rate"] <= 1.0
+    assert 0.0 <= agg["full_clear_rate"] <= 1.0
+    assert 0.0 <= agg["cleared_ratio_min"] <= agg["cleared_ratio_mean"] <= 1.0
+
+    # 平均定位清除时间 T̄（只要有清除即应为正值）
+    assert agg["mean_clear_time_s_mean"] is not None
+    assert agg["mean_clear_time_s_mean"] > 0.0
+    assert agg["mean_clear_time_s_max"] >= agg["mean_clear_time_s_mean"]
+
+    # 程序运行时长（现实秒）
+    assert agg["program_wall_s_mean"] is not None
+    assert agg["program_wall_s_mean"] >= 0.0
+    assert agg["program_wall_s_max"] >= agg["program_wall_s_mean"]
+
+
+def test_rehearse_aggregate_clear_rate_matches_manual_count():
+    """R6.3：clear_rate 应等于累计已清除个数 / 真实源总数，与逐局求和一致。"""
+    episodes = [_rehearse_run_episode(3000 + i, count=10) for i in range(2)]
+    agg = _rehearse_aggregate(episodes)
+    cleared = sum(e["cleared"] for e in episodes)
+    total = sum(e["total_jammers"] for e in episodes)
+    assert agg["cleared_total"] == cleared
+    assert agg["total_jammers_total"] == total
+    assert agg["clear_rate"] == pytest.approx(round(cleared / total, 4))
