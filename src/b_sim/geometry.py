@@ -63,6 +63,67 @@ def clip_polygon(polygon: list[tuple[float, float]], plane: tuple[float, float, 
     return out
 
 
+# 定位区域退化面积阈值（平方米）：交会面积不超过该值即视为空/退化交会。
+MIN_REGION_AREA = 1e-9
+
+
+def _polygon_area(polygon: list[tuple[float, float]]) -> float:
+    """凸多边形（顶点有序）的面积，鞋带公式，返回非负值。"""
+    n = len(polygon)
+    if n < 3:
+        return 0.0
+    area2 = 0.0
+    for i in range(n):
+        x1, y1 = polygon[i]
+        x2, y2 = polygon[(i + 1) % n]
+        area2 += x1 * y2 - x2 * y1
+    return abs(area2) / 2.0
+
+
+@dataclass(frozen=True)
+class LocalizationRegion:
+    """定位区域结果：顶点列表 + 退化/空交会指示。
+
+    - ``vertices``: 楔形交会所得凸多边形顶点（逆时针）；空/退化时为 ``[]``。
+    - ``empty``: 交会为空或面积 ≤ ``MIN_REGION_AREA``（观测互相矛盾/退化）时为 ``True``。
+    - ``reason``: 供人读的说明；``empty`` 为 ``True`` 时取 ``"交会为空"``。
+    """
+
+    vertices: list[tuple[float, float]]
+    empty: bool
+    reason: str = ""
+
+    def __bool__(self) -> bool:  # 兼容 ``if region:`` 用法
+        return not self.empty
+
+
+def localization_region(
+    bearings: list[Bearing],
+    *,
+    error_deg: float = ERROR_ABS_MAX_DEG,
+    bound: float = 4.0 * ARENA_RADIUS,
+) -> LocalizationRegion:
+    """多个检测点的楔形交会得到的凸定位区域，附带"交会为空"指示。
+
+    R1.2：观测数 ``N < 2`` 时拒绝输入（抛 ``ValueError``），不产生定位区域。
+    R1.4：各楔形之交为空或面积 ≤ ``MIN_REGION_AREA``（矛盾/退化）时返回空区域并标记
+    ``empty=True``、``reason="交会为空"``。
+    """
+    if len(bearings) < 2:
+        raise ValueError(
+            f"交会定位至少需要 2 个检测点，收到 {len(bearings)} 个（R1.2）"
+        )
+    polygon = [(-bound, -bound), (bound, -bound), (bound, bound), (-bound, bound)]
+    for bearing in bearings:
+        for plane in wedge_half_planes(bearing, error_deg):
+            polygon = clip_polygon(polygon, plane)
+            if not polygon:
+                return LocalizationRegion([], empty=True, reason="交会为空")
+    if _polygon_area(polygon) <= MIN_REGION_AREA:
+        return LocalizationRegion([], empty=True, reason="交会为空")
+    return LocalizationRegion(polygon, empty=False)
+
+
 def localization_polygon(
     bearings: list[Bearing],
     *,
@@ -71,19 +132,22 @@ def localization_polygon(
 ) -> list[tuple[float, float]]:
     """多个检测点的楔形交会得到的凸定位区域顶点（逆时针）。
 
-    以一个足够大的正方形为初始区域，逐个半平面裁剪。区域为空时返回 []。
+    以一个足够大的正方形为初始区域，逐个半平面裁剪。
+
+    - R1.2：观测数 ``N < 2`` 时抛 ``ValueError``（此前静默返回 ``[]``）。
+    - R1.4：交会为空或面积 ≤ ``MIN_REGION_AREA`` 时返回 ``[]``（"交会为空"，可用
+      :func:`localization_region` 取得显式指示）。
     """
-    polygon = [(-bound, -bound), (bound, -bound), (bound, bound), (-bound, bound)]
-    for bearing in bearings:
-        for plane in wedge_half_planes(bearing, error_deg):
-            polygon = clip_polygon(polygon, plane)
-            if not polygon:
-                return []
-    return polygon
+    return localization_region(bearings, error_deg=error_deg, bound=bound).vertices
 
 
 def polygon_diameter(polygon: list[tuple[float, float]]) -> tuple[float, tuple[float, float], tuple[float, float]]:
-    """凸多边形直径：任意两点最大距离，必在顶点对上取到。返回 (直径, 端点A, 端点B)。"""
+    """凸多边形直径：任意两点最大距离，必在顶点对上取到。返回 (直径, 端点A, 端点B)。
+
+    R1.5：存在多个取得最大距离的顶点对时，确定性地返回**按顶点索引 (i, j) 升序的首个**
+    （外层 ``i`` 升序、内层 ``j`` 升序，配合严格大于比较，只有更大的距离才会替换当前最优，
+    故首个达到最大值的顶点对被保留）。
+    """
     if len(polygon) < 2:
         return 0.0, (0.0, 0.0), (0.0, 0.0)
     best = -1.0
@@ -91,7 +155,7 @@ def polygon_diameter(polygon: list[tuple[float, float]]) -> tuple[float, tuple[f
     for i in range(len(polygon)):
         for j in range(i + 1, len(polygon)):
             d = math.hypot(polygon[i][0] - polygon[j][0], polygon[i][1] - polygon[j][1])
-            if d > best:
+            if d > best:  # 严格大于 → 保留首个（索引升序）达到最大距离的顶点对
                 best, pair = d, (polygon[i], polygon[j])
     return best, pair[0], pair[1]
 

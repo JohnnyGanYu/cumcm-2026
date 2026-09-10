@@ -373,10 +373,10 @@ def test_localization_produces_region_for_good_crossing():
 
 
 def test_empty_intersection_returns_empty_region_indicator():
-    # R1.4：两条方向相反、张角不相交的示向度 → 交会为空
+    # R1.4：两个检测点的示向度彼此背离（源需同时落在两点的"外侧"），楔形之交为空
     bearings = [
-        Bearing(0.0, 0.0, 90.0),     # 从原点朝北
-        Bearing(0.0, 500.0, 270.0),  # 从北侧点朝南（背离）→ 楔形不相交
+        Bearing(-100.0, 0.0, 180.0),  # 从左侧点朝西（背离右点）
+        Bearing(100.0, 0.0, 0.0),     # 从右侧点朝东（背离左点）
     ]
     region = localization_region(bearings)
     assert region.empty is True
@@ -387,10 +387,10 @@ def test_empty_intersection_returns_empty_region_indicator():
 
 
 def test_degenerate_small_area_returns_empty_region_indicator():
-    # R1.4：两条几乎平行的示向度交会面积 ≤ 1e-9 → 视为退化"交会为空"
+    # R1.4：同一检测点两条不同示向度的楔形仅交于顶点，面积 ≤ 1e-9 → 退化"交会为空"
     bearings = [
-        Bearing(0.0, 0.0, 0.0),        # 沿 +x 方向
-        Bearing(0.0, 1e-6, 0.0),       # 平行、极近 → 交会面积极小
+        Bearing(0.0, 0.0, 0.0),   # 从原点朝东
+        Bearing(0.0, 0.0, 90.0),  # 从原点朝北 → 两楔形仅在原点相交
     ]
     region = localization_region(bearings)
     assert region.empty is True
