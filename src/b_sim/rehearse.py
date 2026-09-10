@@ -105,6 +105,8 @@ def main() -> None:
     parser.set_defaults(outer_ring=None)
     parser.add_argument("--outer-radius", type=float, default=None)
     parser.add_argument("--outer-stations", type=int, default=None)
+    parser.add_argument("--home-batch", type=int, default=None,
+                        help="扫过几个站位后统一归航（1=逐站归航）")
     args = parser.parse_args()
 
     config = StrategyConfig(directional_probe=args.directional > 0)
@@ -120,6 +122,8 @@ def main() -> None:
         config.outer_ring_radius = args.outer_radius
     if args.outer_stations is not None:
         config.outer_ring_stations = args.outer_stations
+    if args.home_batch is not None:
+        config.home_batch_stations = args.home_batch
 
     episodes = []
     for i in range(args.episodes):

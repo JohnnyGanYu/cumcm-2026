@@ -93,6 +93,25 @@ def main() -> None:
     print(f"平均定位清除时间: {summary['mean_clear_time_s']} s   <-- 评分指标")
     print(f"检测次数:   {summary['measure_calls']}   清除调用: {summary['clear_calls']}")
     print(f"程序运行时间: {wall:.1f} s  (上限 1200)")
+
+    # 干扰源总数官方接口不返回（附件2 明确"不会通过接口直接返回"），
+    # 只能从认知状态推断，用于判断本局是否真的全清。
+    cleared = set(summary["cleared_channels"])
+    suspect = [ch for ch, st in strategy.channels.items()
+               if not st.cleared and (st.bearings or st.silent_points == [])]
+    silent_only = [ch for ch, st in strategy.channels.items()
+                   if not st.cleared and not st.bearings and st.silent_points]
+    print(f"\n--- 全清判定 ---")
+    print(f"已清除 {len(cleared)} 个: {sorted(cleared)}")
+    if suspect:
+        print(f"⚠ 疑似漏失 {len(suspect)} 个频道(曾收到信号却未清除): {sorted(suspect)}")
+        print(f"  本局很可能【未全清】")
+    else:
+        print(f"✓ 无\"曾收到信号却未清除\"的频道，本局很可能已全清")
+    print(f"全程沉默频道 {len(silent_only)} 个（推定无源）: {sorted(silent_only)}")
+    print(f"推定干扰源总数 = {len(cleared)}（题面范围 10-16）")
+    if not (10 <= len(cleared) <= 16):
+        print(f"  ⚠ 清除数 {len(cleared)} 落在 10-16 之外，说明确有漏失")
     if summary.get("events"):
         print("\n事件:")
         for e in summary["events"]:
@@ -105,6 +124,23 @@ def main() -> None:
         "directional": args.directional,
         "summary": summary,
         "program_wall_s": round(wall, 2),
+        "full_clear_assessment": {
+            "cleared_channels": sorted(cleared),
+            "cleared_count": len(cleared),
+            "suspect_missed_channels": sorted(suspect),
+            "silent_only_channels": sorted(silent_only),
+            "likely_full_clear": not suspect and 10 <= len(cleared) <= 16,
+            "note": "干扰源总数官方接口不返回；suspect=曾收到信号却未清除，非空即很可能漏失",
+        },
+        "per_channel_state": {
+            str(ch): {
+                "cleared": st.cleared,
+                "bearing_count": len(st.bearings),
+                "silent_count": len(st.silent_points),
+                "measure_count": st.measure_count,
+                "clear_attempts": st.clear_attempts,
+            } for ch, st in sorted(strategy.channels.items())
+        },
         "strategy_config": vars(config),
         "protocol_log": client.log,
     }, ensure_ascii=False, indent=2), encoding="utf-8")
