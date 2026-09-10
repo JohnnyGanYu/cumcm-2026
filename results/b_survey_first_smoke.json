@@ -1,0 +1,321 @@
+{
+  "report": {
+    "per_variant": {
+      "baseline": {
+        "variant": "baseline",
+        "episodes": 6,
+        "full_clear_rate": 1.0,
+        "cleared_ratio_mean": 1.0,
+        "total_missed": 0,
+        "mean_clear_time_s": 1088.5,
+        "virtual_s_mean": 14991,
+        "move_m_mean": 61393
+      },
+      "survey_first": {
+        "variant": "survey_first",
+        "episodes": 6,
+        "full_clear_rate": 1.0,
+        "cleared_ratio_mean": 1.0,
+        "total_missed": 0,
+        "mean_clear_time_s": 893.7,
+        "virtual_s_mean": 12293,
+        "move_m_mean": 50983
+      },
+      "hybrid": {
+        "variant": "hybrid",
+        "episodes": 6,
+        "full_clear_rate": 0.6667,
+        "cleared_ratio_mean": 0.971,
+        "total_missed": 2,
+        "mean_clear_time_s": 959.2,
+        "virtual_s_mean": 12681,
+        "move_m_mean": 52232
+      }
+    },
+    "baseline_mean_clear_time_s": 1088.5,
+    "paired_vs_baseline": {
+      "survey_first": {
+        "episodes": 6,
+        "d_mean_clear_time_s": -194.8,
+        "d_pct_of_baseline": -17.9,
+        "median_s": -199.4,
+        "ci95": [
+          -228.8,
+          -160.8
+        ],
+        "t": -11.23,
+        "better": 6,
+        "worse": 0,
+        "tie": 0,
+        "net_extra_cleared": 0
+      },
+      "hybrid": {
+        "episodes": 6,
+        "d_mean_clear_time_s": -129.3,
+        "d_pct_of_baseline": -11.88,
+        "median_s": -131.2,
+        "ci95": [
+          -200.8,
+          -57.8
+        ],
+        "t": -3.55,
+        "better": 5,
+        "worse": 1,
+        "tie": 0,
+        "net_extra_cleared": -2
+      }
+    }
+  },
+  "rows": [
+    {
+      "seed": 81000,
+      "variant": "baseline",
+      "total": 16,
+      "cleared": 16,
+      "ratio": 1.0,
+      "virtual_s": 15004.266017,
+      "mean_clear_time_s": 937.7666260625,
+      "measures": 329,
+      "clears": 25,
+      "move_m": 64886.330102922155,
+      "missed": []
+    },
+    {
+      "seed": 81000,
+      "variant": "survey_first",
+      "total": 16,
+      "cleared": 16,
+      "ratio": 1.0,
+      "virtual_s": 11411.546435,
+      "mean_clear_time_s": 713.2216521875,
+      "measures": 263,
+      "clears": 16,
+      "move_m": 49077.7321870119,
+      "missed": [],
+      "phase_a_end_vt": 4865
+    },
+    {
+      "seed": 81000,
+      "variant": "hybrid",
+      "total": 16,
+      "cleared": 16,
+      "ratio": 1.0,
+      "virtual_s": 11249.692445,
+      "mean_clear_time_s": 703.1057778125,
+      "measures": 284,
+      "clears": 25,
+      "move_m": 47553.46223617717,
+      "missed": [],
+      "phase_a_end_vt": 7336
+    },
+    {
+      "seed": 81001,
+      "variant": "baseline",
+      "total": 16,
+      "cleared": 16,
+      "ratio": 1.0,
+      "virtual_s": 15041.205103,
+      "mean_clear_time_s": 940.0753189375,
+      "measures": 382,
+      "clears": 17,
+      "move_m": 63601.02551885104,
+      "missed": []
+    },
+    {
+      "seed": 81001,
+      "variant": "survey_first",
+      "total": 16,
+      "cleared": 16,
+      "ratio": 1.0,
+      "virtual_s": 12510.592805,
+      "mean_clear_time_s": 781.9120503125,
+      "measures": 303,
+      "clears": 68,
+      "move_m": 52612.96405282208,
+      "missed": [],
+      "phase_a_end_vt": 5147
+    },
+    {
+      "seed": 81001,
+      "variant": "hybrid",
+      "total": 16,
+      "cleared": 16,
+      "ratio": 1.0,
+      "virtual_s": 13513.423035,
+      "mean_clear_time_s": 844.5889396875,
+      "measures": 339,
+      "clears": 67,
+      "move_m": 56577.115175159895,
+      "missed": [],
+      "phase_a_end_vt": 7480
+    },
+    {
+      "seed": 81002,
+      "variant": "baseline",
+      "total": 14,
+      "cleared": 14,
+      "ratio": 1.0,
+      "virtual_s": 15391.125186,
+      "mean_clear_time_s": 1099.3660847142858,
+      "measures": 465,
+      "clears": 14,
+      "move_m": 62870.62595293938,
+      "missed": []
+    },
+    {
+      "seed": 81002,
+      "variant": "survey_first",
+      "total": 14,
+      "cleared": 14,
+      "ratio": 1.0,
+      "virtual_s": 13491.115816,
+      "mean_clear_time_s": 963.6511297142857,
+      "measures": 356,
+      "clears": 69,
+      "move_m": 55945.57908690783,
+      "missed": [],
+      "phase_a_end_vt": 5411
+    },
+    {
+      "seed": 81002,
+      "variant": "hybrid",
+      "total": 14,
+      "cleared": 14,
+      "ratio": 1.0,
+      "virtual_s": 12594.390052,
+      "mean_clear_time_s": 899.5992894285715,
+      "measures": 351,
+      "clears": 41,
+      "move_m": 52011.95025493088,
+      "missed": [],
+      "phase_a_end_vt": 5901
+    },
+    {
+      "seed": 81003,
+      "variant": "baseline",
+      "total": 11,
+      "cleared": 11,
+      "ratio": 1.0,
+      "virtual_s": 14475.998759,
+      "mean_clear_time_s": 1315.9998871818182,
+      "measures": 539,
+      "clears": 11,
+      "move_m": 56104.99382093314,
+      "missed": []
+    },
+    {
+      "seed": 81003,
+      "variant": "survey_first",
+      "total": 11,
+      "cleared": 11,
+      "ratio": 1.0,
+      "virtual_s": 11709.113641,
+      "mean_clear_time_s": 1064.4648764545454,
+      "measures": 401,
+      "clears": 39,
+      "move_m": 46100.56821333058,
+      "missed": [],
+      "phase_a_end_vt": 5807
+    },
+    {
+      "seed": 81003,
+      "variant": "hybrid",
+      "total": 11,
+      "cleared": 10,
+      "ratio": 0.9090909090909091,
+      "virtual_s": 12257.683839,
+      "mean_clear_time_s": 1225.7683839,
+      "measures": 399,
+      "clears": 72,
+      "move_m": 48388.41920261747,
+      "missed": [
+        17
+      ],
+      "phase_a_end_vt": 5861
+    },
+    {
+      "seed": 81004,
+      "variant": "baseline",
+      "total": 15,
+      "cleared": 15,
+      "ratio": 1.0,
+      "virtual_s": 15890.040877,
+      "mean_clear_time_s": 1059.3360584666666,
+      "measures": 472,
+      "clears": 15,
+      "move_m": 65195.204413617124,
+      "missed": []
+    },
+    {
+      "seed": 81004,
+      "variant": "survey_first",
+      "total": 15,
+      "cleared": 15,
+      "ratio": 1.0,
+      "virtual_s": 12829.612297,
+      "mean_clear_time_s": 855.3074864666667,
+      "measures": 315,
+      "clears": 17,
+      "move_m": 54673.06148032515,
+      "missed": [],
+      "phase_a_end_vt": 5087
+    },
+    {
+      "seed": 81004,
+      "variant": "hybrid",
+      "total": 15,
+      "cleared": 15,
+      "ratio": 1.0,
+      "virtual_s": 13387.333065,
+      "mean_clear_time_s": 892.488871,
+      "measures": 357,
+      "clears": 67,
+      "move_m": 55401.66534901746,
+      "missed": [],
+      "phase_a_end_vt": 7556
+    },
+    {
+      "seed": 81005,
+      "variant": "baseline",
+      "total": 12,
+      "cleared": 12,
+      "ratio": 1.0,
+      "virtual_s": 14141.157856,
+      "mean_clear_time_s": 1178.4298213333334,
+      "measures": 496,
+      "clears": 12,
+      "move_m": 55700.78930469133,
+      "missed": []
+    },
+    {
+      "seed": 81005,
+      "variant": "survey_first",
+      "total": 12,
+      "cleared": 12,
+      "ratio": 1.0,
+      "virtual_s": 11803.735411,
+      "mean_clear_time_s": 983.6446175833333,
+      "measures": 367,
+      "clears": 45,
+      "move_m": 47488.67706183286,
+      "missed": [],
+      "phase_a_end_vt": 5609
+    },
+    {
+      "seed": 81005,
+      "variant": "hybrid",
+      "total": 12,
+      "cleared": 11,
+      "ratio": 0.9166666666666666,
+      "virtual_s": 13086.256194,
+      "mean_clear_time_s": 1189.659654,
+      "measures": 388,
+      "clears": 34,
+      "move_m": 53461.28097919253,
+      "missed": [
+        18
+      ],
+      "phase_a_end_vt": 6594
+    }
+  ]
+}

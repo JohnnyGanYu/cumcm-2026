@@ -1,0 +1,179 @@
+{
+  "report": {
+    "episodes": 8,
+    "dogleg_reject": {
+      "all_out_of_bounds": 6,
+      "other": 5
+    },
+    "step_reject": {
+      "other": 4,
+      "all_out_of_bounds": 1
+    },
+    "dogleg_detail": {
+      "n": 11,
+      "all_candidates_out_of_bounds": 6,
+      "pct_all_oob": 54.5,
+      "mean_pos_r": 1624,
+      "mean_consecutive_silent": 2.5
+    },
+    "step_closer_detail": {
+      "n": 5,
+      "all_candidates_out_of_bounds": 1,
+      "pct_all_oob": 20.0,
+      "mean_pos_r": 1235,
+      "mean_consecutive_silent": 1.6
+    },
+    "arena_radius": 1800.0
+  },
+  "samples": [
+    {
+      "where": "step_closer",
+      "channel": 10,
+      "pos_r": 811,
+      "est_r": 826,
+      "cands_out_of_bounds": 0,
+      "cands_total": 2,
+      "distance": 462,
+      "consecutive_silent": 2
+    },
+    {
+      "where": "dogleg",
+      "channel": 17,
+      "pos_r": 1739,
+      "cands_out_of_bounds": 5,
+      "cands_total": 5,
+      "homing_measures": 2,
+      "consecutive_silent": 2
+    },
+    {
+      "where": "dogleg",
+      "channel": 20,
+      "pos_r": 1779,
+      "cands_out_of_bounds": 4,
+      "cands_total": 5,
+      "homing_measures": 4,
+      "consecutive_silent": 4
+    },
+    {
+      "where": "dogleg",
+      "channel": 6,
+      "pos_r": 1797,
+      "cands_out_of_bounds": 5,
+      "cands_total": 5,
+      "homing_measures": 0,
+      "consecutive_silent": 0
+    },
+    {
+      "where": "dogleg",
+      "channel": 3,
+      "pos_r": 766,
+      "cands_out_of_bounds": 0,
+      "cands_total": 5,
+      "homing_measures": 5,
+      "consecutive_silent": 5
+    },
+    {
+      "where": "dogleg",
+      "channel": 6,
+      "pos_r": 1626,
+      "cands_out_of_bounds": 4,
+      "cands_total": 5,
+      "homing_measures": 3,
+      "consecutive_silent": 3
+    },
+    {
+      "where": "dogleg",
+      "channel": 15,
+      "pos_r": 1782,
+      "cands_out_of_bounds": 5,
+      "cands_total": 5,
+      "homing_measures": 5,
+      "consecutive_silent": 5
+    },
+    {
+      "where": "dogleg",
+      "channel": 17,
+      "pos_r": 1512,
+      "cands_out_of_bounds": 1,
+      "cands_total": 5,
+      "homing_measures": 5,
+      "consecutive_silent": 5
+    },
+    {
+      "where": "dogleg",
+      "channel": 10,
+      "pos_r": 1731,
+      "cands_out_of_bounds": 4,
+      "cands_total": 5,
+      "homing_measures": 1,
+      "consecutive_silent": 1
+    },
+    {
+      "where": "dogleg",
+      "channel": 12,
+      "pos_r": 1665,
+      "cands_out_of_bounds": 5,
+      "cands_total": 5,
+      "homing_measures": 3,
+      "consecutive_silent": 3
+    },
+    {
+      "where": "dogleg",
+      "channel": 18,
+      "pos_r": 1672,
+      "cands_out_of_bounds": 5,
+      "cands_total": 5,
+      "homing_measures": 0,
+      "consecutive_silent": 0
+    },
+    {
+      "where": "step_closer",
+      "channel": 20,
+      "pos_r": 963,
+      "est_r": 960,
+      "cands_out_of_bounds": 0,
+      "cands_total": 2,
+      "distance": 498,
+      "consecutive_silent": 2
+    },
+    {
+      "where": "step_closer",
+      "channel": 10,
+      "pos_r": 1849,
+      "est_r": 1839,
+      "cands_out_of_bounds": 0,
+      "cands_total": 2,
+      "distance": 384,
+      "consecutive_silent": 2
+    },
+    {
+      "where": "step_closer",
+      "channel": 5,
+      "pos_r": 863,
+      "est_r": 4279,
+      "cands_out_of_bounds": 2,
+      "cands_total": 2,
+      "distance": 4499,
+      "consecutive_silent": 0
+    },
+    {
+      "where": "step_closer",
+      "channel": 8,
+      "pos_r": 1689,
+      "est_r": 1676,
+      "cands_out_of_bounds": 0,
+      "cands_total": 2,
+      "distance": 347,
+      "consecutive_silent": 2
+    },
+    {
+      "where": "dogleg",
+      "channel": 7,
+      "pos_r": 1800,
+      "cands_out_of_bounds": 5,
+      "cands_total": 5,
+      "homing_measures": 0,
+      "consecutive_silent": 0
+    }
+  ]
+}

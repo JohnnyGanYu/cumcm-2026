@@ -135,6 +135,20 @@ class StrategyConfig:
     # 一分钱不省，反而因误杀真源触发复活绕路（3 局实测 477->545 s，变慢 14%）。
     # 故默认关闭（999）。若将来 Q3 也启用外环（31 站位），可设 13 生效。
     empty_verdict_stations: int = 999       # 全向：不同站位沉默数达此值即判空
+    # 就近复活：归航失败的频道不必等整环走完，机器狗路过其估计位置附近时立即重试。
+    # 根因实测（`src/b_tail_diag.py`，8 局）：
+    #   评分指标 mean_clear_time_s 的 55% 来自最慢 3 个源；
+    #   尾部源 = 第一次归航失败的源（头部源 fails=0，尾部源 fails=1）；
+    #   典型样本 t=119 s 就拿到示向度，却到 t=9398 s 才清除；
+    #   失败后等 p50=6809 s 才重试，而重试仅需 p50=248 s 就成功。
+    #   => 浪费的是**等待**，因为 `_revive_exhausted` 只在整环走完后调用。
+    # 半径标定（98 局 4 档配对实测，`src/b_nearby_revive.py`）：
+    #   600 m: -3.0%   900 m: -4.1%(最优)   1400 m: -3.2%
+    #   过小则很少触发，过大则退化为"原地重试同一失败几何"（已证伪：+6.8 s）。
+    # 全量验证：Q3 -0.6% / 5定向 -4.1% / 10定向 -5.3% / 16定向 -6.1%，
+    #   加权 -48.5 s，清除率与漏失数完全不变（2->2）。
+    nearby_revive_radius_m: float = 900.0
+    nearby_revive_max_per_channel: int = 2
     # 批量归航：扫过几个站位后才统一归航清除（1 = 逐站归航）。
     # 实测被证伪，保留参数供论文写"试过但无效"：Q4 20局 同种子
     #   batch=1 -> 1261.9s (20/20)    batch=2 -> 1291.8s
@@ -169,6 +183,8 @@ class DogStrategy:
         self.radio_channel = 1
         self.events: list[str] = []
         self._stopped = False
+        # 每频道就近复活次数，防止在同一频道上反复烧预算
+        self._revive_counts: dict[int, int] = {}
 
     # ---- 入口 ----
 
@@ -366,8 +382,49 @@ class DogStrategy:
             if ready and (since_home >= self.config.home_batch_stations or not remaining):
                 self._home_all()
                 since_home = 0
+            # 就近复活：路过时立即重试归航失败的频道，不等整环走完。见 StrategyConfig
+            # 的 nearby_revive_radius_m 注释（根因与 98 局标定数据）。
+            if self._stop():
+                return
+            self._revive_nearby()
         if not self._stop():
             self._home_all()
+
+    def _revive_nearby(self) -> None:
+        """机器狗当前位置附近若有\"归航失败但已定位\"的频道，立刻重试一个。
+
+        与 `_revive_exhausted` 的区别是**触发条件**：后者按时间（整环走完），
+        前者按几何（走到附近）。实测尾部源的第二次归航只需 248 s 就成功，
+        却要等 6809 s 才被调度到——这个等待是评分指标的主要损失来源。
+
+        只取最近的一个：复活后 `_home_channel` 会带着机器狗离开当前站位，
+        批量复活会退化成\"专程往返\"（已证伪：eager 变体 +74 s / 7-of-8 更差）。
+        """
+        cfg = self.config
+        best: tuple[float, ChannelState] | None = None
+        for state in self.channels.values():
+            if state.cleared or state.verdict_empty or not state.exhausted:
+                continue
+            if not state.bearings or state.estimate is None:
+                continue
+            if self._revive_counts.get(state.channel, 0) >= cfg.nearby_revive_max_per_channel:
+                continue
+            distance = math.hypot(state.estimate[0] - self.pos[0],
+                                  state.estimate[1] - self.pos[1])
+            if distance <= cfg.nearby_revive_radius_m and (best is None or distance < best[0]):
+                best = (distance, state)
+        if best is None:
+            return
+        state = best[1]
+        self._revive_counts[state.channel] = self._revive_counts.get(state.channel, 0) + 1
+        # 归航预算重新起算：失败可能只是当时几何差，新站位给了更好的交会角
+        state.exhausted = False
+        state.consecutive_silent = 0
+        state.homing_measures = 0
+        state.clear_attempts = 0
+        state.ray_swept = False
+        if not self._home_channel(state):
+            state.exhausted = True
 
     # ---- 阶段 2：归航 ----
 
