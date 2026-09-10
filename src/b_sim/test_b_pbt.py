@@ -566,3 +566,80 @@ def test_property4_time_accounting_matches_protocol_table(actions):
     finally:
         httpd.shutdown()
         httpd.server_close()
+
+
+
+# ===========================================================================
+# 任务 5.5：清除幂等性质测试（设计 §5 / §7.2 P5）
+# ===========================================================================
+from src.b_sim.arena import CLEAR_RADIUS_M  # noqa: E402
+
+
+def _single_source_case(source: Jammer) -> Case:
+    """构造仅含一个源的固定案例（复用 P4 的确定性误差场口径）。
+
+    该源占频道 1；除该源外竞技场内无其它源，故对频道 1 的 `/clear` 命中与否只取决于
+    清除点是否落在源 20 m 内。清除成功一次后，源被标记 `cleared`，其后对同一源再次
+    `/clear` 必返回 `no_target_in_range`（幂等）。
+    """
+    return Case(jammers=[source], error_salt="pbt-p5", seed=0)
+
+
+# ---------------------------------------------------------------------------
+# Feature: b-radio-interference-locate-clear, Property 5: 清除幂等
+# 设计 §5 时间记账表 / §7.2 P5 / _Requirements: 5.7_
+# 对任意（竞技场内、可被清除的）源与频道，成功清除一次后再次 `/clear` 同一点：
+#   (a) 竞技场已清除源计数保持不变（不重复计入）；
+#   (b) 第二次 ClearResult 非 ok（返回 `no_target_in_range`）；
+#   (c) 第二次 `/clear` 的虚拟时间增量 = 失败清除耗时 +3 s（同点无移动费，移动费=0）。
+# ---------------------------------------------------------------------------
+# **Validates: Requirements 5.7**
+@settings(max_examples=50, deadline=None, suppress_health_check=[HealthCheck.filter_too_much])
+@given(source_point=points_in_arena(margin=1.0), channel=st.integers(min_value=CHANNEL_MIN, max_value=CHANNEL_MAX))
+def test_property5_clear_is_idempotent(source_point, channel):
+    sx, sy = source_point
+    # 该源占据抽样频道；接收半径取固定值（本性质与接收半径无关，只需能被 20 m 内清除命中）。
+    source = Jammer(channel=channel, x=sx, y=sy, reception_radius_m=1200.0, directional_deg=None)
+
+    session = Session(PBT_ROBOT_ID, Arena(_single_source_case(source)))
+    httpd = make_server(session, port=0)
+    port = httpd.server_address[1]
+    thread = threading.Thread(target=httpd.serve_forever, daemon=True)
+    thread.start()
+    try:
+        client = RobotClient(PBT_ROBOT_ID, base_url=f"http://127.0.0.1:{port}")
+        client.enter()
+
+        # 清除点：与源位置重合（落在源 20 m 清除半径内，保证第一次成功命中）。
+        cx, cy = sx, sy
+        assert math.hypot(cx - source.x, cy - source.y) <= CLEAR_RADIUS_M
+
+        # 第一次 /clear：成功清除该源。
+        first = client.clear(cx, cy, channel)
+        assert first.ok, "第一次对源内点的 /clear 应成功命中"
+        cleared_after_first = session.arena.case.cleared_count
+        assert cleared_after_first == 1
+        vt_after_first = client.virtual_time_s
+
+        # 第二次 /clear：同一点（移动费=0），源已清除 → 幂等失败。
+        second = client.clear(cx, cy, channel)
+        vt_after_second = client.virtual_time_s
+
+        # (a) 已清除源计数保持不变（不重复计入）。
+        assert session.arena.case.cleared_count == cleared_after_first, (
+            f"再次 /clear 后已清除计数从 {cleared_after_first} 变为 "
+            f"{session.arena.case.cleared_count}，违反幂等"
+        )
+        # (b) 第二次 ClearResult 非 ok（no_target_in_range）。
+        assert not second.ok, "对已清除源再次 /clear 应返回失败（no_target_in_range）"
+        assert second.result == "no_target_in_range"
+
+        # (c) 第二次虚拟时间增量 = 失败清除耗时 +3 s（同点移动费=0）。
+        delta = vt_after_second - vt_after_first
+        assert delta == pytest.approx(CLEAR_FAIL_SECONDS, abs=1e-6), (
+            f"再次 /clear 虚拟时间增量 {delta:.9f} s 应等于失败清除耗时 "
+            f"{CLEAR_FAIL_SECONDS:.1f} s（同点无移动费）"
+        )
+    finally:
+        httpd.shutdown()
+        httpd.server_close()
