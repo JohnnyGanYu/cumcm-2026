@@ -1193,3 +1193,178 @@ def test_q2_out_of_bounds_candidate_never_selected():
         assert sel.point is None
         over = [c for c in sel.evaluated if c.range_from_origin_m > ARENA_RADIUS + 1e-6]
         assert all(not c.valid for c in over)
+
+
+
+# ===========================================================================
+# 任务 3.3：候选区域界定（R2.7）与 lateral_error_at 核对（R2.8）
+# 新增于本微批次，未改动上方已有内容。
+# ===========================================================================
+
+from src.b_sim.geometry import (  # noqa: E402
+    ARENA_RADIUS,
+    CROSSING_ANGLE_MAX_DEG,
+    CROSSING_ANGLE_MIN_DEG,
+    RECEP_LOWER_M,
+    SECOND_POINT_WEDGE_HALF_DEG,
+    crossing_angle_deg,
+    in_second_point_region,
+    second_point_candidate_region,
+)
+from src.b_sim.strategy import lateral_error_at  # noqa: E402
+
+
+def _wedge_diff_deg(p1, theta1, p2):
+    """p1→p2 方位与 theta1 的最小角差（度），用于测试内独立复算前向楔形约束。"""
+    b = math.degrees(math.atan2(p2[1] - p1[1], p2[0] - p1[0]))
+    d = abs(norm_deg(b) - norm_deg(theta1))
+    return min(d, 360.0 - d)
+
+
+# ---------------------------------------------------------------------------
+# R2.7：候选区域界定（θ1±32° 前向楔形 ∩ α∈[60,120] ∩ d2≤1000 ∩ ‖p2‖≤1800）
+# ---------------------------------------------------------------------------
+
+def test_q2_region_bounds_are_theta1_plusminus_32():
+    """R2.7：候选区域角边界为 θ1±32°，径向上界 d2≤1000、‖p2‖≤1800。"""
+    p1 = (-300.0, 0.0)
+    theta1 = 0.0
+    reg = second_point_candidate_region(p1, theta1)
+    assert reg.wedge_half_deg == pytest.approx(SECOND_POINT_WEDGE_HALF_DEG)
+    assert reg.angle_lo_deg == pytest.approx(theta1 - 32.0)
+    assert reg.angle_hi_deg == pytest.approx(theta1 + 32.0)
+    assert reg.crossing_min_deg == pytest.approx(CROSSING_ANGLE_MIN_DEG)
+    assert reg.crossing_max_deg == pytest.approx(CROSSING_ANGLE_MAX_DEG)
+    assert reg.d2_max_m == pytest.approx(RECEP_LOWER_M)      # 1000 m
+    assert reg.range_max_m == pytest.approx(ARENA_RADIUS)     # 1800 m
+
+
+def test_q2_in_region_true_for_wellposed_point():
+    """R2.7：楔形内、α∈[60,120]、d2≤1000、‖p2‖≤1800 的良态点判为在区域内。
+
+    源置于原点（此时 d2 = ‖p2‖）。搜索一个 α≈90°、位于 θ1±32° 前向楔形内的候选点，
+    断言其在区域内，并逐条复核四个界定约束确实满足。
+    """
+    source = (0.0, 0.0)
+    p1 = (-300.0, 0.0)
+    theta1 = 0.0
+
+    found = None
+    for wdeg in [x * 0.5 for x in range(-64, 65)]:
+        phi = math.radians(theta1 + wdeg)
+        for L in range(50, 900, 5):
+            p2 = (p1[0] + L * math.cos(phi), p1[1] + L * math.sin(phi))
+            alpha = crossing_angle_deg(source, p1, p2)
+            d2 = math.hypot(p2[0] - source[0], p2[1] - source[1])
+            if abs(alpha - 90.0) < 1.0 and _wedge_diff_deg(p1, theta1, p2) <= 30.0 and d2 <= 1000.0:
+                found = p2
+                break
+        if found:
+            break
+
+    assert found is not None, "应能构造一个良态的区域内候选点"
+    # 逐条复核四约束满足。
+    assert _wedge_diff_deg(p1, theta1, found) <= 32.0 + 1e-7
+    alpha = crossing_angle_deg(source, p1, found)
+    assert 60.0 - 1e-7 <= alpha <= 120.0 + 1e-7
+    assert math.hypot(found[0] - source[0], found[1] - source[1]) <= 1000.0 + 1e-7
+    assert math.hypot(*found) <= 1800.0 + 1e-7
+    # 结论：在区域内。
+    assert in_second_point_region(found, p1, theta1, source) is True
+
+
+def test_q2_in_region_excludes_bad_crossing_angle():
+    """R2.7：α∉[60,120] 的点（近共线，α<60 或 α>120）被排除，即便在前向楔形内。"""
+    source = (0.0, 0.0)
+    p1 = (-300.0, 0.0)
+    theta1 = 0.0
+
+    # α < 60：沿轴附近小偏移、较短前进 → 近共线，α 偏小。
+    p2_small = (p1[0] + 200.0 * math.cos(math.radians(20.0)),
+                p1[1] + 200.0 * math.sin(math.radians(20.0)))
+    assert crossing_angle_deg(source, p1, p2_small) < CROSSING_ANGLE_MIN_DEG
+    assert _wedge_diff_deg(p1, theta1, p2_small) <= 32.0  # 确在前向楔形内
+    assert in_second_point_region(p2_small, p1, theta1, source) is False
+
+    # α > 120：越过源之后 → 交会角偏大。
+    p2_large = (p1[0] + 520.0 * math.cos(math.radians(10.0)),
+                p1[1] + 520.0 * math.sin(math.radians(10.0)))
+    assert crossing_angle_deg(source, p1, p2_large) > CROSSING_ANGLE_MAX_DEG
+    assert _wedge_diff_deg(p1, theta1, p2_large) <= 32.0
+    assert in_second_point_region(p2_large, p1, theta1, source) is False
+
+
+def test_q2_in_region_excludes_out_of_arena_point():
+    """R2.7：‖p2‖>1800 的点被排除，即便 α∈[60,120] 且 d2≤1000 且在前向楔形内。
+
+    用远处的源（近边缘）使 d2 很小但 ‖p2‖ 超过 1800 m，隔离出"越界"这一排除条件。
+    """
+    source = (1500.0, 0.0)
+    p1 = (1447.905546699921, 295.4423259036624)   # 距源约 300 m
+    theta1 = -80.0
+    p2 = (1809.2360741337043, -105.85587985413065)
+
+    alpha = crossing_angle_deg(source, p1, p2)
+    d2 = math.hypot(p2[0] - source[0], p2[1] - source[1])
+    norm = math.hypot(*p2)
+    # 其余三约束满足，唯独越界。
+    assert 60.0 <= alpha <= 120.0
+    assert d2 <= 1000.0
+    assert _wedge_diff_deg(p1, theta1, p2) <= 32.0 + 1e-6
+    assert norm > 1800.0
+    assert in_second_point_region(p2, p1, theta1, source) is False
+
+
+def test_q2_in_region_boundary_alpha_60_is_inclusive():
+    """R2.7 / R2.2：交会角边界 α=60°（含）判为在区域内（边界包含）。"""
+    source = (0.0, 0.0)
+    p1 = (-300.0, 0.0)
+    theta1 = 0.0
+    # 搜索 α 恰在 60° 附近（略 ≥60）且在楔形内、d2≤1000 的点。
+    found = None
+    for wdeg in [x * 0.25 for x in range(-128, 129)]:
+        phi = math.radians(theta1 + wdeg)
+        for L in range(50, 900):
+            p2 = (p1[0] + L * math.cos(phi), p1[1] + L * math.sin(phi))
+            alpha = crossing_angle_deg(source, p1, p2)
+            if 60.0 <= alpha < 60.05 and _wedge_diff_deg(p1, theta1, p2) <= 32.0 and math.hypot(*p2) <= 1000.0:
+                found = p2
+                break
+        if found:
+            break
+    assert found is not None
+    assert crossing_angle_deg(source, p1, found) >= 60.0
+    assert in_second_point_region(found, p1, theta1, source) is True
+
+
+def test_q2_in_region_rejects_degenerate_p2_equals_p1():
+    """R2.7：p2 与 p1 重合（无明确方位）不在区域内。"""
+    source = (0.0, 0.0)
+    p1 = (-300.0, 0.0)
+    assert in_second_point_region(p1, p1, 0.0, source) is False
+
+
+# ---------------------------------------------------------------------------
+# R2.8：lateral_error_at(r) = r·tan(1°)，关于 r 严格单调递增
+# ---------------------------------------------------------------------------
+
+def test_lateral_error_matches_r_tan_1deg():
+    """R2.8：lateral_error_at(r) 恰为 r·tan(1°)（含 0/100/1000/1500 m）。"""
+    tan1 = math.tan(math.radians(1.0))
+    for r in (0.0, 100.0, 1000.0, 1500.0):
+        assert lateral_error_at(r) == pytest.approx(r * tan1, abs=1e-12)
+    # 直观量级：100 m ≈ 1.7 m、1500 m ≈ 26 m（> 20 m 清除半径，佐证需逼近）。
+    assert lateral_error_at(100.0) == pytest.approx(1.745506, abs=1e-4)
+    assert lateral_error_at(1500.0) == pytest.approx(26.182597, abs=1e-4)
+    assert lateral_error_at(1500.0) > 20.0
+    assert lateral_error_at(0.0) == pytest.approx(0.0, abs=1e-12)
+
+
+def test_lateral_error_strictly_increasing():
+    """R2.8：对任意 r2 > r1 ≥ 0 有 e(r2) > e(r1)（严格单调递增）。"""
+    grid = [0.0, 1e-6, 100.0, 500.0, 1000.0, 1500.0, 1800.0]
+    vals = [lateral_error_at(r) for r in grid]
+    for a, b in zip(vals, vals[1:]):
+        assert b > a
+    # 显式两两抽样再确认严格性。
+    assert lateral_error_at(1500.0) > lateral_error_at(1000.0) > lateral_error_at(100.0) > lateral_error_at(0.0)

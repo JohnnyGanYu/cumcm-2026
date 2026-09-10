@@ -572,3 +572,141 @@ def verify_coverage(points: list[tuple[float, float]], radius: float,
             if any(math.hypot(x - px, y - py) <= radius for px, py in points):
                 covered += 1
     return covered / total if total else 1.0
+
+
+
+# ---------------------------------------------------------------------------
+# Q2 (R2.7): 第二检测点候选区域界定。
+#
+# 候选区域是一条环状扇形带（design §3.2），由四组约束共同界定：
+#   (a) 方向约束：p2 落在以 p1 为顶点、``θ1 ± 32°`` 为角边界的**前向**楔形内
+#       （即 p1→p2 的方位与 θ1 的夹角 ≤ 32°，且沿 θ1 的前进分量为正）；
+#   (b) 交会角约束：估计源处的交会角 ``α ∈ [60°, 120°]``；
+#   (c) 接收半径约束：p2 到估计源的距离 ``d2 ≤ 1000 m``（保证下限）；
+#   (d) 越界约束：``‖p2‖ ≤ 1800 m``（竞技场半径）。
+# 区域**排除**满足 ``α ∉ [60°, 120°]`` 或 ``‖p2‖ > 1800 m`` 的点（R2.7）。
+# 边界一律判为**在区域内**（含），数值容差沿用本模块 Q2 常量。
+# ---------------------------------------------------------------------------
+
+# 第二检测点前向楔形半张角（R2.7 角边界 θ1 ± 32°；与 R2.4 偏移上界一致）。
+SECOND_POINT_WEDGE_HALF_DEG = 32.0
+
+
+@dataclass(frozen=True)
+class SecondPointRegion:
+    """第二检测点候选区域的界定参数（R2.7）。
+
+    区域为以 ``p1`` 为顶点、``[theta1 − wedge_half_deg, theta1 + wedge_half_deg]``
+    为角边界的前向楔形内，并叠加交会角 / 接收半径 / 越界约束的环状扇形带。
+
+    - ``p1``: 第一检测点（楔形顶点）。
+    - ``theta1``: 第一检测点示向度（度，正东 0°、逆时针为正）。
+    - ``wedge_half_deg``: 前向楔形半张角（默认 32°），角边界为 ``theta1 ± 此值``。
+    - ``angle_lo_deg`` / ``angle_hi_deg``: 楔形角下界 / 上界（度，= ``theta1 ∓ 半张角``）。
+    - ``crossing_min_deg`` / ``crossing_max_deg``: 交会角良态区间 ``[60°, 120°]``（含）。
+    - ``d2_max_m``: 到估计源距离上界 ``d2 ≤ 1000 m``（含）。
+    - ``range_max_m``: 到原点距离上界 ``‖p2‖ ≤ 1800 m``（含）。
+    """
+
+    p1: tuple[float, float]
+    theta1: float
+    wedge_half_deg: float
+    angle_lo_deg: float
+    angle_hi_deg: float
+    crossing_min_deg: float
+    crossing_max_deg: float
+    d2_max_m: float
+    range_max_m: float
+
+
+def second_point_candidate_region(
+    p1: tuple[float, float],
+    theta1: float,
+    *,
+    wedge_half_deg: float = SECOND_POINT_WEDGE_HALF_DEG,
+    crossing_min_deg: float = CROSSING_ANGLE_MIN_DEG,
+    crossing_max_deg: float = CROSSING_ANGLE_MAX_DEG,
+    recep_lower: float = RECEP_LOWER_M,
+    arena_radius: float = ARENA_RADIUS,
+) -> SecondPointRegion:
+    """返回第二检测点候选区域的角向 / 径向界定参数（R2.7）。
+
+    这是对 design §3.2 "候选区域 = 楔形前方、交会角 ∈[60,120] 且 d2≤1000 m 的
+    环状扇形带"的显式界定。返回的 :class:`SecondPointRegion` 汇总了角边界
+    （``theta1 ± wedge_half_deg``）与交会角 / 接收半径 / 越界三组约束的上下界，供
+    :func:`in_second_point_region` 判定或论文配图使用。本函数不做任何点判定。
+    """
+    return SecondPointRegion(
+        p1=p1,
+        theta1=theta1,
+        wedge_half_deg=wedge_half_deg,
+        angle_lo_deg=theta1 - wedge_half_deg,
+        angle_hi_deg=theta1 + wedge_half_deg,
+        crossing_min_deg=crossing_min_deg,
+        crossing_max_deg=crossing_max_deg,
+        d2_max_m=recep_lower,
+        range_max_m=arena_radius,
+    )
+
+
+def in_second_point_region(
+    p2: tuple[float, float],
+    p1: tuple[float, float],
+    theta1: float,
+    source: tuple[float, float],
+    *,
+    wedge_half_deg: float = SECOND_POINT_WEDGE_HALF_DEG,
+    crossing_min_deg: float = CROSSING_ANGLE_MIN_DEG,
+    crossing_max_deg: float = CROSSING_ANGLE_MAX_DEG,
+    recep_lower: float = RECEP_LOWER_M,
+    arena_radius: float = ARENA_RADIUS,
+) -> bool:
+    """判定 ``p2`` 是否落在第二检测点候选区域（环状扇形带）内（R2.7）。
+
+    区域界定（边界一律判为在区域内，含）：
+
+    1. **前向楔形**：``p1→p2`` 方位与 ``theta1`` 的最小角差 ``≤ wedge_half_deg``（默认
+       32°）。该条件同时排除反向候选——夹角 > 90° 时前进分量 ``cos(夹角) ≤ 0``，而
+       ``wedge_half_deg ≤ 90°`` 已隐含前进分量为正（``|Δθ| ≤ 32° ⟹ cos > 0``）。
+       ``p2`` 与 ``p1`` 重合（``‖p2 − p1‖ ≈ 0``）视为不在区域内。
+    2. **交会角**：``source`` 处两视线 ``source→p1`` 与 ``source→p2`` 的交会角
+       ``α ∈ [crossing_min_deg, crossing_max_deg]``（默认 ``[60°, 120°]``，边界含）。
+       等价于 ``sin α ≥ √3/2``。**排除** ``α ∉ [60, 120]`` 的点（R2.7）。
+    3. **接收半径**：``d2 = ‖p2 − source‖ ≤ recep_lower``（默认 1000 m，边界含）。
+    4. **越界**：``‖p2‖ ≤ arena_radius``（默认 1800 m，边界含）。**排除** ``‖p2‖ > 1800``
+       的点（R2.7）。
+
+    数值容差沿用 :data:`CROSSING_ANGLE_TOL_DEG` 与 :data:`DIST_TOL_M`。
+    """
+    x1, y1 = p1
+    x2, y2 = p2
+
+    # (1) 前向楔形：p1→p2 方位与 theta1 的最小角差 ≤ 半张角。
+    dx, dy = x2 - x1, y2 - y1
+    if math.hypot(dx, dy) <= EPS:
+        return False  # p2 与 p1 重合，无明确方位，不在区域内。
+    bearing_p1_p2 = math.degrees(math.atan2(dy, dx))
+    ang_diff = abs(norm_deg(bearing_p1_p2) - norm_deg(theta1))
+    ang_diff = min(ang_diff, 360.0 - ang_diff)
+    if ang_diff > wedge_half_deg + CROSSING_ANGLE_TOL_DEG:
+        return False
+
+    # (2) 交会角 α ∈ [60, 120]（含），排除病态点。
+    alpha = crossing_angle_deg(source, p1, p2)
+    if not (
+        crossing_min_deg - CROSSING_ANGLE_TOL_DEG
+        <= alpha
+        <= crossing_max_deg + CROSSING_ANGLE_TOL_DEG
+    ):
+        return False
+
+    # (3) 接收半径 d2 ≤ 1000 m（含）。
+    d2 = math.hypot(x2 - source[0], y2 - source[1])
+    if d2 > recep_lower + DIST_TOL_M:
+        return False
+
+    # (4) 越界 ‖p2‖ ≤ 1800 m（含），排除越界点。
+    if math.hypot(x2, y2) > arena_radius + DIST_TOL_M:
+        return False
+
+    return True
