@@ -311,6 +311,228 @@ def second_point_candidates(
     return candidates
 
 
+# Q2 有效候选判据常量。
+CROSSING_ANGLE_MIN_DEG = 60.0            # 交会角下限（含）。
+CROSSING_ANGLE_MAX_DEG = 120.0           # 交会角上限（含）。
+SIN_CROSSING_MIN = math.sqrt(3.0) / 2.0  # sin 60° = sin 120° ≈ 0.8660，α∈[60,120] ⟺ sinα≥此值。
+CROSSING_ANGLE_TOL_DEG = 1e-7            # 交会角边界（60°/120°）数值容差。
+RECEP_LOWER_M = 1000.0                    # 有效接收半径保证下限（d2 ≤ 此值判有效）。
+DIST_TOL_M = 1e-7                         # d2 / ‖p2‖ 边界数值容差（米）。
+
+
+def crossing_angle_deg(
+    source: tuple[float, float],
+    p1: tuple[float, float],
+    p2: tuple[float, float],
+) -> float:
+    """两条示向线在（估计）源 ``source`` 处的交会角 α（度，∈[0,180]）。
+
+    交会角是两条视线的夹角（design §3.2）：视线 1 为 ``source→p1``、视线 2 为
+    ``source→p2``。返回两方向向量夹角（``acos`` 口径，恒落在 ``[0°, 180°]``）。
+    退化情形（``p1``/``p2`` 与 ``source`` 重合）返回 ``0.0``。
+    """
+    sx, sy = source
+    v1x, v1y = p1[0] - sx, p1[1] - sy
+    v2x, v2y = p2[0] - sx, p2[1] - sy
+    n1 = math.hypot(v1x, v1y)
+    n2 = math.hypot(v2x, v2y)
+    if n1 <= EPS or n2 <= EPS:
+        return 0.0
+    cos_a = (v1x * v2x + v1y * v2y) / (n1 * n2)
+    cos_a = max(-1.0, min(1.0, cos_a))
+    return math.degrees(math.acos(cos_a))
+
+
+@dataclass(frozen=True)
+class SecondPointCandidate:
+    """一个第二检测点候选及其有效性判定（R2.2/R2.3）。
+
+    - ``point``: 候选坐标 ``p2``。
+    - ``offset_deg``: 生成该候选的带符号偏移角 ``s·δ``（度），``0.0`` 为沿示向度直行。
+    - ``crossing_angle_deg``: 估计源处的交会角 α（度）。
+    - ``d2_m``: 候选到估计源的距离 ``d2``（米）。
+    - ``range_from_origin_m``: ``‖p2‖``（到竞技场原点距离，米）。
+    - ``valid``: 是否为有效候选（三条件全部满足）。
+    - ``reason``: 无效原因指示（有效时为 ``"valid"``）。
+    """
+
+    point: tuple[float, float]
+    offset_deg: float
+    crossing_angle_deg: float
+    d2_m: float
+    range_from_origin_m: float
+    valid: bool
+    reason: str
+
+
+def _estimate_source(
+    p1: tuple[float, float], theta1: float, source_distance: float
+) -> tuple[float, float]:
+    """由 ``p1`` 沿示向度 ``theta1`` 前进 ``source_distance`` 得到的估计源位置。"""
+    rad = math.radians(theta1)
+    return (p1[0] + source_distance * math.cos(rad), p1[1] + source_distance * math.sin(rad))
+
+
+def classify_second_point_candidates(
+    p1: tuple[float, float],
+    theta1: float,
+    source: tuple[float, float],
+    *,
+    offsets: tuple[float, ...] = (32.0, 16.0, 0.0),
+    length: float = 380.0,
+    recep_lower: float = RECEP_LOWER_M,
+    arena_radius: float = ARENA_RADIUS,
+) -> list[SecondPointCandidate]:
+    """对 :func:`second_point_candidates` 的候选逐一做有效性判定（R2.2/R2.3）。
+
+    给定（估计）源位置 ``source``（其方位应与 ``theta1`` 大致一致；由调用方按当前对
+    源距离的估计给出，例如 ``p1 + d1·(cos θ1, sin θ1)``），对每个候选 ``p2`` 计算：
+
+    - 交会角 ``α`` = ``source`` 处两视线 ``source→p1`` 与 ``source→p2`` 的夹角；
+    - ``d2`` = ``‖p2 − source‖``（候选到源的估计距离）；
+    - ``‖p2‖`` = 候选到竞技场原点的距离。
+
+    候选**有效**当且仅当同时满足（边界均含，R2.2）：
+
+    1. ``α ∈ [60°, 120°]``（等价 ``sin α ≥ √3/2``；边界 60°/120° 判有效，带 ``1e-7`` 容差）；
+    2. ``d2 ≤ recep_lower``（默认 1000 m，边界含）；
+    3. ``‖p2‖ ≤ arena_radius``（默认 1800 m，边界含）。
+
+    交会角病态（``α < 60°`` 或 ``α > 120°``）的候选标记 ``valid=False``（R2.3）。返回顺序
+    与 :func:`second_point_candidates` 一致（δ 降序），供退让语义按序遍历。
+    """
+    raw = second_point_candidates(
+        p1, theta1, offsets=offsets, length=length, recep_lower=recep_lower
+    )
+    # 复算每个候选的带符号偏移角（与 second_point_candidates 的生成顺序一致）。
+    signed_offsets: list[float] = []
+    for delta in sorted(offsets, reverse=True):
+        if abs(delta) > EPS:
+            signed_offsets.extend((delta, -delta))
+        else:
+            signed_offsets.append(0.0)
+
+    results: list[SecondPointCandidate] = []
+    for p2, signed in zip(raw, signed_offsets):
+        alpha = crossing_angle_deg(source, p1, p2)
+        d2 = math.hypot(p2[0] - source[0], p2[1] - source[1])
+        rng = math.hypot(p2[0], p2[1])
+        angle_ok = (
+            CROSSING_ANGLE_MIN_DEG - CROSSING_ANGLE_TOL_DEG
+            <= alpha
+            <= CROSSING_ANGLE_MAX_DEG + CROSSING_ANGLE_TOL_DEG
+        )
+        d2_ok = d2 <= recep_lower + DIST_TOL_M
+        range_ok = rng <= arena_radius + DIST_TOL_M
+        if angle_ok and d2_ok and range_ok:
+            valid, reason = True, "valid"
+        elif not angle_ok:
+            reason = f"交会角病态 α={alpha:.4f}°∉[60,120]"
+            valid = False
+        elif not d2_ok:
+            reason = f"d2={d2:.3f}m>{recep_lower:.0f}m 超出接收半径下限"
+            valid = False
+        else:
+            reason = f"‖p2‖={rng:.3f}m>{arena_radius:.0f}m 越界"
+            valid = False
+        results.append(
+            SecondPointCandidate(
+                point=p2,
+                offset_deg=signed,
+                crossing_angle_deg=alpha,
+                d2_m=d2,
+                range_from_origin_m=rng,
+                valid=valid,
+                reason=reason,
+            )
+        )
+    return results
+
+
+@dataclass(frozen=True)
+class SecondPointSelection:
+    """第二检测点选择结果（R2.5/R2.6）。
+
+    - ``feasible``: 是否选出可行的第二检测点。
+    - ``point``: 选定的 ``p2``（``feasible=False`` 时为 ``None``）。
+    - ``candidate``: 选定候选的完整判定（``feasible=False`` 时为 ``None``）。
+    - ``reason``: 说明——成功时形如 ``"selected δ=+32.0°"``；失败时为
+      ``"第二检测点不可行"`` 附带汇总原因。
+    - ``evaluated``: 已考察过的候选序列（按退让顺序），供复盘。
+    """
+
+    feasible: bool
+    point: tuple[float, float] | None
+    candidate: SecondPointCandidate | None
+    reason: str
+    evaluated: list[SecondPointCandidate]
+
+
+def select_second_point(
+    p1: tuple[float, float],
+    theta1: float,
+    source: tuple[float, float],
+    is_signal_fn=None,
+    *,
+    offsets: tuple[float, ...] = (32.0, 16.0, 0.0),
+    length: float = 380.0,
+    recep_lower: float = RECEP_LOWER_M,
+    arena_radius: float = ARENA_RADIUS,
+) -> SecondPointSelection:
+    """按由大到小偏移逐级退让选择第二检测点，最终退化为沿示向度直行（R2.5/R2.6）。
+
+    候选按 :func:`classify_second_point_candidates` 的顺序（δ 降序，先 ``+`` 后 ``−``，
+    末尾为 ``δ=0°`` 安全直行）逐个考察。对每个候选：
+
+    - 若候选**无效**（交会角病态 / ``d2>1000`` / ``‖p2‖>1800``），跳过并退让到下一个更小
+      的 ``δ``（R2.3/R2.5），绝不选定越界或病态候选（R2.6）。
+    - 否则调用 ``is_signal_fn(p2)``（可选回调，返回布尔）询问该候选点是否有信号。回调返回
+      ``False``（即 ``no_signal``）时同样退让到下一个候选（R2.5）；返回 ``True`` 则选定。
+      未提供回调时默认视为有信号（仅按有效性判定）。
+
+    IF 所有候选（含 ``δ=0°`` 安全兜底）均无效或均 ``no_signal``，THEN 返回
+    ``feasible=False`` 的显式"第二检测点不可行"结果（附原因），不选定任何候选，
+    ``p1`` 处数据保持不变（R2.6）。
+    """
+    classified = classify_second_point_candidates(
+        p1,
+        theta1,
+        source,
+        offsets=offsets,
+        length=length,
+        recep_lower=recep_lower,
+        arena_radius=arena_radius,
+    )
+    evaluated: list[SecondPointCandidate] = []
+    for cand in classified:
+        evaluated.append(cand)
+        if not cand.valid:
+            continue  # 无效候选：退让到更小 δ，绝不选定越界/病态候选。
+        if is_signal_fn is not None and not is_signal_fn(cand.point):
+            continue  # no_signal：退让到更小 δ。
+        sign = "+" if cand.offset_deg >= 0 else "-"
+        return SecondPointSelection(
+            feasible=True,
+            point=cand.point,
+            candidate=cand,
+            reason=f"selected δ={sign}{abs(cand.offset_deg):.1f}°",
+            evaluated=evaluated,
+        )
+    # 全部退让失败：显式不可行，保持 p1 数据不变，不选任何越界/病态候选（R2.6）。
+    n_invalid = sum(1 for c in classified if not c.valid)
+    n_nosignal = len(classified) - n_invalid
+    return SecondPointSelection(
+        feasible=False,
+        point=None,
+        candidate=None,
+        reason=(
+            "第二检测点不可行："
+            f"{len(classified)} 个候选全部失败（无效 {n_invalid} 个、no_signal {n_nosignal} 个）"
+        ),
+        evaluated=evaluated,
+    )
+
+
 def coverage_points(radius: float, arena_radius: float = ARENA_RADIUS) -> list[tuple[float, float]]:
     """构造覆盖点集：使目标区域内任意一点到某个覆盖点的距离不超过 radius。
 
