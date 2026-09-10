@@ -498,7 +498,9 @@ class DogStrategy:
         ux, uy = dx / norm, dy / norm
         advance = max(cfg.clear_distance_m * 0.8, distance * cfg.approach_fraction)
         advance = min(advance, distance - cfg.clear_distance_m * 0.35) if distance > cfg.clear_distance_m else advance
-        lateral = min(distance * cfg.lateral_fraction, 220.0)
+        # R3.3：横向偏移按 lateral_fraction × 前进距离(advance) 叠加（而非 × 剩余距离），
+        # 与设计 §3.3「lateral_fraction·前进距离」一致；上限 220 m 防止在远距离退化成大幅横向平移。
+        lateral = min(advance * cfg.lateral_fraction, 220.0)
         for sign in (1.0, -1.0):
             candidate = (self.pos[0] + ux * advance - uy * lateral * sign,
                          self.pos[1] + uy * advance + ux * lateral * sign)
