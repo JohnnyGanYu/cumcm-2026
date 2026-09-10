@@ -160,19 +160,37 @@ def polygon_diameter(polygon: list[tuple[float, float]]) -> tuple[float, tuple[f
     return best, pair[0], pair[1]
 
 
-def circle_on_diameter_covers(polygon: list[tuple[float, float]]) -> tuple[bool, float]:
-    """以直径为直径的圆（圆心取直径中点）是否覆盖该区域。
+# 外接圆覆盖判定的数值容差（米）：|worst − D/2| ≤ COVER_TOL 视为落在圆上。
+COVER_TOL_M = 1e-7
 
-    返回 (是否覆盖, 最远顶点到圆心距离 / 半径)。凸集直径为 D 时该圆半径为 D/2，
-    但凸集的最小外接圆半径上界是 D/sqrt(3)（Jung 定理，平面情形），因此覆盖不总成立。
+
+def circle_on_diameter_covers(polygon: list[tuple[float, float]]) -> tuple[bool, float]:
+    """以区域直径为直径的圆（圆心取直径中点）是否覆盖整个定位区域。
+
+    返回 ``(covers, margin_m)``（R1.7 / R1.8）：
+
+    - ``margin = D/2 − max_{v ∈ vertices} ‖v − M‖``（单位：米，``M`` 为直径中点、``D``
+      为区域直径）。``margin`` 为正表示所有顶点在圆内、有裕度；为负表示存在顶点落在圆外
+      （如正三角形型区域，最远顶点距中点 ``≈0.866L > L/2``，Jung 平面上界 ``D/√3``）。
+    - ``covers ⟺ max‖v − M‖ ≤ D/2 + COVER_TOL_M``，等价于 ``margin ≥ −COVER_TOL_M``。
+
+    退化几何（R1.6）：
+    - 单点退化（所有顶点两两距离 ``≤ 1e-7`` 米，``D = 0``）标记"覆盖"，返回 ``margin = 0.0``。
+    - 线段退化（顶点共线，``D`` = 两端点距离）：所有顶点落在以直径为直径的圆上（即区间内），
+      故 ``max‖v − M‖ ≤ D/2``，判定"覆盖"，``margin ≥ 0``。
     """
+    if not polygon:
+        # 空区域无顶点：无外接圆可言，按"覆盖"处理并给出 0 裕度（不供正常路径使用）。
+        return True, 0.0
     diameter, pa, pb = polygon_diameter(polygon)
-    if diameter <= 0:
+    radius = diameter / 2.0
+    if diameter <= 1e-7:
+        # 单点退化：所有顶点两两 ≤ 1e-7，D = 0，圆退化为一点仍"覆盖"该点集。
         return True, 0.0
     cx, cy = (pa[0] + pb[0]) / 2.0, (pa[1] + pb[1]) / 2.0
-    radius = diameter / 2.0
     worst = max(math.hypot(x - cx, y - cy) for x, y in polygon)
-    return worst <= radius + 1e-7, worst / radius
+    margin = radius - worst
+    return worst <= radius + COVER_TOL_M, margin
 
 
 def centroid(polygon: list[tuple[float, float]]) -> tuple[float, float]:
@@ -239,6 +257,58 @@ def bearing_spread_deg(bearings: list[Bearing]) -> float:
             diff = min(diff, 360.0 - diff)
             best = max(best, min(diff, 180.0 - diff) if diff > 90 else diff)
     return best
+
+
+def second_point_candidates(
+    p1: tuple[float, float],
+    theta1: float,
+    *,
+    offsets: tuple[float, ...] = (32.0, 16.0, 0.0),
+    length: float = 380.0,
+    recep_lower: float = 1000.0,
+) -> list[tuple[float, float]]:
+    """Q2：第一检测点 ``p1`` 已获示向度 ``theta1`` 后，生成第二检测点候选序列。
+
+    每个候选沿示向度方向前进 ``length`` 米并叠加小角度偏移 ``δ``：
+
+        ``p2 = p1 + length · (cos(theta1 + s·δ), sin(theta1 + s·δ))``
+
+    角度约定与 ``arena``/本模块一致：正东 = 0°、逆时针为正，读数以度计
+    （``atan2(dy, dx)`` 口径），故 ``(cos, sin)`` 即为沿方位角前进的单位向量。
+
+    候选序列按偏移角 ``δ`` **降序**排列（大 → 小逐级退让），对每个 ``δ > 0`` 生成
+    ``s = +1`` 与 ``s = -1`` 一对候选（先 ``+`` 后 ``-``）；``δ = 0°`` 只生成一个
+    沿示向度直行的候选。此顺序保证使用方按"先大偏移博取良态交会角、失败再退让、
+    最终退化为沿示向度直行"的策略遍历（R2.1、R2.4）。
+
+    仅实现 R2.1（有序候选生成）与 R2.4（沿示向度前进 + ``|δ| ≤ 32°`` 小偏移；
+    前进分量 ``length·cos δ`` 恒为正，绝不产生纯横向平移或反向候选）。本函数**不**
+    对候选做有效性/交会角/接收半径/越界判定，也不实现退让/失败语义或候选区域界定。
+
+    扩展点（后续任务）：
+      * R2.2/R2.3/R2.5/R2.6（有效性判定与退让/显式失败）——任务 3.2。
+      * R2.7（``θ1±32°`` 前向楔形内、``α∈[60,120]``、``d2≤1000``、``‖p2‖≤1800``
+        的环状扇形候选区域界定）——任务 3.3。
+    ``recep_lower``（有效接收半径保证下限，默认 1000 m）为上述扩展预留，本函数不使用。
+
+    参数中偏移角必须满足 ``|δ| ≤ 32°``（R2.4 上界），否则抛 ``ValueError``。
+    """
+    x1, y1 = p1
+    max_offset = 32.0
+    candidates: list[tuple[float, float]] = []
+    # 按 δ 降序遍历，保证候选序列由大偏移到沿示向度直行。
+    for delta in sorted(offsets, reverse=True):
+        if abs(delta) > max_offset + EPS:
+            raise ValueError(
+                f"偏移角 |δ|={abs(delta)}° 超过 32° 上界（R2.4），不生成非法横向候选"
+            )
+        signs = (1.0, -1.0) if abs(delta) > EPS else (1.0,)
+        for sign in signs:
+            phi = math.radians(theta1 + sign * delta)
+            x2 = x1 + length * math.cos(phi)
+            y2 = y1 + length * math.sin(phi)
+            candidates.append((x2, y2))
+    return candidates
 
 
 def coverage_points(radius: float, arena_radius: float = ARENA_RADIUS) -> list[tuple[float, float]]:
