@@ -2957,3 +2957,177 @@ def test_task71_apply_bearing_drops_out_of_sector_even_if_bearing_matches():
     assert in_beam(0.0, 0.0, 180.0, *obs) is False
     belief.apply_bearing(*obs, svd_deg=180.0)
     assert (idx0, h180, 0) not in belief.candidates
+
+
+# =============================================================================
+# 任务 7.2：核对信息增益补测与「推理非加密」（VERIFY，回归测试）
+#
+# 对照 requirements.md R4.5 / R4.8 与 design.md §3.4 / §4.7，固定 directional.py
+# 的补测点选择行为与「盲扫加密站位存在天花板 → 改用推理 + 盲清除」这一设计判断：
+#   - best_probe_point / _probe_candidates（R4.5）：
+#       * 补测点沿候选源朝向前方按 (2·step, 4·step, 0.75·1000 m) 三档距离生成，
+#         裁剪进 1800 m 区域，NOT 直接使用候选源位置本身；
+#       * 评分 = 期望排除比例 gain(=eliminated/total) − 移动折价(distance/500·0.05)，
+#         返回 argmax；相较"信息量更少的远点"能排除更多候选；
+#       * 候选为空时返回 None。
+#   - 「推理非加密」（R4.8）：对照 coverage_design.directional_visibility，
+#     稠密站位布局对定向源的可见率 < 1.0（存在天花板），故加密站位无法保证全见，
+#     必须改用沉默约束推理压缩候选 + 盲清除。
+#
+# 结论：现有实现行为均正确，本次为验证性回归，未改动 directional.py。
+# =============================================================================
+
+from src.b_sim.directional import GRID_STEP_M as _GRID_STEP_M  # noqa: E402
+from src.b_sim.coverage_design import directional_visibility as _directional_visibility  # noqa: E402
+from src.b_sim.coverage_design import ring as _cov_ring  # noqa: E402
+
+
+def _make_single_candidate_belief(position, heading_deg):
+    """构造只含单个 (位置, 朝向) 候选的信念，便于精确断言补测点几何。"""
+    belief = DirectionalBelief.fresh()
+    pi = belief.positions.index(position)
+    hi = belief.headings.index(heading_deg)
+    belief.candidates = {(pi, hi, 0)}
+    return belief
+
+
+def test_task72_probe_points_are_outward_not_source_position():
+    """R4.5：补测点生成于候选源朝向**外侧**，NOT 候选源位置本身。
+
+    候选源在原点、朝向 0°（波束朝东）：补测点应位于 +x 方向前方，
+    绝不等于源位置 (0,0)，且横向 y 分量为 0（沿朝向前方）。
+    """
+    belief = _make_single_candidate_belief((0.0, 0.0), 0.0)
+    probes = belief._probe_candidates(260)
+    assert probes, "应至少生成一个补测点"
+    # 无补测点落在候选源位置本身
+    assert all((px, py) != (0.0, 0.0) for px, py in probes)
+    for px, py in probes:
+        assert px > 0.0, f"补测点应在朝向前方 (x>0)，实得 {(px, py)}"
+        assert abs(py) < 1e-6, f"沿朝向 0° 前方，横向应为 0，实得 {(px, py)}"
+
+
+def test_task72_probe_reaches_follow_two_four_step_and_075_reception():
+    """R4.5：补测点沿朝向前方按 (2·step, 4·step, 0.75·1000 m) 三档距离生成。"""
+    belief = _make_single_candidate_belief((0.0, 0.0), 0.0)
+    probes = belief._probe_candidates(260)
+    reaches = sorted(math.hypot(px, py) for px, py in probes)
+    expected = sorted((_GRID_STEP_M * 2, _GRID_STEP_M * 4, _RECEPTION_MIN_M * 0.75))
+    assert reaches == pytest.approx(expected)
+    # 具体几何：朝向 0° → (240,0), (480,0), (750,0)
+    assert set(probes) == {(240.0, 0.0), (480.0, 0.0), (750.0, 0.0)}
+
+
+def test_task72_probe_points_clipped_into_arena():
+    """R4.5：越界补测点沿区域边界回退，裁剪到 1800 m 圆域内。
+
+    候选源贴近边界、朝向指向区域外，则前方三档距离会越界；应被裁剪到半径 1800 m。
+    """
+    # 取一个靠近边界的格点，朝向指向远离原点方向（外侧）。
+    edge_pos = None
+    for p in DirectionalBelief.fresh().positions:
+        if 1700.0 <= math.hypot(*p) <= 1800.0:
+            edge_pos = p
+            break
+    assert edge_pos is not None
+    heading = math.degrees(math.atan2(edge_pos[1], edge_pos[0]))  # 指向区域外
+    # 用最近的 30° 网格朝向
+    heading_grid = min(_headings(), key=lambda h: abs((h - heading + 180) % 360 - 180))
+    belief = _make_single_candidate_belief(edge_pos, heading_grid)
+    for px, py in belief._probe_candidates(260):
+        assert math.hypot(px, py) <= _ARENA_RADIUS + 1e-6, f"补测点越界未裁剪: {(px, py)}"
+
+
+def test_task72_best_probe_point_none_when_empty():
+    """R4.5：候选集合为空时 best_probe_point 返回 None。"""
+    belief = DirectionalBelief.fresh()
+    belief.candidates = set()
+    assert belief.best_probe_point((0.0, 0.0)) is None
+
+
+def test_task72_best_probe_point_maximizes_elimination_gain():
+    """R4.5：best_probe_point 选期望排除比例最大的补测点。
+
+    构造一簇朝向一致、聚在原点附近的候选，使某个"前方近点"能一次排除全部候选
+    （gain=1.0）；返回点确实能把候选数打到 0（优于信息量更少的远角点）。
+    """
+    belief = DirectionalBelief.fresh()
+    h0 = belief.headings.index(0.0)
+    cluster = [(0.0, 0.0), (120.0, 0.0), (0.0, 120.0), (0.0, -120.0)]
+    belief.candidates = {(belief.positions.index(p), h0, 0) for p in cluster}
+    total = len(belief.candidates)
+
+    best = belief.best_probe_point((0.0, 0.0))
+    assert best is not None
+
+    def eliminated_at(px, py, cands):
+        n = 0
+        for pi, hi, _ in cands:
+            sx, sy = belief.positions[pi]
+            if math.hypot(px - sx, py - sy) <= _RECEPTION_MIN_M and in_beam(
+                sx, sy, belief.headings[hi], px, py
+            ):
+                n += 1
+        return n
+
+    # 最优点应能排除全部候选（gain = 1.0）。
+    assert eliminated_at(*best, belief.candidates) == total
+    # 与"信息量更少的远角点"(区域另一侧) 相比，最优点排除更多。
+    naive = (-1700.0, 0.0)
+    assert eliminated_at(*best, belief.candidates) > eliminated_at(*naive, belief.candidates)
+
+
+def test_task72_best_probe_reduces_candidates_more_than_naive_alternative():
+    """R4.5：移动到 best_probe_point 后（若无信号）比朴素替代点排除更多候选。
+
+    对全域信念，用 best_probe_point 选点，随后 apply_silence 模拟该点无信号；
+    候选削减量应严格大于在一个远角朴素点的削减量。
+    """
+    belief = DirectionalBelief.fresh()
+    before = len(belief.candidates)
+    best = belief.best_probe_point((0.0, 0.0))
+    assert best is not None
+
+    at_best = DirectionalBelief.fresh()
+    at_best.apply_silence(*best)
+    reduced_best = before - len(at_best.candidates)
+
+    at_naive = DirectionalBelief.fresh()
+    at_naive.apply_silence(1700.0, 0.0)  # 贴边角点：可排除的扇区内近候选更少
+    reduced_naive = before - len(at_naive.candidates)
+
+    assert reduced_best > 0
+    assert reduced_best > reduced_naive, (
+        f"best_probe 削减 {reduced_best} 应大于朴素点削减 {reduced_naive}"
+    )
+
+
+def test_task72_best_probe_prefers_closer_point_when_gain_equal():
+    """R4.5：增益相等时，移动折价使 best_probe_point 偏好更近的补测点。
+
+    两个候选状态，其补测点位于同一直线的近/远两处、且各自能排除的候选数相同
+    （单调折价 distance/500·0.05）。构造使近点严格占优。
+    """
+    belief = DirectionalBelief.fresh()
+    h0 = belief.headings.index(0.0)
+    # 单个原点候选：补测点 (240,0)/(480,0)/(750,0) 都能排除该唯一候选（gain 相等=1.0）。
+    belief.candidates = {(belief.positions.index((0.0, 0.0)), h0, 0)}
+    best = belief.best_probe_point((0.0, 0.0))
+    # 三档 reach 增益相同，折价随距离递增 → 选最近的 (240,0)。
+    assert best == (240.0, 0.0)
+
+
+def test_task72_directional_visibility_has_ceiling_below_one():
+    """R4.8：稠密站位布局对定向源的可见率 < 1.0（存在天花板）。
+
+    对照 coverage_design.directional_visibility：即便布上原点 + 双环（31 站位）的
+    稠密布局，定向源（仅 ±90° 可见）的可见率仍达不到 100%——说明盲目加密站位无法
+    保证全见，故 Q4 改用「沉默约束推理 + 盲清除」而非加密观测站位。种子数保持很小。
+    """
+    dense = [(0.0, 0.0)] + _cov_ring(1250, 12) + _cov_ring(1560, 18, math.pi / 18)
+    assert len(dense) == 31
+    seen, total = _directional_visibility(dense, range(3000, 3008), directional_count=5)
+    assert total > 0
+    rate = seen / total
+    # 稠密布局仍有盲区（朝区域外辐射的定向源看不见）→ 可见率严格 < 1.0。
+    assert rate < 1.0, f"稠密站位定向可见率应 < 1.0（存在天花板），实得 {rate:.3f}"
