@@ -781,3 +781,84 @@ def test_property6_candidate_elimination_is_sound(source: Jammer, points):
                 assert _bearing_consistent(belief, node, px, py, svd), (
                     f"存活候选 {node} 与示向度观测 @({px:.1f},{py:.1f}) svd={svd:.3f} 不一致却残留"
                 )
+
+
+
+# ===========================================================================
+# 任务 7.5：预算内全清（含定向）性质测试（设计 §3.4 / §7.2 Property 7 Q4 变体）
+# ===========================================================================
+#
+# 【为何这是「有界种子族」性质，而非 hypothesis 生成】
+# 本性质是「for all seeds in a fixed set」的有界全称命题：对一小组**确定性**种子，
+# 每个种子跑一整局 Q4 策略（DogStrategy vs. 本地 mock server），断言每局全清。
+# 单局要跑完整搜索—推理—定位—清除流程（~2 s/局），若用 @given/hypothesis 生成
+# 数百局会失控（且 hypothesis 生成的是抽象源集合，无法直接喂 run_episode 的种子驱动
+# 案例生成器）。因此**刻意不用 @given**，改为固定种子集合上的普通 pytest 参数化，
+# 使运行时间有界且完全可复现（同种子 → 同案例 → 同结果）。
+#
+# 【配置口径 — 与离线最佳 Q4 配置一致】
+# 复现依据 results/b_q4_r1750.json（seed_start=7001、episodes=40、directional=5、
+# strategy.directional_probe=True、outer_ring_radius=1750），该配置离线达成 40/40 全清。
+# 注意：`directional_probe=True` 时策略在 `_probe_ring` 自动启用外环
+# （`if cfg.directional_probe or cfg.use_outer_ring`，见 strategy.py），故无需显式
+# `use_outer_ring=True`；这里按 b_q4_r1750.json 的原始配置只设 `directional_probe=True`
+# （外环半径取默认 1750 m）。
+#
+# 【种子子集与全量 40/40 的关系】
+# 全量 40/40 扫描由 `python -m src.b_sim.rehearse --episodes 40 --directional 5`
+# 复现（seed 7001..7040，见 results/b_q4_r1750.json，40 局全清）。本测试为把单测运行
+# 时间控制在数十秒内，取该种子区间的**代表性子集**（seed 7001..7010，10 局，覆盖
+# 每案例 10–16 源的规模档位），断言每局全清（cleared == total_jammers，即
+# cleared_ratio == 1.0）。若某些种子在合理配置下未全清，本测试**不会**弱化断言强行
+# 通过，而是让 pytest 直接报告是哪个 seed 的哪些 missed_channels 未清（见断言消息），
+# 以便据实决策。
+Q4_FULL_CLEAR_CONFIG_LABEL = "b_q4_r1750.json (directional_probe=True, outer_ring_radius=1750)"
+# 代表性种子子集（离线最佳配置全量为 7001..7040 全清；此处取前 10 局，源数覆盖 10–16）。
+Q4_REPRESENTATIVE_SEEDS = list(range(7001, 7011))
+
+
+def _q4_full_clear_config():
+    """离线 40/40 全清的 Q4 配置（与 results/b_q4_r1750.json 一致）。"""
+    from src.b_sim.strategy import StrategyConfig  # 局部导入：仅本有界族测试需要
+
+    # 与 b_q4_r1750.json 的 strategy 字段一致：只开定向探测，外环半径取默认 1750 m。
+    return StrategyConfig(directional_probe=True)
+
+
+# ---------------------------------------------------------------------------
+# Feature: b-radio-interference-locate-clear, Property 7 (Q4 变体): 预算内全清不变量（含定向）
+# 设计 §7.2 Property 7 / _Requirements: 4.9_
+#
+# 对含定向源的 Q4 案例族（每案例 10–16 源、含 5 个定向源），在虚拟/现实预算充足时，
+# 策略达成设计目标全清率（离线设计目标 40/40 全清）。这里以固定种子族（有界全称）
+# 断言每局 cleared == total_jammers（cleared_ratio == 1.0）。
+#
+# 【有界族，非 hypothesis 生成】见上方段落说明——刻意用 pytest 参数化而非 @given，
+# 保证运行时间有界且确定性可复现。
+# ---------------------------------------------------------------------------
+# **Validates: Requirements 4.9**
+@pytest.mark.parametrize("seed", Q4_REPRESENTATIVE_SEEDS)
+def test_property7_q4_directional_full_clear_within_budget(seed: int):
+    from src.b_sim.rehearse import run_episode  # 局部导入：仅本有界族测试需要
+
+    episode = run_episode(seed, directional=5, config=_q4_full_clear_config())
+
+    # 案例族规模契约：每案例 10–16 源，且确含定向源（directional=5）。
+    assert 10 <= episode["total_jammers"] <= 16, (
+        f"seed={seed} 源总数 {episode['total_jammers']} 不在 Q4 案例族 [10,16] 内"
+    )
+    assert episode["directional_jammers"] == 5, (
+        f"seed={seed} 定向源数 {episode['directional_jammers']} != 5（Q4 配置 directional=5）"
+    )
+
+    # 预算内全清：清除个数 == 真实源总数（cleared_ratio == 1.0）。
+    # 不满足时**不弱化断言**——直接报出 seed / 已清除比例 / 未清频道 / 所用配置。
+    assert episode["cleared"] == episode["total_jammers"], (
+        f"seed={seed} 未全清：cleared={episode['cleared']}/{episode['total_jammers']} "
+        f"(ratio={episode['cleared_ratio']:.3f}) missed_channels={episode['missed_channels']} "
+        f"config={Q4_FULL_CLEAR_CONFIG_LABEL}"
+    )
+    assert episode["cleared_ratio"] == pytest.approx(1.0, abs=1e-9), (
+        f"seed={seed} cleared_ratio={episode['cleared_ratio']:.6f} != 1.0 "
+        f"missed_channels={episode['missed_channels']} config={Q4_FULL_CLEAR_CONFIG_LABEL}"
+    )
