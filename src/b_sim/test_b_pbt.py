@@ -401,3 +401,40 @@ def test_property3_equilateral_triangle_counterexample_not_covered():
     expected_margin = -(math.sqrt(3.0) / 2.0 - 0.5) * L  # = −(√3/2 − 1/2)·L
     assert margin == pytest.approx(expected_margin, abs=1e-6)
     assert margin < -COVER_TOL_M  # 明确落在容差之外（真·不覆盖）
+
+
+
+# ===========================================================================
+# 任务 3.4：Q2 逼近误差单调收缩性质测试（设计 §7.2 P8）
+# ===========================================================================
+from src.b_sim.strategy import lateral_error_at  # noqa: E402
+
+
+# ---------------------------------------------------------------------------
+# Feature: b-radio-interference-locate-clear, Property 8: 逼近误差单调收缩
+# 设计 §7.2 P8 / _Requirements: 2.8_
+# `lateral_error_at(r)` 关于 `r` 严格单调递增，验证"越近越准"，为逐步逼近提供依据。
+# 对任意 `r2 > r1 ≥ 0`，`lateral_error_at(r2) > lateral_error_at(r1)`；
+# 并核对其闭式定义 `e(r) = r·tan(1°)`（R2.8）。
+# ---------------------------------------------------------------------------
+# **Validates: Requirements 2.8**
+@PBT_SETTINGS
+@given(
+    r1=st.floats(min_value=0.0, max_value=3000.0, allow_nan=False, allow_infinity=False),
+    r2=st.floats(min_value=0.0, max_value=3000.0, allow_nan=False, allow_infinity=False),
+)
+def test_property8_lateral_error_strictly_monotonic(r1: float, r2: float):
+    # 规范化为 0 ≤ r1 < r2；两者相等时跳过（严格单调只对 r2 > r1 成立）。
+    lo, hi = min(r1, r2), max(r1, r2)
+    assume(hi > lo)
+
+    # (a) 严格单调递增：更远的距离横向误差更大 → 逼近使误差单调收缩。
+    assert lateral_error_at(hi) > lateral_error_at(lo), (
+        f"lateral_error_at({hi:.6f})={lateral_error_at(hi):.9f} 未严格大于 "
+        f"lateral_error_at({lo:.6f})={lateral_error_at(lo):.9f}"
+    )
+
+    # (b) 闭式定义一致：e(r) = r·tan(1°)（1° 为示向度误差绝对上界）。
+    tan1 = math.tan(math.radians(1.0))
+    assert lateral_error_at(lo) == pytest.approx(lo * tan1, abs=1e-9)
+    assert lateral_error_at(hi) == pytest.approx(hi * tan1, abs=1e-9)
