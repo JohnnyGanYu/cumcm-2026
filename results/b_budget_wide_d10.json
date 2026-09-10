@@ -1,0 +1,119 @@
+{
+  "plan": "baseline",
+  "episodes": 200,
+  "seed_start": 7000,
+  "directional": 10,
+  "total_elapsed_s": 96.1,
+  "rows": [
+    {
+      "name": "baseline",
+      "overrides": {},
+      "directional": 10,
+      "episodes": 200,
+      "error_count": 0,
+      "errors": [],
+      "metric_mean_s": 1335.27,
+      "metric_median_s": 1302.61,
+      "metric_max_s": 1856.43,
+      "pooled_metric_s": 1303.36,
+      "cleared_ratio_mean": 0.996,
+      "cleared_ratio_min": 0.9,
+      "cleared_total": 2589,
+      "jammers_total": 2599,
+      "cleared_per_episode": 12.945,
+      "full_clear_episodes": 190,
+      "full_clear_rate": 0.95,
+      "virtual_time_mean_s": 16872.0,
+      "virtual_time_max_s": 22387.2,
+      "virtual_budget_used_pct": 6.22,
+      "measure_calls_mean": 573.3,
+      "clear_calls_mean": 23.0,
+      "wall_s_mean": 1.9,
+      "wall_s_max": 4.36,
+      "wall_s_p95": 3.49,
+      "sweep_elapsed_s": 96.1,
+      "missed_episodes": [
+        {
+          "seed": 7013,
+          "total": 16,
+          "cleared": 15,
+          "missed_channels": [
+            18
+          ]
+        },
+        {
+          "seed": 7016,
+          "total": 10,
+          "cleared": 9,
+          "missed_channels": [
+            17
+          ]
+        },
+        {
+          "seed": 7040,
+          "total": 10,
+          "cleared": 9,
+          "missed_channels": [
+            19
+          ]
+        },
+        {
+          "seed": 7053,
+          "total": 12,
+          "cleared": 11,
+          "missed_channels": [
+            18
+          ]
+        },
+        {
+          "seed": 7074,
+          "total": 12,
+          "cleared": 11,
+          "missed_channels": [
+            15
+          ]
+        },
+        {
+          "seed": 7122,
+          "total": 14,
+          "cleared": 13,
+          "missed_channels": [
+            14
+          ]
+        },
+        {
+          "seed": 7158,
+          "total": 15,
+          "cleared": 14,
+          "missed_channels": [
+            6
+          ]
+        },
+        {
+          "seed": 7160,
+          "total": 16,
+          "cleared": 15,
+          "missed_channels": [
+            6
+          ]
+        },
+        {
+          "seed": 7175,
+          "total": 16,
+          "cleared": 15,
+          "missed_channels": [
+            6
+          ]
+        },
+        {
+          "seed": 7186,
+          "total": 10,
+          "cleared": 9,
+          "missed_channels": [
+            18
+          ]
+        }
+      ]
+    }
+  ]
+}

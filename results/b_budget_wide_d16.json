@@ -1,0 +1,84 @@
+{
+  "plan": "baseline",
+  "episodes": 200,
+  "seed_start": 7000,
+  "directional": 16,
+  "total_elapsed_s": 61.8,
+  "rows": [
+    {
+      "name": "baseline",
+      "overrides": {},
+      "directional": 16,
+      "episodes": 29,
+      "error_count": 171,
+      "errors": [
+        {
+          "seed": 7000,
+          "error": "ValueError: 定向干扰源个数必须在 0..count 之间"
+        },
+        {
+          "seed": 7001,
+          "error": "ValueError: 定向干扰源个数必须在 0..count 之间"
+        },
+        {
+          "seed": 7002,
+          "error": "ValueError: 定向干扰源个数必须在 0..count 之间"
+        },
+        {
+          "seed": 7003,
+          "error": "ValueError: 定向干扰源个数必须在 0..count 之间"
+        },
+        {
+          "seed": 7004,
+          "error": "ValueError: 定向干扰源个数必须在 0..count 之间"
+        }
+      ],
+      "metric_mean_s": 1145.44,
+      "metric_median_s": 1144.4,
+      "metric_max_s": 1343.28,
+      "pooled_metric_s": 1144.74,
+      "cleared_ratio_mean": 0.9935,
+      "cleared_ratio_min": 0.9375,
+      "cleared_total": 461,
+      "jammers_total": 464,
+      "cleared_per_episode": 15.897,
+      "full_clear_episodes": 26,
+      "full_clear_rate": 0.8966,
+      "virtual_time_mean_s": 18197.3,
+      "virtual_time_max_s": 20149.2,
+      "virtual_budget_used_pct": 5.6,
+      "measure_calls_mean": 542.4,
+      "clear_calls_mean": 30.0,
+      "wall_s_mean": 8.45,
+      "wall_s_max": 42.45,
+      "wall_s_p95": 37.72,
+      "sweep_elapsed_s": 61.8,
+      "missed_episodes": [
+        {
+          "seed": 7028,
+          "total": 16,
+          "cleared": 15,
+          "missed_channels": [
+            18
+          ]
+        },
+        {
+          "seed": 7124,
+          "total": 16,
+          "cleared": 15,
+          "missed_channels": [
+            8
+          ]
+        },
+        {
+          "seed": 7175,
+          "total": 16,
+          "cleared": 15,
+          "missed_channels": [
+            14
+          ]
+        }
+      ]
+    }
+  ]
+}

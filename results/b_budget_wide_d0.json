@@ -1,0 +1,38 @@
+{
+  "plan": "baseline",
+  "episodes": 200,
+  "seed_start": 7000,
+  "directional": 0,
+  "total_elapsed_s": 32.7,
+  "rows": [
+    {
+      "name": "baseline",
+      "overrides": {},
+      "directional": 0,
+      "episodes": 200,
+      "error_count": 0,
+      "errors": [],
+      "metric_mean_s": 461.19,
+      "metric_median_s": 454.14,
+      "metric_max_s": 653.53,
+      "pooled_metric_s": 455.67,
+      "cleared_ratio_mean": 1.0,
+      "cleared_ratio_min": 1.0,
+      "cleared_total": 2599,
+      "jammers_total": 2599,
+      "cleared_per_episode": 12.995,
+      "full_clear_episodes": 200,
+      "full_clear_rate": 1.0,
+      "virtual_time_mean_s": 5921.4,
+      "virtual_time_max_s": 7672.7,
+      "virtual_budget_used_pct": 2.13,
+      "measure_calls_mean": 202.5,
+      "clear_calls_mean": 13.0,
+      "wall_s_mean": 0.65,
+      "wall_s_max": 0.76,
+      "wall_s_p95": 0.73,
+      "sweep_elapsed_s": 32.7,
+      "missed_episodes": []
+    }
+  ]
+}
