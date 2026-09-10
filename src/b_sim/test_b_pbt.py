@@ -438,3 +438,131 @@ def test_property8_lateral_error_strictly_monotonic(r1: float, r2: float):
     tan1 = math.tan(math.radians(1.0))
     assert lateral_error_at(lo) == pytest.approx(lo * tan1, abs=1e-9)
     assert lateral_error_at(hi) == pytest.approx(hi * tan1, abs=1e-9)
+
+
+
+# ===========================================================================
+# 任务 5.4：时间记账匹配协议表性质测试（设计 §5 / §7.2 P4）
+# ===========================================================================
+import threading  # noqa: E402
+
+from src.b_sim.arena import (  # noqa: E402
+    CHANNEL_MAX,
+    CHANNEL_MIN,
+    CHANNEL_SWITCH_SECONDS,
+    CLEAR_FAIL_SECONDS,
+    CLEAR_SUCCESS_SECONDS,
+    MEASURE_SECONDS,
+    SPEED_MPS,
+    Arena,
+    Case,
+    Jammer,
+)
+from src.b_sim.client import RobotClient  # noqa: E402
+from src.b_sim.server import Session, make_server  # noqa: E402
+
+PBT_ROBOT_ID = "99999"
+
+
+def _make_pbt_case() -> Case:
+    """构造一局固定案例，覆盖 1..20 全部频道，使 /clear 既能成功也能失败。
+
+    源分布在竞技场内不同位置（接收半径足够大以便被清除成功命中判定复用），频道 1..20
+    各一个源；因每个频道都存在源，故 `/clear` 命中与否只取决于清除点是否落在源 20 m 内，
+    与本性质无关（本性质只关心时间记账口径，清除成功/失败均从 ClearResult 读回）。
+    """
+    jammers = [
+        Jammer(
+            channel=ch,
+            x=120.0 * ((ch % 5) - 2),
+            y=120.0 * ((ch // 5) - 2),
+            reception_radius_m=1200.0,
+            directional_deg=None,
+        )
+        for ch in range(CHANNEL_MIN, CHANNEL_MAX + 1)
+    ]
+    return Case(jammers=jammers, error_salt="pbt-p4", seed=0)
+
+
+# 一次动作的抽象描述：类型（measure/clear）+ 目标坐标 + 频道。
+_actions_strategy = st.lists(
+    st.fixed_dictionaries(
+        {
+            "kind": st.sampled_from(["measure", "clear"]),
+            "point": points_in_arena(margin=1.0),
+            "channel": st.integers(min_value=CHANNEL_MIN, max_value=CHANNEL_MAX),
+        }
+    ),
+    min_size=1,
+    max_size=8,
+)
+
+
+# ---------------------------------------------------------------------------
+# Feature: b-radio-interference-locate-clear, Property 4: 时间记账匹配协议表
+# 设计 §5 时间记账表 / §7.2 P4 / _Requirements: 5.6_
+# 对任意动作序列（每个动作 = 竞技场内随机点 + 随机频道 1..20 + measure/clear），
+# 经 mock server + arena 回放后 `RobotClient.virtual_time_s` 等于按 §5 表逐项累加值：
+#   移动 ‖Δ‖/5 s；切频（measure 且 channel≠当前测量频道）+1 s；/measure +5 s；
+#   /clear 成功 +5 s / 失败 +3 s（/clear 不切换测量频道、无切频费）。
+# 差值 ≤ 1e-6 s。
+# ---------------------------------------------------------------------------
+# **Validates: Requirements 5.6**
+@settings(max_examples=60, deadline=None, suppress_health_check=[HealthCheck.filter_too_much])
+@given(actions=_actions_strategy)
+def test_property4_time_accounting_matches_protocol_table(actions):
+    # 每个抽样案例启动一个全新的 mock server + arena（hypothesis 与 pytest fixture
+    # 不能混用，故在测试体内自建线程化 server），回放动作后与独立记账对比。
+    session = Session(PBT_ROBOT_ID, Arena(_make_pbt_case()))
+    httpd = make_server(session, port=0)
+    port = httpd.server_address[1]
+    thread = threading.Thread(target=httpd.serve_forever, daemon=True)
+    thread.start()
+    try:
+        client = RobotClient(PBT_ROBOT_ID, base_url=f"http://127.0.0.1:{port}")
+        client.enter()  # /enter 不推进虚拟时钟
+
+        # 独立按协议表**逐项累加**期望虚拟时间。§5 明确"以微秒整数累加"，故每个动作先
+        # 把 (移动 + 动作) 秒数按微秒四舍五入为整数微秒再累加（与 Arena._commit_move 的
+        # int(round(seconds * 1e6)) 口径一致），最后换算回秒。这样"逐项累加值"是协议规定
+        # 的记账语义，而非把原始浮点秒直接求和（后者在多次大位移下会偏离微秒累加值）。
+        # 状态：当前机器狗坐标（从原点出发）、当前"测量频道"（初始 1）。
+        cur_x, cur_y = 0.0, 0.0
+        cur_channel = 1  # RobotState.channel 初值
+        expected_us = 0  # 期望虚拟时间（整数微秒）
+
+        def to_us(seconds: float) -> int:
+            return int(round(seconds * 1_000_000))
+
+        for act in actions:
+            tx, ty = act["point"]
+            ch = act["channel"]
+            move_cost = math.hypot(tx - cur_x, ty - cur_y) / SPEED_MPS
+
+            if act["kind"] == "measure":
+                cost = move_cost + MEASURE_SECONDS
+                if ch != cur_channel:
+                    cost += CHANNEL_SWITCH_SECONDS  # 切频（换测量频道）+1 s
+                expected_us += to_us(cost)
+                cur_channel = ch  # measure 提交后更新当前测量频道
+                client.measure(tx, ty, ch)
+            else:  # clear：无切频费、不改变测量频道；成功 +5 / 失败 +3
+                result = client.clear(tx, ty, ch)
+                action_cost = CLEAR_SUCCESS_SECONDS if result.ok else CLEAR_FAIL_SECONDS
+                expected_us += to_us(move_cost + action_cost)
+                # 注意：/clear 不切换 cur_channel
+
+            cur_x, cur_y = tx, ty  # 移动落点更新机器狗坐标
+
+        expected = expected_us / 1_000_000.0
+        assert abs(client.virtual_time_s - expected) <= 1e-6, (
+            f"客户端虚拟时刻 {client.virtual_time_s:.9f} s 与协议表逐项累加期望 "
+            f"{expected:.9f} s 偏差 {abs(client.virtual_time_s - expected):.3e} s 超过 1e-6"
+        )
+        # 交叉核对：服务端 arena 的虚拟时刻与客户端一致（同一真值来源）。
+        assert client.virtual_time_s == pytest.approx(
+            session.arena.robot.virtual_time_s, abs=1e-9
+        )
+    finally:
+        httpd.shutdown()
+        httpd.server_close()
