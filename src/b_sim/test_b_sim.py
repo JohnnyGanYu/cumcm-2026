@@ -2496,3 +2496,303 @@ def test_home_all_processes_nearest_active_channel_first():
     strat._home_all()
     assert order[0] == near.channel, f"未先处理最近目标: {order}"
     assert order == [near.channel, far.channel]
+
+
+
+# ===========================================================================
+# 任务 6.4：核对预算上限、优雅退出与结果报告（R3.12 / R3.13）
+# Feature: b-radio-interference-locate-clear
+#
+# 本节为「验证/加固」任务的回归测试（VERIFY：实现已正确，无需改 strategy.py）。
+# 核对项：
+#   (R3.12) _stop() 在「现实剩余 ≤ real_time_reserve_s(15 s)」或「虚拟时刻
+#           ≥ 0.9×MAX_VIRTUAL_SECONDS(=324000 s)」时停止新动作（_stopped=True 并
+#           记事件）；否则继续。run() 用 try/finally 保证即便某阶段抛
+#           TestEnded/ProtocolError 也总会调用 client.exit() 优雅收尾。
+#   (R3.13) summary() 报告已清除个数 cleared_count（int）、平均定位清除时间 T̄
+#           （mean_clear_time_s = virtual_time_s/已清除个数，无清除时为 None）、
+#           程序虚拟时长 virtual_time_s，以及 measure_calls/clear_calls，
+#           字段与官方评分项对应；cleared_count == len(cleared_channels)。
+#
+# T̄「两位小数」口径说明（R3.13）：summary() 返回**原始浮点** mean_clear_time_s，
+# 两位/三位小数的四舍五入由**上层报告层** rehearse.per_episode 完成
+# （src/b_sim/rehearse.py 中 round(stats["mean_clear_time_s"], 3)）。设计有意让
+# summary() 保持原始精度、由报告层负责格式化，故此处**验证该分工**而非改变行为。
+#
+# 复用任务 6.2 的替身：_FakeArena62 / _FakeClient62 / _make_strategy62 /
+# _StrategyConfig62 / _Bearing62（Bearing）。另定义一个带 enter/exit 的最小客户端
+# 替身以驱动 run() 的 finally 优雅退出路径。
+# ===========================================================================
+
+from src.b_sim.arena import MAX_VIRTUAL_SECONDS as _MAX_VIRTUAL_64
+from src.b_sim.client import (
+    ClearResult as _ClearResult64,
+    MeasureResult as _MeasureResult64,
+    ProtocolError as _ProtocolError64,
+    TestEnded as _TestEnded64,
+)
+
+
+# ---- (R3.12) _stop()：虚拟预算阈值 324000 s ----
+
+def test_stop_virtual_budget_threshold_is_324000_seconds():
+    """R3.12：虚拟预算上限 = 0.9 × MAX_VIRTUAL_SECONDS(360000) = 324000 s。"""
+    cfg = _StrategyConfig62()
+    assert _MAX_VIRTUAL_64 == pytest.approx(360000.0)
+    assert cfg.virtual_time_budget_s == pytest.approx(324000.0)
+
+
+def test_stop_true_when_virtual_time_at_or_above_324000():
+    """R3.12：虚拟时刻恰达 324000 s（含）→ _stop()=True，并记「virtual time budget reached」。
+
+    与任务 5.3 的现实预算断言不重叠：此处聚焦虚拟预算阈值 324000 与事件消息。
+    real_budget_left_s 置为大值，隔离出虚拟预算这一触发路径。
+    """
+    cfg = _StrategyConfig62()
+    # 恰为 324000 s（边界含 ≥）→ 停止。real_budget 充裕（10000 s > 15）。
+    arena = _FakeArena62()
+    strat_at = _make_strategy62(arena, cfg)
+    strat_at.client.virtual_time_s = 324000.0
+    assert strat_at._stop() is True
+    assert strat_at._stopped is True
+    assert "virtual time budget reached" in strat_at.events
+    assert "real time budget reached" not in strat_at.events  # 非现实预算触发
+
+    # 略超 324000 s → 同样停止。
+    strat_over = _make_strategy62(_FakeArena62(), cfg)
+    strat_over.client.virtual_time_s = 324000.0 + 1.0
+    assert strat_over._stop() is True
+    assert "virtual time budget reached" in strat_over.events
+
+
+def test_stop_false_when_virtual_time_below_324000_and_real_budget_ok():
+    """R3.12：虚拟时刻 < 324000 s 且现实预算 > 15 s → _stop()=False（继续动作）。"""
+    cfg = _StrategyConfig62()
+    arena = _FakeArena62()
+    strat = _make_strategy62(arena, cfg)
+    # _FakeClient62.real_budget_left_s() 恒返回 10000 s（> 15）。
+    strat.client.virtual_time_s = 324000.0 - 1.0   # 差 1 s 未达阈值
+    assert strat._stop() is False
+    assert strat._stopped is False
+    assert "virtual time budget reached" not in strat.events
+
+
+# ---- (R3.12) run() 的 finally 总会优雅调用 client.exit() ----
+
+class _StubRunClient64:
+    """可驱动 DogStrategy.run() 的最小客户端替身。
+
+    - enter()/exit() 记录调用次数；exit_called 供断言优雅退出。
+    - measure()/clear() 可配置为抛 TestEnded/ProtocolError，验证异常下仍走 finally。
+    - 暴露 real_budget_left_s / virtual_time_s / log（run()/summary() 需要）。
+    """
+
+    def __init__(self, *, measure_exc=None, exit_exc=None):
+        self.virtual_time_s = 0.0
+        self.log: list[dict] = []
+        self.enter_calls = 0
+        self.exit_calls = 0
+        self._measure_exc = measure_exc
+        self._exit_exc = exit_exc
+
+    def real_budget_left_s(self) -> float:
+        return 10_000.0
+
+    def enter(self):
+        self.enter_calls += 1
+        return {"accepted": True, "remaining_real_duration_s": 1200.0}
+
+    def exit(self):
+        self.exit_calls += 1
+        if self._exit_exc is not None:
+            raise self._exit_exc
+
+    def measure(self, x, y, channel):
+        if self._measure_exc is not None:
+            raise self._measure_exc
+        self.log.append({"path": "/measure", "request": {"channel": channel}})
+        return _MeasureResult64(result="no_signal", svd_deg=None, virtual_time_s=0.0)
+
+    def clear(self, x, y, channel):
+        self.log.append({"path": "/clear", "request": {"channel": channel}})
+        return _ClearResult64(result="no_target_in_range", virtual_time_s=0.0)
+
+
+def _make_strategy_with_client64(client, config=None):
+    strat = _DogStrategy62.__new__(_DogStrategy62)  # 绕过 __init__ 的真实 client 依赖
+    strat.client = client
+    strat.config = config or _StrategyConfig62()
+    strat.channels = {ch: _ChannelState62(ch) for ch in range(1, 21)}
+    strat.pos = (0.0, 0.0)
+    strat.radio_channel = 1
+    strat.events = []
+    strat._stopped = False
+    return strat
+
+
+def test_run_calls_exit_when_phase_raises_test_ended():
+    """R3.12：某阶段（measure）遇 TestEnded 时，run() 仍在 finally 中调用 client.exit()，
+    并正常返回 summary()。
+
+    说明：_measure()/_clear() 内部已捕获 TestEnded/ProtocolError，记「... stopped: ...」
+    事件并置 _stopped=True（比让异常一路上抛更优雅——后续阶段被 _stop() 短路）。
+    无论异常在 _measure 内被捕获、还是罕见地一路抛到 run() 的 except，finally 都保证
+    client.exit() 被调用。此处核对「measure 遇 TestEnded → 记停止事件 + 优雅 exit」。
+    """
+    client = _StubRunClient64(measure_exc=_TestEnded64("simulated end"))
+    strat = _make_strategy_with_client64(client)
+    result = strat.run()
+    assert client.enter_calls == 1
+    assert client.exit_calls == 1, "阶段异常下仍应优雅调用 client.exit()"
+    # _measure 捕获异常后置停止标记并记事件；后续阶段被 _stop() 短路。
+    assert strat._stopped is True
+    assert any("measure stopped" in e for e in strat.events)
+    # summary() 正常返回（未清除任何频道）。
+    assert isinstance(result, dict)
+    assert result["cleared_count"] == 0
+    assert result["mean_clear_time_s"] is None
+
+
+def test_run_calls_exit_when_phase_raises_protocol_error():
+    """R3.12：阶段遇 ProtocolError 时同样走 finally 优雅退出并返回 summary()。"""
+    client = _StubRunClient64(measure_exc=_ProtocolError64("simulated protocol error"))
+    strat = _make_strategy_with_client64(client)
+    result = strat.run()
+    assert client.exit_calls == 1
+    assert strat._stopped is True
+    assert any("measure stopped" in e for e in strat.events)
+    assert result["cleared_count"] == 0
+
+
+def test_run_finally_exit_always_called_even_if_run_body_raises(monkeypatch):
+    """R3.12：即便某阶段抛出会一路上传到 run() try/except 的 TestEnded/ProtocolError
+    （例如 enter 之后、_measure 之外的阶段直接抛），finally 仍调用 client.exit()，
+    并记「aborted: ...」事件后返回 summary()。
+
+    通过打桩 _home_all 令其直接抛 TestEnded（绕过 _measure 的内部捕获），验证 run()
+    的 except (TestEnded, ProtocolError) 分支记 aborted 事件、finally 仍优雅退出。
+    """
+    client = _StubRunClient64()
+    strat = _make_strategy_with_client64(client)
+    # sweep_origin 关闭以尽快进入 _home_all；令 _home_all 抛异常上传到 run()。
+    strat.config = _StrategyConfig62()
+    object.__setattr__(strat.config, "sweep_origin", False)
+
+    def boom():
+        raise _TestEnded64("home phase aborted")
+
+    strat._home_all = boom  # type: ignore[assignment]
+    result = strat.run()
+    assert client.exit_calls == 1, "run() body 抛异常时 finally 仍应调用 exit()"
+    assert any(e.startswith("aborted:") for e in strat.events)
+    assert isinstance(result, dict)
+    assert result["cleared_count"] == 0
+
+
+def test_run_exit_exception_is_swallowed_and_summary_returned():
+    """R3.12：即便 client.exit() 自身抛 TestEnded/ProtocolError，run() 也吞掉异常，
+    仍返回 summary()（优雅退出绝不向上抛错终止程序）。"""
+    client = _StubRunClient64(measure_exc=_TestEnded64("phase end"),
+                              exit_exc=_ProtocolError64("exit failed"))
+    strat = _make_strategy_with_client64(client)
+    # 不应抛出——finally 内对 exit 的异常被吞。
+    result = strat.run()
+    assert client.exit_calls == 1
+    assert isinstance(result, dict)
+    assert result["cleared_count"] == 0
+
+
+def test_run_calls_exit_on_normal_completion():
+    """R3.12（对照）：正常完成（无异常）时 run() 亦调用一次 client.exit()。"""
+    client = _StubRunClient64()
+    strat = _make_strategy_with_client64(client)
+    result = strat.run()
+    assert client.enter_calls == 1
+    assert client.exit_calls == 1
+    assert isinstance(result, dict)
+
+
+# ---- (R3.13) summary() 字段与官方评分项对应 ----
+
+def test_summary_fields_match_official_scoring_items_when_cleared():
+    """R3.13：summary() 报告 cleared_count（int）、T̄（mean_clear_time_s = 虚拟时长/已清除）、
+    程序虚拟时长 virtual_time_s，以及 measure_calls/clear_calls；cleared_count==len(cleared_channels)。
+
+    直接装配一个「已清除若干频道 + 已知虚拟时长」的策略实例，核对 summary() 各字段。
+    """
+    arena = _FakeArena62()
+    strat = _make_strategy62(arena)
+    # 标记频道 2、5、7 为已清除（共 3 个）。
+    for ch in (2, 5, 7):
+        strat.channels[ch].cleared = True
+    # 预置客户端虚拟时长与日志（3 次 measure、2 次 clear）供计数。
+    strat.client.virtual_time_s = 900.0
+    strat.client.log = [
+        {"path": "/measure", "request": {"channel": 1}},
+        {"path": "/measure", "request": {"channel": 2}},
+        {"path": "/clear", "request": {"channel": 2}},
+        {"path": "/measure", "request": {"channel": 5}},
+        {"path": "/clear", "request": {"channel": 5}},
+    ]
+
+    s = strat.summary()
+    # 已清除频道列表升序、个数为整数且与列表长度一致。
+    assert s["cleared_channels"] == [2, 5, 7]
+    assert isinstance(s["cleared_count"], int)
+    assert s["cleared_count"] == 3
+    assert s["cleared_count"] == len(s["cleared_channels"])
+    # T̄ = 虚拟时长 / 已清除个数 = 900 / 3 = 300.0（原始浮点，未经四舍五入）。
+    assert s["mean_clear_time_s"] == pytest.approx(900.0 / 3.0)
+    assert s["mean_clear_time_s"] == pytest.approx(300.0)
+    # 程序虚拟时长即 client.virtual_time_s。
+    assert s["virtual_time_s"] == pytest.approx(900.0)
+    # measure/clear 调用数由 client.log 中 path 计数。
+    assert s["measure_calls"] == 3
+    assert s["clear_calls"] == 2
+    # 官方评分项字段齐备。
+    for key in ("cleared_channels", "cleared_count", "virtual_time_s",
+                "measure_calls", "clear_calls", "mean_clear_time_s", "events"):
+        assert key in s
+
+
+def test_summary_mean_clear_time_is_none_when_nothing_cleared():
+    """R3.13：无任何清除时 T̄（mean_clear_time_s）为 None（避免除零），cleared_count=0。"""
+    arena = _FakeArena62()
+    strat = _make_strategy62(arena)
+    strat.client.virtual_time_s = 500.0
+    strat.client.log = [
+        {"path": "/measure", "request": {"channel": 1}},
+        {"path": "/measure", "request": {"channel": 2}},
+    ]
+    s = strat.summary()
+    assert s["cleared_channels"] == []
+    assert s["cleared_count"] == 0
+    assert s["cleared_count"] == len(s["cleared_channels"])
+    assert s["mean_clear_time_s"] is None       # 无清除 → 不做除法，返回 None
+    assert s["virtual_time_s"] == pytest.approx(500.0)
+    assert s["measure_calls"] == 2
+    assert s["clear_calls"] == 0
+
+
+def test_summary_raw_mean_is_rounded_by_reporting_layer_not_summary():
+    """R3.13（口径分工）：summary() 返回原始浮点 T̄，两/三位小数由报告层四舍五入。
+
+    验证「summary 原始、rehearse 舍入」的分工：构造虚拟时长使原始 T̄ 含多位小数，
+    断言 summary() 保留原始精度，而 rehearse 报告层的 round(·, 3) 才产生定点结果。
+    此测试固定该分工，避免误把舍入塞进 summary() 改变既有行为。
+    """
+    arena = _FakeArena62()
+    strat = _make_strategy62(arena)
+    for ch in (1, 2, 3):
+        strat.channels[ch].cleared = True
+    strat.client.virtual_time_s = 1000.0        # T̄ = 1000/3 = 333.3333...
+    strat.client.log = []
+    s = strat.summary()
+    raw = s["mean_clear_time_s"]
+    assert raw == pytest.approx(1000.0 / 3.0)
+    # 原始值确含多位小数（未在 summary 内被截断成两/三位）。
+    assert round(raw, 3) != raw
+    # 报告层（rehearse.per_episode）负责舍入：模拟其 round(·, 3)。
+    assert round(raw, 3) == pytest.approx(333.333)
+    # 两位小数报告口径亦由报告层完成。
+    assert round(raw, 2) == pytest.approx(333.33)
