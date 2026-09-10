@@ -654,41 +654,206 @@ def test_boundary_coordinate_exactly_two_million_is_allowed_by_client_gate():
 
 
 
-# ---------- Q2 第二检测点候选生成 (second_point_candidates, R2.1 / R2.4) ----------
+# ---------- 任务 9.2：批量彩排统计与官方校准记录（R6.3 / R6.4 / R6.5）----------
+# Feature: b-radio-interference-locate-clear
+# 核对 rehearse.py 能对本地 mock 服务批量彩排并汇总 T̄、清除率、程序运行时长。
+# 批量规模保持小（少量局）以确保测试快速；上限（Q3≥60/Q4≥40）在 rehearse.main 由
+# --episodes 控制，此处只验证聚合契约与量值合理性。
 
-def test_second_point_candidates_ordering_descending_delta():
+from src.b_sim.rehearse import aggregate as _rehearse_aggregate
+from src.b_sim.rehearse import run_episode as _rehearse_run_episode
+
+
+def test_rehearse_small_batch_aggregates_scoring_fields():
+    """R6.3：批量彩排（此处用小批量保证快速）应汇总清除个数、清除率、T̄、运行时长。
+
+    对本地 mock 服务连跑几局，aggregate() 返回的字典须含全部评分项字段且量值合理：
+      - cleared_total：累计已清除个数（整数，0 ≤ 值 ≤ 真实源总数）
+      - clear_rate / full_clear_rate：清除率 ∈ [0, 1]
+      - mean_clear_time_s_mean：平均定位清除时间 T̄（> 0）
+      - program_wall_s_mean / _max：程序运行时长（≥ 0 现实秒）
+    正式 Q3≥60 / Q4≥40 的批量规模由 rehearse.main 的 --episodes 控制，聚合逻辑同此。
+    """
+    episodes = [_rehearse_run_episode(2000 + i, count=10) for i in range(3)]
+    agg = _rehearse_aggregate(episodes)
+
+    # 局数与清除个数
+    assert agg["episodes"] == 3
+    assert isinstance(agg["cleared_total"], int)
+    assert 0 <= agg["cleared_total"] <= agg["total_jammers_total"]
+    assert agg["total_jammers_total"] == sum(e["total_jammers"] for e in episodes)
+
+    # 清除率
+    assert 0.0 <= agg["clear_rate"] <= 1.0
+    assert 0.0 <= agg["full_clear_rate"] <= 1.0
+    assert 0.0 <= agg["cleared_ratio_min"] <= agg["cleared_ratio_mean"] <= 1.0
+
+    # 平均定位清除时间 T̄（只要有清除即应为正值）
+    assert agg["mean_clear_time_s_mean"] is not None
+    assert agg["mean_clear_time_s_mean"] > 0.0
+    assert agg["mean_clear_time_s_max"] >= agg["mean_clear_time_s_mean"]
+
+    # 程序运行时长（现实秒）
+    assert agg["program_wall_s_mean"] is not None
+    assert agg["program_wall_s_mean"] >= 0.0
+    assert agg["program_wall_s_max"] >= agg["program_wall_s_mean"]
+
+
+def test_rehearse_aggregate_clear_rate_matches_manual_count():
+    """R6.3：clear_rate 应等于累计已清除个数 / 真实源总数，与逐局求和一致。"""
+    episodes = [_rehearse_run_episode(3000 + i, count=10) for i in range(2)]
+    agg = _rehearse_aggregate(episodes)
+    cleared = sum(e["cleared"] for e in episodes)
+    total = sum(e["total_jammers"] for e in episodes)
+    assert agg["cleared_total"] == cleared
+    assert agg["total_jammers_total"] == total
+    assert agg["clear_rate"] == pytest.approx(round(cleared / total, 4))
+
+
+
+# ---------- 任务 9.2：批量彩排统计与官方校准记录（R6.3 / R6.4 / R6.5）----------
+# Feature: b-radio-interference-locate-clear
+# 核对 rehearse.py 能对本地 mock 服务批量彩排并汇总 T̄、清除率、程序运行时长。
+# 批量规模保持小（少量局）以确保测试快速；上限（Q3≥60/Q4≥40）在 rehearse.main 由
+# --episodes 控制，此处只验证聚合契约与量值合理性。
+
+from src.b_sim.rehearse import aggregate as _rehearse_aggregate
+from src.b_sim.rehearse import run_episode as _rehearse_run_episode
+
+
+def test_rehearse_small_batch_aggregates_scoring_fields():
+    """R6.3：批量彩排（此处用小批量保证快速）应汇总清除个数、清除率、T̄、运行时长。
+
+    对本地 mock 服务连跑几局，aggregate() 返回的字典须含全部评分项字段且量值合理：
+      - cleared_total：累计已清除个数（整数，0 ≤ 值 ≤ 真实源总数）
+      - clear_rate / full_clear_rate：清除率 ∈ [0, 1]
+      - mean_clear_time_s_mean：平均定位清除时间 T̄（> 0）
+      - program_wall_s_mean / _max：程序运行时长（≥ 0 现实秒）
+    正式 Q3≥60 / Q4≥40 的批量规模由 rehearse.main 的 --episodes 控制，聚合逻辑同此。
+    """
+    episodes = [_rehearse_run_episode(2000 + i, count=10) for i in range(3)]
+    agg = _rehearse_aggregate(episodes)
+
+    # 局数与清除个数
+    assert agg["episodes"] == 3
+    assert isinstance(agg["cleared_total"], int)
+    assert 0 <= agg["cleared_total"] <= agg["total_jammers_total"]
+    assert agg["total_jammers_total"] == sum(e["total_jammers"] for e in episodes)
+
+    # 清除率
+    assert 0.0 <= agg["clear_rate"] <= 1.0
+    assert 0.0 <= agg["full_clear_rate"] <= 1.0
+    assert 0.0 <= agg["cleared_ratio_min"] <= agg["cleared_ratio_mean"] <= 1.0
+
+    # 平均定位清除时间 T̄（只要有清除即应为正值）
+    assert agg["mean_clear_time_s_mean"] is not None
+    assert agg["mean_clear_time_s_mean"] > 0.0
+    assert agg["mean_clear_time_s_max"] >= agg["mean_clear_time_s_mean"]
+
+    # 程序运行时长（现实秒）
+    assert agg["program_wall_s_mean"] is not None
+    assert agg["program_wall_s_mean"] >= 0.0
+    assert agg["program_wall_s_max"] >= agg["program_wall_s_mean"]
+
+
+def test_rehearse_aggregate_clear_rate_matches_manual_count():
+    """R6.3：clear_rate 应等于累计已清除个数 / 真实源总数，与逐局求和一致。"""
+    episodes = [_rehearse_run_episode(3000 + i, count=10) for i in range(2)]
+    agg = _rehearse_aggregate(episodes)
+    cleared = sum(e["cleared"] for e in episodes)
+    total = sum(e["total_jammers"] for e in episodes)
+    assert agg["cleared_total"] == cleared
+    assert agg["total_jammers_total"] == total
+    assert agg["clear_rate"] == pytest.approx(round(cleared / total, 4))
+
+
+
+# ---------- 任务 9.2：批量彩排统计与官方校准记录（R6.3 / R6.4 / R6.5）----------
+# Feature: b-radio-interference-locate-clear
+# 核对 rehearse.py 能对本地 mock 服务批量彩排并汇总 T̄、清除率、程序运行时长。
+# 批量规模保持小（少量局）以确保测试快速；上限（Q3≥60/Q4≥40）在 rehearse.main 由
+# --episodes 控制，此处只验证聚合契约与量值合理性。
+
+from src.b_sim.rehearse import aggregate as _rehearse_aggregate
+from src.b_sim.rehearse import run_episode as _rehearse_run_episode
+
+
+def test_rehearse_small_batch_aggregates_scoring_fields():
+    """R6.3：批量彩排（此处用小批量保证快速）应汇总清除个数、清除率、T̄、运行时长。
+
+    对本地 mock 服务连跑几局，aggregate() 返回的字典须含全部评分项字段且量值合理：
+      - cleared_total：累计已清除个数（整数，0 ≤ 值 ≤ 真实源总数）
+      - clear_rate / full_clear_rate：清除率 ∈ [0, 1]
+      - mean_clear_time_s_mean：平均定位清除时间 T̄（> 0）
+      - program_wall_s_mean / _max：程序运行时长（≥ 0 现实秒）
+    正式 Q3≥60 / Q4≥40 的批量规模由 rehearse.main 的 --episodes 控制，聚合逻辑同此。
+    """
+    episodes = [_rehearse_run_episode(2000 + i, count=10) for i in range(3)]
+    agg = _rehearse_aggregate(episodes)
+
+    # 局数与清除个数
+    assert agg["episodes"] == 3
+    assert isinstance(agg["cleared_total"], int)
+    assert 0 <= agg["cleared_total"] <= agg["total_jammers_total"]
+    assert agg["total_jammers_total"] == sum(e["total_jammers"] for e in episodes)
+
+    # 清除率
+    assert 0.0 <= agg["clear_rate"] <= 1.0
+    assert 0.0 <= agg["full_clear_rate"] <= 1.0
+    assert 0.0 <= agg["cleared_ratio_min"] <= agg["cleared_ratio_mean"] <= 1.0
+
+    # 平均定位清除时间 T̄（只要有清除即应为正值）
+    assert agg["mean_clear_time_s_mean"] is not None
+    assert agg["mean_clear_time_s_mean"] > 0.0
+    assert agg["mean_clear_time_s_max"] >= agg["mean_clear_time_s_mean"]
+
+    # 程序运行时长（现实秒）
+    assert agg["program_wall_s_mean"] is not None
+    assert agg["program_wall_s_mean"] >= 0.0
+    assert agg["program_wall_s_max"] >= agg["program_wall_s_mean"]
+
+
+def test_rehearse_aggregate_clear_rate_matches_manual_count():
+    """R6.3：clear_rate 应等于累计已清除个数 / 真实源总数，与逐局求和一致。"""
+    episodes = [_rehearse_run_episode(3000 + i, count=10) for i in range(2)]
+    agg = _rehearse_aggregate(episodes)
+    cleared = sum(e["cleared"] for e in episodes)
+    total = sum(e["total_jammers"] for e in episodes)
+    assert agg["cleared_total"] == cleared
+    assert agg["total_jammers_total"] == total
+    assert agg["clear_rate"] == pytest.approx(round(cleared / total, 4))
+
+
+
+# ---------- Q2 第二检测点候选生成 (second_point_candidates, R2.1 / R2.4) [task 3.1] ----------
+
+def test_q2_second_point_candidates_ordering_descending_delta():
     """R2.1：候选序列按偏移角 δ 降序排列（32° 对 → 16° 对 → 0° 单点）。"""
     p1 = (100.0, 200.0)
     theta1 = 30.0
     cands = second_point_candidates(p1, theta1)
-    # 由每个候选反解其相对 p1 的方位与 theta1 的带符号夹角 |δ|。
     def abs_delta(pt):
         dx, dy = pt[0] - p1[0], pt[1] - p1[1]
         bearing = math.degrees(math.atan2(dy, dx))
         diff = abs(norm_deg(bearing) - norm_deg(theta1))
         return diff if diff <= 180.0 else 360.0 - diff
     deltas = [abs_delta(c) for c in cands]
-    # 期望：32,32,16,16,0（成对，且非严格降序即 δ 不增）。
     for a, b in zip(deltas, deltas[1:]):
         assert a >= b - 1e-9, f"δ 未按降序排列: {deltas}"
     assert deltas[0] == pytest.approx(32.0, abs=1e-6)
     assert deltas[-1] == pytest.approx(0.0, abs=1e-6)
 
 
-def test_second_point_candidates_sequence_length():
+def test_q2_second_point_candidates_sequence_length():
     """R2.1：δ>0 生成 ± 一对，δ=0 只生成一个候选。"""
     p1 = (0.0, 0.0)
-    # 默认 offsets=(32,16,0) → 2+2+1 = 5 个候选。
     assert len(second_point_candidates(p1, 45.0)) == 5
-    # 仅 δ=0 → 单个候选。
     assert len(second_point_candidates(p1, 45.0, offsets=(0.0,))) == 1
-    # 仅 δ=32 → ± 一对。
     assert len(second_point_candidates(p1, 45.0, offsets=(32.0,))) == 2
-    # δ=32,0 → 2+1 = 3。
     assert len(second_point_candidates(p1, 45.0, offsets=(32.0, 0.0))) == 3
 
 
-def test_second_point_candidates_forward_advance_length():
+def test_q2_second_point_candidates_forward_advance_length():
     """R2.4：每个候选到 p1 的距离 = L = 380 m（±1 m 容差），且沿示向度有正前进分量。"""
     p1 = (-50.0, 75.0)
     theta1 = 123.4
@@ -698,14 +863,12 @@ def test_second_point_candidates_forward_advance_length():
         rel = (pt[0] - p1[0], pt[1] - p1[1])
         dist = math.hypot(*rel)
         assert abs(dist - 380.0) <= 1.0, f"候选前进长度 {dist} 偏离 380±1 m"
-        # 沿示向度方向的前进分量 L·cos δ 必须严格为正（禁止纯横向/反向）。
         forward = rel[0] * ux + rel[1] * uy
         assert forward > 0.0, "候选缺少沿 θ1 的正前进分量"
-        # cos(32°)*380 ≈ 322.2 为最小前进分量下界。
         assert forward >= 380.0 * math.cos(math.radians(32.0)) - 1e-6
 
 
-def test_second_point_candidates_no_pure_lateral_translation():
+def test_q2_second_point_candidates_no_pure_lateral_translation():
     """R2.4：无 |δ|>32° 或纯横向平移（前进分量 ≤ 0）候选，且非法偏移被拒。"""
     p1 = (300.0, -120.0)
     theta1 = 200.0
@@ -714,8 +877,6 @@ def test_second_point_candidates_no_pure_lateral_translation():
     for pt in second_point_candidates(p1, theta1):
         rel = (pt[0] - p1[0], pt[1] - p1[1])
         forward = rel[0] * ux + rel[1] * uy
-        # 前进分量 = L·cos δ > 0 ⇔ |δ| < 90°；此处 |δ| ≤ 32° 恒成立。
         assert forward > 0.0
-    # |δ| > 32° 应被显式拒绝（不生成非法横向候选）。
     with pytest.raises(ValueError):
         second_point_candidates(p1, theta1, offsets=(45.0,))
