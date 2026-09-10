@@ -9,3 +9,16 @@ results/tmp/
 official_runs/*
 !official_runs/README.md
 !official_runs/*.sanitized.*
+
+# 专精 B 题：A/C/D/E 的题目附件与代码本机保留，不入库
+problem/A题/
+problem/C题/
+problem/D题/
+problem/E题/
+problem/problems-raw/
+src/a_*.py
+src/c_*.py
+src/inspect_q1_data.py
+results/a_q1_*.csv
+results/q1_*.csv
+results/q1_summary.json
