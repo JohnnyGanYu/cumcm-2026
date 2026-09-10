@@ -54,6 +54,7 @@ class ChannelState:
     clear_attempts: int = 0
     consecutive_silent: int = 0
     revived: bool = False            # 补扫后已给过第二次机会
+    ray_swept: bool = False          # 已做过射线盲清除（防重入，_home_channel 是循环）
     belief: DirectionalBelief | None = None   # 问题 4：定向源候选集合
     estimate: tuple[float, float] | None = None
     diameter: float = float("inf")
@@ -95,7 +96,15 @@ class StrategyConfig:
     # 双环方案（950x8 + 1560x14）需 23 站位，最坏间隙 539 m，覆盖更好但成本高 77%。
     probe_ring_radius: float = 1250.0
     probe_ring_stations: int = 12
-    outer_ring_radius: float = 1560.0
+    # 外环半径实测依据（200 案例 × 5 定向源，统计定向源可见率）：
+    #   内1250x12 单环          90.00%
+    #   +外1560x14              97.30%
+    #   +外1700x16              99.10%
+    #   +外1750x18              99.90%
+    # 1560 m 不够：漏失案例 seed 7039 ch4 的可见点全落在距原点 1600-1800 m 窄带内，
+    # 1560 m 外环差 40 m 就是够不到，这也解释了早先"开外环仍救不回它"。
+    # 外环是惰性的（内环解决不了才走），故提高半径不会普遍推高耗时。
+    outer_ring_radius: float = 1750.0
     outer_ring_stations: int = 14
     use_outer_ring: bool = False          # 全向情形单环足够；定向情形自动启用
     # 问题 4：定向源只在 180 度扇区内可见，方位采样必须更密
@@ -110,6 +119,14 @@ class StrategyConfig:
     spiral_points: int = 6
     max_measures_per_channel: int = 40    # 搜索阶段总额度（定向源需要大量沉默观测）
     max_homing_measures: int = 14         # 归航阶段额度，拿到首个示向度后起算
+    narrow_sector_extra_measures: int = 22  # 窄可见区定向源的归航加码（沉默观测>=8 时）
+    silent_tolerance: int = 3               # 连续沉默多少次后放弃归航
+    narrow_sector_silent_tolerance: int = 10  # 窄可见区定向源的放宽值
+    # 射线盲清除（单条示向度、交会不出位置时的最后手段）
+    ray_clear_step_m: float = 32.0          # 沿射线铺点间距，须 < 2*清除半径(40m)
+    ray_clear_lateral_m: float = 22.0       # 横向偏移，补偿 ±1° 示向度误差
+    ray_clear_max_range_m: float = 1600.0   # 最远铺到多少米（接收半径下限 1000m 起）
+    ray_clear_max_attempts: int = 120       # 该频道 clear 调用上限
     max_clear_attempts: int = 9
     # 预算
     real_time_reserve_s: float = 15.0
@@ -143,6 +160,7 @@ class DogStrategy:
             self._probe_ring()
             self._revive_exhausted()
             self._home_all()
+            self._inner_retry()
             if self.config.directional_probe:
                 self._belief_search()
                 self._home_all()
@@ -260,6 +278,39 @@ class DogStrategy:
                 state.exhausted = False
                 state.revived = True
                 state.consecutive_silent = 0
+                state.ray_swept = False   # 新观测可能给出更好的射线，允许再扫一次
+
+    def _inner_retry(self) -> None:
+        """内圈重测：救"原点可见、但环形站位全部超出其接收半径"的近距离源。
+
+        实测漏失案例 seed 9002 ch18：真值 (-213,38)、距原点仅 217 m、接收半径
+        1027 m —— 原点能拿到示向度，但半径 1250 m 的 12 个环形站位到它最近
+        1037 m，全部超出 9.9 m。归航失败后 `_probe_ring` 只往外走，旧示向度
+        重试同样的几何必然再失败。故在此对仍未清除的频道回内圈重新取观测。
+        """
+        # 只救"已经拿到过示向度、却始终清不掉"的频道。
+        # 完全沉默的频道属于覆盖问题（交给环形补扫/信念搜索），内圈重测帮不上；
+        # 无条件对所有频道跑内圈会让平均耗时上涨约 12%（实测 477->533 s）。
+        targets = [st for st in self.channels.values()
+                   if not st.cleared and st.bearings]
+        if not targets:
+            return
+        # 原点 + 小半径三角，给近距离源提供新的交会基线
+        inner = [(0.0, 0.0), (300.0, 0.0), (-150.0, 260.0), (-150.0, -260.0)]
+        for station in inner:
+            if self._stop():
+                return
+            todo = [st for st in self.channels.values()
+                    if not st.cleared and st.bearings]
+            if not todo:
+                return
+            for state in sorted(todo, key=lambda s: s.channel):
+                if self._stop():
+                    return
+                # 清掉陈旧几何，强制以新观测重新定位
+                state.exhausted = False
+                self._probe_channel_at(station, state)
+            self._home_all()
 
     def _belief_search(self, max_rounds: int = 60) -> None:
         """问题 4 收尾：对仍沉默的频道，用候选集合推理挑信息增益最大的点补测。
@@ -361,14 +412,36 @@ class DogStrategy:
         """把一个频道推进到清除完成。返回 False 表示放弃。"""
         while not self._stop():
             budget = self.config.max_homing_measures + (6 if state.revived else 0)
+            # 可见区极小的定向源需要更多归航试探：实测 seed 7001 ch11 / 7015 ch20 /
+            # 7039 ch4 的可见区仅占目标区域 2.3%-5.4% 且朝区域外辐射，一旦走出扇区
+            # 立即丢信号，14 次归航额度不够（该局反复 5 次 budget exhausted）。
+            # 沉默观测多说明可见区窄，据此加码；虚拟/现实时间余量极大（实测各用
+            # 上限的 5.1% 与 0.17%），不加码纯属浪费预算。
+            if len(state.silent_points) >= 8:
+                budget += self.config.narrow_sector_extra_measures
             if state.homing_measures >= budget:
                 self.events.append(f"ch{state.channel}: measure budget exhausted")
                 return self._final_attempt(state)
             if state.clear_attempts >= self.config.max_clear_attempts:
                 self.events.append(f"ch{state.channel}: clear budget exhausted")
-                return False
-            if state.consecutive_silent >= 3:
+                # 打桩实测（seed 7001 ch11）：交会估计落在 (815,1948)，距原点 2112 m
+                # 已在 1800 m 区域外，而真值在 (1050.7,1415.8)。围绕错误估计打满 9 次
+                # clear 后，这条门禁在"丢信号"判断之前就 return，使射线盲扫永不触发
+                # （打桩计数为 0）。估计不可信时改走射线盲扫：只信示向度方向。
+                return self._ray_blind_clear(state)
+            # 丢信号容忍度：窄可见区的定向源在归航路上频繁出扇区，3 次即弃太苛刻。
+            # 实测 seed 7001 ch11 / 7015 ch20 可见区仅占目标区域 3.9%/5.4% 且朝区域外
+            # 辐射，均因连续沉默 3 次被判 "lost signal" 而漏失（而非预算耗尽）。
+            silent_tolerance = self.config.silent_tolerance
+            if state.bearings and len(state.silent_points) >= 6:
+                silent_tolerance = self.config.narrow_sector_silent_tolerance
+            if state.consecutive_silent >= silent_tolerance:
                 self.events.append(f"ch{state.channel}: lost signal, defer to ring probe")
+                # 已有示向度却反复丢信号 = 窄扇区源，环形补扫也救不回来（实测开外环
+                # 反而 36/40 更差）。改为立即用射线盲清除兜底：方向已知、距离未知时
+                # /clear 只看距离，沿射线铺点即可命中。
+                if state.bearings:
+                    return self._ray_blind_clear(state)
                 return False
 
             if state.estimate is None:
@@ -460,11 +533,66 @@ class DogStrategy:
         return False
 
     def _final_attempt(self, state: ChannelState) -> bool:
-        if state.estimate is None:
+        if state.estimate is not None:
+            if self._clear_at(state.estimate, state.channel):
+                return True
+            if self._spiral(state):
+                return True
+        return self._ray_blind_clear(state)
+
+    def _ray_blind_clear(self, state: ChannelState) -> bool:
+        """沿单条示向度射线铺点盲清除：方向已知、距离未知时的最后手段。
+
+        适用场景（实测 seed 7001 ch11 / 7015 ch20 / 7039 ch4）：源贴近区域边界且
+        朝区域外辐射，可见区退化成一条极细走廊（7001 ch11 仅方位 300° 能看到
+        1140 m，其余方位 20-200 m）。策略沿示向度从原点侧逼近走的是错误走廊，
+        一路沉默，交会不出 estimate，`_final_attempt` 旧实现直接放弃。
+
+        依据：`/clear` 判定只看平面距离 <= 20 m，与辐射朝向、测向机频道无关。
+        因此只需在射线上按 <= 2*20 m 的间距铺清除点即可覆盖整条射线；方向由示向度
+        给出（±1° 误差在 1800 m 处横向偏差约 31 m，故同时在射线两侧做横向偏移）。
+        虚拟时间余量极大（Q4 实测仅用上限的 5.1%），这点开销可以接受。
+        """
+        if not state.bearings or state.ray_swept:
             return False
-        if self._clear_at(state.estimate, state.channel):
-            return True
-        return self._spiral(state)
+        state.ray_swept = True
+        # 射线盲扫用独立计数：_home_channel 的 max_clear_attempts(=9) 是给"围绕估计
+        # 位置补点"设的，会在铺点第 9 次就把盲扫掐死（实测事件从 lost signal 变成
+        # clear budget exhausted 却仍漏失）。这里改为只受 ray_clear_max_attempts 约束。
+        ray_start_attempts = state.clear_attempts
+        last = state.bearings[-1]
+        ox, oy, bearing = last.x, last.y, last.svd_deg
+        step = self.config.ray_clear_step_m
+        lateral = self.config.ray_clear_lateral_m
+        rad = math.radians(bearing)
+        ux, uy = math.cos(rad), math.sin(rad)
+        # 法向单位向量，用于补偿 ±1° 示向度误差带来的横向偏差
+        nx, ny = -uy, ux
+        r = step
+        while r <= self.config.ray_clear_max_range_m:
+            if self._stop() or state.cleared:
+                return state.cleared
+            if state.clear_attempts - ray_start_attempts >= self.config.ray_clear_max_attempts:
+                self.events.append(f"ch{state.channel}: ray blind clear budget exhausted")
+                return state.cleared
+            # 横向偏差随距离线性增长，近处只打中心线，远处补两侧
+            offsets = [0.0]
+            if r * math.radians(1.0) > lateral:
+                offsets = [0.0, lateral, -lateral]
+            for off in offsets:
+                px = ox + ux * r + nx * off
+                py = oy + uy * r + ny * off
+                if math.hypot(px, py) > ARENA_RADIUS + CLEAR_RADIUS_M:
+                    continue
+                if self._clear_at((px, py), state.channel):
+                    self.events.append(
+                        f"ch{state.channel}: cleared by ray blind sweep at r={r:.0f}m")
+                    return True
+                if self._stop() or (state.clear_attempts - ray_start_attempts
+                                    >= self.config.ray_clear_max_attempts):
+                    return state.cleared
+            r += step
+        return state.cleared
 
     # ---- 底层动作 ----
 

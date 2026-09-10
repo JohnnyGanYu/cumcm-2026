@@ -98,6 +98,13 @@ def main() -> None:
     parser.add_argument("--scan-radius", type=float, default=None)
     parser.add_argument("--label", default=None)
     parser.add_argument("--out-dir", default="results")
+    parser.add_argument("--out", default=None, help="直接指定输出文件路径")
+    parser.add_argument("--outer-ring", dest="outer_ring", action="store_true",
+                        help="启用外环补扫（救近边界定向源）")
+    parser.add_argument("--no-outer-ring", dest="outer_ring", action="store_false")
+    parser.set_defaults(outer_ring=None)
+    parser.add_argument("--outer-radius", type=float, default=None)
+    parser.add_argument("--outer-stations", type=int, default=None)
     args = parser.parse_args()
 
     config = StrategyConfig(directional_probe=args.directional > 0)
@@ -107,6 +114,12 @@ def main() -> None:
         config.scan_stations = args.scan_stations
     if args.scan_radius is not None:
         config.scan_ring_radius = args.scan_radius
+    if args.outer_ring is not None:
+        config.use_outer_ring = args.outer_ring
+    if args.outer_radius is not None:
+        config.outer_ring_radius = args.outer_radius
+    if args.outer_stations is not None:
+        config.outer_ring_stations = args.outer_stations
 
     episodes = []
     for i in range(args.episodes):
@@ -124,9 +137,13 @@ def main() -> None:
     print(json.dumps(summary, ensure_ascii=False, indent=2))
 
     label = args.label or (f"q4_dir{args.directional}" if args.directional else "q3")
-    out_dir = Path(args.out_dir)
-    out_dir.mkdir(parents=True, exist_ok=True)
-    out_path = out_dir / f"b_rehearsal_{label}.json"
+    if args.out:
+        out_path = Path(args.out)
+        out_path.parent.mkdir(parents=True, exist_ok=True)
+    else:
+        out_dir = Path(args.out_dir)
+        out_dir.mkdir(parents=True, exist_ok=True)
+        out_path = out_dir / f"b_rehearsal_{label}.json"
     payload = {
         "config": {
             "episodes": args.episodes,
