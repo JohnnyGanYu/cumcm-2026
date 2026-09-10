@@ -1,0 +1,127 @@
+{
+  "report": {
+    "episodes": 3,
+    "move_share_by_phase_pct": {
+      "ring": 69.3,
+      "homing": 30.7
+    },
+    "mean_move_m": 63107,
+    "mean_clear_time_s_observed": 1160.9,
+    "mean_clear_time_s_tsp_lower_bound": 1106.3,
+    "headroom_s": 54.6,
+    "headroom_pct": 4.7,
+    "note": "TSP 下界假设所有源位置已知且免费，只付移动+清除；是顺序优化的乐观上限"
+  },
+  "rows": [
+    {
+      "seed": 80000,
+      "total": 15,
+      "cleared": 15,
+      "virtual_s": 15832.064184,
+      "mean_clear_time_s": 1055.4709456,
+      "move_m_total": 64280,
+      "by_phase": {
+        "ring": {
+          "m": 43558,
+          "n": 46,
+          "pct": 67.8
+        },
+        "homing": {
+          "m": 20723,
+          "n": 82,
+          "pct": 32.2
+        }
+      },
+      "clear_times": [
+        297,
+        607,
+        1013,
+        1326,
+        1884,
+        2106,
+        3768,
+        3948,
+        4374,
+        5230,
+        9150,
+        9322,
+        9405,
+        9671,
+        10213
+      ],
+      "tsp_lower_bound_mean_clear_s": 1059
+    },
+    {
+      "seed": 80001,
+      "total": 15,
+      "cleared": 15,
+      "virtual_s": 15530.205137,
+      "mean_clear_time_s": 1035.3470091333334,
+      "move_m_total": 64611,
+      "by_phase": {
+        "ring": {
+          "m": 43560,
+          "n": 46,
+          "pct": 67.4
+        },
+        "homing": {
+          "m": 21051,
+          "n": 84,
+          "pct": 32.6
+        }
+      },
+      "clear_times": [
+        271,
+        432,
+        754,
+        1289,
+        1768,
+        2173,
+        3286,
+        3487,
+        3722,
+        4113,
+        4661,
+        5450,
+        9222,
+        9499,
+        9896
+      ],
+      "tsp_lower_bound_mean_clear_s": 1160
+    },
+    {
+      "seed": 80002,
+      "total": 11,
+      "cleared": 11,
+      "virtual_s": 15311.759652,
+      "mean_clear_time_s": 1391.9781501818181,
+      "move_m_total": 60429,
+      "by_phase": {
+        "ring": {
+          "m": 43891,
+          "n": 46,
+          "pct": 72.6
+        },
+        "homing": {
+          "m": 16538,
+          "n": 64,
+          "pct": 27.4
+        }
+      },
+      "clear_times": [
+        397,
+        554,
+        1068,
+        1558,
+        1935,
+        2275,
+        2460,
+        2656,
+        3991,
+        5277,
+        9454
+      ],
+      "tsp_lower_bound_mean_clear_s": 1100
+    }
+  ]
+}

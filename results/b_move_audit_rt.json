@@ -1,0 +1,263 @@
+{
+  "report": {
+    "episodes": 6,
+    "move_share_by_phase_pct": {
+      "ring": 71.9,
+      "homing": 28.1,
+      "spiral": 0.2
+    },
+    "mean_move_m": 61496,
+    "mean_clear_time_s_observed": 1222.9,
+    "mean_clear_time_s_tsp_lower_bound": 1028.3,
+    "headroom_s": 194.5,
+    "headroom_pct": 15.9,
+    "note": "TSP 下界假设所有源位置已知且免费，只付移动+清除；是顺序优化的乐观上限"
+  },
+  "rows": [
+    {
+      "seed": 80000,
+      "n_homing_excursions": 20,
+      "homing_net_m": 17435,
+      "homing_actual_m": 20723,
+      "return_to_ring_est_m": 17435,
+      "total": 15,
+      "cleared": 15,
+      "virtual_s": 15832.064184,
+      "mean_clear_time_s": 1055.4709456,
+      "move_m_total": 64280,
+      "by_phase": {
+        "ring": {
+          "m": 43558,
+          "n": 46,
+          "pct": 67.8
+        },
+        "homing": {
+          "m": 20723,
+          "n": 82,
+          "pct": 32.2
+        }
+      },
+      "clear_times": [
+        297,
+        607,
+        1013,
+        1326,
+        1884,
+        2106,
+        3768,
+        3948,
+        4374,
+        5230,
+        9150,
+        9322,
+        9405,
+        9671,
+        10213
+      ],
+      "tsp_lower_bound_mean_clear_s": 1059
+    },
+    {
+      "seed": 80001,
+      "n_homing_excursions": 18,
+      "homing_net_m": 17655,
+      "homing_actual_m": 21051,
+      "return_to_ring_est_m": 17655,
+      "total": 15,
+      "cleared": 15,
+      "virtual_s": 15530.205137,
+      "mean_clear_time_s": 1035.3470091333334,
+      "move_m_total": 64611,
+      "by_phase": {
+        "ring": {
+          "m": 43560,
+          "n": 46,
+          "pct": 67.4
+        },
+        "homing": {
+          "m": 21051,
+          "n": 84,
+          "pct": 32.6
+        }
+      },
+      "clear_times": [
+        271,
+        432,
+        754,
+        1289,
+        1768,
+        2173,
+        3286,
+        3487,
+        3722,
+        4113,
+        4661,
+        5450,
+        9222,
+        9499,
+        9896
+      ],
+      "tsp_lower_bound_mean_clear_s": 1160
+    },
+    {
+      "seed": 80002,
+      "n_homing_excursions": 12,
+      "homing_net_m": 13569,
+      "homing_actual_m": 16538,
+      "return_to_ring_est_m": 13569,
+      "total": 11,
+      "cleared": 11,
+      "virtual_s": 15311.759652,
+      "mean_clear_time_s": 1391.9781501818181,
+      "move_m_total": 60429,
+      "by_phase": {
+        "ring": {
+          "m": 43891,
+          "n": 46,
+          "pct": 72.6
+        },
+        "homing": {
+          "m": 16538,
+          "n": 64,
+          "pct": 27.4
+        }
+      },
+      "clear_times": [
+        397,
+        554,
+        1068,
+        1558,
+        1935,
+        2275,
+        2460,
+        2656,
+        3991,
+        5277,
+        9454
+      ],
+      "tsp_lower_bound_mean_clear_s": 1100
+    },
+    {
+      "seed": 80003,
+      "n_homing_excursions": 18,
+      "homing_net_m": 16235,
+      "homing_actual_m": 19311,
+      "return_to_ring_est_m": 16235,
+      "total": 15,
+      "cleared": 15,
+      "virtual_s": 15509.39384,
+      "mean_clear_time_s": 1033.9595893333333,
+      "move_m_total": 64607,
+      "by_phase": {
+        "ring": {
+          "m": 45296,
+          "n": 46,
+          "pct": 70.1
+        },
+        "homing": {
+          "m": 19311,
+          "n": 79,
+          "pct": 29.9
+        }
+      },
+      "clear_times": [
+        387,
+        688,
+        907,
+        1052,
+        1305,
+        1754,
+        2007,
+        2229,
+        2633,
+        3085,
+        4596,
+        4904,
+        9377,
+        9629,
+        9882
+      ],
+      "tsp_lower_bound_mean_clear_s": 1010
+    },
+    {
+      "seed": 80004,
+      "n_homing_excursions": 15,
+      "homing_net_m": 11527,
+      "homing_actual_m": 14351,
+      "return_to_ring_est_m": 11527,
+      "total": 13,
+      "cleared": 13,
+      "virtual_s": 14494.930805,
+      "mean_clear_time_s": 1114.9946773076922,
+      "move_m_total": 57815,
+      "by_phase": {
+        "ring": {
+          "m": 43374,
+          "n": 46,
+          "pct": 75.0
+        },
+        "homing": {
+          "m": 14351,
+          "n": 67,
+          "pct": 24.8
+        },
+        "spiral": {
+          "m": 90,
+          "n": 6,
+          "pct": 0.2
+        }
+      },
+      "clear_times": [
+        262,
+        391,
+        522,
+        789,
+        947,
+        1259,
+        1609,
+        2168,
+        2542,
+        3634,
+        5135,
+        8437,
+        8738
+      ],
+      "tsp_lower_bound_mean_clear_s": 872
+    },
+    {
+      "seed": 80005,
+      "n_homing_excursions": 11,
+      "homing_net_m": 10363,
+      "homing_actual_m": 12459,
+      "return_to_ring_est_m": 10363,
+      "total": 10,
+      "cleared": 9,
+      "virtual_s": 15348.152732,
+      "mean_clear_time_s": 1705.3503035555557,
+      "move_m_total": 57231,
+      "by_phase": {
+        "ring": {
+          "m": 44772,
+          "n": 46,
+          "pct": 78.2
+        },
+        "homing": {
+          "m": 12459,
+          "n": 49,
+          "pct": 21.8
+        }
+      },
+      "clear_times": [
+        392,
+        651,
+        1085,
+        1559,
+        2691,
+        3576,
+        4243,
+        8768,
+        9260
+      ],
+      "tsp_lower_bound_mean_clear_s": 969
+    }
+  ]
+}
