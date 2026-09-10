@@ -4,3 +4,8 @@ __pycache__/
 .venv/
 *.log
 results/tmp/
+# 官方测试产物：原始件含真实队号/服务端票据，只入库 *.sanitized.*
+official_runs/*.jlog
+official_runs/*_console.txt
+!official_runs/*.sanitized.jlog
+!official_runs/*.sanitized.txt

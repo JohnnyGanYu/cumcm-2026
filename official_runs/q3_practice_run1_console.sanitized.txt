@@ -1,0 +1,13 @@
+python run_official.py --robot-id TTTTTTTTTTTT
+启动: robot_id=TTTTTTTTTTTT 模式=问题3(全向)
+
+===== 结果 =====
+已清除频道: [3, 4, 7, 9, 10, 12, 15, 17, 19, 20]
+清除个数:   10
+虚拟时间:   4893.7 s  (上限 360000)
+平均定位清除时间: 489.37138619999996 s   <-- 评分指标
+检测次数:   209   清除调用: 10
+程序运行时间: 2.2 s  (上限 1200)
+
+完整协议日志已写入: C:\Users\UUUUUUUUUU\Downloads\CUMCM2026B_robot_windows\official_log_20260910_225816.json
+请把这个文件回传，用于校准离线仿真器。
