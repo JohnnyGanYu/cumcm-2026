@@ -55,6 +55,7 @@ class ChannelState:
     consecutive_silent: int = 0
     revived: bool = False            # 补扫后已给过第二次机会
     ray_swept: bool = False          # 已做过射线盲清除（防重入，_home_channel 是循环）
+    verdict_empty: bool = False      # 已判定该频道无干扰源，停止再测
     belief: DirectionalBelief | None = None   # 问题 4：定向源候选集合
     estimate: tuple[float, float] | None = None
     diameter: float = float("inf")
@@ -120,6 +121,29 @@ class StrategyConfig:
     max_measures_per_channel: int = 40    # 搜索阶段总额度（定向源需要大量沉默观测）
     max_homing_measures: int = 14         # 归航阶段额度，拿到首个示向度后起算
     narrow_sector_extra_measures: int = 22  # 窄可见区定向源的归航加码（沉默观测>=8 时）
+    # 判空：累积够多个"不同站位"的沉默观测后，认定该频道无干扰源、停止再测。
+    # 蒙特卡洛依据（4000 次抽样，站位=原点+内环1250x12+外环1750x18）：
+    #   前 k 个站位全沉默时，真源被误判为空的概率
+    #     k= 5: 全向 23.23%  定向 45.90%
+    #     k= 8: 全向 11.60%  定向 30.98%
+    #     k=12: 全向  0.00%  定向 11.43%
+    #     k=31: 全向  0.00%  定向  0.65%
+    # 故全向情形 13 个站位（原点+内环）足以零误判判空，可省下 18 个外环站位的检测；
+    # 定向源即使跑满 31 站位仍有 0.65% 误判，问题 4 不能提前判空（阈值设为极大）。
+    # 实测官方日志：空频道各被检测 47 次，占检测总数 62%-79%，是最大的时间浪费。
+    # 实测结论：Q3 只用原点+内环共 13 个站位，阈值 13 等于"跑满才判"，
+    # 一分钱不省，反而因误杀真源触发复活绕路（3 局实测 477->545 s，变慢 14%）。
+    # 故默认关闭（999）。若将来 Q3 也启用外环（31 站位），可设 13 生效。
+    empty_verdict_stations: int = 999       # 全向：不同站位沉默数达此值即判空
+    # 批量归航：扫过几个站位后才统一归航清除（1 = 逐站归航）。
+    # 实测被证伪，保留参数供论文写"试过但无效"：Q4 20局 同种子
+    #   batch=1 -> 1261.9s (20/20)    batch=2 -> 1291.8s
+    #   batch=3 -> 1334.0s            batch=5 -> 1349.4s
+    #   batch=8 -> 1395.8s (19/20，掉一局)
+    # 越攒越慢。原因：拿到示向度时机器狗已被 dogleg/step_closer 带到源附近，
+    # "发现即归航"本就是就近处理；攒批后回头清除反而绕远路。
+    # 官方日志里"环形<->归航切换 13 次"不是浪费，是必要的就近往返。
+    home_batch_stations: int = 1
     silent_tolerance: int = 3               # 连续沉默多少次后放弃归航
     narrow_sector_silent_tolerance: int = 10  # 窄可见区定向源的放宽值
     # 射线盲清除（单条示向度、交会不出位置时的最后手段）
@@ -195,13 +219,15 @@ class DogStrategy:
         for channel in channels:
             if self._stop(): return
             state = self.channels[channel]
-            if state.cleared or state.bearings:
+            if state.cleared or state.bearings or state.verdict_empty:
                 continue
             self._probe_channel_at(point, state)
 
     def _probe_target(self, state: ChannelState) -> bool:
-        """补扫对象：未清除，且尚无示向度或归航已失败（换站位可改善几何）。"""
-        return not state.cleared and (not state.bearings or state.exhausted)
+        """补扫对象：未清除、未判空，且尚无示向度或归航已失败（换站位可改善几何）。"""
+        if state.cleared or state.verdict_empty:
+            return False
+        return not state.bearings or state.exhausted
 
     def _needs_probe(self) -> bool:
         return any(self._probe_target(st) for st in self.channels.values())
@@ -221,6 +247,30 @@ class DogStrategy:
             state.consecutive_silent += 1
             if state.belief is not None:
                 state.belief.apply_silence(point[0], point[1])
+            self._maybe_verdict_empty(state)
+
+    def _maybe_verdict_empty(self, state: ChannelState) -> None:
+        """够多个"相距足够远的站位"都沉默 -> 判定该频道无干扰源，不再检测。
+
+        只在全向情形启用（directional_probe 关闭）。依据见 StrategyConfig
+        中 empty_verdict_stations 的蒙特卡洛表：全向源在 13 个站位（原点+内环）
+        全沉默的误判率为 0.00%，而定向源即使 31 站位全沉默仍有 0.65%，
+        故问题 4 不判空。
+        """
+        if state.verdict_empty or state.bearings or state.cleared:
+            return
+        if self.config.directional_probe:
+            return
+        # 按"互相距离 >= 接收半径下限一半"去重，避免同一片区域的多次沉默被重复计数
+        distinct: list[tuple[float, float]] = []
+        for p in state.silent_points:
+            if all(math.hypot(p[0] - q[0], p[1] - q[1]) >= RECEPTION_MIN_M * 0.5
+                   for q in distinct):
+                distinct.append(p)
+        if len(distinct) >= self.config.empty_verdict_stations:
+            state.verdict_empty = True
+            self.events.append(
+                f"ch{state.channel}: verdict empty after {len(distinct)} distinct silent stations")
 
     def _probe_stations(self) -> list[list[tuple[float, float]]]:
         """双环覆盖站位。内环先扫（离原点近、代价低），外环兜住边界源。
@@ -256,17 +306,33 @@ class DogStrategy:
             self._walk_ring(ring)
 
     def _walk_ring(self, ring: list[tuple[float, float]]) -> None:
-        """就近串行访问一个环上的站位，每站扫完立刻归航清除，避免回头空驶。"""
+        """就近串行访问环上站位，每扫过 batch 个站位再统一归航清除。
+
+        为什么批量：官方日志实测(seed 案例 230354)总移动 66,920 m 中，
+        归航/清除段占 45,629 m = 9,126 s，且环形<->归航切换 13 次，
+        每次切换都是一趟长途往返。同样 155 个站位按最近邻只需 30,929 m，
+        即"发现一个就立刻跑去清除"浪费了 54% 的移动距离。
+        批量归航把多个目标凑一起、按就近顺序处理，减少往返。
+        batch=1 等价于原来的逐站归航。
+        """
         remaining = ring[:]
+        since_home = 0
         while remaining and not self._stop():
             todo = [st for st in self.channels.values() if self._probe_target(st)]
             if not todo:
-                return
+                break
             remaining.sort(key=lambda p: math.hypot(p[0] - self.pos[0], p[1] - self.pos[1]))
             station = remaining.pop(0)
             for state in sorted(todo, key=lambda s: s.channel):
                 if self._stop(): return
                 self._probe_channel_at(station, state)
+            since_home += 1
+            # 有目标可清且已攒够一批，或本环已走完 -> 统一归航
+            ready = any(st.active for st in self.channels.values())
+            if ready and (since_home >= self.config.home_batch_stations or not remaining):
+                self._home_all()
+                since_home = 0
+        if not self._stop():
             self._home_all()
 
     # ---- 阶段 2：归航 ----
@@ -411,6 +477,8 @@ class DogStrategy:
     def _home_channel(self, state: ChannelState) -> bool:
         """把一个频道推进到清除完成。返回 False 表示放弃。"""
         while not self._stop():
+            if state.cleared:      # 循环内某步已清除成功，立刻收工
+                return True
             budget = self.config.max_homing_measures + (6 if state.revived else 0)
             # 可见区极小的定向源需要更多归航试探：实测 seed 7001 ch11 / 7015 ch20 /
             # 7039 ch4 的可见区仅占目标区域 2.3%-5.4% 且朝区域外辐射，一旦走出扇区
@@ -523,7 +591,10 @@ class DogStrategy:
         cx, cy = state.estimate
         cfg = self.config
         for k in range(cfg.spiral_points):
-            if self._stop() or state.clear_attempts >= cfg.max_clear_attempts:
+            # 已清除必须立刻停：同一干扰源只能清除一次，继续打全是浪费。
+            # 实测(官方日志 seed 7001)45 次清除调用中 35 次发生在成功之后，
+            # 其中 30 次出自本函数——每个多余调用白烧 3 s。
+            if state.cleared or self._stop() or state.clear_attempts >= cfg.max_clear_attempts:
                 return state.cleared
             theta = 2.0 * math.pi * k / cfg.spiral_points
             point = (cx + cfg.spiral_radius_m * math.cos(theta),
@@ -613,6 +684,10 @@ class DogStrategy:
 
     def _clear_at(self, point: tuple[float, float], channel: int) -> bool:
         state = self.channels[channel]
+        # 全局兜底：同一干扰源只能清除一次，已清除后任何调用都只会返回
+        # no_target_in_range 并白烧 3 s 虚拟时间。
+        if state.cleared:
+            return True
         state.clear_attempts += 1
         try:
             result: ClearResult = self.client.clear(point[0], point[1], channel)

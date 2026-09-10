@@ -61,6 +61,15 @@ def main() -> None:
     ap.add_argument("--base-url", default="http://127.0.0.1:2026")
     ap.add_argument("--directional", action="store_true",
                     help="问题4：启用定向源推理与盲清除")
+    ap.add_argument("--total-jammers", type=int, default=None, metavar="N",
+                    help="演练测试结束时模拟器界面告示的干扰源总数（人工抄录）。"
+                         "官方接口不返回该值，填入后才能算出题目要求的"
+                         "\"被清除干扰源个数的比例\"。正式测试不告示，留空即可。")
+    ap.add_argument("--test-kind", choices=["practice", "formal"], default="practice",
+                    help="practice=演练测试, formal=正式测试（写入日志便于归档区分）")
+    ap.add_argument("--case-code", default=None,
+                    help="测试案例编码（正式测试须记录，论文表1要求该列）")
+    ap.add_argument("--note", default=None, help="本次测试备注，写入日志")
     ap.add_argument("--dry-run", action="store_true", help="只探测接口连通性")
     ap.add_argument("--timeout", type=float, default=5.0, help="单请求超时秒数")
     args = ap.parse_args()
@@ -109,7 +118,21 @@ def main() -> None:
     else:
         print(f"✓ 无\"曾收到信号却未清除\"的频道，本局很可能已全清")
     print(f"全程沉默频道 {len(silent_only)} 个（推定无源）: {sorted(silent_only)}")
-    print(f"推定干扰源总数 = {len(cleared)}（题面范围 10-16）")
+    if args.total_jammers is not None:
+        ratio = len(cleared) / args.total_jammers
+        print(f"\n--- 题目要求的统计值（按人工抄录的总数 {args.total_jammers}）---")
+        print(f"被清除干扰源个数的比例 = {len(cleared)}/{args.total_jammers} = {ratio:.4f}")
+        print(f"平均定位清除时间       = {summary['mean_clear_time_s']:.4f} s")
+        if len(cleared) > args.total_jammers:
+            print("  ⚠ 清除数大于抄录总数，请核对界面数字")
+        elif ratio < 1.0:
+            print(f"  ⚠ 未全清，漏失 {args.total_jammers - len(cleared)} 个")
+        else:
+            print("  ✓ 全部清除")
+    else:
+        print(f"推定干扰源总数 = {len(cleared)}（题面范围 10-16）")
+        print("  注: 官方接口不返回总数。演练测试结束时模拟器界面会告示，")
+        print("      请抄录后用 --total-jammers N 重跑记录，否则无法算出比例。")
     if not (10 <= len(cleared) <= 16):
         print(f"  ⚠ 清除数 {len(cleared)} 落在 10-16 之外，说明确有漏失")
     if summary.get("events"):
@@ -118,10 +141,25 @@ def main() -> None:
             print("  ", e)
 
     stamp = time.strftime("%Y%m%d_%H%M%S")
-    out = Path(f"official_log_{stamp}.json")
+    kind = "formal" if args.test_kind == "formal" else "practice"
+    prob = "q4" if args.directional else "q3"
+    out = Path(f"official_log_{prob}_{kind}_{stamp}.json")
+    ratio_val = (len(cleared) / args.total_jammers) if args.total_jammers else None
     out.write_text(json.dumps({
         "robot_id": args.robot_id,
         "directional": args.directional,
+        "test_kind": args.test_kind,
+        "case_code": args.case_code,
+        "note": args.note,
+        "reported_total_jammers": args.total_jammers,
+        "paper_table1_row": {
+            "测试案例编码": args.case_code,
+            "清除干扰源个数": len(cleared),
+            "干扰源总数_人工抄录": args.total_jammers,
+            "被清除干扰源个数的比例": (round(ratio_val, 4) if ratio_val is not None else None),
+            "平均定位清除时间_s": round(summary["mean_clear_time_s"], 4),
+            "程序运行时间_s": round(wall, 2),
+        },
         "summary": summary,
         "program_wall_s": round(wall, 2),
         "full_clear_assessment": {
@@ -145,7 +183,12 @@ def main() -> None:
         "protocol_log": client.log,
     }, ensure_ascii=False, indent=2), encoding="utf-8")
     print(f"\n完整协议日志已写入: {out.resolve()}")
-    print("请把这个文件回传，用于校准离线仿真器。")
+    print("请把这个文件回传。")
+    if args.total_jammers is None and args.test_kind == "practice":
+        print("提示: 演练测试结束时界面会告示干扰源总数，抄下来后可直接改写日志中的")
+        print("      reported_total_jammers 字段，或下次用 --total-jammers N 运行。")
+    if args.test_kind == "formal" and not args.case_code:
+        print("提示: 正式测试请用 --case-code 记录案例编码，论文表1需要该列。")
 
 
 if __name__ == "__main__":

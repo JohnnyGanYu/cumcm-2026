@@ -54,3 +54,35 @@ python run_official.py --robot-id 你的参赛队号 --directional
 
 **若官方模拟器结果与此差距明显，把 `official_log_*.json` 回传**，
 我据此校准离线仿真器再重新调参。官方行为是最终判据。
+
+## 记录干扰源总数（题目要求的比例统计值）
+
+干扰源总数**官方接口不返回**（附件2 明确说明），只在演练测试结束时由模拟器**界面**告示。
+机器狗程序拿不到这个数，必须人工抄录，否则算不出题目要求的
+"被清除干扰源个数的比例"。
+
+演练测试（先跑，结束后从界面抄下总数）：
+
+```
+python run_official.py --robot-id 你的队号
+```
+
+看到界面告示总数（例如 14）后，日志里的 `reported_total_jammers` 字段直接改成 14，
+或下次运行时带上参数：
+
+```
+python run_official.py --robot-id 你的队号 --total-jammers 14
+```
+
+正式测试（务必记录案例编码，论文表1需要该列）：
+
+```
+python run_official.py --robot-id 你的队号 --test-kind formal --case-code 界面上的案例编码
+python run_official.py --robot-id 你的队号 --test-kind formal --case-code 编码 --directional   # 问题4
+```
+
+日志文件名会自动区分，例如 `official_log_q3_formal_20260913_101530.json`，
+其中 `paper_table1_row` 字段可直接填进论文表 1。
+
+正式测试不告示总数，`--total-jammers` 留空即可；此时用 `full_clear_assessment`
+里的 `suspect_missed_channels` 判断是否可能漏失。

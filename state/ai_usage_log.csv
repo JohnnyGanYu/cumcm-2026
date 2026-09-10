@@ -1,1 +1,12 @@
 ﻿time,tool,version_model,stage,purpose,key_prompt,output_file,adopted,human_changes,verification,team_member
+"2026-09-10 20:35","Hermes Agent (Leo)","claude-opus-5","选题","解析B题PDF与附件1/2协议，比较A/B/C三题工程量与风险","读取三题题目与附件，给出选题比较","problem/B题/","是","队员复核题面约束后自行决定选B","逐条对照题目原文与赛前说明会文件","甘宇"
+"2026-09-10 20:47","Hermes Agent (Leo)","claude-opus-5","代码-仿真器","按附件1/2协议复刻本地离线仿真器，用于无限次策略演练","按协议实现 /enter /measure /clear /exit 与计时规则","src/b_sim/arena.py, server.py, client.py","是","队员核对附件2第10节199秒计时示例，逐步验证通过","33项pytest回归；与官方实测偏差5.4%(Q3)/9.6%(Q4)","甘宇"
+"2026-09-10 20:56","Hermes delegate_task 子agent×3","claude-opus-5","可行性验证","并行验证A题PDE可解性、C题LP可解性、B题问题2检测点策略","必须实际跑出真实数字，不允许只描述方法","results/b_q2_results.json","部分","仅采纳B题问题2结论；A/C题结论用于选题决策后弃用","蒙特卡洛仿真复算，结果写入JSON可复现","甘宇"
+"2026-09-10 21:05","Hermes Agent (Leo)","claude-opus-5","建模-问题1","构造""以直径为直径的圆不覆盖定位区域""的严格反例","给出严格反例并说明几何原因","src/b_q1_counterexample.py","是","队员核验反例数值与Jung定理上界推导","mpmath高精度实算，R=14.3098>d/2=14.3019","甘宇"
+"2026-09-10 21:08","Hermes Agent (Leo)","claude-opus-5","建模-问题2","计算最优交会夹角与第二检测点候选区域","给出第二检测点选择策略并定量验证","src/b_q2.py, results/b_q2_results.json","是","队员复核γ*=90°的几何解释与候选区面积","网格扫描+蒙特卡洛，2000次抽样","甘宇"
+"2026-09-10 21:30","Hermes Agent (Leo)","claude-opus-5","算法-问题3","设计全向源搜索-定位-清除策略并离线迭代","制定策略使清除率与平均定位清除时间最优","src/b_sim/strategy.py","是","队员审查策略逻辑；四次失败原因由队员参与判定","离线60局100%全清；官方演练实测489.4s","甘宇"
+"2026-09-10 22:00","Hermes Agent (Leo)","claude-opus-5","算法-问题4","定向源""沉默即约束""推理与候选格点盲清除","在定向源未知方向下提升清除率","src/b_sim/directional.py","是","队员核验推理正确性（候选压缩后真值仍保留）","离线40局100%全清；官方演练4次均值1397.4s","甘宇"
+"2026-09-10 22:27","Hermes Agent (Leo)","claude-opus-5","交付","生成Windows交付包用于对接官方模拟器","打包机器狗程序，说明运行方式","dist_windows/","是","队员在本机Windows实际运行并回传日志","官方模拟器实测通过，程序运行时间2.2-8.8s","甘宇"
+"2026-09-10 23:20","Hermes Agent (Leo)","claude-opus-5","分析","从官方协议日志分解时间预算，定位优化杠杆","算出移动/检测/清除各占多少虚拟时间","src/b_time_budget.py","是","队员复核四局一致性与稀释效应解释","四局实算：移动81.0% 检测18.3% 清除0.8%","甘宇"
+"2026-09-10 23:38","Hermes delegate_task 子agent×4","claude-opus-5","分析","并行计算TSP移动下界、信息论下界、后验估计收益、方法调研","必须跑出真实数字","results/b_tsp_bound.json, b_info_bound.json","待定","队员尚在审查，未写入论文","脚本实算，结果待核实","甘宇"
+"2026-09-10 23:05","Hermes Agent (Leo)","claude-opus-5","合规","编写官方日志脱敏工具，清除队号与server_ticket","入库前抹除身份信息","src/sanitize_official_run.py","是","队员确认脱敏后无队号/姓名/票据残留","grep核验：队号、Windows用户名、ticket均已清除","甘宇"
