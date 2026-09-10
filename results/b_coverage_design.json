@@ -1,0 +1,156 @@
+{
+  "arena_radius_m": 1800.0,
+  "reception_radius_lower_bound_m": 1000.0,
+  "origin_blind_sources": {
+    "blind": 659,
+    "total": 1281,
+    "fraction": 0.5144,
+    "note": "站在原点收不到信号的源比例，说明环形补扫是主路径而非兜底"
+  },
+  "coverage": [
+    {
+      "layout": "仅原点",
+      "stations": 1,
+      "worst_gap_m": 1799.9,
+      "guarantees_detection": false,
+      "worst_point": [
+        -1686.0,
+        -630.0
+      ]
+    },
+    {
+      "layout": "原点+950x8",
+      "stations": 9,
+      "worst_gap_m": 990.4,
+      "guarantees_detection": true,
+      "worst_point": [
+        -1662.0,
+        690.0
+      ]
+    },
+    {
+      "layout": "原点+1100x8",
+      "stations": 9,
+      "worst_gap_m": 888.5,
+      "guarantees_detection": true,
+      "worst_point": [
+        1662.0,
+        -690.0
+      ]
+    },
+    {
+      "layout": "原点+1200x10",
+      "stations": 11,
+      "worst_gap_m": 753.7,
+      "guarantees_detection": true,
+      "worst_point": [
+        -1710.0,
+        558.0
+      ]
+    },
+    {
+      "layout": "原点+1250x12",
+      "stations": 13,
+      "worst_gap_m": 670.1,
+      "guarantees_detection": true,
+      "worst_point": [
+        -1278.0,
+        -1266.0
+      ]
+    },
+    {
+      "layout": "原点+1300x12",
+      "stations": 13,
+      "worst_gap_m": 670.3,
+      "guarantees_detection": true,
+      "worst_point": [
+        -474.0,
+        -474.0
+      ]
+    },
+    {
+      "layout": "原点+900x6+1500x12",
+      "stations": 19,
+      "worst_gap_m": 534.8,
+      "guarantees_detection": true,
+      "worst_point": [
+        -930.0,
+        -534.0
+      ]
+    },
+    {
+      "layout": "原点+1250x12+1560x18",
+      "stations": 31,
+      "worst_gap_m": 644.7,
+      "guarantees_detection": true,
+      "worst_point": [
+        -462.0,
+        -450.0
+      ]
+    },
+    {
+      "layout": "原点+700x6+1200x12+1650x18",
+      "stations": 37,
+      "worst_gap_m": 427.7,
+      "guarantees_detection": true,
+      "worst_point": [
+        -738.0,
+        -426.0
+      ]
+    }
+  ],
+  "directional_visibility": [
+    {
+      "layout": "原点+950x8",
+      "stations": 9,
+      "directional_visible": "238/300",
+      "visibility_rate": 0.7933
+    },
+    {
+      "layout": "原点+1100x8",
+      "stations": 9,
+      "directional_visible": "252/300",
+      "visibility_rate": 0.84
+    },
+    {
+      "layout": "原点+1200x10",
+      "stations": 11,
+      "directional_visible": "264/300",
+      "visibility_rate": 0.88
+    },
+    {
+      "layout": "原点+1250x12",
+      "stations": 13,
+      "directional_visible": "269/300",
+      "visibility_rate": 0.8967
+    },
+    {
+      "layout": "原点+1300x12",
+      "stations": 13,
+      "directional_visible": "273/300",
+      "visibility_rate": 0.91
+    },
+    {
+      "layout": "原点+900x6+1500x12",
+      "stations": 19,
+      "directional_visible": "288/300",
+      "visibility_rate": 0.96
+    },
+    {
+      "layout": "原点+1250x12+1560x18",
+      "stations": 31,
+      "directional_visible": "291/300",
+      "visibility_rate": 0.97
+    },
+    {
+      "layout": "原点+700x6+1200x12+1650x18",
+      "stations": 37,
+      "directional_visible": "296/300",
+      "visibility_rate": 0.9867
+    }
+  ],
+  "conclusion": {
+    "omni": "原点+1250x12（13 站位）最坏间隙 670 m < 1000 m，可保证发现任一全向源，较双环 23 站位方案成本低 43%",
+    "directional": "盲扫存在天花板：37 站位仅 98.7% 可见率且成本翻倍，故改用沉默约束推理压缩候选 + 对候选格点盲清除（/clear 不受辐射方向限制）"
+  }
+}
