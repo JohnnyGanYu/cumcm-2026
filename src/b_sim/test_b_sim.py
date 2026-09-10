@@ -1690,3 +1690,141 @@ def test_walk_ring_reorders_by_current_position_each_step():
     strategy._walk_ring([(0.0, 300.0), (0.0, 400.0), (0.0, -100.0)])
     assert station_seq[0] == (0.0, -100.0)
     assert station_seq[1] == (0.0, 300.0)
+
+
+
+# ---------- 任务 5.3：现实时间预算与虚拟时钟一致性核对（R5.6 / R5.8）----------
+# Feature: b-radio-interference-locate-clear
+# 回归核对（VERIFY 任务，实现已正确，无需改 client.py）：
+#   (a) enter() 后 real_budget_left_s() 从服务端返回的 remaining_real_duration_s
+#       派生（非硬编码 1200 s），随单调时钟推进而递减；
+#   (b) real_budget_left_s 随单调时间前进而减少；
+#   (c) real_budget_left_s() ≤ real_time_reserve_s(15) 时 DogStrategy._stop() 为 True，
+#       > 15 s 时为 False（对齐 R5.8：策略在 15 s 前收尾）；
+#   (d) 一次成功 measure 将 client.virtual_time_s 更新为服务端返回值。
+
+import time as _time_53
+
+from src.b_sim.strategy import DogStrategy as _DogStrategy53
+from src.b_sim.strategy import StrategyConfig as _StrategyConfig53
+
+
+def test_real_budget_derives_from_server_remaining_not_hardcoded_1200():
+    """R5.8：real_budget_left_s() 基于 /enter 的 remaining_real_duration_s，而非固定 1200 s。
+
+    直接构造客户端并把服务端提供的剩余时长设为非 1200 的值，断言预算按该值
+    （减去自 enter 以来的单调耗时）派生，而不是固定 1200 s。
+    """
+    client = RobotClient(ROBOT)
+    # 模拟 /enter 返回一个明显不等于 1200 的 remaining_real_duration_s。
+    client.remaining_real_s = 300.0
+    client._enter_monotonic = _time_53.monotonic()
+    left = client.real_budget_left_s()
+    # 预算应贴近 300（减去极小的调用耗时），绝不是 1200。
+    assert left <= 300.0
+    assert left == pytest.approx(300.0, abs=1.0)
+    assert abs(left - 1200.0) > 100.0  # 明确排除硬编码 1200 s
+
+    # 另一个非 1200 的值同样成立（例如更小的现实预算）。
+    client.remaining_real_s = 42.5
+    client._enter_monotonic = _time_53.monotonic()
+    left2 = client.real_budget_left_s()
+    assert left2 == pytest.approx(42.5, abs=1.0)
+    assert abs(left2 - 1200.0) > 1000.0
+
+
+def test_real_budget_decreases_as_monotonic_time_advances(monkeypatch):
+    """R5.8：real_budget_left_s 随单调时钟推进而单调递减（monotonic 时钟驱动）。
+
+    monkeypatch time.monotonic 以确定性推进虚拟的现实时间，验证预算按 remaining − elapsed
+    递减，且 elapsed 达到/超过 remaining 时截断为 0（不为负）。
+    """
+    fake_now = {"t": 1000.0}
+    monkeypatch.setattr("src.b_sim.client.time.monotonic", lambda: fake_now["t"])
+
+    client = RobotClient(ROBOT)
+    client.remaining_real_s = 100.0
+    client._enter_monotonic = fake_now["t"]  # enter 时刻
+    assert client.real_budget_left_s() == pytest.approx(100.0)
+
+    fake_now["t"] += 30.0  # 现实时间前进 30 s
+    assert client.real_budget_left_s() == pytest.approx(70.0)
+
+    fake_now["t"] += 40.0  # 再前进 40 s（共 70 s）
+    assert client.real_budget_left_s() == pytest.approx(30.0)
+
+    # 超过剩余预算后截断为 0（max(0, ...)），不返回负值。
+    fake_now["t"] += 1000.0
+    assert client.real_budget_left_s() == 0.0
+    # real_elapsed_s 反映自 enter 以来的单调耗时。
+    assert client.real_elapsed_s() == pytest.approx(1070.0)
+
+
+def test_real_elapsed_is_zero_before_enter():
+    """enter() 之前（_enter_monotonic 为 None）耗时与预算均安全返回 0。"""
+    client = RobotClient(ROBOT)
+    assert client._enter_monotonic is None
+    assert client.real_elapsed_s() == 0.0
+    assert client.real_budget_left_s() == 0.0
+
+
+class _FakeBudgetClient:
+    """最小客户端替身：仅暴露 _stop() 所需的 real_budget_left_s / virtual_time_s。"""
+
+    def __init__(self, budget_left_s: float, virtual_time_s: float = 0.0):
+        self._budget_left_s = budget_left_s
+        self.virtual_time_s = virtual_time_s
+
+    def real_budget_left_s(self) -> float:
+        return self._budget_left_s
+
+
+def test_stop_triggers_when_real_budget_at_or_below_reserve():
+    """R5.8：现实剩余 ≤ real_time_reserve_s(15) 时 _stop() 返回 True（15 s 前收尾）。"""
+    config = _StrategyConfig53()
+    assert config.real_time_reserve_s == 15.0
+
+    # 恰为 15 s：≤ 判据成立 → 停止。
+    strat_at = _DogStrategy53(client=_FakeBudgetClient(15.0), config=config)
+    assert strat_at._stop() is True
+    assert "real time budget reached" in strat_at.events
+
+    # 低于 15 s（如 5 s）→ 停止。
+    strat_below = _DogStrategy53(client=_FakeBudgetClient(5.0), config=config)
+    assert strat_below._stop() is True
+
+
+def test_stop_does_not_trigger_when_real_budget_above_reserve():
+    """R5.8：现实剩余 > 15 s 且虚拟预算未耗尽时 _stop() 返回 False（继续动作）。"""
+    config = _StrategyConfig53()
+    # 现实剩余 16 s（> 15），虚拟时刻远低于 0.9×360000 预算 → 不停止。
+    strat = _DogStrategy53(client=_FakeBudgetClient(16.0, virtual_time_s=0.0), config=config)
+    assert strat._stop() is False
+    assert strat._stopped is False
+
+    # 充裕的现实预算（如 600 s）同样不停止。
+    strat2 = _DogStrategy53(client=_FakeBudgetClient(600.0, virtual_time_s=1000.0), config=config)
+    assert strat2._stop() is False
+
+
+def test_stop_triggers_when_virtual_budget_reached_even_with_real_budget():
+    """R5.8/R3.12：现实预算充裕但虚拟时刻 ≥ 0.9×MAX_VIRTUAL_SECONDS 时亦停止。"""
+    config = _StrategyConfig53()
+    over_virtual = config.virtual_time_budget_s  # 恰达虚拟预算上限
+    strat = _DogStrategy53(client=_FakeBudgetClient(600.0, virtual_time_s=over_virtual),
+                           config=config)
+    assert strat._stop() is True
+    assert "virtual time budget reached" in strat.events
+
+
+def test_successful_measure_updates_client_virtual_time_from_server(server):
+    """R5.6：一次成功 measure 将 client.virtual_time_s 更新为服务端返回的 virtual_time_s。"""
+    url, session = server
+    client = RobotClient(ROBOT, base_url=url)
+    client.enter()
+    assert client.virtual_time_s == 0.0
+    result = client.measure(0.0, 0.0, 1)
+    # 客户端虚拟时钟 == 该动作返回的 virtual_time_s == 服务端 arena 的虚拟时刻。
+    assert client.virtual_time_s == pytest.approx(result.virtual_time_s)
+    assert client.virtual_time_s == pytest.approx(session.arena.robot.virtual_time_s)
+    assert client.virtual_time_s > 0.0  # 检测 +5 s，虚拟时刻已推进
