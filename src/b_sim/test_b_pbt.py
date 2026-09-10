@@ -862,3 +862,117 @@ def test_property7_q4_directional_full_clear_within_budget(seed: int):
         f"seed={seed} cleared_ratio={episode['cleared_ratio']:.6f} != 1.0 "
         f"missed_channels={episode['missed_channels']} config={Q4_FULL_CLEAR_CONFIG_LABEL}"
     )
+
+
+
+# ===========================================================================
+# 任务 6.5：预算内全清（全向）性质测试（设计 §7.2 Property 7 Q3 变体）
+# ===========================================================================
+#
+# 【为何这是「有界种子族」性质，而非 hypothesis 生成】
+# 本性质是「for all seeds/counts in a fixed set」的有界全称命题：对一小组**确定性**
+# 种子（每个可附一个显式源数档位），每个组合跑一整局 Q3 全向策略（DogStrategy vs.
+# 本地 mock server），断言每局全清。单局要跑完整"搜索—定位—清除"流程（~数秒/局，
+# 视源数而定），若用 @given/hypothesis 生成数百局会失控（且 hypothesis 生成的是抽象
+# 源集合，无法直接喂 run_episode 的种子驱动案例生成器）。因此**刻意不用 @given**，
+# 改为固定种子族上的普通 pytest 参数化，使运行时间有界且完全可复现（同种子[+同 count]
+# → 同案例 → 同结果）。整体运行时间控制在 ~60 s 内（代表性子集 12 局）。
+#
+# 【配置口径 — Q3 默认全向配置】
+# Q3 用**默认** `StrategyConfig()`：全向、单覆盖环（原点 + 1250 m×12 站位）、
+# `directional_probe=False`、`use_outer_ring=False`。这与离线 60/60 全清结果
+# results/b_rehearsal_q3_final.json 的 strategy 字段完全一致（seed_start=5000、
+# episodes=60、directional=0、default StrategyConfig）。见 src/b_sim/README.md
+# 「当前成绩」表：问题 3（全向）60 局 60 局全清、100% 清除率。
+#
+# 【种子子集 + 源数档位与全量 60/60 的关系】
+# 全量 60/60 扫描由 `python -m src.b_sim.rehearse --episodes 60 --seed-start 5000`
+# 复现（seed 5000..5059，见 results/b_rehearsal_q3_final.json，60 局全清）。本测试为把
+# 单测运行时间控制在数十秒内，取该种子区间的**代表性子集**并显式覆盖 R3.14 要求的
+# 源数三档（10 / 13 / 16）：
+#   - 各 3 个种子分别以显式 count=10 / 13 / 16 运行（用 generate_case 的 count 参数），
+#     使性质「for counts 10, 13, 16」被**具体地**逐档穷举；
+#   - 另取 3 个种子按自然源数（10–16 随机）运行，覆盖档位之间的中间规模。
+# 共 12 局，断言每局全清（cleared == total_jammers，即 cleared_ratio == 1.0）。
+# 若某组合在默认配置下未全清，本测试**不会**弱化断言强行通过，而是让 pytest 直接报出
+# 是哪个 seed / 哪个 count 的哪些 missed_channels 未清（见断言消息），以便据实决策。
+Q3_FULL_CLEAR_CONFIG_LABEL = "default StrategyConfig() (omni, single ring 1250x12, directional_probe=False)"
+
+# 显式源数档位（R3.14「源总数 10、13、16 三档均含」）——每档取 3 个代表性种子。
+Q3_EXPLICIT_COUNT_CASES = [
+    (seed, count)
+    for count in (10, 13, 16)
+    for seed in (5000, 5001, 5002)
+]
+# 自然源数（10–16 随机）代表性种子，覆盖档位之间的中间规模。
+Q3_NATURAL_COUNT_SEEDS = [5000, 5001, 5010]
+
+
+# ---------------------------------------------------------------------------
+# Feature: b-radio-interference-locate-clear, Property 7 (Q3 变体): 预算内全清不变量（全向）
+# 设计 §7.2 Property 7 / _Requirements: 3.14_
+#
+# 对 Q3 全向案例族（源总数含 10 / 13 / 16 三档），在虚拟/现实预算充足时，策略达成
+# 100% 清除（cleared == total_jammers、cleared_ratio == 1.0）。这里以固定种子族
+# （有界全称）+ 显式源数档位断言每局全清。
+#
+# 【有界族，非 hypothesis 生成】见上方段落说明——刻意用 pytest 参数化而非 @given，
+# 保证运行时间有界且确定性可复现。
+# ---------------------------------------------------------------------------
+# **Validates: Requirements 3.14**
+@pytest.mark.parametrize("seed,count", Q3_EXPLICIT_COUNT_CASES)
+def test_property7_q3_omni_full_clear_within_budget_explicit_counts(seed: int, count: int):
+    """显式源数档位（10 / 13 / 16）：每档均在预算内 100% 全清。"""
+    from src.b_sim.rehearse import run_episode  # 局部导入：仅本有界族测试需要
+    from src.b_sim.strategy import StrategyConfig
+
+    # Q3 默认全向配置（directional=0、default StrategyConfig）。
+    episode = run_episode(seed, directional=0, count=count, config=StrategyConfig())
+
+    # 案例族契约：源总数就是显式指定的 count，且全为全向（无定向源）。
+    assert episode["total_jammers"] == count, (
+        f"seed={seed} 显式 count={count} 但源总数为 {episode['total_jammers']}"
+    )
+    assert episode["directional_jammers"] == 0, (
+        f"seed={seed} count={count} 定向源数 {episode['directional_jammers']} != 0（Q3 全向）"
+    )
+
+    # 预算内全清：清除个数 == 真实源总数（cleared_ratio == 1.0）。不满足时**不弱化断言**。
+    assert episode["cleared"] == episode["total_jammers"], (
+        f"seed={seed} count={count} 未全清：cleared={episode['cleared']}/{episode['total_jammers']} "
+        f"(ratio={episode['cleared_ratio']:.3f}) missed_channels={episode['missed_channels']} "
+        f"config={Q3_FULL_CLEAR_CONFIG_LABEL}"
+    )
+    assert episode["cleared_ratio"] == pytest.approx(1.0, abs=1e-9), (
+        f"seed={seed} count={count} cleared_ratio={episode['cleared_ratio']:.6f} != 1.0 "
+        f"missed_channels={episode['missed_channels']} config={Q3_FULL_CLEAR_CONFIG_LABEL}"
+    )
+
+
+# **Validates: Requirements 3.14**
+@pytest.mark.parametrize("seed", Q3_NATURAL_COUNT_SEEDS)
+def test_property7_q3_omni_full_clear_within_budget_natural_counts(seed: int):
+    """自然源数（10–16 随机）：档位之间的中间规模亦在预算内 100% 全清。"""
+    from src.b_sim.rehearse import run_episode  # 局部导入：仅本有界族测试需要
+    from src.b_sim.strategy import StrategyConfig
+
+    episode = run_episode(seed, directional=0, config=StrategyConfig())
+
+    # 案例族规模契约：每案例 10–16 源，且全为全向（无定向源）。
+    assert 10 <= episode["total_jammers"] <= 16, (
+        f"seed={seed} 源总数 {episode['total_jammers']} 不在 Q3 案例族 [10,16] 内"
+    )
+    assert episode["directional_jammers"] == 0, (
+        f"seed={seed} 定向源数 {episode['directional_jammers']} != 0（Q3 全向）"
+    )
+
+    # 预算内全清。不满足时**不弱化断言**——直接报出 seed / 已清除比例 / 未清频道 / 配置。
+    assert episode["cleared"] == episode["total_jammers"], (
+        f"seed={seed} 未全清：cleared={episode['cleared']}/{episode['total_jammers']} "
+        f"(ratio={episode['cleared_ratio']:.3f}) missed_channels={episode['missed_channels']} "
+        f"config={Q3_FULL_CLEAR_CONFIG_LABEL}"
+    )
+    assert episode["cleared_ratio"] == pytest.approx(1.0, abs=1e-9), (
+        f"seed={seed} cleared_ratio={episode['cleared_ratio']:.6f} != 1.0 "
+        f"missed_channels={episode['missed_channels']} config={Q3_FULL_CLEAR_CONFIG_LABEL}"
+    )
