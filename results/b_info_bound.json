@@ -1,0 +1,558 @@
+{
+  "constants": {
+    "arena_radius_m": 1800.0,
+    "clear_radius_m": 20.0,
+    "near_threshold_m": 5.0,
+    "reception_radius_m": [
+      1000.0,
+      1500.0
+    ],
+    "n_channels": 20,
+    "source_count_range": [
+      10,
+      16
+    ],
+    "bearing_error_abs_max_deg": 1.0,
+    "svd_quantization_deg": 0.01,
+    "directional_half_angle_deg": 90.0
+  },
+  "requirement": {
+    "q3_N10": {
+      "n_sources": 10,
+      "n_directional": 0,
+      "target_radius_m": 20.0,
+      "bits_position": 129.8370619265935,
+      "bits_position_per_source": 12.98370619265935,
+      "bits_channel_subset": 17.495261691472315,
+      "bits_source_count": 2.807354922057604,
+      "bits_core_localization": 150.1396785401234,
+      "bits_directional_flags": 0.0,
+      "bits_directional_bearing": 0.0,
+      "bits_total_with_nuisance": 150.1396785401234
+    },
+    "q3_N11": {
+      "n_sources": 11,
+      "n_directional": 0,
+      "target_radius_m": 20.0,
+      "bits_position": 142.82076811925285,
+      "bits_position_per_source": 12.98370619265935,
+      "bits_channel_subset": 17.35775816772238,
+      "bits_source_count": 2.807354922057604,
+      "bits_core_localization": 162.98588120903284,
+      "bits_directional_flags": 0.0,
+      "bits_directional_bearing": 0.0,
+      "bits_total_with_nuisance": 162.98588120903284
+    },
+    "q3_N12": {
+      "n_sources": 12,
+      "n_directional": 0,
+      "target_radius_m": 20.0,
+      "bits_position": 155.8044743119122,
+      "bits_position_per_source": 12.98370619265935,
+      "bits_channel_subset": 16.942720668443535,
+      "bits_source_count": 2.807354922057604,
+      "bits_core_localization": 175.55454990241336,
+      "bits_directional_flags": 0.0,
+      "bits_directional_bearing": 0.0,
+      "bits_total_with_nuisance": 175.55454990241336
+    },
+    "q3_N13": {
+      "n_sources": 13,
+      "n_directional": 0,
+      "target_radius_m": 20.0,
+      "bits_position": 168.78818050457156,
+      "bits_position_per_source": 12.98370619265935,
+      "bits_channel_subset": 16.242280950302444,
+      "bits_source_count": 2.807354922057604,
+      "bits_core_localization": 187.8378163769316,
+      "bits_directional_flags": 0.0,
+      "bits_directional_bearing": 0.0,
+      "bits_total_with_nuisance": 187.8378163769316
+    },
+    "q3_N14": {
+      "n_sources": 14,
+      "n_directional": 0,
+      "target_radius_m": 20.0,
+      "bits_position": 181.77188669723088,
+      "bits_position_per_source": 12.98370619265935,
+      "bits_channel_subset": 15.242280950302444,
+      "bits_source_count": 2.807354922057604,
+      "bits_core_localization": 199.82152256959094,
+      "bits_directional_flags": 0.0,
+      "bits_directional_bearing": 0.0,
+      "bits_total_with_nuisance": 199.82152256959094
+    },
+    "q3_N15": {
+      "n_sources": 15,
+      "n_directional": 0,
+      "target_radius_m": 20.0,
+      "bits_position": 194.75559288989024,
+      "bits_position_per_source": 12.98370619265935,
+      "bits_channel_subset": 13.92035285541508,
+      "bits_source_count": 2.807354922057604,
+      "bits_core_localization": 211.48330066736293,
+      "bits_directional_flags": 0.0,
+      "bits_directional_bearing": 0.0,
+      "bits_total_with_nuisance": 211.48330066736293
+    },
+    "q3_N16": {
+      "n_sources": 16,
+      "n_directional": 0,
+      "target_radius_m": 20.0,
+      "bits_position": 207.7392990825496,
+      "bits_position_per_source": 12.98370619265935,
+      "bits_channel_subset": 12.242280950302444,
+      "bits_source_count": 2.807354922057604,
+      "bits_core_localization": 222.78893495490965,
+      "bits_directional_flags": 0.0,
+      "bits_directional_bearing": 0.0,
+      "bits_total_with_nuisance": 222.78893495490965
+    },
+    "q4_N10_dir4": {
+      "n_sources": 10,
+      "n_directional": 4,
+      "target_radius_m": 20.0,
+      "bits_position": 129.8370619265935,
+      "bits_position_per_source": 12.98370619265935,
+      "bits_channel_subset": 17.495261691472315,
+      "bits_source_count": 2.807354922057604,
+      "bits_core_localization": 150.1396785401234,
+      "bits_directional_flags": 7.714245517666122,
+      "bits_directional_bearing": 29.9674123853187,
+      "bits_total_with_nuisance": 187.82133644310824
+    },
+    "q4_N11_dir5": {
+      "n_sources": 11,
+      "n_directional": 5,
+      "target_radius_m": 20.0,
+      "bits_position": 142.82076811925285,
+      "bits_position_per_source": 12.98370619265935,
+      "bits_channel_subset": 17.35775816772238,
+      "bits_source_count": 2.807354922057604,
+      "bits_core_localization": 162.98588120903284,
+      "bits_directional_flags": 8.851749041416058,
+      "bits_directional_bearing": 37.45926548164837,
+      "bits_total_with_nuisance": 209.29689573209728
+    },
+    "q4_N12_dir5": {
+      "n_sources": 12,
+      "n_directional": 5,
+      "target_radius_m": 20.0,
+      "bits_position": 155.8044743119122,
+      "bits_position_per_source": 12.98370619265935,
+      "bits_channel_subset": 16.942720668443535,
+      "bits_source_count": 2.807354922057604,
+      "bits_core_localization": 175.55454990241336,
+      "bits_directional_flags": 9.62935662007961,
+      "bits_directional_bearing": 37.45926548164837,
+      "bits_total_with_nuisance": 222.64317200414135
+    },
+    "q4_N13_dir5": {
+      "n_sources": 13,
+      "n_directional": 5,
+      "target_radius_m": 20.0,
+      "bits_position": 168.78818050457156,
+      "bits_position_per_source": 12.98370619265935,
+      "bits_channel_subset": 16.242280950302444,
+      "bits_source_count": 2.807354922057604,
+      "bits_core_localization": 187.8378163769316,
+      "bits_directional_flags": 10.329796338220701,
+      "bits_directional_bearing": 37.45926548164837,
+      "bits_total_with_nuisance": 235.62687819680067
+    },
+    "q4_N14_dir6": {
+      "n_sources": 14,
+      "n_directional": 6,
+      "target_radius_m": 20.0,
+      "bits_position": 181.77188669723088,
+      "bits_position_per_source": 12.98370619265935,
+      "bits_channel_subset": 15.242280950302444,
+      "bits_source_count": 2.807354922057604,
+      "bits_core_localization": 199.82152256959094,
+      "bits_directional_flags": 11.552188759557149,
+      "bits_directional_bearing": 44.95111857797805,
+      "bits_total_with_nuisance": 256.3248299071261
+    },
+    "q4_N15_dir6": {
+      "n_sources": 15,
+      "n_directional": 6,
+      "target_radius_m": 20.0,
+      "bits_position": 194.75559288989024,
+      "bits_position_per_source": 12.98370619265935,
+      "bits_channel_subset": 13.92035285541508,
+      "bits_source_count": 2.807354922057604,
+      "bits_core_localization": 211.48330066736293,
+      "bits_directional_flags": 12.289154353723356,
+      "bits_directional_bearing": 44.95111857797805,
+      "bits_total_with_nuisance": 268.7235735990643
+    },
+    "q4_N16_dir7": {
+      "n_sources": 16,
+      "n_directional": 7,
+      "target_radius_m": 20.0,
+      "bits_position": 207.7392990825496,
+      "bits_position_per_source": 12.98370619265935,
+      "bits_channel_subset": 12.242280950302444,
+      "bits_source_count": 2.807354922057604,
+      "bits_core_localization": 222.78893495490965,
+      "bits_directional_flags": 13.481799431665753,
+      "bits_directional_bearing": 52.44297167430772,
+      "bits_total_with_nuisance": 288.7137060608831
+    }
+  },
+  "capacity": {
+    "alphabet_size": 36002,
+    "H_Y_max_bits": 15.135789433602595,
+    "H_Y_given_theta_bits": 7.643856189774724,
+    "capacity_bits": 7.49193324382787,
+    "capacity_bits_check_180_sectors": 7.491853096329675,
+    "noise_bins": 200
+  },
+  "monte_carlo_station_mi": [
+    {
+      "station": [
+        0.0,
+        0.0
+      ],
+      "station_radius_m": 0.0,
+      "directional": false,
+      "p_no_signal": 0.5119775,
+      "p_near": 5e-06,
+      "p_direction": 0.4880175,
+      "H_type_bits": 0.999676107618203,
+      "H_svd_1deg_bits": 8.49043278109906,
+      "H_Y_bits": 8.385473975461599,
+      "H_Y_given_theta_bits": 3.7303355880933866,
+      "mutual_information_bits": 4.655138387368212,
+      "n_samples": 400000
+    },
+    {
+      "station": [
+        0.0,
+        0.0
+      ],
+      "station_radius_m": 0.0,
+      "directional": true,
+      "p_no_signal": 0.755715,
+      "p_near": 1e-05,
+      "p_direction": 0.244275,
+      "H_type_bits": 0.8022539524198888,
+      "H_svd_1deg_bits": 8.488888581832589,
+      "H_Y_bits": 4.498805181504265,
+      "H_Y_given_theta_bits": 1.8672029707572206,
+      "mutual_information_bits": 2.6316022107470443,
+      "n_samples": 400000
+    },
+    {
+      "station": [
+        600.0,
+        0.0
+      ],
+      "station_radius_m": 600.0,
+      "directional": false,
+      "p_no_signal": 0.5258375,
+      "p_near": 1e-05,
+      "p_direction": 0.4741525,
+      "H_type_bits": 0.9982426812140868,
+      "H_svd_1deg_bits": 8.488372618529823,
+      "H_Y_bits": 8.173226801243707,
+      "H_Y_given_theta_bits": 3.62435352202216,
+      "mutual_information_bits": 4.548873279221548,
+      "n_samples": 400000
+    },
+    {
+      "station": [
+        600.0,
+        0.0
+      ],
+      "station_radius_m": 600.0,
+      "directional": true,
+      "p_no_signal": 0.76362,
+      "p_near": 2.5e-06,
+      "p_direction": 0.2363775,
+      "H_type_bits": 0.789013270267453,
+      "H_svd_1deg_bits": 8.487257276561287,
+      "H_Y_bits": 4.365668043656293,
+      "H_Y_given_theta_bits": 1.806835616498475,
+      "mutual_information_bits": 2.5588324271578182,
+      "n_samples": 400000
+    },
+    {
+      "station": [
+        1250.0,
+        0.0
+      ],
+      "station_radius_m": 1250.0,
+      "directional": false,
+      "p_no_signal": 0.661315,
+      "p_near": 5e-06,
+      "p_direction": 0.33868,
+      "H_type_bits": 0.9236422298621285,
+      "H_svd_1deg_bits": 8.292791893794327,
+      "H_Y_bits": 5.982386202805294,
+      "H_Y_given_theta_bits": 2.5888212143529037,
+      "mutual_information_bits": 3.3935649884523906,
+      "n_samples": 400000
+    },
+    {
+      "station": [
+        1250.0,
+        0.0
+      ],
+      "station_radius_m": 1250.0,
+      "directional": true,
+      "p_no_signal": 0.8316,
+      "p_near": 7.5e-06,
+      "p_direction": 0.1683925,
+      "H_type_bits": 0.6541507656510313,
+      "H_svd_1deg_bits": 8.285104931848792,
+      "H_Y_bits": 3.1680758513240193,
+      "H_Y_given_theta_bits": 1.2871680534366403,
+      "mutual_information_bits": 1.880907797887379,
+      "n_samples": 400000
+    },
+    {
+      "station": [
+        1750.0,
+        0.0
+      ],
+      "station_radius_m": 1750.0,
+      "directional": false,
+      "p_no_signal": 0.781655,
+      "p_near": 1e-05,
+      "p_direction": 0.218335,
+      "H_type_bits": 0.7572925567204575,
+      "H_svd_1deg_bits": 7.491089999080297,
+      "H_Y_bits": 3.8434460328641187,
+      "H_Y_given_theta_bits": 1.6689213411944646,
+      "mutual_information_bits": 2.174524691669654,
+      "n_samples": 400000
+    },
+    {
+      "station": [
+        1750.0,
+        0.0
+      ],
+      "station_radius_m": 1750.0,
+      "directional": true,
+      "p_no_signal": 0.89113,
+      "p_near": 5e-06,
+      "p_direction": 0.108865,
+      "H_type_bits": 0.49657736517265744,
+      "H_svd_1deg_bits": 7.485770858222251,
+      "H_Y_bits": 2.0347992137528483,
+      "H_Y_given_theta_bits": 0.8321484040998254,
+      "mutual_information_bits": 1.202650809653023,
+      "n_samples": 400000
+    }
+  ],
+  "official_runs": {
+    "q4_practice_run1": {
+      "breakdown": {
+        "measure_calls_unique": 610,
+        "measure_calls_reported": 610,
+        "types": {
+          "no_signal": 539,
+          "direction": 71
+        },
+        "cleared_count": 12,
+        "clear_calls": 48,
+        "virtual_time_s": 17160.863927
+      },
+      "information": {
+        "n_measurements": 610,
+        "type_probs": {
+          "no_signal": 0.8836065573770492,
+          "direction": 0.11639344262295082
+        },
+        "H_type_bits": 0.5189042948954407,
+        "p_direction": 0.11639344262295082,
+        "H_svd_10deg_bits": 4.779546943235045,
+        "H_svd_quantized_empirical_bits": 14.745331227897132,
+        "H_svd_quantized_uniform_bits": 15.1357092861044,
+        "H_Y_given_theta_bits": 0.8896947368426318,
+        "bits_per_measurement_empirical": 1.3454694222834587,
+        "bits_per_measurement_loose": 1.390906868402665,
+        "bits_per_measurement_capacity": 7.49193324382787,
+        "total_bits_empirical": 820.7363475929097,
+        "total_bits_loose": 848.4531897256257,
+        "total_bits_capacity": 4570.079278735001
+      }
+    },
+    "q4_practice_run2": {
+      "breakdown": {
+        "measure_calls_unique": 581,
+        "measure_calls_reported": 581,
+        "types": {
+          "no_signal": 504,
+          "direction": 77
+        },
+        "cleared_count": 14,
+        "clear_calls": 43,
+        "virtual_time_s": 15893.237223
+      },
+      "information": {
+        "n_measurements": 581,
+        "type_probs": {
+          "no_signal": 0.8674698795180723,
+          "direction": 0.13253012048192772
+        },
+        "H_type_bits": 0.5643364444932288,
+        "p_direction": 0.13253012048192772,
+        "H_svd_10deg_bits": 4.814662676693278,
+        "H_svd_quantized_empirical_bits": 14.780446961355365,
+        "H_svd_quantized_uniform_bits": 15.1357092861044,
+        "H_Y_given_theta_bits": 1.0130411817773732,
+        "bits_per_measurement_empirical": 1.5101496792810245,
+        "bits_per_measurement_loose": 1.557232637982704,
+        "bits_per_measurement_capacity": 7.49193324382787,
+        "total_bits_empirical": 877.3969636622752,
+        "total_bits_loose": 904.752162667951,
+        "total_bits_capacity": 4352.813214663993
+      }
+    },
+    "q4_practice_run3": {
+      "breakdown": {
+        "measure_calls_unique": 596,
+        "measure_calls_reported": 596,
+        "types": {
+          "direction": 44,
+          "no_signal": 552
+        },
+        "cleared_count": 10,
+        "clear_calls": 32,
+        "virtual_time_s": 15879.066436
+      },
+      "information": {
+        "n_measurements": 596,
+        "type_probs": {
+          "direction": 0.0738255033557047,
+          "no_signal": 0.9261744966442953
+        },
+        "H_type_bits": 0.38004017925143946,
+        "p_direction": 0.0738255033557047,
+        "H_svd_10deg_bits": 4.743300368538958,
+        "H_svd_quantized_empirical_bits": 14.709084653201046,
+        "H_svd_quantized_uniform_bits": 15.1357092861044,
+        "H_Y_given_theta_bits": 0.5643115307887381,
+        "bits_per_measurement_empirical": 0.9016342268869397,
+        "bits_per_measurement_loose": 0.9331300051549725,
+        "bits_per_measurement_capacity": 7.49193324382787,
+        "total_bits_empirical": 537.3739992246161,
+        "total_bits_loose": 556.1454830723636,
+        "total_bits_capacity": 4465.192213321411
+      }
+    },
+    "q4_practice_run4": {
+      "breakdown": {
+        "measure_calls_unique": 628,
+        "measure_calls_reported": 628,
+        "types": {
+          "no_signal": 568,
+          "direction": 60
+        },
+        "cleared_count": 12,
+        "clear_calls": 47,
+        "virtual_time_s": 17236.955765
+      },
+      "information": {
+        "n_measurements": 628,
+        "type_probs": {
+          "no_signal": 0.9044585987261147,
+          "direction": 0.09554140127388536
+        },
+        "H_type_bits": 0.4547006858101453,
+        "p_direction": 0.09554140127388536,
+        "H_svd_10deg_bits": 4.5062389286533895,
+        "H_svd_quantized_empirical_bits": 14.472023213315477,
+        "H_svd_quantized_uniform_bits": 15.1357092861044,
+        "H_Y_given_theta_bits": 0.7303047315071394,
+        "bits_per_measurement_empirical": 1.1070733313713637,
+        "bits_per_measurement_loose": 1.1704828287715792,
+        "bits_per_measurement_capacity": 7.49193324382787,
+        "total_bits_empirical": 695.2420521012164,
+        "total_bits_loose": 735.0632164685517,
+        "total_bits_capacity": 4704.934077123902
+      }
+    }
+  },
+  "efficiency": {
+    "run": "q4_practice_run1",
+    "requirement": {
+      "n_sources": 12,
+      "n_directional": 5,
+      "target_radius_m": 20.0,
+      "bits_position": 155.8044743119122,
+      "bits_position_per_source": 12.98370619265935,
+      "bits_channel_subset": 16.942720668443535,
+      "bits_source_count": 2.807354922057604,
+      "bits_core_localization": 175.55454990241336,
+      "bits_directional_flags": 9.62935662007961,
+      "bits_directional_bearing": 37.45926548164837,
+      "bits_total_with_nuisance": 222.64317200414135
+    },
+    "rows": [
+      {
+        "supply_model": "容量上界 C=7.4919 bit/次",
+        "supplied_bits": 4570.079278735001,
+        "required_core_bits": 175.55454990241336,
+        "required_full_bits": 222.64317200414135,
+        "efficiency_core": 0.038413895951277,
+        "efficiency_full": 0.048717573246512484,
+        "min_detections_core": 24
+      },
+      {
+        "supply_model": "宽松经验上界",
+        "supplied_bits": 848.4531897256257,
+        "required_core_bits": 175.55454990241336,
+        "required_full_bits": 222.64317200414135,
+        "efficiency_core": 0.20691129696758462,
+        "efficiency_full": 0.262410672386228,
+        "min_detections_core": 127
+      },
+      {
+        "supply_model": "经验上界（含实测角分布）",
+        "supplied_bits": 820.7363475929097,
+        "required_core_bits": 175.55454990241336,
+        "required_full_bits": 222.64317200414135,
+        "efficiency_core": 0.21389883659629205,
+        "efficiency_full": 0.2712724648507632,
+        "min_detections_core": 131
+      },
+      {
+        "supply_model": "最优站位互信息 × 次数",
+        "supplied_bits": 2839.6344162946093,
+        "required_core_bits": 175.55454990241336,
+        "required_full_bits": 222.64317200414135,
+        "efficiency_core": 0.06182294062046603,
+        "efficiency_full": 0.07840557598772332,
+        "min_detections_core": 38
+      }
+    ],
+    "best_station_mi_bits": 4.655138387368212
+  },
+  "q3_reference": {
+    "measure_calls": 209,
+    "cleared": 10,
+    "required_core_bits": 150.1396785401234,
+    "supplied_capacity_bits": 1565.814047960025,
+    "efficiency_core": 0.09588602090760937,
+    "min_detections_core": 21,
+    "q4_efficiency_same_basis": 0.038413895951277,
+    "q3_over_q4_efficiency_ratio": 2.4961285111311864
+  },
+  "constructive_bound": {
+    "channel_probe": 20,
+    "triangulation": 24,
+    "constructive_disjoint": 44,
+    "constructive_shared": 24,
+    "information_bound": 24,
+    "redundancy_vs_constructive": 25.416666666666668,
+    "redundancy_vs_information": 25.416666666666668
+  },
+  "inefficiency_source": {
+    "p_no_signal": 0.8836065573770492,
+    "bits_per_no_signal": 0.17852396969774315,
+    "bits_per_direction_at_capacity": 7.49193324382787
+  }
+}

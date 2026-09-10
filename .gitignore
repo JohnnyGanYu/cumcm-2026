@@ -28,3 +28,11 @@ src/multi_review*.py
 results/multi_review.json
 # 官方日志只放 official_runs/ 且只放脱敏版
 src/official_log_*.json
+
+# belief 分析的逐快照原始记录：体积大(合计约6.8MB)、可由脚本复现，本机保留不入库
+# 结论见 results/b_belief_verdict.md 与 b_belief_ablation_q4.json / b_belief_live_*.json
+results/b_belief_records_*.json
+results/b_belief_analysis_q3.json
+results/b_belief_analysis_q4.json
+results/b_belief_analysis_smoke.json
+results/b_belief_replay_q4.json

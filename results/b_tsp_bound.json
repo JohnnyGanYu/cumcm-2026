@@ -1,0 +1,514 @@
+{
+  "runs": [
+    {
+      "file": "q4_practice_run1.sanitized.json",
+      "cleared": 12,
+      "time": {
+        "measure_calls": 610,
+        "channel_switches": 559,
+        "clear_success": 12,
+        "clear_fail": 36,
+        "move_distance_m": 66919.31965088632,
+        "t_measure_s": 3609.0,
+        "t_clear_s": 168.0,
+        "t_move_s": 13383.863930177264,
+        "virtual_time_s": 17160.863927,
+        "reconcile_err_s": 3.1772651709616184e-06,
+        "pct_measure": 21.030409747156085,
+        "pct_clear": 0.9789716923031926,
+        "pct_move": 77.99061857905532
+      },
+      "dist_breakdown": {
+        "d_station_transit_m": 44398.16765189461,
+        "d_homing_m": 21871.233074049895,
+        "d_clear_fine_m": 649.9189249418364
+      },
+      "n_stations": 47,
+      "station_radii": [
+        300,
+        350,
+        400,
+        900,
+        1250,
+        1750,
+        1800
+      ],
+      "n_excursions": 7,
+      "ring_order_loss": [
+        {
+          "radius_m": 1250,
+          "n": 12,
+          "actual_m": 13538.538922680615,
+          "angle_sorted_m": 7117.5237403193205,
+          "loss_m": 6421.015182361294,
+          "angles": [
+            30,
+            0,
+            300,
+            330,
+            60,
+            150,
+            240,
+            210,
+            180,
+            120,
+            90,
+            270
+          ]
+        },
+        {
+          "radius_m": 1750,
+          "n": 18,
+          "actual_m": 10332.066571182355,
+          "angle_sorted_m": 10332.066571182353,
+          "loss_m": 1.8189894035458565e-12,
+          "angles": [
+            270,
+            290,
+            310,
+            330,
+            350,
+            10,
+            30,
+            50,
+            70,
+            90,
+            110,
+            130,
+            150,
+            170,
+            190,
+            210,
+            230,
+            250
+          ]
+        },
+        {
+          "radius_m": 1800,
+          "n": 12,
+          "actual_m": 18832.02236673827,
+          "angle_sorted_m": 10050.4585461118,
+          "loss_m": 8781.56382062647,
+          "angles": [
+            303,
+            324,
+            241,
+            216,
+            126,
+            144,
+            61,
+            36,
+            0,
+            90,
+            180,
+            270
+          ]
+        }
+      ],
+      "ring_loss_total_m": 15202.579002987766,
+      "actual_move_m": 66919.31965088632,
+      "bounds_m": {
+        "B_cov": 19994.701119661404,
+        "B_ring12": 8367.523740319319,
+        "L4": 38908.264758188125,
+        "L4_tour": 19966.774710717822,
+        "L4_service": 18941.490047470303,
+        "L3": 21111.46027531691,
+        "L3_mst_lb": 19990.57165466306,
+        "L1": 8780.79543218164
+      },
+      "methods": {
+        "B_cov": "heuristic NNx46+2opt+OrOpt n=47",
+        "B_ring12": "exact Held-Karp n=13",
+        "L1": "exact Held-Karp n=13",
+        "L3": "heuristic NNx58+2opt+OrOpt n=59"
+      },
+      "coverage_order_loss_m": 24403.466532233208,
+      "ratio_actual_over_L1": 7.6210999524743315,
+      "metric_actual": 1430.0719939166665,
+      "metric_L4": 963.2210793031354,
+      "metric_L3": 666.6076712552818,
+      "metric_L1": 461.0965905363607,
+      "metric_L0": 151.34659053636065
+    },
+    {
+      "file": "q4_practice_run2.sanitized.json",
+      "cleared": 14,
+      "time": {
+        "measure_calls": 581,
+        "channel_switches": 538,
+        "clear_success": 14,
+        "clear_fail": 29,
+        "move_distance_m": 61466.186128655296,
+        "t_measure_s": 3443.0,
+        "t_clear_s": 157.0,
+        "t_move_s": 12293.23722573106,
+        "virtual_time_s": 15893.237223,
+        "reconcile_err_s": 2.7310597943142056e-06,
+        "pct_measure": 21.66330214348931,
+        "pct_clear": 0.9878415441556264,
+        "pct_move": 77.34885632953885
+      },
+      "dist_breakdown": {
+        "d_station_transit_m": 18733.951067192524,
+        "d_homing_m": 42087.53250734801,
+        "d_clear_fine_m": 644.7025541147835
+      },
+      "n_stations": 31,
+      "station_radii": [
+        1250,
+        1750
+      ],
+      "n_excursions": 6,
+      "ring_order_loss": [
+        {
+          "radius_m": 1250,
+          "n": 12,
+          "actual_m": 7117.5237403193205,
+          "angle_sorted_m": 7117.5237403193205,
+          "loss_m": 0.0,
+          "angles": [
+            240,
+            210,
+            180,
+            150,
+            120,
+            90,
+            60,
+            30,
+            0,
+            330,
+            300,
+            270
+          ]
+        },
+        {
+          "radius_m": 1750,
+          "n": 18,
+          "actual_m": 10332.066571182355,
+          "angle_sorted_m": 10332.066571182353,
+          "loss_m": 1.8189894035458565e-12,
+          "angles": [
+            270,
+            290,
+            310,
+            330,
+            350,
+            10,
+            30,
+            50,
+            70,
+            90,
+            110,
+            130,
+            150,
+            170,
+            190,
+            210,
+            230,
+            250
+          ]
+        }
+      ],
+      "ring_loss_total_m": 1.8189894035458565e-12,
+      "actual_move_m": 61466.186128655296,
+      "bounds_m": {
+        "B_cov": 18133.131786866998,
+        "B_ring12": 8367.523740319319,
+        "L4": 58585.5046226234,
+        "L4_tour": 18548.760208319694,
+        "L4_service": 40036.7444143037,
+        "L3": 21416.64026638373,
+        "L3_mst_lb": 19998.170202183435,
+        "L1": 6506.071286559054
+      },
+      "methods": {
+        "B_cov": "heuristic NNx30+2opt+OrOpt n=31",
+        "B_ring12": "exact Held-Karp n=13",
+        "L1": "exact Held-Karp n=15",
+        "L3": "heuristic NNx44+2opt+OrOpt n=45"
+      },
+      "coverage_order_loss_m": 600.819280325526,
+      "ratio_actual_over_L1": 9.447511934835205,
+      "metric_actual": 1135.2312302142857,
+      "metric_L4": 1094.0786374660486,
+      "metric_L3": 563.094860948339,
+      "metric_L1": 350.0867326651293,
+      "metric_L0": 97.9438755222722
+    },
+    {
+      "file": "q4_practice_run3.sanitized.json",
+      "cleared": 10,
+      "time": {
+        "measure_calls": 596,
+        "channel_switches": 556,
+        "clear_success": 10,
+        "clear_fail": 22,
+        "move_distance_m": 61135.33218632431,
+        "t_measure_s": 3536.0,
+        "t_clear_s": 116.0,
+        "t_move_s": 12227.066437264863,
+        "virtual_time_s": 15879.066436,
+        "reconcile_err_s": 1.264863385586068e-06,
+        "pct_measure": 22.268311643204715,
+        "pct_clear": 0.7305215358064896,
+        "pct_move": 77.0011668289544
+      },
+      "dist_breakdown": {
+        "d_station_transit_m": 43962.718534715044,
+        "d_homing_m": 16665.01960383203,
+        "d_clear_fine_m": 507.59404777723574
+      },
+      "n_stations": 47,
+      "station_radii": [
+        350,
+        400,
+        450,
+        850,
+        1250,
+        1750,
+        1800
+      ],
+      "n_excursions": 7,
+      "ring_order_loss": [
+        {
+          "radius_m": 1250,
+          "n": 12,
+          "actual_m": 7117.52374031932,
+          "angle_sorted_m": 7117.5237403193205,
+          "loss_m": -9.094947017729282e-13,
+          "angles": [
+            330,
+            300,
+            270,
+            240,
+            210,
+            180,
+            150,
+            120,
+            90,
+            60,
+            30,
+            0
+          ]
+        },
+        {
+          "radius_m": 1750,
+          "n": 18,
+          "actual_m": 13795.133087125007,
+          "angle_sorted_m": 10332.066571182353,
+          "loss_m": 3463.0665159426535,
+          "angles": [
+            10,
+            30,
+            50,
+            70,
+            90,
+            130,
+            110,
+            150,
+            170,
+            190,
+            210,
+            230,
+            250,
+            310,
+            290,
+            270,
+            330,
+            350
+          ]
+        },
+        {
+          "radius_m": 1800,
+          "n": 12,
+          "actual_m": 20719.82270036067,
+          "angle_sorted_m": 10053.22871736572,
+          "loss_m": 10666.59398299495,
+          "angles": [
+            57,
+            36,
+            119,
+            144,
+            237,
+            299,
+            324,
+            216,
+            180,
+            90,
+            0,
+            270
+          ]
+        }
+      ],
+      "ring_loss_total_m": 14129.660498937603,
+      "actual_move_m": 61135.33218632431,
+      "bounds_m": {
+        "B_cov": 20049.39878137193,
+        "B_ring12": 8367.523740319319,
+        "L4": 33400.82590444089,
+        "L4_tour": 19988.34670338937,
+        "L4_service": 13412.479201051521,
+        "L3": 21269.486071802326,
+        "L3_mst_lb": 19835.224699239323,
+        "L1": 8709.694423429622
+      },
+      "methods": {
+        "B_cov": "heuristic NNx46+2opt+OrOpt n=47",
+        "B_ring12": "exact Held-Karp n=13",
+        "L1": "exact Held-Karp n=11",
+        "L3": "heuristic NNx56+2opt+OrOpt n=57"
+      },
+      "coverage_order_loss_m": 23913.319753343116,
+      "ratio_actual_over_L1": 7.019228139837655,
+      "metric_actual": 1587.9066435999998,
+      "metric_L4": 1033.2165180888178,
+      "metric_L3": 790.5897214360465,
+      "metric_L1": 539.3938884685924,
+      "metric_L0": 179.19388846859243
+    },
+    {
+      "file": "q4_practice_run4.sanitized.json",
+      "cleared": 12,
+      "time": {
+        "measure_calls": 628,
+        "channel_switches": 591,
+        "clear_success": 12,
+        "clear_fail": 35,
+        "move_distance_m": 66704.77883265221,
+        "t_measure_s": 3731.0,
+        "t_clear_s": 165.0,
+        "t_move_s": 13340.955766530442,
+        "virtual_time_s": 17236.955765,
+        "reconcile_err_s": 1.5304431144613773e-06,
+        "pct_measure": 21.645353453745436,
+        "pct_clear": 0.9572455963194845,
+        "pct_move": 77.39740095881393
+      },
+      "dist_breakdown": {
+        "d_station_transit_m": 47241.72957644976,
+        "d_homing_m": 18888.99903649335,
+        "d_clear_fine_m": 574.0502197091098
+      },
+      "n_stations": 47,
+      "station_radii": [
+        350,
+        400,
+        850,
+        1250,
+        1750,
+        1800
+      ],
+      "n_excursions": 9,
+      "ring_order_loss": [
+        {
+          "radius_m": 1250,
+          "n": 12,
+          "actual_m": 10359.211364477882,
+          "angle_sorted_m": 7117.5237403193205,
+          "loss_m": 3241.6876241585614,
+          "angles": [
+            240,
+            210,
+            180,
+            120,
+            90,
+            60,
+            150,
+            30,
+            0,
+            330,
+            300,
+            270
+          ]
+        },
+        {
+          "radius_m": 1750,
+          "n": 18,
+          "actual_m": 10332.066571182355,
+          "angle_sorted_m": 10332.066571182353,
+          "loss_m": 1.8189894035458565e-12,
+          "angles": [
+            270,
+            290,
+            310,
+            330,
+            350,
+            10,
+            30,
+            50,
+            70,
+            90,
+            110,
+            130,
+            150,
+            170,
+            190,
+            210,
+            230,
+            250
+          ]
+        },
+        {
+          "radius_m": 1800,
+          "n": 12,
+          "actual_m": 20865.63821106689,
+          "angle_sorted_m": 10055.592532697656,
+          "loss_m": 10810.045678369233,
+          "angles": [
+            119,
+            144,
+            61,
+            36,
+            303,
+            241,
+            216,
+            324,
+            0,
+            90,
+            180,
+            270
+          ]
+        }
+      ],
+      "ring_loss_total_m": 14051.733302527797,
+      "actual_move_m": 66704.77883265221,
+      "bounds_m": {
+        "B_cov": 19914.769849132317,
+        "B_ring12": 8367.523740319319,
+        "L4": 36081.387242586105,
+        "L4_tour": 20265.22018156701,
+        "L4_service": 15816.1670610191,
+        "L3": 20971.991317297325,
+        "L3_mst_lb": 19846.565873988075,
+        "L1": 9751.55812519764
+      },
+      "methods": {
+        "B_cov": "heuristic NNx46+2opt+OrOpt n=47",
+        "B_ring12": "exact Held-Karp n=13",
+        "L1": "exact Held-Karp n=13",
+        "L3": "heuristic NNx58+2opt+OrOpt n=59"
+      },
+      "coverage_order_loss_m": 27326.959727317444,
+      "ratio_actual_over_L1": 6.840422625415082,
+      "metric_actual": 1436.4129804166666,
+      "metric_L4": 926.0231207097685,
+      "metric_L3": 674.1998552882887,
+      "metric_L1": 487.19263541996065,
+      "metric_L0": 167.525968753294
+    }
+  ],
+  "mean": {
+    "metric_actual": 1397.4057120369046,
+    "metric_L4": 1004.1348388919425,
+    "metric_L3": 673.623027231989,
+    "metric_L1": 459.44246177251074,
+    "metric_L0": 149.00258082012982,
+    "gain_L4_pct": -28.142927265677013,
+    "gain_L3_pct": -51.79474211178844,
+    "gain_L1_pct": -67.12175584978736,
+    "coverage_order_loss_m": 19061.141323304822,
+    "ring_loss_total_m": 10845.993201113291,
+    "ring_loss_s": 2169.1986402226585
+  }
+}
