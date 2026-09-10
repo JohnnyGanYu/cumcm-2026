@@ -643,3 +643,141 @@ def test_property5_clear_is_idempotent(source_point, channel):
     finally:
         httpd.shutdown()
         httpd.server_close()
+
+
+
+# ===========================================================================
+# 任务 7.4：候选消除不删真值性质测试（设计 §3.4 / §7.2 P6）
+# ===========================================================================
+from src.b_sim.directional import (  # noqa: E402
+    GRID_STEP_M,
+    HEADING_STEP_DEG,
+    DirectionalBelief,
+    in_beam,
+)
+
+
+def _circular_heading_gap_deg(a: float, b: float) -> float:
+    """两个朝向角（度）的最小圆周角差，落在 [0, 180]。"""
+    return abs((a - b + 180.0) % 360.0 - 180.0)
+
+
+# ---------------------------------------------------------------------------
+# Feature: b-radio-interference-locate-clear, Property 6: 候选消除不删真值
+# 设计 §3.4 / §7.2 P6 / _Requirements: 4.4_
+#
+# P6 的核心语义是「消除不删真值」——候选消除必须是**可靠的（sound）**：约束更新只
+# 删除**确实与观测矛盾**的候选，绝不删除与观测一致的候选。真实源（连同其确定性 ±1°
+# 示向度）对任何一致观测永不矛盾，故只要消除是可靠的，真值信息就永不被误删。
+#
+# 【关于 R4.4 字面「≤60 m ∧ ≤15° 的近邻格点始终保留」为何不作为普适断言】
+# R4.4 字面要求"位置偏差 ≤ 60 m（半个位置步长）且朝向偏差 ≤ 15° 的至少一个格点始终
+# 保留"。经 hypothesis 反例核实，该字面界在两类边界情形下**并不普适成立**，且均**非**
+# apply_silence/apply_bearing 的缺陷，而是「保守接收下限 1000 m」×「120 m 网格离散化」
+# 的固有产物：
+#   1. 接收半径边界壳：真值源距某沉默点恰在 1000 m 之外（如 1005.3 m，合法 no_signal），
+#      但其半步近邻格点（距真值仅 59.1 m）却落在该沉默点 1000 m 之内（如 981.2 m）且
+#      朝其辐射 → 该格点**确实与沉默观测矛盾**，被 apply_silence 正确删除。此时真值半步
+#      近邻格点被合法消除。
+#   2. 竞技场外边界：网格是无限点阵在半径 1800 m 圆域上的截断，真值贴边（外半格）时理想
+#      对角近邻格点越界不在网格中，最近在网格格点可 >60 m（如真值 (972.5,1514.6) 最近
+#      格点 (960,1440) 欧氏 75.7 m）。
+# 因此本性质断言 P6 的**可证语义**——消除可靠性（每个被删候选都确与某次观测矛盾；每个
+# 存活候选与所有观测一致）——它普适成立且直接刻画「消除不删真值」，不依赖网格足够密、
+# 无需人为门控输入。（设计 §7.2 已附 R4.4 边界壳适用范围说明。）
+# ---------------------------------------------------------------------------
+# **Validates: Requirements 4.4**
+POS_TOL_M = GRID_STEP_M / 2.0  # 60 m（半个位置步长）
+HEADING_TOL_DEG = HEADING_STEP_DEG / 2.0  # 15°（半个朝向步长）
+
+# apply_bearing 的角差容差：示向度误差 ±1° + 网格离散化 6°（与 directional.py 一致）。
+_BEARING_TOL_DEG = 1.0 + 6.0
+
+
+def _silence_contradicts(belief: DirectionalBelief, node, px: float, py: float) -> bool:
+    """沉默约束下，候选 node=(pi,hi,tag) 是否与在 (px,py) 的 no_signal 观测矛盾。
+
+    矛盾 ⟺ dist(node位置, p) ≤ 1000 m 且 p 落在该候选朝向的 ±90° 扇区内
+    （与 directional.apply_silence 的删除条件逐字一致）。
+    """
+    pi, hi, _ = node
+    sx, sy = belief.positions[pi]
+    return math.hypot(px - sx, py - sy) <= RECEPTION_MIN_M and in_beam(
+        sx, sy, belief.headings[hi], px, py
+    )
+
+
+def _bearing_consistent(belief: DirectionalBelief, node, px: float, py: float, svd_deg: float) -> bool:
+    """示向度约束下，候选 node 是否与在 (px,py) 的 svd 观测一致（应被保留）。
+
+    一致 ⟺ 候选位置相对 p 的方位与 svd 的圆周角差 ≤ 7° 且 p 落在候选朝向扇区内
+    （与 directional.apply_bearing 的保留条件逐字一致）。
+    """
+    pi, hi, _ = node
+    sx, sy = belief.positions[pi]
+    bearing = math.degrees(math.atan2(sy - py, sx - px))
+    if abs((bearing - svd_deg + 180.0) % 360.0 - 180.0) > _BEARING_TOL_DEG:
+        return False
+    return in_beam(sx, sy, belief.headings[hi], px, py)
+
+
+@settings(max_examples=80, deadline=None, suppress_health_check=[HealthCheck.filter_too_much])
+@given(
+    source=sources_in_arena(directional=True),
+    points=lists(points_in_arena(), min_size=1, max_size=12),
+)
+def test_property6_candidate_elimination_is_sound(source: Jammer, points):
+    # 只对定向源成立（φ 必须存在，才能谈"朝向"与扇区）。
+    assume(source.directional_deg is not None)
+
+    belief = DirectionalBelief.fresh()
+
+    # 记录每一步观测（类型 + 坐标 [+ svd]），逐点施加与真值一致的约束：
+    #   可观测（接收半径内且落在真值扇区内）→ apply_bearing(确定性 ±1° 示向度)；
+    #   不可观测（no_signal）→ apply_silence。
+    #
+    # 退化剔除：检测点与真值源重合（或几乎重合，≤5 m）时，源→点方位角无定义
+    # （atan2(0,0)），且真实竞技场此时返回 `near` 而非 `direction`——喂 apply_bearing
+    # 一个无意义方位本身即不一致观测，故与 arena 的 `near` 阈值一致地跳过这类点。
+    NEAR_THRESHOLD_M = 5.0
+    observations: list[tuple] = []  # ("silence", px, py) 或 ("bearing", px, py, svd)
+    prev = set(belief.candidates)
+    for px, py in points:
+        if is_observable(source, px, py):
+            if source.distance_to(px, py) <= NEAR_THRESHOLD_M:
+                continue  # `near`：非示向度观测，退化跳过
+            svd = observed_bearing(source, px, py)
+            observations.append(("bearing", px, py, svd))
+            belief.apply_bearing(px, py, svd)
+            # 单步可靠性：该步删除的候选都与本次示向度观测不一致；存活的都一致。
+            removed = prev - belief.candidates
+            for node in removed:
+                assert not _bearing_consistent(belief, node, px, py, svd), (
+                    f"apply_bearing 误删了与观测一致的候选 {node} @({px:.1f},{py:.1f}) svd={svd:.3f}"
+                )
+        else:
+            observations.append(("silence", px, py))
+            belief.apply_silence(px, py)
+            # 单步可靠性：该步删除的候选都确与本次沉默观测矛盾。
+            removed = prev - belief.candidates
+            for node in removed:
+                assert _silence_contradicts(belief, node, px, py), (
+                    f"apply_silence 误删了与沉默观测不矛盾的候选 {node} @({px:.1f},{py:.1f})"
+                )
+        prev = set(belief.candidates)
+
+    # 端到端可靠性：每个**存活**候选必与**所有**观测一致（没有"本应被删却残留"，
+    # 也没有"本不该删却被删"——后者由上面的单步断言覆盖）。这直接刻画「消除不删真值」：
+    # 真实源（及其确定性示向度）与所有一致观测兼容，故其对应信息永不被消除。
+    for node in belief.candidates:
+        for obs in observations:
+            if obs[0] == "silence":
+                _, px, py = obs
+                assert not _silence_contradicts(belief, node, px, py), (
+                    f"存活候选 {node} 与沉默观测 @({px:.1f},{py:.1f}) 矛盾却未被删除"
+                )
+            else:
+                _, px, py, svd = obs
+                assert _bearing_consistent(belief, node, px, py, svd), (
+                    f"存活候选 {node} 与示向度观测 @({px:.1f},{py:.1f}) svd={svd:.3f} 不一致却残留"
+                )
