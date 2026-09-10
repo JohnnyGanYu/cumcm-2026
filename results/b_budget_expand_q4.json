@@ -1,0 +1,295 @@
+{
+  "plan": "custom",
+  "episodes": 120,
+  "seed_start": 7000,
+  "directional": 5,
+  "total_elapsed_s": 337.2,
+  "rows": [
+    {
+      "name": "baseline",
+      "overrides": {},
+      "directional": 5,
+      "episodes": 120,
+      "error_count": 0,
+      "errors": [],
+      "metric_mean_s": 1241.4,
+      "metric_median_s": 1212.98,
+      "metric_max_s": 2200.66,
+      "pooled_metric_s": 1210.65,
+      "cleared_ratio_mean": 0.9985,
+      "cleared_ratio_min": 0.9,
+      "cleared_total": 1556,
+      "jammers_total": 1558,
+      "cleared_per_episode": 12.967,
+      "full_clear_episodes": 118,
+      "full_clear_rate": 0.9833,
+      "virtual_time_mean_s": 15698.1,
+      "virtual_time_max_s": 19806.0,
+      "virtual_budget_used_pct": 5.5,
+      "measure_calls_mean": 511.9,
+      "clear_calls_mean": 17.0,
+      "wall_s_mean": 1.59,
+      "wall_s_max": 2.08,
+      "wall_s_p95": 1.9,
+      "sweep_elapsed_s": 48.3,
+      "missed_episodes": [
+        {
+          "seed": 7047,
+          "total": 10,
+          "cleared": 9,
+          "missed_channels": [
+            15
+          ]
+        },
+        {
+          "seed": 7053,
+          "total": 12,
+          "cleared": 11,
+          "missed_channels": [
+            18
+          ]
+        }
+      ]
+    },
+    {
+      "name": "dirring24",
+      "overrides": {
+        "directional_ring_stations": 24
+      },
+      "directional": 5,
+      "episodes": 120,
+      "error_count": 0,
+      "errors": [],
+      "metric_mean_s": 1231.97,
+      "metric_median_s": 1199.9,
+      "metric_max_s": 1809.26,
+      "pooled_metric_s": 1201.44,
+      "cleared_ratio_mean": 0.9993,
+      "cleared_ratio_min": 0.9167,
+      "cleared_total": 1557,
+      "jammers_total": 1558,
+      "cleared_per_episode": 12.975,
+      "full_clear_episodes": 119,
+      "full_clear_rate": 0.9917,
+      "virtual_time_mean_s": 15588.7,
+      "virtual_time_max_s": 19260.9,
+      "virtual_budget_used_pct": 5.35,
+      "measure_calls_mean": 568.0,
+      "clear_calls_mean": 18.1,
+      "wall_s_mean": 1.69,
+      "wall_s_max": 2.05,
+      "wall_s_p95": 1.96,
+      "sweep_elapsed_s": 51.2,
+      "missed_episodes": [
+        {
+          "seed": 7053,
+          "total": 12,
+          "cleared": 11,
+          "missed_channels": [
+            18
+          ]
+        }
+      ]
+    },
+    {
+      "name": "dirring30",
+      "overrides": {
+        "directional_ring_stations": 30
+      },
+      "directional": 5,
+      "episodes": 120,
+      "error_count": 0,
+      "errors": [],
+      "metric_mean_s": 1240.95,
+      "metric_median_s": 1213.31,
+      "metric_max_s": 1794.0,
+      "pooled_metric_s": 1211.07,
+      "cleared_ratio_mean": 1.0,
+      "cleared_ratio_min": 1.0,
+      "cleared_total": 1558,
+      "jammers_total": 1558,
+      "cleared_per_episode": 12.983,
+      "full_clear_episodes": 120,
+      "full_clear_rate": 1.0,
+      "virtual_time_mean_s": 15723.7,
+      "virtual_time_max_s": 19819.5,
+      "virtual_budget_used_pct": 5.51,
+      "measure_calls_mean": 621.3,
+      "clear_calls_mean": 20.7,
+      "wall_s_mean": 1.59,
+      "wall_s_max": 2.18,
+      "wall_s_p95": 1.98,
+      "sweep_elapsed_s": 48.3,
+      "missed_episodes": []
+    },
+    {
+      "name": "dirring36",
+      "overrides": {
+        "directional_ring_stations": 36
+      },
+      "directional": 5,
+      "episodes": 120,
+      "error_count": 0,
+      "errors": [],
+      "metric_mean_s": 1287.45,
+      "metric_median_s": 1253.22,
+      "metric_max_s": 1849.89,
+      "pooled_metric_s": 1256.17,
+      "cleared_ratio_mean": 1.0,
+      "cleared_ratio_min": 1.0,
+      "cleared_total": 1558,
+      "jammers_total": 1558,
+      "cleared_per_episode": 12.983,
+      "full_clear_episodes": 120,
+      "full_clear_rate": 1.0,
+      "virtual_time_mean_s": 16309.3,
+      "virtual_time_max_s": 20110.3,
+      "virtual_budget_used_pct": 5.59,
+      "measure_calls_mean": 676.8,
+      "clear_calls_mean": 23.2,
+      "wall_s_mean": 1.63,
+      "wall_s_max": 2.3,
+      "wall_s_p95": 1.98,
+      "sweep_elapsed_s": 49.6,
+      "missed_episodes": []
+    },
+    {
+      "name": "inner8_dirring24",
+      "overrides": {
+        "probe_ring_stations": 8,
+        "directional_ring_stations": 24
+      },
+      "directional": 5,
+      "episodes": 120,
+      "error_count": 0,
+      "errors": [],
+      "metric_mean_s": 1191.23,
+      "metric_median_s": 1181.69,
+      "metric_max_s": 1772.64,
+      "pooled_metric_s": 1162.71,
+      "cleared_ratio_mean": 0.9993,
+      "cleared_ratio_min": 0.9167,
+      "cleared_total": 1557,
+      "jammers_total": 1558,
+      "cleared_per_episode": 12.975,
+      "full_clear_episodes": 119,
+      "full_clear_rate": 0.9917,
+      "virtual_time_mean_s": 15086.1,
+      "virtual_time_max_s": 18340.4,
+      "virtual_budget_used_pct": 5.09,
+      "measure_calls_mean": 528.1,
+      "clear_calls_mean": 17.2,
+      "wall_s_mean": 1.49,
+      "wall_s_max": 2.03,
+      "wall_s_p95": 1.78,
+      "sweep_elapsed_s": 45.3,
+      "missed_episodes": [
+        {
+          "seed": 7053,
+          "total": 12,
+          "cleared": 11,
+          "missed_channels": [
+            18
+          ]
+        }
+      ]
+    },
+    {
+      "name": "belief400_blind150",
+      "overrides": {
+        "belief_search_rounds": 400,
+        "blind_clear_max_targets": 150
+      },
+      "directional": 5,
+      "episodes": 120,
+      "error_count": 0,
+      "errors": [],
+      "metric_mean_s": 1241.4,
+      "metric_median_s": 1212.98,
+      "metric_max_s": 2200.66,
+      "pooled_metric_s": 1210.65,
+      "cleared_ratio_mean": 0.9985,
+      "cleared_ratio_min": 0.9,
+      "cleared_total": 1556,
+      "jammers_total": 1558,
+      "cleared_per_episode": 12.967,
+      "full_clear_episodes": 118,
+      "full_clear_rate": 0.9833,
+      "virtual_time_mean_s": 15698.1,
+      "virtual_time_max_s": 19806.0,
+      "virtual_budget_used_pct": 5.5,
+      "measure_calls_mean": 511.9,
+      "clear_calls_mean": 17.0,
+      "wall_s_mean": 1.48,
+      "wall_s_max": 2.03,
+      "wall_s_p95": 1.74,
+      "sweep_elapsed_s": 44.9,
+      "missed_episodes": [
+        {
+          "seed": 7047,
+          "total": 10,
+          "cleared": 9,
+          "missed_channels": [
+            15
+          ]
+        },
+        {
+          "seed": 7053,
+          "total": 12,
+          "cleared": 11,
+          "missed_channels": [
+            18
+          ]
+        }
+      ]
+    },
+    {
+      "name": "ray800",
+      "overrides": {
+        "ray_clear_max_attempts": 800
+      },
+      "directional": 5,
+      "episodes": 120,
+      "error_count": 0,
+      "errors": [],
+      "metric_mean_s": 1241.4,
+      "metric_median_s": 1212.98,
+      "metric_max_s": 2200.66,
+      "pooled_metric_s": 1210.65,
+      "cleared_ratio_mean": 0.9985,
+      "cleared_ratio_min": 0.9,
+      "cleared_total": 1556,
+      "jammers_total": 1558,
+      "cleared_per_episode": 12.967,
+      "full_clear_episodes": 118,
+      "full_clear_rate": 0.9833,
+      "virtual_time_mean_s": 15698.1,
+      "virtual_time_max_s": 19806.0,
+      "virtual_budget_used_pct": 5.5,
+      "measure_calls_mean": 511.9,
+      "clear_calls_mean": 17.0,
+      "wall_s_mean": 1.64,
+      "wall_s_max": 2.19,
+      "wall_s_p95": 1.96,
+      "sweep_elapsed_s": 49.7,
+      "missed_episodes": [
+        {
+          "seed": 7047,
+          "total": 10,
+          "cleared": 9,
+          "missed_channels": [
+            15
+          ]
+        },
+        {
+          "seed": 7053,
+          "total": 12,
+          "cleared": 11,
+          "missed_channels": [
+            18
+          ]
+        }
+      ]
+    }
+  ]
+}
