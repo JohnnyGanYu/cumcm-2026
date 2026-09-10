@@ -2231,3 +2231,268 @@ def test_lost_signal_defers_to_ray_blind_clear_when_bearing_known():
     strat._home_channel(state)
     assert ray_called["n"] == 1
     assert "lost signal" in " ".join(strat.events)
+
+
+# ===========================================================================
+# 任务 6.3：核对预算拆分、沉默容忍与复活/内圈/边缘处理（R3.7–R3.11）
+# Feature: b-radio-interference-locate-clear
+#
+# 本节为「验证/加固」任务的回归测试（VERIFY：实现已正确，无需改 strategy.py）。
+# 复用上方任务 6.2 定义的替身：_FakeArena62 / _make_strategy62 / _StrategyConfig62 /
+# _Bearing62（Bearing）。核对项：
+#   (R3.7) 搜索段 max_measures_per_channel=40 与归航段 max_homing_measures=14 分别记账；
+#          首个示向度后 add_bearing 重置 homing_measures=0 且清除 exhausted；
+#          _measure 每次都累加 measure_count，仅在已有示向度时才累加 homing_measures。
+#   (R3.8) _revive_exhausted 复活放弃频道（exhausted→False、置 revived）；silent_tolerance=3。
+#   (R3.9) _inner_retry 对「有示向度却清不掉」的频道走原点小三角基线（≥3 观测点）。
+#   (R3.10) 边缘源（hypot>1400）允许越过覆盖环沿示向度逼近至 ARENA_RADIUS(1800) 内。
+#   (R3.11) 就近贪心排序（轻断言，主验证在任务 6.1）。
+# ===========================================================================
+
+
+# ---- (R3.7) 预算拆分与首个示向度重置 ----
+
+def test_config_budget_split_search_forty_homing_fourteen():
+    """R3.7：搜索段总额度 40、归航段额度 14、沉默容忍 3 —— 配置默认值到位。"""
+    cfg = _StrategyConfig62()
+    assert cfg.max_measures_per_channel == 40
+    assert cfg.max_homing_measures == 14
+    assert cfg.silent_tolerance == 3
+
+
+def test_add_bearing_first_resets_homing_measures_and_clears_exhausted():
+    """R3.7：首个示向度到来时，homing_measures 重置为 0 且清除 exhausted 标记。
+
+    构造一个「搜索阶段已烧掉大量归航额度且被判放弃」的状态：homing_measures>0、
+    exhausted=True、且已有若干沉默观测。add_bearing 后二者必须双双复位，避免
+    「已可定位」的频道因搜索阶段耗尽额度而被误判放弃。
+    """
+    state = _ChannelState62(channel=4)
+    state.homing_measures = 11          # 搜索阶段已累计的归航计数
+    state.exhausted = True              # 曾被判放弃
+    state.consecutive_silent = 5
+    state.silent_points = [(0.0, 0.0), (10.0, 0.0)]
+    assert not state.bearings           # 首个示向度之前
+
+    state.add_bearing(100.0, 200.0, 42.0)
+
+    assert state.homing_measures == 0   # 归航预算重新起算
+    assert state.exhausted is False     # 放弃标记被清除
+    assert state.consecutive_silent == 0
+    assert len(state.bearings) == 1
+
+
+def test_add_bearing_second_does_not_reset_homing_measures():
+    """R3.7：非首个示向度不重置归航计数（只有 first 分支才重置）。"""
+    state = _ChannelState62(channel=4)
+    state.add_bearing(0.0, 0.0, 10.0)   # 首个 → 复位
+    state.homing_measures = 7           # 归航阶段自然累计
+    state.exhausted = True
+    state.add_bearing(50.0, 50.0, 20.0)  # 第二个：不应触发 first 复位
+    assert state.homing_measures == 7
+    # 注意 exhausted 仅在 first 分支清除；此处第二个示向度不改动它。
+    assert state.exhausted is True
+
+
+def test_measure_counts_search_and_homing_budgets_separately():
+    """R3.7：_measure 每次累加 measure_count；仅在已有示向度时才累加 homing_measures。"""
+    arena = _FakeArena62(measure_script=[
+        {"measure_result": "no_signal", "virtual_time_s": 0.0},   # 搜索段：无示向度
+        {"measure_result": "no_signal", "virtual_time_s": 0.0},   # 归航段：已有示向度
+    ])
+    strat = _make_strategy62(arena)
+    state = strat.channels[1]
+
+    # 尚无示向度：measure_count +1，homing_measures 不动（仍属搜索段）。
+    strat._measure((0.0, 0.0), 1)
+    assert state.measure_count == 1
+    assert state.homing_measures == 0
+
+    # 拿到首个示向度（不经 _measure，直接注入以隔离计数逻辑）。
+    state.add_bearing(0.0, 0.0, 45.0)
+    assert state.homing_measures == 0   # add_bearing 复位
+
+    # 已有示向度后再 _measure：measure_count 与 homing_measures 同时 +1。
+    strat._measure((10.0, 0.0), 1)
+    assert state.measure_count == 2
+    assert state.homing_measures == 1
+
+
+# ---- (R3.8) 复活与沉默容忍 ----
+
+def test_revive_exhausted_flips_and_marks_revived_for_uncleared():
+    """R3.8：_revive_exhausted 对未清除的放弃频道置 exhausted→False 并标记 revived。"""
+    strat = _make_strategy62(_FakeArena62())
+    # ch1：放弃且未清除 → 应被复活
+    s1 = strat.channels[1]
+    s1.exhausted = True
+    s1.cleared = False
+    s1.consecutive_silent = 3
+    # ch2：放弃但已清除 → 不复活（无需再试）
+    s2 = strat.channels[2]
+    s2.exhausted = True
+    s2.cleared = True
+    # ch3：放弃且未清除，但此前已复活过 → 不再复活（只给一次第二次机会）
+    s3 = strat.channels[3]
+    s3.exhausted = True
+    s3.cleared = False
+    s3.revived = True
+
+    strat._revive_exhausted()
+
+    assert s1.exhausted is False and s1.revived is True
+    assert s1.consecutive_silent == 0        # 复活时清零连续沉默计数
+    assert s1.ray_swept is False             # 允许再做一次射线盲清除
+    assert s2.cleared is True and s2.revived is False  # 已清除频道不动
+    assert s3.exhausted is True              # 已复活过的频道保持放弃
+
+
+def test_silent_tolerance_three_before_abandoning_channel():
+    """R3.8：连续沉默达 silent_tolerance(=3) 次后方可对当前站位放弃该频道。
+
+    对一个既无示向度的频道连续喂 no_signal：每次 _probe_channel_at 累加
+    consecutive_silent；到达 3 次即达放弃阈值。
+    """
+    cfg = _StrategyConfig62()
+    arena = _FakeArena62(measure_script=[
+        {"measure_result": "no_signal", "virtual_time_s": 0.0} for _ in range(3)
+    ])
+    strat = _make_strategy62(arena, cfg)
+    state = strat.channels[5]
+    for expected in (1, 2, 3):
+        strat._probe_channel_at((100.0 * expected, 0.0), state)
+        assert state.consecutive_silent == expected
+    # 达到 silent_tolerance 才允许放弃（前两次不足以放弃）。
+    assert state.consecutive_silent >= cfg.silent_tolerance
+    assert len(state.silent_points) == 3
+
+
+# ---- (R3.9) 内圈重测：原点可见但环站位全沉默的近距离源 ----
+
+def test_inner_retry_visits_small_triangle_of_at_least_three_points():
+    """R3.9：_inner_retry 对「有示向度却清不掉」的频道走原点小三角基线（≥3 观测点）。
+
+    源在原点可见（已注入一条示向度）但始终清不掉（真源置于 5000 m 外，clear 永远失败）。
+    打桩 _probe_channel_at 记录被访问的站位点：应包含原点在内的一个小三角基线，
+    ≥3 个不同观测点，且三角边长 ≤400 m（贴近原点的小基线）。
+    """
+    arena = _FakeArena62(source=(5000.0, 0.0))     # 真源在远处 → clear 恒失败
+    strat = _make_strategy62(arena)
+    # 仅 ch7 有示向度且未清除；其余频道无示向度（不应被内圈重测选中）。
+    state = strat.channels[7]
+    state.bearings = [_Bearing62(0.0, 0.0, 30.0)]
+    state.cleared = False
+
+    visited: list[tuple[float, float]] = []
+
+    def spy_probe(point, st):
+        if st.channel == 7:
+            visited.append(point)
+        # 记录后即返回，不真正驱动 measure/clear，隔离站位序列
+        return None
+
+    strat._probe_channel_at = spy_probe  # type: ignore[assignment]
+    # _home_all 在 _inner_retry 每站后被调用；替身化为 no-op 以隔离站位序列。
+    strat._home_all = lambda: None       # type: ignore[assignment]
+
+    strat._inner_retry()
+
+    # 去重后至少 3 个不同观测点（内圈三角基线）。
+    unique = sorted(set(visited))
+    assert len(unique) >= 3, f"内圈重测观测点不足 3 个: {unique}"
+    # 必含原点作为基线锚点。
+    assert (0.0, 0.0) in unique
+    # 三角基线贴近原点：所有点到原点距离 ≤400 m（小三角）。
+    for px, py in unique:
+        assert _math62.hypot(px, py) <= 400.0 + 1e-6, f"内圈站位 {px,py} 超出小三角范围"
+
+
+def test_inner_retry_skips_channels_without_bearings():
+    """R3.9：完全沉默（无示向度）的频道不参与内圈重测（属覆盖问题，交给环补扫）。"""
+    arena = _FakeArena62(source=(5000.0, 0.0))
+    strat = _make_strategy62(arena)
+    # 所有频道均无示向度 → 无目标 → 不访问任何站位。
+    visited: list[tuple[float, float]] = []
+    strat._probe_channel_at = lambda point, st: visited.append(point)  # type: ignore[assignment]
+    strat._home_all = lambda: None  # type: ignore[assignment]
+    strat._inner_retry()
+    assert visited == []
+
+
+# ---- (R3.10) 边缘源允许越过覆盖环逼近至 1800 m 内 ----
+
+def test_edge_source_step_closer_advances_past_ring_within_arena_radius():
+    """R3.10：边缘源（hypot>1400）沿示向度逼近，新观测点可越过 1250 m 覆盖环，
+    但仍落在 ARENA_RADIUS(1800) 允许范围内（_step_closer 判据 ≤ ARENA_RADIUS×1.02）。
+
+    构造一个贴边估计（正东 1700 m，hypot=1700>1400），狗从覆盖环上（1250 m）沿 x 轴
+    逼近。验证 _step_closer 生成的重测点前进到覆盖环（1250 m）之外、且 ≤1800×1.02——
+    即策略不把逼近点钉死在覆盖环上，允许越环贴近边缘源。
+    """
+    from src.b_sim.strategy import ARENA_RADIUS as _ARENA_R
+    cfg = _StrategyConfig62()
+    arena = _FakeArena62(measure_script=[{"measure_result": "no_signal", "virtual_time_s": 0.0}] * 4)
+    strat = _make_strategy62(arena, cfg)
+    state = strat.channels[9]
+    state.estimate = (1700.0, 0.0)          # 贴边源估计，hypot=1700>1400
+    strat.pos = (cfg.probe_ring_radius, 0.0)  # 狗恰在 1250 m 覆盖环上
+    distance = 1700.0 - cfg.probe_ring_radius  # 剩余 450 m
+
+    ok = strat._step_closer(state, distance)
+    assert ok is True
+    assert arena.measure_calls, "_step_closer 未发起越环重测"
+    cx, cy, _ = arena.measure_calls[0]
+    # 新观测点越过 1250 m 覆盖环（沿 +x 前进），且未越出竞技场允许半径。
+    assert cx > cfg.probe_ring_radius, "边缘源逼近点未越过覆盖环"
+    assert _math62.hypot(cx, cy) <= _ARENA_R * 1.02 + 1e-6
+
+
+def test_edge_source_can_clear_within_fifty_five_metres_beyond_ring():
+    """R3.10：边缘源允许一路逼近至 dist(estimate) ≤ clear_distance(55) 再清除。
+
+    真源在正东 1500 m（贴边）。狗逼近到距估计 ≤55 m 时，_home_channel 触发 /clear，
+    clear 命中真源（20 m 内）→ 清除成功。整条路径越过覆盖环但始终在 1800 m 内。
+    """
+    cfg = _StrategyConfig62()
+    source = (1500.0, 0.0)
+    arena = _FakeArena62(source=source)     # clear 依距离判定
+    strat = _make_strategy62(arena, cfg)
+    state = strat.channels[10]
+    state.bearings = [_Bearing62(1470.0, 0.0, 0.0)]  # 已有方向（朝东）
+    state.estimate = source                 # 已能定位到贴边真源
+    strat.pos = (1460.0, 0.0)               # 已逼近到距源 40 m ≤55
+    ok = strat._home_channel(state)
+    assert ok is True and state.cleared is True
+    # 清除点应在真源 20 m 内且落在竞技场半径附近（越环但合法）。
+    assert arena.clear_calls, "未发起 /clear"
+    cx, cy, _ = arena.clear_calls[-1]
+    assert _math62.hypot(cx - source[0], cy - source[1]) <= cfg.clear_distance_m
+
+
+# ---- (R3.11) 就近贪心排序（轻断言，主验证在任务 6.1）----
+
+def test_home_all_processes_nearest_active_channel_first():
+    """R3.11（轻断言）：_home_all 按到当前位置的欧氏距离升序选取下一归航目标。
+
+    两个已可定位的频道，近者应先被 _home_channel 处理。用打桩记录处理顺序。
+    """
+    strat = _make_strategy62(_FakeArena62())
+    near = strat.channels[1]
+    far = strat.channels[2]
+    near.bearings = [_Bearing62(0.0, 0.0, 0.0)]
+    near.estimate = (100.0, 0.0)            # 距原点 100 m
+    far.bearings = [_Bearing62(0.0, 0.0, 0.0)]
+    far.estimate = (900.0, 0.0)             # 距原点 900 m
+    strat.pos = (0.0, 0.0)
+
+    order: list[int] = []
+
+    def spy_home(st):
+        order.append(st.channel)
+        st.cleared = True                   # 处理后标记清除，退出 active 集合
+        return True
+
+    strat._home_channel = spy_home  # type: ignore[assignment]
+    strat._home_all()
+    assert order[0] == near.channel, f"未先处理最近目标: {order}"
+    assert order == [near.channel, far.channel]
