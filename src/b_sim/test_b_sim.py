@@ -1828,3 +1828,406 @@ def test_successful_measure_updates_client_virtual_time_from_server(server):
     assert client.virtual_time_s == pytest.approx(result.virtual_time_s)
     assert client.virtual_time_s == pytest.approx(session.arena.robot.virtual_time_s)
     assert client.virtual_time_s > 0.0  # 检测 +5 s，虚拟时刻已推进
+
+
+
+# ---------------------------------------------------------------------------
+# 任务 6.2：核对逐步逼近归航与清除触发（R3.3 / R3.4 / R3.5 / R3.6）
+# Feature: b-radio-interference-locate-clear
+#
+# 本节为「验证/加固」任务的回归测试。核对项：
+#   (a) _step_closer 前进 approach_fraction(0.62)×剩余距离，横向偏移
+#       lateral_fraction(0.16)×前进距离（advance），使定位多边形直径随逼近单调不增（R3.3）；
+#   (b) dist(estimate) ≤ clear_distance_m(55) 触发对估计位置的 /clear（R3.4）；
+#   (c) near（真实距离 ≤5 m）在当前位置直接 /clear、不要求先取示向度（R3.5）；
+#   (d) /clear 失败保持 cleared=False、累加 clear_attempts、走 _spiral 补点，
+#       连续失败达上限转射线盲清除/放弃复活，不无限重试同一估计点（R3.6）。
+#
+# 说明：单元核对用最小 fake client 替身（仅暴露 DogStrategy 所需接口），
+# near 直接清除额外用本地 mock arena 端到端驱动 _probe_channel_at 佐证。
+# ---------------------------------------------------------------------------
+
+import math as _math62
+
+from src.b_sim.arena import Arena as _Arena62, Case as _Case62, Jammer as _Jammer62
+from src.b_sim.client import ClearResult, MeasureResult
+from src.b_sim.geometry import Bearing as _Bearing62
+from src.b_sim.strategy import (
+    ChannelState as _ChannelState62,
+    DogStrategy as _DogStrategy62,
+    StrategyConfig as _StrategyConfig62,
+)
+
+
+class _FakeArena62:
+    """最小 arena 替身：measure 返回预置结果序列，clear 依据到真源距离判定成功。
+
+    仅覆盖 DogStrategy 归航路径所需的 measure/clear 行为，不联网、不计时。
+    """
+
+    def __init__(self, *, source=None, clear_radius=20.0, measure_script=None):
+        self.source = source          # (x, y) 真源；用于 clear 距离判定
+        self.clear_radius = clear_radius
+        self.measure_script = list(measure_script or [])
+        self.measure_calls: list[tuple[float, float, int]] = []
+        self.clear_calls: list[tuple[float, float, int]] = []
+
+    def measure(self, x, y, channel):
+        self.measure_calls.append((x, y, channel))
+        if self.measure_script:
+            return self.measure_script.pop(0)
+        return {"measure_result": "no_signal", "virtual_time_s": 0.0}
+
+    def clear(self, x, y, channel):
+        self.clear_calls.append((x, y, channel))
+        ok = (self.source is not None
+              and _math62.hypot(x - self.source[0], y - self.source[1]) <= self.clear_radius)
+        return {"clear_result": "success" if ok else "no_target_in_range",
+                "virtual_time_s": 0.0}
+
+
+class _FakeClient62:
+    """最小 client 替身：把 measure/clear 转发给 _FakeArena62，记录调用序列。
+
+    暴露 DogStrategy 所需接口：measure/clear/real_budget_left_s/virtual_time_s/log。
+    real_budget_left_s 返回大值（永不因预算触发 _stop）。
+    """
+
+    def __init__(self, arena: _FakeArena62):
+        self.arena = arena
+        self.virtual_time_s = 0.0
+        self.log: list[dict] = []
+        self.clear_calls: list[tuple[float, float, int]] = []
+        self.measure_calls: list[tuple[float, float, int]] = []
+
+    def real_budget_left_s(self) -> float:
+        return 10_000.0
+
+    def measure(self, x, y, channel):
+        self.measure_calls.append((x, y, channel))
+        body = self.arena.measure(x, y, channel)
+        res = body["measure_result"]
+        svd = body.get("svd_deg")
+        return MeasureResult(result=res, svd_deg=svd, virtual_time_s=0.0)
+
+    def clear(self, x, y, channel):
+        self.clear_calls.append((x, y, channel))
+        body = self.arena.clear(x, y, channel)
+        return ClearResult(result=body["clear_result"], virtual_time_s=0.0)
+
+
+def _make_strategy62(arena: _FakeArena62, config=None):
+    strat = _DogStrategy62.__new__(_DogStrategy62)  # 绕过 __init__ 的真实 client 依赖
+    strat.client = _FakeClient62(arena)
+    strat.config = config or _StrategyConfig62()
+    strat.channels = {ch: _ChannelState62(ch) for ch in range(1, 21)}
+    strat.pos = (0.0, 0.0)
+    strat.radio_channel = 1
+    strat.events = []
+    strat._stopped = False
+    return strat
+
+
+# ---- (a) R3.3：_step_closer 前进/横向几何 ----
+
+def test_step_closer_advance_is_062_of_distance_and_lateral_016_of_advance():
+    """R3.3：前进 ≈0.62×剩余距离，横向偏移 ≈0.16×前进距离(advance)。
+
+    构造一个远距离估计（避免 clear_distance 附近的截断项主导），验证新观测点相对
+    起点的沿视线前进分量 ≈0.62×distance，横向（垂直视线）分量 ≈0.16×advance。
+    """
+    cfg = _StrategyConfig62()
+    # 估计位于正东 1000 m 处，狗在原点；no_signal 使 _step_closer 不会因取得示向度而提前返回。
+    arena = _FakeArena62(measure_script=[{"measure_result": "no_signal", "virtual_time_s": 0.0}] * 4)
+    strat = _make_strategy62(arena, cfg)
+    state = strat.channels[1]
+    state.estimate = (1000.0, 0.0)
+    strat.pos = (0.0, 0.0)
+    distance = 1000.0
+
+    ok = strat._step_closer(state, distance)
+    assert ok is True
+    assert arena.measure_calls, "_step_closer 未发起重测"
+    # 第一个候选（sign=+1）：视线为 +x，横向单位向量为 (-uy, ux)=(0,1)，
+    # sign=+1 时候选 = pos + u*advance - (0,1)*lateral。
+    cx, cy, _ch = arena.measure_calls[0]
+    # 起点为原点、视线沿 +x：前进分量 = cx，横向分量 = |cy|。
+    expected_advance = distance * cfg.approach_fraction        # 620 m
+    expected_lateral = expected_advance * cfg.lateral_fraction  # 0.16×advance
+    assert cx == pytest.approx(expected_advance, rel=1e-6)
+    assert abs(cy) == pytest.approx(expected_lateral, rel=1e-6)
+    # 明确区分「×advance」与「旧口径 ×distance」：两者数值不同。
+    assert abs(cy) < distance * cfg.lateral_fraction - 1.0
+
+
+def test_step_closer_advance_capped_near_clear_distance():
+    """R3.3：距离接近 clear_distance 时前进被 (distance − clear_distance×0.35) 截断，
+    仍保持沿视线单调靠近（advance>0 且不越过目标）。"""
+    cfg = _StrategyConfig62()
+    arena = _FakeArena62(measure_script=[{"measure_result": "no_signal", "virtual_time_s": 0.0}] * 4)
+    strat = _make_strategy62(arena, cfg)
+    state = strat.channels[1]
+    distance = 70.0                       # 略大于 clear_distance(55)
+    state.estimate = (distance, 0.0)
+    strat.pos = (0.0, 0.0)
+    strat._step_closer(state, distance)
+    cx, cy, _ = arena.measure_calls[0]
+    upper = distance - cfg.clear_distance_m * 0.35
+    lower = cfg.clear_distance_m * 0.8
+    expected_advance = min(max(lower, distance * cfg.approach_fraction), upper)
+    assert cx == pytest.approx(expected_advance, rel=1e-6)
+    assert 0.0 < cx < distance             # 前进但不越过目标
+    assert abs(cy) == pytest.approx(expected_advance * cfg.lateral_fraction, rel=1e-6)
+
+
+def test_localization_diameter_non_increasing_while_approaching():
+    """R3.3：随检测点逐步逼近真源，ChannelState.diameter 单调不增（逼近收缩误差）。
+
+    真源在正东 1000 m。以一串沿 x 轴逐步逼近的检测点喂入带 ±1° 误差的示向度，
+    每加一个更近的观测，refresh 后的定位多边形直径应不增（收缩或持平）。
+    """
+    source = (1000.0, 0.0)
+
+    def svd_from(px, py, err_deg):
+        true_deg = math.degrees(math.atan2(source[1] - py, source[0] - px))
+        return norm_deg(true_deg + err_deg)
+
+    state = _ChannelState62(1)
+    # 逐步逼近的检测点（沿 x 轴，带交叉的横向偏移以形成有效交会基线）。
+    approach_points = [
+        (-200.0, 60.0),
+        (0.0, -60.0),
+        (200.0, 55.0),
+        (400.0, -50.0),
+        (600.0, 45.0),
+        (750.0, -40.0),
+        (850.0, 30.0),
+    ]
+    # 确定性 ±1° 误差（交替符号，落在 [−1,+1] 界内）。
+    errs = [1.0, -1.0, 1.0, -1.0, 1.0, -1.0, 1.0]
+
+    diameters: list[float] = []
+    for (px, py), e in zip(approach_points, errs):
+        state.add_bearing(px, py, svd_from(px, py, e))
+        if state.diameter != float("inf"):
+            diameters.append(state.diameter)
+
+    assert len(diameters) >= 3, "有效观测不足以形成定位多边形"
+    for earlier, later in zip(diameters, diameters[1:]):
+        assert later <= earlier + 1e-6, f"逼近过程直径增大: {diameters}"
+    # 逼近确有收缩效果：末尾直径显著小于起始。
+    assert diameters[-1] < diameters[0]
+
+
+# ---- (b) R3.4：dist(estimate) ≤ 55 m 触发对估计位置的 /clear ----
+
+def test_home_channel_triggers_clear_at_estimate_within_clear_distance():
+    """R3.4：估计到源距离 ≤ clear_distance_m(55) 时，对估计位置发起 /clear。"""
+    cfg = _StrategyConfig62()
+    # 真源即估计点，狗距其 40 m（< 55）。clear 应命中并成功。
+    source = (40.0, 0.0)
+    arena = _FakeArena62(source=source)
+    strat = _make_strategy62(arena, cfg)
+    state = strat.channels[3]
+    state.bearings = [_Bearing62(0.0, 100.0, 270.0), _Bearing62(0.0, -100.0, 90.0)]
+    state.estimate = (40.0, 0.0)          # dist(estimate) = 40 ≤ 55
+    strat.pos = (0.0, 0.0)
+
+    ok = strat._home_channel(state)
+    assert ok is True
+    assert state.cleared is True
+    # 恰好对估计位置发起了 /clear（首个 clear 调用坐标 == estimate）。
+    assert arena.clear_calls, "未发起任何 /clear"
+    fx, fy, fch = arena.clear_calls[0]
+    assert (fx, fy) == pytest.approx((40.0, 0.0))
+    assert fch == 3
+
+
+def test_home_channel_does_not_clear_when_estimate_beyond_clear_distance():
+    """R3.4 边界：dist(estimate) > 55 m 时不立即 /clear，而是先 _step_closer 逼近。"""
+    cfg = _StrategyConfig62()
+    arena = _FakeArena62(source=(1000.0, 0.0),
+                         measure_script=[{"measure_result": "no_signal", "virtual_time_s": 0.0}] * 2)
+    strat = _make_strategy62(arena, cfg)
+    state = strat.channels[3]
+    state.bearings = [_Bearing62(0.0, 100.0, 275.0), _Bearing62(0.0, -100.0, 85.0)]
+    state.estimate = (1000.0, 0.0)        # 远大于 55
+    strat.pos = (0.0, 0.0)
+    # 只推进一步：打桩 _step_closer 记录被调用后立即结束循环。
+    called = {"step": 0}
+    orig_step = strat._step_closer
+
+    def spy_step(st, dist):
+        called["step"] += 1
+        strat._stopped = True             # 逼停循环，只验证首步走的是逼近而非清除
+        return orig_step(st, dist)
+
+    strat._step_closer = spy_step  # type: ignore[assignment]
+    strat._home_channel(state)
+    assert called["step"] == 1, "远距离首步应为 _step_closer 逼近"
+    assert not arena.clear_calls, "估计距离 >55 m 不应立即 /clear"
+
+
+# ---- (c) R3.5：near（≤5 m）在当前位置直接 /clear，不要求先取示向度 ----
+
+def test_probe_channel_at_near_triggers_direct_clear_without_bearing():
+    """R3.5：检测返回 near 时，对当前所在点直接 /clear，且不写入示向度。"""
+    cfg = _StrategyConfig62()
+    point = (300.0, 400.0)
+    arena = _FakeArena62(source=point,     # clear 命中
+                         measure_script=[{"measure_result": "near", "virtual_time_s": 0.0}])
+    strat = _make_strategy62(arena, cfg)
+    state = strat.channels[7]
+
+    strat._probe_channel_at(point, state)
+
+    # 直接对 point 清除，成功；未取得任何示向度。
+    assert arena.clear_calls == [(300.0, 400.0, 7)]
+    assert state.cleared is True
+    assert state.bearings == [], "near 路径不应写入示向度"
+
+
+def test_near_direct_clear_end_to_end_via_mock_arena():
+    """R3.5（端到端）：真实 Arena 下源在原点，狗在其 3 m 内检测得 near → 直接清除成功。
+
+    用真实 Arena（复刻 near ≤5 m 判定与 20 m 清除半径）驱动 _probe_channel_at，
+    佐证策略在 near 结果上对当前位置直接 /clear。
+    """
+    case = _Case62(jammers=[_Jammer62(channel=2, x=0.0, y=0.0, reception_radius_m=1200.0)],
+                   error_salt="t62", seed=0)
+    arena = _Arena62(case)
+    arena.enter()
+    # 独立地先确认该点确实返回 near（真实距离 3 m ≤ 5 m）。
+    assert arena.measure(3.0, 0.0, 2)["measure_result"] == "near"
+
+    # 用真实客户端接口的最小包装：直接调用 arena 并转成 MeasureResult/ClearResult。
+    class _ArenaClient:
+        virtual_time_s = 0.0
+        def __init__(self, a): self.a = a; self.log = []
+        def real_budget_left_s(self): return 10_000.0
+        def measure(self, x, y, ch):
+            b = self.a.measure(x, y, ch)
+            return MeasureResult(result=b["measure_result"], svd_deg=b.get("svd_deg"),
+                                 virtual_time_s=b.get("virtual_time_s", 0.0))
+        def clear(self, x, y, ch):
+            b = self.a.clear(x, y, ch)
+            return ClearResult(result=b["clear_result"], virtual_time_s=b.get("virtual_time_s", 0.0))
+
+    strat = _DogStrategy62.__new__(_DogStrategy62)
+    strat.client = _ArenaClient(arena)
+    strat.config = _StrategyConfig62()
+    strat.channels = {ch: _ChannelState62(ch) for ch in range(1, 21)}
+    strat.pos = (0.0, 0.0)
+    strat.radio_channel = 1
+    strat.events = []
+    strat._stopped = False
+
+    state = strat.channels[2]
+    strat._probe_channel_at((3.0, 0.0), state)   # near → 直接对 (3,0) 清除（距源 3 m ≤ 20）
+    assert state.cleared is True
+    assert state.bearings == []
+
+
+# ---- (d) R3.6：/clear 失败保持 cleared=False、累加 clear_attempts、_spiral 补点、不无限重试 ----
+
+def test_clear_at_failure_increments_attempts_and_keeps_uncleared():
+    """R3.6：/clear 失败 → cleared 保持 False，clear_attempts +1。"""
+    cfg = _StrategyConfig62()
+    # 真源离估计点很远（>20 m），任何 clear 都失败。
+    arena = _FakeArena62(source=(5000.0, 0.0))
+    strat = _make_strategy62(arena, cfg)
+    state = strat.channels[4]
+    before = state.clear_attempts
+    ok = strat._clear_at((0.0, 0.0), 4)
+    assert ok is False
+    assert state.cleared is False
+    assert state.clear_attempts == before + 1
+
+
+def test_home_channel_clear_failure_attempts_spiral_and_stays_uncleared():
+    """R3.6：clear_distance 内清除失败后走 _spiral 补点；仍失败则保持未清除并结束。"""
+    cfg = _StrategyConfig62()
+    # 估计点在狗 40 m（<55）触发 clear；真源在 5000 m 外，clear/spiral 均失败。
+    arena = _FakeArena62(source=(5000.0, 0.0))
+    strat = _make_strategy62(arena, cfg)
+    state = strat.channels[5]
+    state.bearings = [_Bearing62(0.0, 100.0, 270.0), _Bearing62(0.0, -100.0, 90.0)]
+    state.estimate = (40.0, 0.0)
+    strat.pos = (0.0, 0.0)
+
+    spiral_called = {"n": 0}
+    orig_spiral = strat._spiral
+
+    def spy_spiral(st):
+        spiral_called["n"] += 1
+        return orig_spiral(st)
+
+    strat._spiral = spy_spiral  # type: ignore[assignment]
+
+    ok = strat._home_channel(state)
+    assert ok is False
+    assert state.cleared is False
+    assert spiral_called["n"] == 1, "clear 失败后应尝试 _spiral 补点一次"
+    # 至少发起了 1 次估计点 clear + 若干次 spiral 补点 clear（有限，不无限）。
+    assert len(arena.clear_calls) >= 2
+    # spiral 布点数量受 spiral_points 约束，clear_attempts 不超过 max_clear_attempts。
+    assert state.clear_attempts <= cfg.max_clear_attempts
+
+
+def test_home_channel_clear_budget_exhausted_falls_back_to_ray_not_infinite():
+    """R3.6：连续 /clear 失败累计达上限 → 转射线盲清除兜底，不无限重试同一估计点。
+
+    预置 clear_attempts 达到 max_clear_attempts，令 _home_channel 首轮即命中
+    「clear budget exhausted」门禁，转入 _ray_blind_clear（有限调用，最终返回）。
+    """
+    cfg = _StrategyConfig62()
+    arena = _FakeArena62(source=(5000.0, 0.0))     # 一切 clear 失败
+    strat = _make_strategy62(arena, cfg)
+    state = strat.channels[6]
+    state.bearings = [_Bearing62(0.0, 0.0, 45.0)]
+    state.estimate = (30.0, 30.0)
+    state.clear_attempts = cfg.max_clear_attempts   # 已达清除上限
+    strat.pos = (0.0, 0.0)
+
+    ray_called = {"n": 0}
+    orig_ray = strat._ray_blind_clear
+
+    def spy_ray(st):
+        ray_called["n"] += 1
+        return orig_ray(st)
+
+    strat._ray_blind_clear = spy_ray  # type: ignore[assignment]
+
+    ok = strat._home_channel(state)
+    # clear 上限门禁应立即转射线盲清除（而非围绕估计点无限重试）。
+    assert ray_called["n"] == 1
+    assert "clear budget exhausted" in " ".join(strat.events)
+    assert ok is False or state.cleared is True     # 真源在 5000 m 外，实际清不掉
+    assert state.cleared is False
+    # 射线盲清除有独立上限，clear 调用数有限（不无限）。
+    ray_start = cfg.max_clear_attempts
+    assert state.clear_attempts - ray_start <= cfg.ray_clear_max_attempts + 1
+
+
+def test_lost_signal_defers_to_ray_blind_clear_when_bearing_known():
+    """R3.6：连续沉默达容忍上限且已有示向度 → 转射线盲清除兜底（不无限重试）。"""
+    cfg = _StrategyConfig62()
+    arena = _FakeArena62(source=(5000.0, 0.0))
+    strat = _make_strategy62(arena, cfg)
+    state = strat.channels[8]
+    state.bearings = [_Bearing62(0.0, 0.0, 30.0)]   # 已有方向
+    state.estimate = None
+    state.consecutive_silent = cfg.silent_tolerance  # 达到沉默容忍上限
+    strat.pos = (0.0, 0.0)
+
+    ray_called = {"n": 0}
+    orig_ray = strat._ray_blind_clear
+
+    def spy_ray(st):
+        ray_called["n"] += 1
+        return orig_ray(st)
+
+    strat._ray_blind_clear = spy_ray  # type: ignore[assignment]
+    strat._home_channel(state)
+    assert ray_called["n"] == 1
+    assert "lost signal" in " ".join(strat.events)
