@@ -529,3 +529,74 @@ def test_commit_move_allows_action_exactly_at_limit():
     with pytest.raises(ArenaRejected):
         tight.measure(300.0, 400.0, 1)
     assert tight.robot.exit_reason == "virtual_time_exhausted"
+
+
+
+# ---------- 任务 5.1：客户端发送前坐标越界拒绝（R5.3）----------
+# Feature: b-radio-interference-locate-clear
+# 客户端在 measure()/clear() 发送前校验 abs(x)/abs(y) ≤ 2_000_000 m；
+# 越界（含 NaN/inf）抛 ProtocolError 且不发送、不生成 request_id、不推进虚拟时刻；
+# 恰为 2_000_000 m 放行（通过客户端侧门禁）。
+
+
+def test_measure_rejects_out_of_bounds_x_before_sending(server):
+    """R5.3：abs(x) 略超 2_000_000 m → ProtocolError，且未发出任何请求。"""
+    url, session = server
+    client = RobotClient(ROBOT, base_url=url)
+    client.enter()
+    calls_before = session.arena.stats()["measure_calls"]
+    vt_before = client.virtual_time_s
+    seq_before = client._seq
+    with pytest.raises(ProtocolError):
+        client.measure(2_000_000.0 + 1.0, 0.0, 1)
+    # 未发送：服务端未记 measure，客户端虚拟时刻不变、无日志新增、request_id 未推进
+    assert session.arena.stats()["measure_calls"] == calls_before
+    assert client.virtual_time_s == vt_before
+    assert client._seq == seq_before
+    assert all(entry["path"] != "/measure" for entry in client.log)
+
+
+def test_measure_rejects_out_of_bounds_y_before_sending(server):
+    """R5.3：abs(y) 越界同样在发送前拒绝。"""
+    url, session = server
+    client = RobotClient(ROBOT, base_url=url)
+    client.enter()
+    calls_before = session.arena.stats()["measure_calls"]
+    with pytest.raises(ProtocolError):
+        client.measure(0.0, -2_000_000.5, 1)
+    assert session.arena.stats()["measure_calls"] == calls_before
+
+
+def test_measure_rejects_non_finite_coordinates(server):
+    """R5.3：NaN / inf 亦属越界（非有限值），发送前拒绝。"""
+    url, session = server
+    client = RobotClient(ROBOT, base_url=url)
+    client.enter()
+    calls_before = session.arena.stats()["measure_calls"]
+    for bad_x in (float("nan"), float("inf"), float("-inf")):
+        with pytest.raises(ProtocolError):
+            client.measure(bad_x, 0.0, 1)
+    assert session.arena.stats()["measure_calls"] == calls_before
+
+
+def test_clear_rejects_out_of_bounds_before_sending(server):
+    """R5.3：clear() 与 measure() 同样在发送前拦截越界坐标。"""
+    url, session = server
+    client = RobotClient(ROBOT, base_url=url)
+    client.enter()
+    clears_before = session.arena.stats().get("clear_calls", 0)
+    vt_before = client.virtual_time_s
+    with pytest.raises(ProtocolError):
+        client.clear(3_000_000.0, 0.0, 1)
+    assert session.arena.stats().get("clear_calls", 0) == clears_before
+    assert client.virtual_time_s == vt_before
+
+
+def test_boundary_coordinate_exactly_two_million_is_allowed_by_client_gate():
+    """R5.3：恰为 ±2_000_000 m 视为合法，通过客户端侧门禁（不抛越界错误）。"""
+    # 直接验证发送前门禁：边界值不抛，越界值抛。不依赖网络。
+    RobotClient._check_coord(2_000_000.0, -2_000_000.0)   # 恰为边界 → 放行
+    RobotClient._check_coord(-2_000_000.0, 2_000_000.0)   # 另一侧边界 → 放行
+    with pytest.raises(ProtocolError):
+        RobotClient._check_coord(2_000_000.0 + 1e-3, 0.0)  # 略超 → 拒绝
+

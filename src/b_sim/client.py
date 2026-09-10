@@ -10,10 +10,15 @@
 from __future__ import annotations
 
 import json
+import math
 import time
 import urllib.error
 import urllib.request
 from dataclasses import dataclass, field
+
+# 协议允许的坐标绝对值上限（米）；abs(x)/abs(y) 超过该值越界拒发，
+# 恰为 MAX_COORD_ABS 视为合法。与 server.MAX_COORD_ABS 保持一致（R5.3）。
+MAX_COORD_ABS = 2_000_000.0
 
 
 class ProtocolError(RuntimeError):
@@ -67,6 +72,7 @@ class RobotClient:
         return body
 
     def measure(self, x: float, y: float, channel: int) -> MeasureResult:
+        self._check_coord(x, y)
         payload = self._base_payload("measure")
         payload["position"] = {"x": float(x), "y": float(y)}
         payload["channel"] = int(channel)
@@ -78,6 +84,7 @@ class RobotClient:
         )
 
     def clear(self, x: float, y: float, channel: int) -> ClearResult:
+        self._check_coord(x, y)
         payload = self._base_payload("clear")
         payload["position"] = {"x": float(x), "y": float(y)}
         payload["channel"] = int(channel)
@@ -98,6 +105,21 @@ class RobotClient:
         return max(0.0, self.remaining_real_s - self.real_elapsed_s())
 
     # ---- 内部 ----
+
+    @staticmethod
+    def _check_coord(x: float, y: float) -> None:
+        """发送前坐标越界拦截（R5.3）。
+
+        `abs(x)` 或 `abs(y)` 超过 MAX_COORD_ABS（含 NaN/inf 等非有限值）即在发送前
+        抛 `ProtocolError`；不生成 request_id、不发送 HTTP 请求、不记账、不推进虚拟时刻。
+        恰为 MAX_COORD_ABS（2_000_000 m）视为合法而放行。
+        """
+        for axis, value in (("x", x), ("y", y)):
+            fv = float(value)
+            if not math.isfinite(fv) or abs(fv) > MAX_COORD_ABS:
+                raise ProtocolError(
+                    f"坐标越界：position.{axis}={value} 超出 ±{MAX_COORD_ABS:g} m，发送前拒绝"
+                )
 
     def _base_payload(self, tag: str) -> dict:
         self._seq += 1
