@@ -4,6 +4,7 @@ __pycache__/
 .venv/
 *.log
 results/tmp/
+.hypothesis/
 # 官方测试产物：原始件含真实队号/服务端票据，只入库 *.sanitized.*
 # 白名单式：默认忽略目录内一切，再放行 README 与脱敏件
 official_runs/*
