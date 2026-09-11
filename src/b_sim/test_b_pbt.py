@@ -427,6 +427,11 @@ def test_property8_lateral_error_strictly_monotonic(r1: float, r2: float):
     # 规范化为 0 ≤ r1 < r2；两者相等时跳过（严格单调只对 r2 > r1 成立）。
     lo, hi = min(r1, r2), max(r1, r2)
     assume(hi > lo)
+    # 严格单调只在「距离差可被浮点分辨」时成立：e(r)=r·tan(1°) 把间隔压缩约 57 倍，
+    # 故 r1=0.0 与 r2=5e-324（次正规数）会同时映射到 0.0。这是双精度的分辨极限，
+    # 不是策略缺陷 —— 清除半径 20 m、示向度误差 1°，物理上有意义的距离差不会小于
+    # 毫米量级。取 1e-6 m 作下限，既远低于任何实际尺度，又避开次正规数病态区。
+    assume(hi - lo >= 1e-6)
 
     # (a) 严格单调递增：更远的距离横向误差更大 → 逼近使误差单调收缩。
     assert lateral_error_at(hi) > lateral_error_at(lo), (
