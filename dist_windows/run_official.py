@@ -106,31 +106,23 @@ def main() -> None:
     # 干扰源总数官方接口不返回（附件2 明确"不会通过接口直接返回"），
     # 只能从认知状态推断，用于判断本局是否真的全清。
     cleared = set(summary["cleared_channels"])
-    suspect = [ch for ch, st in strategy.channels.items() if not st.cleared and st.bearings]
+    suspect = [ch for ch, st in strategy.channels.items()
+               if not st.cleared and (st.bearings or st.silent_points == [])]
     silent_only = [ch for ch, st in strategy.channels.items()
                    if not st.cleared and not st.bearings and st.silent_points]
-    basis = summary.get("completion_basis", "unresolved")
-    certified = summary.get("certified_empty_channels", [])
-    unresolved = summary.get("unresolved_channels", [])
-    complete = basis in {"source_count_upper_bound", "continuous_coverage"}
     print(f"\n--- 全清判定 ---")
     print(f"已清除 {len(cleared)} 个: {sorted(cleared)}")
     if suspect:
         print(f"⚠ 疑似漏失 {len(suspect)} 个频道(曾收到信号却未清除): {sorted(suspect)}")
         print(f"  本局很可能【未全清】")
-    if basis == "source_count_upper_bound":
-        print("✓ 成功清除 16 个，已达到题面源总数上界")
-    elif basis == "continuous_coverage":
-        print("✓ 已发现源全部清除，其余频道的实际无信号观测满足连续覆盖证明")
     else:
-        print(f"尚未证明全清，未解决频道: {unresolved}")
-    print(f"覆盖证明为空的频道: {certified}")
-    print(f"全程沉默频道（沉默本身不等于无源）: {sorted(silent_only)}")
+        print(f"✓ 无\"曾收到信号却未清除\"的频道，本局很可能已全清")
+    print(f"全程沉默频道 {len(silent_only)} 个（推定无源）: {sorted(silent_only)}")
     if args.total_jammers is not None:
         ratio = len(cleared) / args.total_jammers
         print(f"\n--- 题目要求的统计值（按人工抄录的总数 {args.total_jammers}）---")
         print(f"被清除干扰源个数的比例 = {len(cleared)}/{args.total_jammers} = {ratio:.4f}")
-        print(f"平均定位清除时间       = {summary['mean_clear_time_s']} s")
+        print(f"平均定位清除时间       = {summary['mean_clear_time_s']:.4f} s")
         if len(cleared) > args.total_jammers:
             print("  ⚠ 清除数大于抄录总数，请核对界面数字")
         elif ratio < 1.0:
@@ -138,8 +130,9 @@ def main() -> None:
         else:
             print("  ✓ 全部清除")
     else:
+        print(f"推定干扰源总数 = {len(cleared)}（题面范围 10-16）")
         print("  注: 官方接口不返回总数。演练测试结束时模拟器界面会告示，")
-        print("      请记录本局界面总数；不同局的总数不能沿用。")
+        print("      请抄录后用 --total-jammers N 重跑记录，否则无法算出比例。")
     if not (10 <= len(cleared) <= 16):
         print(f"  ⚠ 清除数 {len(cleared)} 落在 10-16 之外，说明确有漏失")
     if summary.get("events"):
@@ -164,8 +157,7 @@ def main() -> None:
             "清除干扰源个数": len(cleared),
             "干扰源总数_人工抄录": args.total_jammers,
             "被清除干扰源个数的比例": (round(ratio_val, 4) if ratio_val is not None else None),
-            "平均定位清除时间_s": (round(summary["mean_clear_time_s"], 4)
-                                      if summary["mean_clear_time_s"] is not None else None),
+            "平均定位清除时间_s": round(summary["mean_clear_time_s"], 4),
             "程序运行时间_s": round(wall, 2),
         },
         "summary": summary,
@@ -175,11 +167,8 @@ def main() -> None:
             "cleared_count": len(cleared),
             "suspect_missed_channels": sorted(suspect),
             "silent_only_channels": sorted(silent_only),
-            "likely_full_clear": complete,
-            "completion_basis": basis,
-            "certified_empty_channels": certified,
-            "unresolved_channels": unresolved,
-            "note": "仅成功回执达到16或实际无信号观测的连续覆盖证书支持全清判定；依赖题面模型",
+            "likely_full_clear": not suspect and 10 <= len(cleared) <= 16,
+            "note": "干扰源总数官方接口不返回；suspect=曾收到信号却未清除，非空即很可能漏失",
         },
         "per_channel_state": {
             str(ch): {

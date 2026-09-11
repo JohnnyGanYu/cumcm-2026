@@ -324,7 +324,11 @@ def main():
     parser.add_argument("--seeds", help="explicit comma-separated seeds, replacing episodes/seed-start")
     parser.add_argument("--workers", type=int, default=4)
     parser.add_argument("--out", type=Path, required=True)
-    parser.add_argument("--baseline-ref", default="d83c40d")
+    # 默认基线改为 HEAD：本仓库把"当前 main"作为对照基准，候选是工作树里的改动。
+    # 原值 d83c40d 是 PR #6 作者当时的基线（无 TSP 路径规划），用它会把 main 已有
+    # 的收益算成"候选变慢"——冒烟实测确实出现了 255s -> 402s 这种反向结果。
+    parser.add_argument("--baseline-ref", default="HEAD",
+                        help="对照基线的 git ref；默认 HEAD（即当前提交）")
     parser.add_argument("--resume", action="store_true", help="resume an incomplete report only with identical sources/configuration/seeds")
     parser.add_argument("--directionals", default="0,5,10,16")
     parser.add_argument("--variant", default="default", help="default, JSON object, or path to config override JSON")

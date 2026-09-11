@@ -1,0 +1,28 @@
+{
+ "official": {
+  "n_runs": 4,
+  "measure_calls": 2415,
+  "response_kinds": {
+   "no_signal": 2163,
+   "direction": 252,
+   "no_target_in_range": 122,
+   "success": 48
+  },
+  "near_events": 0,
+  "successful_clears": 48,
+  "clear_radius_max": 1766.6,
+  "clear_radius_mean": 1156.3,
+  "clear_radius_p90": 1730.1,
+  "robot_max_radius_seen": 1839.9
+ },
+ "mock": {
+  "n_sources": 2571,
+  "radius_max": 1799.9,
+  "radius_mean": 1192.6,
+  "radius_p90": 1704.0,
+  "within_30m_of_boundary": 88,
+  "within_30m_pct": 3.42,
+  "beyond_1500m": 764,
+  "beyond_1500m_pct": 29.72
+ }
+}

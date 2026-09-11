@@ -37,3 +37,7 @@ results/b_belief_analysis_q3.json
 results/b_belief_analysis_q4.json
 results/b_belief_analysis_smoke.json
 results/b_belief_replay_q4.json
+
+# Kiro IDE 本地工作区（spec/steering/hooks 等），不入库：
+# 属编辑器私有状态，随人随机器不同，且 PR #3 曾把它带进仓库。
+.kiro/

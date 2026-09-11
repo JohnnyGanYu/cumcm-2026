@@ -105,20 +105,10 @@ def test_full_configuration_rejects_unknown_fields_before_any_run():
             selected_configurations(bundles, [5], {"directional_probe": False})
 
 
-def test_continuous_certificate_cache_is_parallel_and_coordinate_exact():
-    from concurrent.futures import ThreadPoolExecutor
-    from .b_sim.silence_coverage import certified_stations, silence_certificate
-    points = certified_stations("rings25")
-    missing_outer = points[:13]
-    with ThreadPoolExecutor(max_workers=4) as pool:
-        results = list(pool.map(lambda i: silence_certificate(points if i % 2 == 0 else missing_outer, True), range(16)))
-    assert results == [i % 2 == 0 for i in range(16)]
-    assert silence_certificate(points, True)
-    # A caller's list mutation must not corrupt an immutable cached key/result.
-    points.clear()
-    assert not silence_certificate(points, True)
-    assert silence_certificate(certified_stations("rings25"), True)
-
+# 已移除 test_continuous_certificate_cache_is_parallel_and_coordinate_exact：
+# 它测的是 PR #6 的 src/b_sim/silence_coverage.py（沉默覆盖认证），本仓库未采纳
+# 该模块（判空在定向档误判率高：k=12 时 11.43%，风险大于收益）。评测框架本身
+# 不依赖它，其余 10 项测试全绿。
 
 def test_report_retries_transient_windows_sharing_violation(tmp_path, monkeypatch):
     import json

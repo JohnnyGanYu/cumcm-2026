@@ -28,11 +28,6 @@ from .arena import (
 )
 
 MAX_BODY_BYTES = 65536
-# Drain a small rejected upload before closing the connection. Closing while a
-# normal client is still sending can reset the TCP stream on Windows, hiding
-# the intended 413 response. Both bytes and elapsed time are strictly bounded.
-MAX_REJECT_DRAIN_BYTES = 2 * MAX_BODY_BYTES
-MAX_REJECT_DRAIN_SECONDS = 0.5
 MAX_COORD_ABS = 2_000_000.0
 VALID_PATHS = {"/enter", "/measure", "/clear", "/exit"}
 ALLOWED_FIELDS = {
@@ -91,27 +86,27 @@ class Handler(BaseHTTPRequestHandler):
             super().log_message(format, *args)
 
     def do_GET(self):  # noqa: N802
-        self._reject_unread(405)
+        self._send(405, {"accepted": False, "real_timestamp_ms": _now_ms(), "virtual_time_s": 0})
 
     def do_POST(self):  # noqa: N802
         path = self.path
         if path not in VALID_PATHS:
-            self._reject_unread(404)
+            self._send(404, self._envelope(False))
             return
         ctype = self.headers.get("Content-Type", "")
         base, *params = [p.strip() for p in ctype.split(";")]
         if base.lower() != "application/json" or any(
             p.lower() not in {"charset=utf-8", ""} for p in params
         ):
-            self._reject_unread(415)
+            self._send(415, self._envelope(False))
             return
         encoding = (self.headers.get("Content-Encoding") or "identity").strip().lower()
         if encoding != "identity":
-            self._reject_unread(415)
+            self._send(415, self._envelope(False))
             return
         length = int(self.headers.get("Content-Length") or 0)
         if length > MAX_BODY_BYTES:
-            self._reject_unread(413)
+            self._send(413, self._envelope(False))
             return
         raw = self.rfile.read(length)
 
@@ -129,38 +124,6 @@ class Handler(BaseHTTPRequestHandler):
         except json.JSONDecodeError:
             status, body = 400, self._envelope(False)
         self._send(status, body)
-
-    def _reject_unread(self, status: int) -> None:
-        self.close_connection = True
-        try:
-            length = max(0, int(self.headers.get("Content-Length") or 0))
-        except ValueError:
-            length = 0
-        if length:
-            self._drain_rejected_body(length)
-        self._send(status, self._envelope(False))
-
-    def _drain_rejected_body(self, length: int) -> None:
-        """Discard only a bounded prefix; never parse or dispatch rejected JSON."""
-        remaining = min(length, MAX_REJECT_DRAIN_BYTES)
-        deadline = time.monotonic() + MAX_REJECT_DRAIN_SECONDS
-        previous_timeout = self.connection.gettimeout()
-        try:
-            while remaining > 0:
-                budget = deadline - time.monotonic()
-                if budget <= 0:
-                    break
-                self.connection.settimeout(budget)
-                chunk = self.rfile.read1(min(8192, remaining))
-                if not chunk:
-                    break
-                remaining -= len(chunk)
-        except (TimeoutError, OSError):
-            # A peer can advertise a long body and stop sending. Return the
-            # rejection without waiting for the rest of that body.
-            pass
-        finally:
-            self.connection.settimeout(previous_timeout)
 
     # ---- 业务分派 ----
 
@@ -255,8 +218,6 @@ class Handler(BaseHTTPRequestHandler):
         self.send_response(status)
         self.send_header("Content-Type", "application/json; charset=utf-8")
         self.send_header("Content-Length", str(len(raw)))
-        if self.close_connection:
-            self.send_header("Connection", "close")
         self.end_headers()
         self.wfile.write(raw)
 

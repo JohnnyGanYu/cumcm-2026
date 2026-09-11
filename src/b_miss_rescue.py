@@ -305,6 +305,15 @@ def paired_report(by_variant: dict[str, list[dict]], ref: str = "baseline") -> d
         out[name] = {
             "paired_episodes": len(keys),
             "clear_rate_raw": f"{cleared}/{total}",
+            # 门禁一：源总数必须与参考臂一致。不一致意味着两臂跑的不是同一批案例,
+            # 速度对比无意义。最常见的成因不是变体真的改了案例生成, 而是某些种子上
+            # 抛异常被当成 error 静默丢局（实测 seed 7052 因 verdict_empty 缺失丢局,
+            # 使源数变成 142 vs 157, 曾被误读为案例生成差异）。命中此门禁时先查
+            # rows 里的 error 条目, 再怀疑变体本身。
+            "total_sources_matches_ref": total == sum(base[k]["total"] for k in keys),
+            # 门禁二：清除数不得低于参考臂。评分指标是 总时间/清除数, 分子分母同向
+            # 变化时容易把"快了但掉源"误读成改进, 故与速度指标分开判定。
+            "clear_regression": d_cleared < 0,
             "clear_rate": round(cleared / total, 5) if total else None,
             "full_clear_episodes": sum(1 for k in keys if cur[k]["cleared"] == cur[k]["total"]),
             "d_cleared_sources": d_cleared,
@@ -385,6 +394,10 @@ def main() -> None:
               f"d={p['d_metric_pct']:+}% meas={p['measure_calls_mean']} "
               f"clr={p['clear_calls_mean']}")
         print(f"{'':<18} still_missed={p['still_missed']}")
+        if not p["total_sources_matches_ref"]:
+            print(f"{'':<18} !! 源总数与参考臂不一致, 速度对比不可采信")
+        if p["clear_regression"]:
+            print(f"{'':<18} !! 清除数退化 {p['d_cleared_sources']:+d}, 速度收益不足以采纳")
     for v in variants:
         print(f"{v:<18} causes={aggs[v]['cause_distribution']} "
               f"u_hard_bound={aggs[v]['u_hard_bound_raw']}")

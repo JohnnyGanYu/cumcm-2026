@@ -1,0 +1,70 @@
+{
+ "report": {
+  "config": {
+   "directional": 10,
+   "count": null,
+   "seed_start": 9103,
+   "episodes": 1
+  },
+  "colocate_off": {
+   "episodes": 1,
+   "clear_rate": 1.0,
+   "full_clear": 1,
+   "meanT": 943.6,
+   "move_m": 65354.4,
+   "measures": 301.0,
+   "colo_new_estimates_total": 0
+  },
+  "colocate_on": {
+   "episodes": 1,
+   "clear_rate": 0.9375,
+   "full_clear": 0,
+   "meanT": 944.0,
+   "move_m": 60793.0,
+   "measures": 328.0,
+   "colo_new_estimates_total": 7
+  },
+  "paired_on_vs_off": {
+   "mean_clear_time_s": {
+    "n_pairs": 1
+   },
+   "move_m": {
+    "n_pairs": 1
+   },
+   "cleared": {
+    "n_pairs": 1
+   },
+   "measures": {
+    "n_pairs": 1
+   }
+  }
+ },
+ "off": [
+  {
+   "seed": 9103,
+   "cleared": 16,
+   "total": 16,
+   "clear_ratio": 1.0,
+   "mean_clear_time_s": 943.554440375,
+   "move_m": 65354.35525421647,
+   "measures": 301,
+   "colo_stops": 0,
+   "colo_measures": 0,
+   "colo_new_estimates": 0
+  }
+ ],
+ "on": [
+  {
+   "seed": 9103,
+   "cleared": 15,
+   "total": 16,
+   "clear_ratio": 0.9375,
+   "mean_clear_time_s": 943.9736440666667,
+   "move_m": 60793.023334334765,
+   "measures": 328,
+   "colo_stops": 5,
+   "colo_measures": 12,
+   "colo_new_estimates": 7
+  }
+ ]
+}
