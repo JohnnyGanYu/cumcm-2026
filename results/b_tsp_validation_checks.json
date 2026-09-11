@@ -1,0 +1,30 @@
+{
+  "passed": true,
+  "candidate_source_sha256": "bd83d680bc8a58dd3266f8a63e72ce2cbb5fb889e5018db3b8339ece7f51b152",
+  "python": "3.12.13 (main, Aug  7 2026, 02:26:41) [MSC v.1944 64 bit (AMD64)]",
+  "platform": "Windows-11-10.0.26100-SP0",
+  "test_command": "python -X utf8 -m pytest src/b_sim src/test_b_optimization_benchmark.py src/test_b_optimization_process.py src/test_b_silence_audit.py -q --tb=short",
+  "test_exit_code": 0,
+  "tests_passed": 287,
+  "test_stdout": "........................................................................ [ 25%]\r\n........................................................................ [ 50%]\r\n........................................................................ [ 75%]\r\n.......................................................................  [100%]\r\n287 passed in 681.32s (0:11:21)",
+  "test_sources_sha256": {
+    "src/b_sim/test_b_pbt.py": "58f6d74ca43ca63b05fddfc41bfa4d1b7ff17fd399f144b82d8f0eaf8200d40b",
+    "src/b_sim/test_b_sim.py": "86b15ea044822c1f59807bbcc23d91a1b9202f5a0ff5b2e40cddb352d68d4885",
+    "src/b_sim/test_bounded_homing.py": "83c6010dca5ed34022d6ae9537d7695d9ceb97360385674a294add0d578b7c6b",
+    "src/b_sim/test_certified_silence.py": "1f4ebf5e9f4d121f8cf834e2c37adabe6583578c35067750cf80174e2cea666d",
+    "src/b_sim/test_exact_cover_gain.py": "38a07afb6cddee09156c461169a95c3bef0f3abdd3ae5d0a56175f43d2020a2f",
+    "src/b_sim/test_silence_coverage.py": "a490965f586f5b38eccdf53d07fd024fd4d6f8bc491eb6b19d2fe0340be7c363",
+    "src/test_b_optimization_benchmark.py": "d99b4c34aa8fcb6fc274adfd9b7ff31734120dd933fa9654108dedde6378e4f1",
+    "src/test_b_optimization_process.py": "354f33107ff6615b12351aecf4f6b71472ac6a023a6baf2b78a13455532bc055",
+    "src/test_b_silence_audit.py": "8633a14f05982fc8b13da38b555d108dda3fbbbe2d118a19011d5d4f11939977"
+  },
+  "package_check_command": "python -m src.pack_dist_windows --check",
+  "package_check_exit_code": 0,
+  "windows_zip": {
+    "path": "CUMCM2026B_robot_windows.zip",
+    "sha256": "a24b9321cd22350cb730b6a780e104785c7928102148557bd8d0b9efe8062f44",
+    "entry_smoke_report": "results/b_tsp_windows_smoke.json",
+    "passed": true
+  },
+  "scope": "Final default-policy source, full test suite and real extracted ZIP entry; paired performance results are recorded separately."
+}

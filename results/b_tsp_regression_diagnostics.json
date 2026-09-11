@@ -1,0 +1,267 @@
+{
+  "schema_version": 1,
+  "status": "observed_regressions_not_fixed",
+  "baseline_commit": "d560cbae6675314541391cc8c7e0bd628a1cf50b",
+  "recommendation": "Enable bounded_homing and certified_silence by default only for Q3; retain Q4 explicit experiment switches and baseline defaults. Do not treat these rejected candidates as accepted.",
+  "diagnostic_source_metadata": {
+    "baseline_commit": "d560cbae6675314541391cc8c7e0bd628a1cf50b",
+    "working_tree_head": "7c16cf63de5828b2326da87bc66eeeeb5ac9a6ca",
+    "baseline_source_sha256": "f551d57f404143b2a2d590f8bf991312272c71734396214e3e7fdfaa63524c31",
+    "candidate_source_sha256": "c8e842723a3073f2b77f693bc225a90375f91ea8972e28931a8b7fe5aac3b3e8"
+  },
+  "cases": [
+    {
+      "seed": 962270,
+      "directional": 10,
+      "target_channel": 18,
+      "evidence_report": "results/b_tsp_bounded_300.json",
+      "case_sha256": "4761fdf74432a8759275457c82091272b030ae233112d3d5412c17a8e321fcf3",
+      "false_empty_certification": false,
+      "certification_evidence": {
+        "empty_verdict_count": 0,
+        "false_empty_count": 0,
+        "certified_channels": [],
+        "false_empty_channels": []
+      },
+      "arms": {
+        "baseline": {
+          "trace_sha256": "67a01d33d6be79d1f2d274a400c6bfacd70755af032621bf9ab42016e69e465c",
+          "matches_original_report": true,
+          "cleared": 12,
+          "total_jammers": 12,
+          "mean_clear_time_s": 733.9889920833333,
+          "target_state": {
+            "cleared": true,
+            "abandoned": false,
+            "certified_empty": null,
+            "measure_count": 9,
+            "clear_attempts": 10,
+            "homing_measures": 3,
+            "consecutive_silent": 3,
+            "ray_swept": true,
+            "probe_rounds": 0,
+            "estimate": null,
+            "diameter": "inf",
+            "cover_radius": "inf",
+            "feasible_count": 70
+          },
+          "bearings": [
+            {
+              "x": -825.0,
+              "y": -1275.0,
+              "svd_deg": 325.1
+            }
+          ],
+          "key_events": [
+            "ch18: cleared by ray blind sweep at r=320m"
+          ],
+          "closest_clear_distance_m": 9.21246280355777
+        },
+        "candidate": {
+          "trace_sha256": "795137186ab7f280daf4653fcbdff95817e8f352bde83d7ed71a405536c93d84",
+          "matches_original_report": true,
+          "cleared": 11,
+          "total_jammers": 12,
+          "mean_clear_time_s": 1111.4036228181817,
+          "target_state": {
+            "cleared": false,
+            "abandoned": true,
+            "certified_empty": false,
+            "measure_count": 31,
+            "clear_attempts": 0,
+            "homing_measures": 0,
+            "consecutive_silent": 31,
+            "ray_swept": false,
+            "probe_rounds": 0,
+            "estimate": null,
+            "diameter": "inf",
+            "cover_radius": "inf",
+            "feasible_count": 897
+          },
+          "bearings": [],
+          "key_events": [
+            "ch18: 从未收到信号且已清除 11 个 ≥ 总数下界 10，不为其做盲清除"
+          ],
+          "closest_clear_distance_m": null
+        }
+      },
+      "truth_used_only_for_posthoc_audit": {
+        "channel": 18,
+        "x": -565.9705050675702,
+        "y": -1449.532195910212,
+        "reception_radius_m": 1309.4898127293186,
+        "directional_deg": 207.20985062636862,
+        "cleared": false
+      },
+      "classification": "never_discovered_after_trajectory_change",
+      "cause": "31 silent measurements, zero bearings and zero clears. Search eventually abandons unknown channels after clearing at least the known source-count lower bound of 10; remaining feasible state count is 897. Baseline obtains one bearing and ray-clears at 320 m.",
+      "search_limits": {
+        "cover_station_budget": 30,
+        "actual_distinct_channel_measurements": 31,
+        "blind_clear_unknown_guard": "cleared_count >= SOURCE_COUNT_MIN (11 >= 10)"
+      }
+    },
+    {
+      "seed": 963141,
+      "directional": 5,
+      "target_channel": 9,
+      "evidence_report": "results/b_tsp_combined_rejected.json",
+      "case_sha256": "5279121fa320c863797a91145e974f6b49a798d44b6f4baae048d7fe6c7ce312",
+      "false_empty_certification": false,
+      "certification_evidence": {
+        "empty_verdict_count": 0,
+        "false_empty_count": 0,
+        "certified_channels": [],
+        "false_empty_channels": []
+      },
+      "arms": {
+        "baseline": {
+          "trace_sha256": "67d798bb4553d6dc91d43102ae0889659b29962aa12edec23c85097002ea5b9f",
+          "matches_original_report": true,
+          "cleared": 12,
+          "total_jammers": 12,
+          "mean_clear_time_s": 662.8218626666667,
+          "target_state": {
+            "cleared": true,
+            "abandoned": false,
+            "certified_empty": null,
+            "measure_count": 15,
+            "clear_attempts": 6,
+            "homing_measures": 2,
+            "consecutive_silent": 1,
+            "ray_swept": false,
+            "probe_rounds": 0,
+            "estimate": [
+              841.432938345913,
+              -1387.8872769470804
+            ],
+            "diameter": 275.71776118974526,
+            "cover_radius": 143.61443628879957,
+            "feasible_count": 61
+          },
+          "bearings": [
+            {
+              "x": 1125.0,
+              "y": -375.0,
+              "svd_deg": 254.44
+            },
+            {
+              "x": 1443.8336719065585,
+              "y": -408.1706584428061,
+              "svd_deg": 238.33
+            }
+          ],
+          "key_events": [],
+          "closest_clear_distance_m": 15.119476142328145
+        },
+        "candidate": {
+          "trace_sha256": "73f6af35d73a2d0402289dc0186322fe75aec5e6843832f81259a9e60cb7ba5e",
+          "matches_original_report": true,
+          "cleared": 11,
+          "total_jammers": 12,
+          "mean_clear_time_s": 1063.6316213636364,
+          "target_state": {
+            "cleared": false,
+            "abandoned": true,
+            "certified_empty": false,
+            "measure_count": 24,
+            "clear_attempts": 138,
+            "homing_measures": 11,
+            "consecutive_silent": 6,
+            "ray_swept": true,
+            "probe_rounds": 3,
+            "estimate": [
+              806.8019345680408,
+              -1514.3922058629125
+            ],
+            "diameter": 292.27787695824446,
+            "cover_radius": 157.50545839900897,
+            "feasible_count": 19
+          },
+          "bearings": [
+            {
+              "x": 1125.0,
+              "y": -375.0,
+              "svd_deg": 254.44
+            },
+            {
+              "x": 1443.8332514173185,
+              "y": -408.18103756104256,
+              "svd_deg": 240.02
+            }
+          ],
+          "key_events": [
+            "ch9: clear budget exhausted",
+            "ch9: clear budget exhausted",
+            "ch9: clear budget exhausted",
+            "ch9: clear budget exhausted",
+            "ch9: 盲清除 8 个候选格点（剩余候选位置 8）"
+          ],
+          "closest_clear_distance_m": 22.587298839969115
+        }
+      },
+      "truth_used_only_for_posthoc_audit": {
+        "channel": 9,
+        "x": 842.3846906890725,
+        "y": -1413.4142620555162,
+        "reception_radius_m": 1342.3878312367895,
+        "directional_deg": 352.3839533620419,
+        "cleared": false
+      },
+      "classification": "localized_then_failed_recovery_with_existing_discrete_state_deletion",
+      "cause": "Two valid bearings leave a 292.28 m region. Silent approaches and exhausted clear budget trigger one ray sweep; closest clear is 22.59 m. Later retries are blocked by spent clear budget/ray_swept; feasible blind clearing excludes the real source cell after an existing incorrect directional deletion.",
+      "bounded_region_audit": {
+        "contains_true_source": true,
+        "estimate_error_m": 107.06389526230821,
+        "diameter_m": 292.27787695824446,
+        "bearing_errors_deg": [
+          -0.3351129718852235,
+          0.9128185531750717
+        ]
+      },
+      "true_cell_removal": {
+        "source_file": "src/b_sim/feasible.py",
+        "function": "FeasibleSet._visible_mask",
+        "branch_line": 321,
+        "return_line": 322,
+        "same_as_baseline": true,
+        "cell_step_m": 75,
+        "heading_count": 12,
+        "cell_center": [
+          825.0,
+          -1425.0
+        ],
+        "source_position": [
+          842.3846906890725,
+          -1413.4142620555162
+        ],
+        "source_heading_deg": 352.3839533620419,
+        "no_signal_observation": [
+          830.0249062537863,
+          -1453.7284157258562
+        ],
+        "mask_before": 4223,
+        "mask_after": 0,
+        "removed_mode_count": 8,
+        "distance_observation_to_cell_m": 29.16455987970606,
+        "half_cell_diagonal_m": 53.033008588991066,
+        "distance_observation_to_true_source_m": 42.16628104827985,
+        "beam_angle_difference_deg": 99.42879776353584,
+        "reason": "When distance to cell center <= half diagonal, _visible_mask returns all_mask even for conservative_drop=True. A legal silent observation outside the true directional beam therefore deletes every mode of a cell containing the source.",
+        "minimal_reproduction": [
+          "fs = FeasibleSet(step=75, headings=12)",
+          "index = fs.cells.index((825.0, -1425.0))",
+          "fs.alive = {index: 4223}",
+          "fs.apply_silence(830.0249062537863, -1453.7284157258562)",
+          "assert index not in fs.alive"
+        ]
+      },
+      "not_fixed_next_steps": [
+        "Separate guaranteed visibility from possible visibility near a cell center: conservative_drop must not clear directional modes merely because distance <= half diagonal.",
+        "Audit the corresponding near-cell all_mask branch in _beam_stencil and its gain representation.",
+        "Test source positions and beam headings continuously inside cells, replay both regressions, then run new independent 300-pair-per-stratum validation."
+      ]
+    }
+  ],
+  "core_modified_by_diagnostic": false
+}

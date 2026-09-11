@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "report": "results/b_tsp_silence_development.json",
+  "report_complete_when_archived": true,
+  "evaluation_stage": "development",
+  "archive": "bounded_candidate.zip",
+  "shared_payload_reason": "The certificate-only development and bounded-only validation reports froze identical source bytes; their configuration overrides differ.",
+  "candidate_source_sha256": "acb34f11480be8e62ad0b98a7c25e4f7b9e01acc2c21c356e3b1af93f3bae72c",
+  "archive_sha256": "f78c44ed6f782bf6e5b4187e41f2c140539a57657b8841d3b81fc19e4c48b9c4",
+  "baseline_commit": "d560cbae6675314541391cc8c7e0bd628a1cf50b",
+  "baseline_source_sha256": "f551d57f404143b2a2d590f8bf991312272c71734396214e3e7fdfaa63524c31",
+  "variant_overrides": {
+    "bounded_homing": false,
+    "certified_silence": true
+  },
+  "seed_plan": {
+    "seeds": [
+      961000,
+      961001,
+      961002,
+      961003,
+      961004,
+      961005,
+      961006,
+      961007,
+      961008,
+      961009,
+      961010,
+      961011
+    ],
+    "directionals": [
+      0,
+      5,
+      10,
+      16
+    ],
+    "d16_count": 16,
+    "other_counts": "generated 10..16, not passed to strategy"
+  },
+  "file_manifest": "bounded_candidate.manifest.json",
+  "archive_source_digest_verified": true
+}

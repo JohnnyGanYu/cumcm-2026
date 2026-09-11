@@ -10,7 +10,7 @@ Failed cases remain in the report. Exit code 2 means the acceptance gate failed.
 from __future__ import annotations
 
 import argparse
-from concurrent.futures import ThreadPoolExecutor, as_completed
+from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor, as_completed
 from contextlib import contextmanager
 from dataclasses import asdict
 import hashlib
@@ -124,6 +124,8 @@ def run_episode(bundles, seed: int, directional: int, arm: str, overrides=None, 
     code = bundles[arm]
     count = 16 if directional == 16 else None
     arena = engine["arena"].Arena(engine["arena"].generate_case(seed, count=count, directional_count=directional))
+    case_digest = hashlib.sha256(json.dumps(asdict(arena.case), sort_keys=True,
+        separators=(",", ":"), allow_nan=False).encode()).hexdigest()
     session = engine["server"].Session("paired-offline", arena, real_limit_s=1200)
     server = thread = None
     config = code["strategy"].StrategyConfig(directional_probe=directional > 0)
@@ -160,9 +162,13 @@ def run_episode(bundles, seed: int, directional: int, arm: str, overrides=None, 
     stats = arena.stats()
     successes = [e for e in arena.robot.trace if e.get("clear_result") == "success"]
     events = strategy.events if strategy is not None else []
+    certified = sorted(ch for ch, state in strategy.channels.items()
+                       if getattr(state, "certified_empty", False)) if strategy else []
+    source_channels = {jammer.channel for jammer in arena.case.jammers}
     trace_json = json.dumps(arena.robot.trace, sort_keys=True, separators=(",", ":"), allow_nan=False)
     stats.update(seed=seed, directional=directional, explicit_count=count, arm=arm, transport=transport,
                  wall_time_s=time.monotonic() - started, config=asdict(config),
+                 case_sha256=case_digest,
                  missed_channels=sorted(j.channel for j in arena.case.jammers if not j.cleared),
                  cleared_channels=sorted(j.channel for j in arena.case.jammers if j.cleared),
                  full_clear=arena.case.cleared_count == arena.case.total,
@@ -173,6 +179,10 @@ def run_episode(bundles, seed: int, directional: int, arm: str, overrides=None, 
                  certified_empty_channels=summary.get("certified_empty_channels"),
                  unresolved_channels=summary.get("unresolved_channels"),
                  coverage_skipped_stations=summary.get("coverage_skipped_stations"),
+                 certification_audit={"empty_verdict_count": len(certified),
+                     "false_empty_count": len(set(certified) & source_channels),
+                     "certified_channels": certified,
+                     "false_empty_channels": sorted(set(certified) & source_channels)},
                  exception=caught, aborted_events=failure_events(events),
                  finished=arena.robot.finished)
     return stats
@@ -214,6 +224,12 @@ def aggregate(rows):
                        "total_jammers": sum(e["total_jammers"] for e in episodes),
                        "missed_cases": [{"seed": e["seed"], "channels": e["missed_channels"]}
                                         for e in episodes if e["missed_channels"]]}
+            audits = [e.get("certification_audit", {}) for e in episodes]
+            summary["certification_audit"] = {
+                "empty_verdict_count": sum(a.get("empty_verdict_count", 0) for a in audits),
+                "false_empty_count": sum(a.get("false_empty_count", 0) for a in audits),
+                "cases_with_verdict": sum(a.get("empty_verdict_count", 0) > 0 for a in audits),
+                "counting_unit": "one certified channel per episode; abandonment is excluded"}
             for metric in METRICS:
                 values = [e[metric] for e in episodes if e[metric] is not None]
                 # Missing scores invalidate the report, not silently improve its mean.
@@ -236,12 +252,20 @@ def gate(rows, expected, http_checks):
     reasons = []
     if len(rows) != expected:
         reasons.append(f"incomplete: expected {expected} pairs, got {len(rows)}")
+    if len({(r["seed"], r["directional"]) for r in rows}) != len(rows):
+        reasons.append("duplicate episode pairs")
     for pair in rows:
         key = f"d{pair['directional']}/seed={pair['seed']}"
+        if (not pair["baseline"].get("case_sha256")
+                or pair["baseline"]["case_sha256"] != pair["candidate"].get("case_sha256")
+                or pair["baseline"]["total_jammers"] != pair["candidate"]["total_jammers"]):
+            reasons.append(f"{key}: different or unrecorded generated cases")
         for arm in ("baseline", "candidate"):
             e = pair[arm]
             if e["exception"] or e["aborted_events"] or not e["finished"] or e["mean_clear_time_s"] is None:
                 reasons.append(f"{key}/{arm}: exception, aborted, unfinished or undefined score")
+            if e.get("certification_audit", {}).get("false_empty_count", 0):
+                reasons.append(f"{key}/{arm}: false empty certificate")
         if regressions(pair):
             reasons.append(f"{key}: candidate newly missed channels {regressions(pair)}")
     for check in http_checks:
@@ -287,7 +311,7 @@ def resume_rows(previous, report):
     """Reuse observations only when the entire frozen evaluation still matches."""
     for key in ("schema_version", "baseline_commit", "candidate_source_sha256", "baseline_source_sha256",
                 "transport", "seed_plan", "variant_overrides", "evaluation_stage", "selected_configurations",
-                "http_checks_per_stratum", "metric_definition", "physics", "bootstrap"):
+                "http_checks_per_stratum", "metric_definition", "physics", "bootstrap", "executor", "workers"):
         if key not in previous or previous[key] != report[key]:
             raise ValueError(f"Cannot resume: {key} changed or missing")
     if previous.get("complete"):
@@ -317,12 +341,34 @@ def selected_configurations(bundles, directionals, variant):
     return configs
 
 
+_WORKER_BUNDLES = None
+
+
+def initialize_worker(directory, package_names):
+    """Each process imports the parent's immutable source snapshot, not the worktree."""
+    global _WORKER_BUNDLES
+    sys.path.insert(0, directory)
+    _WORKER_BUNDLES = {arm: {name: importlib.import_module(package + "." + name)
+                       for name in ("arena", "client", "server", "strategy")}
+                       for arm, package in package_names.items()}
+
+
+def worker_pair(seed, directional, variant, transport):
+    assert _WORKER_BUNDLES is not None
+    return {"seed": seed, "directional": directional,
+            "baseline": run_episode(_WORKER_BUNDLES, seed, directional, "baseline", transport=transport),
+            "candidate": run_episode(_WORKER_BUNDLES, seed, directional, "candidate",
+                                     overrides_for(variant, directional), transport)}
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--episodes", type=int, default=30, help="paired episodes per directional stratum")
     parser.add_argument("--seed-start", type=int, default=930000)
     parser.add_argument("--seeds", help="explicit comma-separated seeds, replacing episodes/seed-start")
     parser.add_argument("--workers", type=int, default=4)
+    parser.add_argument("--executor", choices=("thread", "process"), default="process",
+                        help="process workers run CPU-bound Q4 evaluations concurrently from the frozen snapshot")
     parser.add_argument("--out", type=Path, required=True)
     # 默认基线改为 HEAD：本仓库把"当前 main"作为对照基准，候选是工作树里的改动。
     # 原值 d83c40d 是 PR #6 作者当时的基线（无 TSP 路径规划），用它会把 main 已有
@@ -350,7 +396,8 @@ def main():
     expected = len(seeds) * len(directionals)
     rows, checks = [], []
     with frozen_versions(args.baseline_ref) as (bundles, metadata):
-        report = {"schema_version": 2, "complete": False, **metadata, "transport": args.transport,
+        report = {"schema_version": 3, "complete": False, **metadata, "transport": args.transport,
+                  "executor": args.executor, "workers": args.workers,
                   "evaluation_stage": args.stage,
                   "http_checks_per_stratum": args.http_checks, "variant_overrides": variant,
                   "selected_configurations": selected_configurations(bundles, directionals, variant),
@@ -372,11 +419,19 @@ def main():
                     "candidate": run_episode(bundles, seed, directional, "candidate",
                                                overrides_for(variant, directional), args.transport)}
 
-        with ThreadPoolExecutor(max_workers=args.workers) as pool:
+        if args.executor == "process":
+            directory = str(Path(bundles["baseline"]["strategy"].__file__).parent.parent)
+            pool = ProcessPoolExecutor(max_workers=args.workers, initializer=initialize_worker,
+                initargs=(directory, {arm: value["package_name"] for arm, value in bundles.items()}))
+            submit = lambda seed, d: pool.submit(worker_pair, seed, d, variant, args.transport)
+        else:
+            pool = ThreadPoolExecutor(max_workers=args.workers)
+            submit = lambda seed, d: pool.submit(pair_run, seed, d)
+        with pool:
             finished_pairs = {(r["seed"], r["directional"]) for r in rows}
             if len(finished_pairs) != len(rows):
                 raise ValueError("Duplicate pairs in resumed report")
-            futures = {pool.submit(pair_run, seed, d): (seed, d) for d in directionals for seed in seeds
+            futures = {submit(seed, d): (seed, d) for d in directionals for seed in seeds
                        if (seed, d) not in finished_pairs}
             for future in as_completed(futures):
                 pair = future.result()

@@ -8,7 +8,7 @@ from .b_optimization_benchmark import (
 
 
 def episode(cleared=(1, 2), missed=(), mean=100):
-    return {"seed": 1, "directional": 0, "cleared_channels": list(cleared),
+    return {"seed": 1, "directional": 0, "case_sha256": "same-case", "cleared_channels": list(cleared),
             "missed_channels": list(missed), "cleared": len(cleared),
             "total_jammers": len(cleared) + len(missed), "full_clear": not missed,
             "mean_clear_time_s": mean, "total_virtual_time_s": mean * len(cleared),
@@ -36,6 +36,17 @@ def test_gate_rejects_incomplete_aborted_and_http_mismatch():
     assert not gate([bad], 1, [])["passed"]
     checks = [{"directional": 0, "seed": 1, "arm": "candidate", "equivalent": False}]
     assert not gate([pair], 1, checks)["passed"]
+
+
+def test_gate_rejects_changed_case_duplicate_pair_and_false_certificate():
+    pair = {"seed": 1, "directional": 0, "baseline": episode(), "candidate": episode()}
+    assert not gate([pair, pair], 2, [])["passed"]
+    pair["candidate"]["case_sha256"] = "different-case"
+    assert not gate([pair], 1, [])["passed"]
+    pair["candidate"]["case_sha256"] = "same-case"
+    pair["candidate"]["certification_audit"] = {"empty_verdict_count": 5, "false_empty_count": 1}
+    assert not gate([pair], 1, [])["passed"]
+    assert aggregate([pair])["d0"]["candidate"]["certification_audit"]["false_empty_count"] == 1
 
 
 def test_config_overrides_and_bootstrap_are_deterministic():
@@ -134,7 +145,7 @@ def test_resume_rejects_changed_provenance_and_duplicate_or_unplanned_pairs():
     report = {key: "same" for key in (
         "schema_version", "baseline_commit", "candidate_source_sha256", "baseline_source_sha256",
         "transport", "variant_overrides", "evaluation_stage", "selected_configurations",
-        "http_checks_per_stratum", "metric_definition", "physics", "bootstrap")}
+        "http_checks_per_stratum", "metric_definition", "physics", "bootstrap", "executor", "workers")}
     report.update(seed_plan={"seeds": [1, 2], "directionals": [0, 5]}, complete=False,
                   rows=[{"seed": 1, "directional": 0}])
     assert resume_rows(deepcopy(report), report) == report["rows"]

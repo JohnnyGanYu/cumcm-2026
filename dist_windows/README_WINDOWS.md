@@ -32,7 +32,7 @@ python run_official.py --robot-id 你的参赛队号 --directional
   而一次测试只允许 enter 一次；探测后必须重开一次测试才能正式跑。
   `--dry-run` 只用来确认"模拟器装好了、端口对了"。
 - 程序跑完会在当前目录生成 `official_log_<时间戳>.json`，
-  含完整指令与响应序列。**模拟器自己不提供这个功能，支撑材料需要它。**
+  含客户端完整指令与响应序列。请与模拟器界面成绩及可导出的官方日志一同保存，作为复核依据。
 - 正式测试问题3、问题4**各只有 3 次机会**，且 **9/13 17:30 后不能开新测试**，
   建议 15:30 前跑完。
 - 同一账号不能双设备登录；原设备崩溃后服务器最多约 120 秒释放会话。
@@ -40,20 +40,17 @@ python run_official.py --robot-id 你的参赛队号 --directional
 ## 看什么指标
 
 输出里的 **平均定位清除时间** 就是评分指标，越小越好。同时确认：
-- 清除个数 = 本局干扰源总数（应该 10-16 个）
+- 清除个数与同一局结束后告示的干扰源总数核对（应该 10-16 个）
 - 程序运行时间远低于 1200 s
 - 虚拟时间远低于 360000 s
 
-## 离线仿真器上的当前成绩（供对照）
+## 本交付包的策略与复验证据
 
-| 场景 | 局数 | 全清 | 清除率 | 平均定位清除时间 |
-|---|---|---|---|---|
-| 问题3 全向 | 60 | 60/60 | 100% | 477 s |
-| 问题4 含5定向 | 40 | 40/40 | 100% | 1275 s |
-| 问题4 换种子交叉验证 | 30 | 30/30 | 100% | 1259 s |
+本包保留 main 的 TSP 巡回；Q3 默认增加全部示向的有界交会与实际沉默覆盖认证，Q4 因实验候选新增漏清而默认关闭这两个开关。覆盖增益均改用等价整数位集计算。完整每档 300 对评测、Q3 300 秒/Q4 500 秒目标差距、误判审计见仓库根目录 `项目优化.md`，原始数据见 `results/b_tsp_optimization_final.json`。这些是离线验证，官方模拟器成绩以实际运行结果为准。
 
-**若官方模拟器结果与此差距明显，把 `official_log_*.json` 回传**，
-我据此校准离线仿真器再重新调参。官方行为是最终判据。
+运行日志分别记录 `certified_empty_channels`、`abandoned_channels` 和 `unresolved_channels`。放弃搜索不等于确认空频道；只有已清 16 个或其余频道均有覆盖认证时，程序才给出相应的全清依据。未知总数时，不能把清除数本身当成总数。
+
+本包由 `python -m src.pack_dist_windows` 从源码同步，包含 `MANIFEST.sha256`。在完整仓库可运行 `python -m src.pack_dist_windows --check` 校验源码、入口、说明和 ZIP 一致性。
 
 ## 记录干扰源总数（题目要求的比例统计值）
 
@@ -67,12 +64,9 @@ python run_official.py --robot-id 你的参赛队号 --directional
 python run_official.py --robot-id 你的队号
 ```
 
-看到界面告示总数（例如 14）后，日志里的 `reported_total_jammers` 字段直接改成 14，
-或下次运行时带上参数：
-
-```
-python run_official.py --robot-id 你的队号 --total-jammers 14
-```
+看到界面告示总数（例如 14）后，保留原始日志，并将**同一局**的总数、案例编码和成绩记录到复核表。
+若补录到日志，需同时核对 `reported_total_jammers`、比例及论文表格字段；只改一个字段不会自动重算其他字段。
+`--total-jammers` 只用于运行前已经可靠知道本局总数的情况，绝不能把上一局的总数传给下一局。
 
 正式测试（务必记录案例编码，论文表1需要该列）：
 
@@ -84,5 +78,5 @@ python run_official.py --robot-id 你的队号 --test-kind formal --case-code �
 日志文件名会自动区分，例如 `official_log_q3_formal_20260913_101530.json`，
 其中 `paper_table1_row` 字段可直接填进论文表 1。
 
-正式测试不告示总数，`--total-jammers` 留空即可；此时用 `full_clear_assessment`
-里的 `suspect_missed_channels` 判断是否可能漏失。
+正式测试未告示总数时，`--total-jammers` 留空；检查 `full_clear_assessment` 的完成依据及
+`unresolved_channels`，无法认证的频道应保留为未解决，不能据程序退出认定全清。

@@ -1,0 +1,110 @@
+{
+  "schema_version": 1,
+  "report": "results/b_tsp_combined_rejected.json",
+  "archive": "combined_candidate.zip",
+  "candidate_source_sha256": "c8e842723a3073f2b77f693bc225a90375f91ea8972e28931a8b7fe5aac3b3e8",
+  "archive_sha256": "d520368f04b227aac70b4705629cf24631279b88eae9eafbc8ab609f88eff4f2",
+  "baseline_commit": "d560cbae6675314541391cc8c7e0bd628a1cf50b",
+  "baseline_source_sha256": "f551d57f404143b2a2d590f8bf991312272c71734396214e3e7fdfaa63524c31",
+  "variant_overrides": {},
+  "evaluation_stage": "final",
+  "report_complete_when_archived": false,
+  "publication_status": "rejected for default Q4 publication after a newly missed channel; retained as original experimental evidence, not release validation",
+  "known_regression": {
+    "directional": 5,
+    "seed": 963141,
+    "channel": 9
+  },
+  "digest_algorithm": "sha256 of sorted(path_utf8 + NUL + file_bytes_with_CRLF_replaced_by_LF + NUL), paths relative to b_sim, non-test .py files only",
+  "archive_format": "sorted relative .py paths; fixed 1980-01-01 00:00:00 timestamp; deflate level 9; Unix regular file 0644; no caches",
+  "byte_identical_regeneration_checked": true,
+  "archive_source_digest_verified": true,
+  "files": [
+    {
+      "path": "__init__.py",
+      "bytes": 85,
+      "sha256": "e1dccd11f992821c586e65632ff43245708c151ee02e38c7d63bd2ea1dd76aa5"
+    },
+    {
+      "path": "arena.py",
+      "bytes": 12182,
+      "sha256": "3776c9df4ef8e01f1c4dc49f47abb075be0d4fcf567feaf62f0ebd2043d0ee90"
+    },
+    {
+      "path": "client.py",
+      "bytes": 9115,
+      "sha256": "522ee3a100a830744f6c67cbcada27a333fc2d5c5919fe59374e2e9e4b6a533c"
+    },
+    {
+      "path": "coverage_audit.py",
+      "bytes": 4413,
+      "sha256": "a423d92081fe376606fe1fd21181820cf72e514acdce68f085688f4bf489675e"
+    },
+    {
+      "path": "coverage_design.py",
+      "bytes": 6180,
+      "sha256": "a763534608a061a1063d72a2c631831112e76cf292eafb2dcf5784420439f434"
+    },
+    {
+      "path": "directional.py",
+      "bytes": 8132,
+      "sha256": "6846bfc9f1b12f75cdc8e8581fdda3dd81024a3267abedf55ca489a960e61ba8"
+    },
+    {
+      "path": "feasible.py",
+      "bytes": 41343,
+      "sha256": "84e9c504effb54fc68ae8721f0159fd489c8729a8aa5ee8d8e30f14dcc102385"
+    },
+    {
+      "path": "geometry.py",
+      "bytes": 30803,
+      "sha256": "2acd918006f6d05939d7559324bf063ce3fc7e10c67e7daa673316dcdcb323ee"
+    },
+    {
+      "path": "homing.py",
+      "bytes": 2802,
+      "sha256": "220ffea73754c25a34ba727fb2297d1ad23c78aeec45f8ab923b99a387cf6f20"
+    },
+    {
+      "path": "phase_probe.py",
+      "bytes": 5161,
+      "sha256": "020b298343edbc1e8f0575dea3e871813863cb69e9d53cf468fc4248d178d089"
+    },
+    {
+      "path": "rehearse.py",
+      "bytes": 9888,
+      "sha256": "88dbf655d099387ba1d0280f8d7ea7ef3e00de71536757aea444274e17e91a44"
+    },
+    {
+      "path": "route.py",
+      "bytes": 6913,
+      "sha256": "abd9e7ce71e075b013fd01db24390d17527b8b3dc39afbdfaccb14ba61bf05cf"
+    },
+    {
+      "path": "server.py",
+      "bytes": 12818,
+      "sha256": "83646cfc822879e4930e3fc4622df1bd47b68d7e7eb3a1d30cae8624309017af"
+    },
+    {
+      "path": "silence_coverage.py",
+      "bytes": 14422,
+      "sha256": "9165f32d8a1770da83d7b6ede2ba43ce60e76da3cb2def02b19f3a9a7eceb915"
+    },
+    {
+      "path": "strategy.py",
+      "bytes": 86715,
+      "sha256": "29cad8a4a766eb9be8835d0710b308b729083d29934e4dc2f95770c8ac1b833f"
+    },
+    {
+      "path": "timeline.py",
+      "bytes": 10779,
+      "sha256": "3ba30feb16e7165c063929c263a6db33cc846b7d6a5c0c41f6bb157a12f8f5fa"
+    },
+    {
+      "path": "tune.py",
+      "bytes": 7915,
+      "sha256": "fde26009bc0817c6332622547fed65bb79f91f911bf28d1ae06e0e0acb0668b6"
+    }
+  ],
+  "original_report_path_when_archived": "results/b_tsp_optimization_final.json"
+}

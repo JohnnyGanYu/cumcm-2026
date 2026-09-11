@@ -64,6 +64,7 @@ from .client import ClearResult, MeasureResult, ProtocolError, RobotClient, Test
 from .directional import DirectionalBelief
 from .feasible import FeasibleSet, cover_route
 from .geometry import Bearing, estimate_position, localization_polygon, polygon_diameter
+from .homing import bounded_estimate
 from .route import order_route
 
 
@@ -84,12 +85,14 @@ class ChannelState:
     ray_swept: bool = False          # 已做过射线盲清除（防重入，_home_channel 是循环）
     probe_rounds: int = 0            # 已在覆盖站位上重搜过几轮（有界，防止无进展死循环）
     abandoned: bool = False          # 全部兜底手段用尽，永久放弃（不再消耗任何预算）
+    certified_empty: bool = False    # 仅实际沉默观测的连续覆盖证明；不等同于 abandoned
     belief: DirectionalBelief | None = None   # 问题 4：定向源候选集合 (x, y, φ)
     feasible: FeasibleSet | None = None       # 可行域（位置边缘），驱动"是否还要找"与"站哪"
     estimate: tuple[float, float] | None = None
     diameter: float = float("inf")
     # 估计位置到定位区域最远顶点的距离。≤ 清除半径 ⟹ 可证明"直接走过去清除必成功"。
     cover_radius: float = float("inf")
+    bounded_homing: bool = False
 
     def add_bearing(self, x: float, y: float, svd_deg: float) -> None:
         first = not self.bearings
@@ -105,6 +108,12 @@ class ChannelState:
         self._refresh()
 
     def _refresh(self) -> None:
+        if self.bounded_homing:
+            result = bounded_estimate(self.bearings)
+            self.estimate, self.diameter, self.cover_radius = (
+                result if result is not None else (None, float("inf"), float("inf"))
+            )
+            return
         if len(self.bearings) < 2:
             self.estimate = None
             self.diameter = float("inf")
@@ -148,7 +157,7 @@ class ChannelState:
         是否已被观测约束排空。可行域为空是**主动停止搜索**的依据——原实现只能靠"检测预算
         耗尽"被动放弃，会为根本不存在的源反复跑站位。
         """
-        if self.cleared or self.abandoned:
+        if self.cleared or self.abandoned or self.certified_empty:
             return False
         if self.bearings:
             return True
@@ -161,6 +170,10 @@ class ChannelState:
 
 @dataclass
 class StrategyConfig:
+    # None 按题型选择默认值：Q3 开启，Q4 保留 main；显式布尔值用于独立消融。
+    # Q4 大样本出现新增漏清，未通过清除保持验收，不能仅因均值下降默认开启。
+    certified_silence: bool | None = None
+    bounded_homing: bool | None = None
     # 阶段 1
     sweep_origin: bool = True
     # 阶段 3 覆盖环。设计依据（数值实测，见 results/b_coverage_design.json）：
@@ -299,6 +312,12 @@ class StrategyConfig:
     direct_clear_diameter_m: float = 150.0
     legacy_ring_fallback: bool = True    # 可行域路线走完仍有漏时，回落到固定环扫
 
+    def __post_init__(self) -> None:
+        if self.certified_silence is None:
+            self.certified_silence = not self.directional_probe
+        if self.bounded_homing is None:
+            self.bounded_homing = not self.directional_probe
+
 
 class DogStrategy:
     # 类级默认值：这些是纯计数/缓存字段，给出类级默认后，即使实例被绕过 `__init__` 构造
@@ -313,7 +332,8 @@ class DogStrategy:
         self.client = client
         self.config = config or StrategyConfig()
         self.channels: dict[int, ChannelState] = {
-            ch: ChannelState(ch) for ch in range(CHANNEL_MIN, CHANNEL_MAX + 1)
+            ch: ChannelState(ch, bounded_homing=self.config.bounded_homing)
+            for ch in range(CHANNEL_MIN, CHANNEL_MAX + 1)
         }
         self.pos = (0.0, 0.0)
         self.radio_channel = 1
@@ -797,6 +817,10 @@ class DogStrategy:
 
     def summary(self) -> dict:
         cleared = sorted(ch for ch, st in self.channels.items() if st.cleared)
+        certified = sorted(ch for ch, st in self.channels.items() if st.certified_empty and not st.cleared)
+        unresolved = sorted(set(self.channels) - set(cleared) - set(certified))
+        basis = ("source_count_upper_bound" if len(cleared) >= SOURCE_COUNT_MAX else
+                 "continuous_coverage" if not unresolved else "unresolved")
         measures = sum(1 for e in self.client.log if e["path"] == "/measure")
         clears = sum(1 for e in self.client.log if e["path"] == "/clear")
         return {
@@ -806,6 +830,10 @@ class DogStrategy:
             "measure_calls": measures,
             "clear_calls": clears,
             "mean_clear_time_s": self.client.virtual_time_s / len(cleared) if cleared else None,
+            "certified_empty_channels": certified,
+            "unresolved_channels": [] if basis == "source_count_upper_bound" else unresolved,
+            "completion_basis": basis,
+            "abandoned_channels": sorted(ch for ch, st in self.channels.items() if st.abandoned),
             "events": self.events,
         }
 
@@ -842,19 +870,39 @@ class DogStrategy:
             if state.feasible is not None:
                 state.feasible.apply_near(point[0], point[1])
             self._clear_at(point, state.channel)
-        elif result.svd_deg is not None:
+        elif result.result == "direction":
+            if result.svd_deg is None:
+                raise ProtocolError("direction response has no bearing")
             state.add_bearing(point[0], point[1], result.svd_deg)
             if state.feasible is not None:
                 state.feasible.apply_bearing(point[0], point[1], result.svd_deg)
             if state.belief is not None:
                 state.belief.apply_bearing(point[0], point[1], result.svd_deg)
-        else:
+        elif result.result == "no_signal":
             state.silent_points.append(point)
             state.consecutive_silent += 1
+            if self._certify_silence(state):
+                return
             if state.feasible is not None and self.config.use_silence_constraint:
                 state.feasible.apply_silence(point[0], point[1])
             if state.belief is not None:
                 state.belief.apply_silence(point[0], point[1])
+        else:
+            raise ProtocolError(f"unknown measurement result: {result.result!r}")
+
+    def _certify_silence(self, state: ChannelState) -> bool:
+        """Only received no-signal points may justify this distinct verdict."""
+        if not self.config.certified_silence or state.bearings or state.cleared:
+            return False
+        if state.certified_empty:
+            return True
+        from .silence_coverage import silence_certificate
+        if not silence_certificate(state.silent_points, self.config.directional_probe):
+            return False
+        state.certified_empty = True
+        self._invalidate_cover_plan()
+        self.events.append(f"ch{state.channel}: empty by continuous silence certificate")
+        return True
 
     def _probe_stations(self) -> list[list[tuple[float, float]]]:
         """双环覆盖站位。内环先扫（离原点近、代价低），外环兜住边界源。
@@ -1035,7 +1083,7 @@ class DogStrategy:
         for state in sorted(self.channels.values(), key=lambda s: s.channel):
             if self._stop():
                 return
-            if state.cleared or state.feasible is None or not state.feasible.possible:
+            if state.cleared or state.certified_empty or state.feasible is None or not state.feasible.possible:
                 continue
             # 收到过示向度 ⟹ 这个频道**确实**有一个未清除的源，盲清除无论多贵都值得。
             # 没收到过 ⟹ 与空频道不可区分，只有在"已清除个数 < 总数下界 10"时才有据可依。

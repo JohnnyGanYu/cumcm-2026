@@ -14,7 +14,7 @@
 
 ## 只同步运行时，不同步离线工具
 
-交付包里只放机器狗本体依赖的模块（`RUNTIME_MODULES`）。仿真器（`arena`/`server`）、彩排与
+交付包里只放机器狗本体依赖的模块（`RUNTIME_MODULES`）。`arena` 因运行时引用其常量而保留；HTTP 服务端（`server`）、彩排与
 调参工具（`rehearse`/`tune`/`timeline`/`phase_probe`/`coverage_audit`/`coverage_design`）和测试
 一律不入包：它们只在离线用，且 `tune`/`timeline` 依赖 `arena`，带进去反而增加正式测试当天的
 出错面。机器狗本体只用 Python 标准库。
@@ -26,10 +26,12 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import sys
 from pathlib import Path
+from zipfile import ZipFile, ZipInfo, ZIP_DEFLATED
 
-# 机器狗运行时依赖闭包：strategy → {arena, client, directional, feasible, geometry, route}
+# 机器狗运行时依赖闭包由 RUNTIME_MODULES 显式列出；arena 提供共享常量。
 RUNTIME_MODULES = (
     "__init__.py",
     "arena.py",
@@ -37,12 +39,15 @@ RUNTIME_MODULES = (
     "directional.py",
     "feasible.py",
     "geometry.py",
+    "homing.py",
     "route.py",
+    "silence_coverage.py",
     "strategy.py",
 )
 
 SOURCE_DIR = Path("src/b_sim")
 TARGET_DIR = Path("dist_windows/b_sim")
+ARCHIVE = Path("CUMCM2026B_robot_windows.zip")
 
 
 def sync(*, check_only: bool = False) -> int:
@@ -79,6 +84,46 @@ def sync(*, check_only: bool = False) -> int:
             else:
                 path.unlink()
                 print(f"  x {path.name}（已删除：不属于运行时依赖）")
+
+    entry = TARGET_DIR.parent / "run_official.py"
+    wanted_entry = Path("src/run_official.py").read_text(encoding="utf-8")
+    if not entry.exists() or entry.read_text(encoding="utf-8") != wanted_entry:
+        stale += 1
+        if not check_only:
+            entry.write_text(wanted_entry, encoding="utf-8")
+        print(f"  {'!' if check_only else '>'} run_official.py")
+
+    files = {f"b_sim/{name}": (SOURCE_DIR / name).read_bytes().replace(b"\r\n", b"\n")
+             for name in RUNTIME_MODULES}
+    files["run_official.py"] = wanted_entry.replace("\r\n", "\n").encode("utf-8")
+    files["README_WINDOWS.md"] = (TARGET_DIR.parent / "README_WINDOWS.md").read_bytes().replace(b"\r\n", b"\n")
+    manifest = "".join(f"{hashlib.sha256(data).hexdigest()}  {name}\n"
+                       for name, data in sorted(files.items())).encode("utf-8")
+    files["MANIFEST.sha256"] = manifest
+    manifest_path = TARGET_DIR.parent / "MANIFEST.sha256"
+    if not manifest_path.exists() or manifest_path.read_bytes().replace(b"\r\n", b"\n") != manifest:
+        stale += 1
+        if not check_only:
+            manifest_path.write_bytes(manifest)
+    archive_matches = False
+    if ARCHIVE.exists():
+        with ZipFile(ARCHIVE) as archive:
+            archive_matches = (sorted(archive.namelist()) == sorted(files)
+                               and all(archive.read(name) == data for name, data in files.items()))
+    if not archive_matches:
+        stale += 1
+        if check_only:
+            print("  ! ZIP 与运行时或说明不一致")
+        else:
+            temporary = ARCHIVE.with_suffix(".zip.tmp")
+            with ZipFile(temporary, "w", compression=ZIP_DEFLATED, compresslevel=9) as archive:
+                for name, data in sorted(files.items()):
+                    info = ZipInfo(name, date_time=(2026, 9, 11, 0, 0, 0))
+                    info.compress_type = ZIP_DEFLATED
+                    info.external_attr = 0o644 << 16
+                    archive.writestr(info, data)
+            temporary.replace(ARCHIVE)
+            print(f"  > ZIP 已同步，{len(files)} 个成员")
     return stale
 
 

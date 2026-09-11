@@ -546,6 +546,37 @@ def cover_stations(sets: Sequence[FeasibleSet], current: Point, *,
     return _prune_redundant(chosen, sets, reception_min_m=reception_min_m)
 
 
+def _work_mode_bits(work: dict[int, int], headings: int) -> int:
+    """Pack each lattice cell's modes into a disjoint fixed-width bit slot."""
+    width = headings + 1
+    all_mask = (1 << width) - 1
+    bits = 0
+    for cell, mask in work.items():
+        bits |= (mask & all_mask) << (cell * width)
+    return bits
+
+
+@lru_cache(maxsize=8192)
+def _station_mode_bits(step: float, reach: float, headings: int, station: int) -> int:
+    """Cache the exact existing beam stencil in the same lattice-cell slots.
+
+    Only the integer representation changes: the offsets, radius comparison,
+    mode masks, and source-to-station orientation come from _beam_stencil.
+    Bounding the cache also bounds memory across alternate discretizations.
+    """
+    points, index = _lattice(step)
+    x, y = points[station]
+    i, j = int(round(x / step)), int(round(y / step))
+    offsets, masks = _beam_stencil(step, reach, headings)
+    width = headings + 1
+    bits = 0
+    for di, dj, bucket in offsets:
+        cell = index.get((i - di, j - dj))
+        if cell is not None:
+            bits |= masks[bucket] << (cell * width)
+    return bits
+
+
 def _cover_stations_directional(sets: Sequence[FeasibleSet], current: Point, *,
                                 max_stations: int, cell_step: float,
                                 reception_min_m: float, min_gain: int,
@@ -568,24 +599,20 @@ def _cover_stations_directional(sets: Sequence[FeasibleSet], current: Point, *,
     """
     points, index = _lattice(cell_step)
     reach = guaranteed_reach(cell_step, reception_min_m)
-    offsets, masks = _beam_stencil(cell_step, reach, max(fs.headings for fs in sets))
+    headings = max(fs.headings for fs in sets)
+    offsets, masks = _beam_stencil(cell_step, reach, headings)
     representative = max(sets, key=lambda fs: fs.state_count)
     work = dict(representative.alive)
     if not work:
         return []
+    work_bits = _work_mode_bits(work, headings)
     ij = {si: (int(round(x / cell_step)), int(round(y / cell_step)))
           for si, (x, y) in enumerate(points)}
     coarse = [si for si, (i, j) in ij.items() if i % 2 == 0 and j % 2 == 0]
     scale = max(travel_weight_m, 1e-6)
 
     def gain_at(si: int) -> int:
-        i, j = ij[si]
-        total = 0
-        for di, dj, bucket in offsets:
-            mask = work.get(index.get((i - di, j - dj), -1), 0)
-            if mask:
-                total += (mask & masks[bucket]).bit_count()
-        return total
+        return (work_bits & _station_mode_bits(cell_step, reach, headings, si)).bit_count()
 
     chosen: list[Point] = []
     live_anchors = [current, *anchors]
@@ -630,6 +657,7 @@ def _cover_stations_directional(sets: Sequence[FeasibleSet], current: Point, *,
                 work[cell] = remaining
             else:
                 del work[cell]
+        work_bits = _work_mode_bits(work, headings)
     return chosen
 
 

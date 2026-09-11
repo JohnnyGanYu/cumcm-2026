@@ -334,12 +334,57 @@ def test_duplicate_json_key_returns_400(server):
 
 
 def test_protocol_surface_errors(server):
-    url, _ = server
+    url, session = server
     assert raw_post(url, "/unknown", base("u"))[0] == 404
     assert raw_post(url, "/enter", base("v"), method="GET")[0] == 405
     assert raw_post(url, "/enter", base("w"), ctype="text/plain")[0] == 415
     assert raw_post(url, "/enter", b"{not json", ctype="application/json")[0] == 400
-    assert raw_post(url, "/enter", b"x" * 70000)[0] == 413
+    # Exercise the Windows upload/early-response race more than once. A rejected
+    # request must receive 413 and cannot enter or advance the arena.
+    for _ in range(10):
+        status, body = raw_post(url, "/enter", b"x" * 70000)
+        assert status == 413
+        assert body["accepted"] is False
+        assert body["virtual_time_s"] == 0
+    assert not session.arena.robot.entered
+
+
+def test_rejected_body_drain_is_bounded_and_restores_timeout():
+    import io
+    from src.b_sim.server import Handler, MAX_REJECT_DRAIN_BYTES
+
+    class Connection:
+        timeout = None
+
+        def gettimeout(self):
+            return self.timeout
+
+        def settimeout(self, value):
+            self.timeout = value
+
+    handler = object.__new__(Handler)
+    handler.connection = Connection()
+    handler.rfile = io.BytesIO(b"x" * (MAX_REJECT_DRAIN_BYTES + 100))
+    handler._drain_rejected_body(10**12)
+    assert handler.rfile.tell() == MAX_REJECT_DRAIN_BYTES
+    assert handler.connection.gettimeout() is None
+
+
+def test_oversized_request_with_stalled_body_still_returns_413(server):
+    import socket
+    from urllib.parse import urlsplit
+
+    url, session = server
+    address = urlsplit(url)
+    with socket.create_connection((address.hostname, address.port), timeout=3) as peer:
+        peer.sendall(b"POST /enter HTTP/1.1\r\nHost: localhost\r\n"
+                     b"Content-Type: application/json\r\nContent-Length: 1000000000\r\n\r\nx")
+        response = peer.makefile("rb")
+        try:
+            assert response.readline().startswith(b"HTTP/1.1 413 ")
+        finally:
+            response.close()
+    assert not session.arena.robot.entered
 
 
 def test_client_raises_protocol_error_on_rejection(server):
