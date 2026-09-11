@@ -1492,11 +1492,16 @@ def test_sweep_at_origin_measures_each_channel_exactly_once():
     assert all(_is_origin(e["request"]["position"]) for e in client.log if e["path"] == "/measure")
 
 
-def test_run_order_origin_sweep_precedes_ring_and_retry():
-    """R3.1：run() 的默认阶段顺序为「原点普扫 → 归航/环补扫 → 内圈重测」。
+def test_run_order_origin_sweep_precedes_tour_and_fallbacks():
+    """R3.1：run() 的情节顺序为「原点普扫 → 统一主巡回 → 兜底（复活/内圈重测/固定环扫）」。
+
+    与旧版的差别（本轮路径规划重构）：清除与补测不再是「归航」「环补扫」两个交替阶段，而是合并
+    进同一个开放 TSP 主巡回 `_tour`；固定环扫 `_probe_ring` 降级为兜底，且只在"可断言还有源
+    没找到"（已清除数 < 干扰源总数下界 10）时才启用。本例只有 1 个干扰源，故该条件成立、
+    环扫兜底会执行。
 
     通过在 DogStrategy 上打桩记录各阶段调用次序，确认 _sweep_at 首个被调用，
-    且 _probe_ring / _inner_retry 均在其之后。
+    且 _tour / _revive_exhausted / _probe_ring 均在其之后。
     """
     jammers = [_Jammer61(channel=1, x=1600.0, y=0.0, reception_radius_m=1000.0)]
     case = _Case61(jammers=jammers, error_salt="t61c", seed=0)
@@ -1510,23 +1515,16 @@ def test_run_order_origin_sweep_precedes_ring_and_retry():
     try:
         client = _RobotClient61("t61c", base_url=f"http://127.0.0.1:{port}")
         strategy = _DogStrategy61(client)
-        orig_sweep = strategy._sweep_at
-        orig_home = strategy._home_all
-        orig_ring = strategy._probe_ring
-        orig_revive = strategy._revive_exhausted
-        orig_retry = strategy._inner_retry
-
         def rec(name, fn):
             def wrapper(*a, **k):
                 calls.append(name)
                 return fn(*a, **k)
             return wrapper
 
-        strategy._sweep_at = rec("sweep", orig_sweep)          # type: ignore[assignment]
-        strategy._home_all = rec("home", orig_home)            # type: ignore[assignment]
-        strategy._probe_ring = rec("ring", orig_ring)          # type: ignore[assignment]
-        strategy._revive_exhausted = rec("revive", orig_revive)  # type: ignore[assignment]
-        strategy._inner_retry = rec("retry", orig_retry)       # type: ignore[assignment]
+        strategy._sweep_at = rec("sweep", strategy._sweep_at)            # type: ignore[assignment]
+        strategy._tour = rec("tour", strategy._tour)                     # type: ignore[assignment]
+        strategy._revive_exhausted = rec("revive", strategy._revive_exhausted)  # type: ignore[assignment]
+        strategy._probe_ring = rec("ring", strategy._probe_ring)         # type: ignore[assignment]
         strategy.run()
     finally:
         httpd.shutdown()
@@ -1535,24 +1533,23 @@ def test_run_order_origin_sweep_precedes_ring_and_retry():
     assert calls, "策略未执行任何阶段"
     assert calls[0] == "sweep", f"首阶段应为原点普扫，实际 {calls[0]}"
     sweep_i = calls.index("sweep")
-    # 归航、环补扫、复活、内圈重测均在原点普扫之后。
-    for phase in ("home", "ring", "revive", "retry"):
+    for phase in ("tour", "revive", "ring"):
         assert phase in calls, f"缺少阶段 {phase}"
         assert calls.index(phase) > sweep_i, f"阶段 {phase} 早于原点普扫"
-    # 具体子序列：sweep → home → ring → revive → home → retry。
-    assert calls.index("ring") > calls.index("home")
-    assert calls.index("revive") > calls.index("ring")
-    assert calls.index("retry") > calls.index("revive")
+    # 子序列：sweep → tour → revive → ...（环扫兜底在复活之后）
+    assert calls.index("tour") < calls.index("revive")
+    assert calls.index("revive") < calls.index("ring")
+    # 主巡回是主路径，兜底只跑一次量级：tour 的调用次数应不少于环扫
+    assert calls.count("tour") >= calls.count("ring")
 
 
 # ---- (b) R3.2：覆盖站位 {原点} ∪ Ring(1250,12) 最坏间隙 ≈670 m < 1000 m ----
 
 def test_coverage_stations_are_origin_plus_ring():
-    """R3.2：覆盖环 = 原点 + Ring(probe_ring_radius, probe_ring_stations)。
+    """R3.2：覆盖站位 = 原点 + 单层内环，且最坏覆盖间隙 < 接收半径下限。
 
-    只断言「结构与覆盖充分性」这一规格，不把具体环参数写死 —— 参数是可调优的
-    设计变量（900 局配对实测把 1250x12 收缩到 1150x6，见 StrategyConfig 注释），
-    真正必须守住的性质是最坏覆盖间隙 < 全向源最小有效接收半径。
+    锁的是「覆盖充分性」这条规格，而不是某一组具体环参数——参数经实测标定会变
+    （1250x12 -> 1150x6 -> 1100x8），把数值写死会让调参必然踩红。
     """
     cfg = _StrategyConfig61()
     # 单环情形（全向 Q3）不启用外环。
@@ -1563,19 +1560,13 @@ def test_coverage_stations_are_origin_plus_ring():
     # 环站位均落在配置半径上。
     for px, py in stations[1:]:
         assert math.hypot(px, py) == pytest.approx(cfg.probe_ring_radius, abs=1e-6)
-    # 覆盖充分性：最坏间隙必须严格小于接收半径下限，否则存在收不到的全向源。
+    # 覆盖充分性：任一点到最近站位不超过全向源最小有效接收半径。
     gap, _ = _worst_gap(stations, grid=300)
-    assert gap < _RECEPTION_MIN_61, (
-        f"环({cfg.probe_ring_radius:.0f} m, {cfg.probe_ring_stations}) 最坏间隙 "
-        f"{gap:.1f} m 未小于接收半径下限 {_RECEPTION_MIN_61:.0f} m")
+    assert gap < _RECEPTION_MIN_61, f"最坏间隙 {gap:.1f} m 已超接收半径下限"
 
 
 def test_worst_coverage_gap_is_about_670m_and_below_reception_min():
-    """R3.2：worst_coverage_gap({原点}∪Ring(1250,12)) ≈ 670 m 且 < 1000 m。
-
-    这是对「几何工具函数」的定值校验，锁的是 _worst_gap 的正确性，而非当前默认
-    配置（默认已收缩为 1150x6，见 StrategyConfig）。故此处继续显式传 1250/12。
-    """
+    """R3.2：coverage_design.worst_coverage_gap({原点}∪Ring(1250,12)) ≈ 670 m 且 < 1000 m。"""
     stations = [(0.0, 0.0)] + _cov_ring(1250.0, 12)
     gap, worst_point = _worst_gap(stations, grid=300)
     # 设计文档 §2.4 / coverage_design 结论表载明最坏间隙 = 670 m。
@@ -1587,10 +1578,7 @@ def test_worst_coverage_gap_is_about_670m_and_below_reception_min():
 
 
 def test_probe_stations_single_ring_for_omni_case():
-    """R3.2：全向情形 _probe_stations 只产生一层内环，不含外环。
-
-    站位数与半径取自配置（可调优），此处只断言「单层」与「半径一致」。
-    """
+    """R3.2：全向情形 _probe_stations 只产生一层内环，不含外环。"""
     cfg = _StrategyConfig61()
     strategy = _DogStrategy61(client=None, config=cfg)  # 不触网，仅算站位
     rings = strategy._probe_stations()
@@ -2299,15 +2287,29 @@ def test_add_bearing_first_resets_homing_measures_and_clears_exhausted():
 
 
 def test_add_bearing_second_does_not_reset_homing_measures():
-    """R3.7：非首个示向度不重置归航计数（只有 first 分支才重置）。"""
+    """R3.7：归航中拿到后续示向度不重置归航计数。
+
+    复位只在两种情形发生：拿到**首个**示向度（此前的检测都花在搜索上，归航预算须重新起算），
+    或该频道**已被判定归航失败（exhausted）后又在新站位拿到示向度**——后者意味着换了一套交会
+    几何，值得重新起算；这条重试由 `ChannelState.probe_rounds` 上界兜住，不会无限循环。
+    """
     state = _ChannelState62(channel=4)
     state.add_bearing(0.0, 0.0, 10.0)   # 首个 → 复位
     state.homing_measures = 7           # 归航阶段自然累计
-    state.exhausted = True
-    state.add_bearing(50.0, 50.0, 20.0)  # 第二个：不应触发 first 复位
+    state.add_bearing(50.0, 50.0, 20.0)  # 归航中的第二个：不复位
     assert state.homing_measures == 7
-    # 注意 exhausted 仅在 first 分支清除；此处第二个示向度不改动它。
-    assert state.exhausted is True
+    assert state.exhausted is False
+
+
+def test_add_bearing_after_exhausted_resets_homing_budget_and_clears_flag():
+    """R3.7 续：归航失败后在新站位重新拿到示向度 → 重置归航预算并解除 exhausted。"""
+    state = _ChannelState62(channel=4)
+    state.add_bearing(0.0, 0.0, 10.0)
+    state.homing_measures = 7
+    state.exhausted = True               # 归航失败，等待换站位重取几何
+    state.add_bearing(50.0, 50.0, 20.0)
+    assert state.homing_measures == 0, "新交会几何应重新起算归航预算"
+    assert state.exhausted is False, "拿到新示向度后应解除放弃标记"
 
 
 def test_measure_counts_search_and_homing_budgets_separately():
@@ -2685,19 +2687,19 @@ def test_run_finally_exit_always_called_even_if_run_body_raises(monkeypatch):
     （例如 enter 之后、_measure 之外的阶段直接抛），finally 仍调用 client.exit()，
     并记「aborted: ...」事件后返回 summary()。
 
-    通过打桩 _home_all 令其直接抛 TestEnded（绕过 _measure 的内部捕获），验证 run()
+    通过打桩主巡回 _tour 令其直接抛 TestEnded（绕过 _measure 的内部捕获），验证 run()
     的 except (TestEnded, ProtocolError) 分支记 aborted 事件、finally 仍优雅退出。
     """
     client = _StubRunClient64()
     strat = _make_strategy_with_client64(client)
-    # sweep_origin 关闭以尽快进入 _home_all；令 _home_all 抛异常上传到 run()。
+    # sweep_origin 关闭以尽快进入主巡回；令 _tour 抛异常上传到 run()。
     strat.config = _StrategyConfig62()
     object.__setattr__(strat.config, "sweep_origin", False)
 
-    def boom():
-        raise _TestEnded64("home phase aborted")
+    def boom(*_args, **_kwargs):
+        raise _TestEnded64("tour phase aborted")
 
-    strat._home_all = boom  # type: ignore[assignment]
+    strat._tour = boom  # type: ignore[assignment]
     result = strat.run()
     assert client.exit_calls == 1, "run() body 抛异常时 finally 仍应调用 exit()"
     assert any(e.startswith("aborted:") for e in strat.events)
