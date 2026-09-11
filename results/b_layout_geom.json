@@ -1,0 +1,248 @@
+{
+  "model": {
+    "arena_radius_m": 1800.0,
+    "rho_conservative_m": 1000.0,
+    "reception_range_m": [
+      1000.0,
+      1500.0
+    ],
+    "mc_samples": 20000,
+    "grid": 340,
+    "selfcheck_origin_blind_generate_case": 0.501,
+    "selfcheck_origin_blind_mc": 0.5139
+  },
+  "coverage_bounds": [
+    {
+      "radius_m": 1000,
+      "n_min": 7,
+      "chord_gap_m": 433.9,
+      "radial_gap_m": 800.0,
+      "origin_gap_m": 500.0,
+      "bisector_gap_m": 998.3
+    },
+    {
+      "radius_m": 1100,
+      "n_min": 7,
+      "chord_gap_m": 477.3,
+      "radial_gap_m": 700.0,
+      "origin_gap_m": 550.0,
+      "bisector_gap_m": 939.2
+    },
+    {
+      "radius_m": 1150,
+      "n_min": 6,
+      "chord_gap_m": 575.0,
+      "radial_gap_m": 650.0,
+      "origin_gap_m": 575.0,
+      "bisector_gap_m": 988.5
+    },
+    {
+      "radius_m": 1200,
+      "n_min": 6,
+      "chord_gap_m": 600.0,
+      "radial_gap_m": 600.0,
+      "origin_gap_m": 600.0,
+      "bisector_gap_m": 968.9
+    },
+    {
+      "radius_m": 1250,
+      "n_min": 6,
+      "chord_gap_m": 625.0,
+      "radial_gap_m": 550.0,
+      "origin_gap_m": 625.0,
+      "bisector_gap_m": 951.5
+    },
+    {
+      "radius_m": 1300,
+      "n_min": 6,
+      "chord_gap_m": 650.0,
+      "radial_gap_m": 500.0,
+      "origin_gap_m": 650.0,
+      "bisector_gap_m": 936.5
+    },
+    {
+      "radius_m": 1400,
+      "n_min": 6,
+      "chord_gap_m": 700.0,
+      "radial_gap_m": 400.0,
+      "origin_gap_m": 700.0,
+      "bisector_gap_m": 913.9
+    },
+    {
+      "radius_m": 1500,
+      "n_min": 6,
+      "chord_gap_m": 750.0,
+      "radial_gap_m": 300.0,
+      "origin_gap_m": 750.0,
+      "bisector_gap_m": 901.9
+    },
+    {
+      "radius_m": 1600,
+      "n_min": 6,
+      "chord_gap_m": 800.0,
+      "radial_gap_m": 200.0,
+      "origin_gap_m": 800.0,
+      "bisector_gap_m": 923.8
+    },
+    {
+      "radius_m": 1700,
+      "n_min": 6,
+      "chord_gap_m": 850.0,
+      "radial_gap_m": 100.0,
+      "origin_gap_m": 850.0,
+      "bisector_gap_m": 981.5
+    },
+    {
+      "radius_m": 1800,
+      "n_min": 7,
+      "chord_gap_m": 781.0,
+      "radial_gap_m": 0.0,
+      "origin_gap_m": 900.0,
+      "bisector_gap_m": 998.9
+    }
+  ],
+  "q3_layouts": {
+    "_stripped": true,
+    "n": 62,
+    "_note": "逐局明细已剥离以控体积，可用同名脚本复现",
+    "sample": [
+      {
+        "layout": "TUNED_q3_1250x9",
+        "layers": [
+          [
+            1250.0,
+            9,
+            0.0
+          ]
+        ],
+        "stations": 10,
+        "probe_stations": 9,
+        "worst_gap_m": 754.1,
+        "guarantees_omni": true,
+        "worst_point": [
+          1689,
+          -619
+        ],
+        "tour_m": 8090.0,
+        "tour_time_s": 1618.0,
+        "chord_gap_m": 427.5,
+        "radial_gap_m": 550.0,
+        "origin_gap_m": 625.0,
+        "bisector_gap_m": 757.6,
+        "omni_p_hit": 1.0,
+        "omni_mean_discover_index": 2.893,
+        "omni_mean_discover_travel_m": 1822.0,
+        "omni_p_hit_conservative_r1000": 1.0,
+        "dir_p_hit": 0.8857,
+        "dir_mean_discover_index": 4.895,
+        "dir_mean_discover_travel_m": 3532.0,
+        "dir_p_hit_conservative_r1000": 0.8544
+      },
+      {
+        "layout": "DEFAULT_1250x12",
+        "layers": [
+          [
+            1250.0,
+            12,
+            0.0
+          ]
+        ],
+        "stations": 13,
+        "probe_stations": 12,
+        "worst_gap_m": 668.9,
+        "guarantees_omni": true,
+        "worst_point": [
+          -1276,
+          -1265
+        ],
+        "tour_m": 8368.0,
+        "tour_time_s": 1674.0,
+        "chord_gap_m": 323.5,
+        "radial_gap_m": 550.0,
+        "origin_gap_m": 625.0,
+        "bisector_gap_m": 675.2,
+        "omni_p_hit": 1.0,
+        "omni_mean_discover_index": 3.291,
+        "omni_mean_discover_travel_m": 1792.0,
+        "omni_p_hit_conservative_r1000": 1.0,
+        "dir_p_hit": 0.8956,
+        "dir_mean_discover_index": 5.793,
+        "dir_mean_discover_travel_m": 3490.0,
+        "dir_p_hit_conservative_r1000": 0.8765
+      }
+    ]
+  },
+  "q4_layouts": {
+    "_stripped": true,
+    "n": 62,
+    "_note": "逐局明细已剥离以控体积，可用同名脚本复现",
+    "sample": [
+      {
+        "layout": "TUNED_q3_1250x9",
+        "layers": [
+          [
+            1250.0,
+            8,
+            0.0
+          ],
+          [
+            1750.0,
+            30,
+            0.1047
+          ]
+        ],
+        "stations": 39,
+        "probe_stations": 38,
+        "worst_gap_m": 672.1,
+        "guarantees_omni": true,
+        "worst_point": [
+          -630,
+          -259
+        ],
+        "tour_m": 19063.0,
+        "tour_time_s": 3813.0,
+        "omni_p_hit": 1.0,
+        "omni_mean_discover_index": 2.784,
+        "omni_mean_discover_travel_m": 1857.0,
+        "omni_p_hit_conservative_r1000": 1.0,
+        "dir_p_hit": 0.9951,
+        "dir_mean_discover_index": 6.092,
+        "dir_mean_discover_travel_m": 4169.0,
+        "dir_p_hit_conservative_r1000": 0.9822
+      },
+      {
+        "layout": "DEFAULT_1250x12",
+        "layers": [
+          [
+            1250.0,
+            12,
+            0.0
+          ],
+          [
+            1750.0,
+            18,
+            0.1745
+          ]
+        ],
+        "stations": 31,
+        "probe_stations": 30,
+        "worst_gap_m": 643.9,
+        "guarantees_omni": true,
+        "worst_point": [
+          -461,
+          -450
+        ],
+        "tour_m": 19200.0,
+        "tour_time_s": 3840.0,
+        "omni_p_hit": 1.0,
+        "omni_mean_discover_index": 3.291,
+        "omni_mean_discover_travel_m": 1792.0,
+        "omni_p_hit_conservative_r1000": 1.0,
+        "dir_p_hit": 0.9952,
+        "dir_mean_discover_index": 6.59,
+        "dir_mean_discover_travel_m": 4024.0,
+        "dir_p_hit_conservative_r1000": 0.9867
+      }
+    ]
+  }
+}

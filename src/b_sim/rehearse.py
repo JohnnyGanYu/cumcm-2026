@@ -107,6 +107,10 @@ def main() -> None:
     parser.add_argument("--outer-stations", type=int, default=None)
     parser.add_argument("--home-batch", type=int, default=None,
                         help="扫过几个站位后统一归航（1=逐站归航）")
+    parser.add_argument("--approach", type=float, default=None,
+                        help="每次前进占剩余距离的比例（默认0.62）")
+    parser.add_argument("--lateral", type=float, default=None,
+                        help="前进时横向偏移比例（默认0.16）")
     args = parser.parse_args()
 
     config = StrategyConfig(directional_probe=args.directional > 0)
@@ -124,6 +128,10 @@ def main() -> None:
         config.outer_ring_stations = args.outer_stations
     if args.home_batch is not None:
         config.home_batch_stations = args.home_batch
+    if args.approach is not None:
+        config.approach_fraction = args.approach
+    if args.lateral is not None:
+        config.lateral_fraction = args.lateral
 
     episodes = []
     for i in range(args.episodes):

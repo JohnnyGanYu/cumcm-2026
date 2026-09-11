@@ -1,0 +1,202 @@
+{
+  "config": {
+    "plan": "paired",
+    "variants": "baseline,r1_raygap",
+    "episodes": 200,
+    "seed_start": 7000,
+    "directional": 10,
+    "count": null,
+    "workers": 4,
+    "out": "results/b_miss_paired_d10.json"
+  },
+  "paired": {
+    "baseline": {
+      "paired_episodes": 200,
+      "clear_rate_raw": "2585/2599",
+      "clear_rate": 0.99461,
+      "full_clear_episodes": 186,
+      "d_cleared_sources": 0,
+      "metric_mean_s": 1286.4,
+      "d_metric_s": 0.0,
+      "d_metric_pct": 0.0,
+      "better_episodes": 0,
+      "worse_episodes": 0,
+      "measure_calls_mean": 511.5,
+      "clear_calls_mean": 26.4,
+      "still_missed": [
+        [
+          10,
+          7000,
+          9
+        ],
+        [
+          10,
+          7013,
+          18
+        ],
+        [
+          10,
+          7016,
+          17
+        ],
+        [
+          10,
+          7037,
+          4
+        ],
+        [
+          10,
+          7040,
+          19
+        ],
+        [
+          10,
+          7053,
+          18
+        ],
+        [
+          10,
+          7074,
+          15
+        ],
+        [
+          10,
+          7096,
+          16
+        ],
+        [
+          10,
+          7122,
+          14
+        ],
+        [
+          10,
+          7158,
+          6
+        ],
+        [
+          10,
+          7160,
+          6
+        ],
+        [
+          10,
+          7175,
+          6
+        ],
+        [
+          10,
+          7186,
+          18
+        ],
+        [
+          10,
+          7190,
+          12
+        ]
+      ]
+    },
+    "r1_raygap": {
+      "paired_episodes": 200,
+      "clear_rate_raw": "2598/2599",
+      "clear_rate": 0.99962,
+      "full_clear_episodes": 199,
+      "d_cleared_sources": 13,
+      "metric_mean_s": 1277.3,
+      "d_metric_s": -9.1,
+      "d_metric_pct": -0.71,
+      "better_episodes": 87,
+      "worse_episodes": 107,
+      "measure_calls_mean": 466.7,
+      "clear_calls_mean": 72.4,
+      "still_missed": [
+        [
+          10,
+          7160,
+          6
+        ]
+      ]
+    }
+  },
+  "aggregate": {
+    "baseline": {
+      "episodes": 200,
+      "errors": [],
+      "error_count": 0,
+      "sources": 2599,
+      "cleared": 2585,
+      "clear_rate_raw": "2585/2599",
+      "clear_rate": 0.99461,
+      "missed": 14,
+      "cause_distribution": {
+        "C_homing_failed": 13,
+        "B1_layout_gap": 1
+      },
+      "u_hard_bound_sources": 2599,
+      "u_hard_bound_raw": "2599/2599",
+      "missed_with_u_hard": 14,
+      "missed_with_u_layout": 5,
+      "missed_with_u_traj": 13,
+      "gap_to_hard_bound_sources": 14,
+      "gap_to_hard_bound_pct": 0.5387,
+      "mean_clear_time_s": 1286.4
+    },
+    "r1_raygap": {
+      "episodes": 200,
+      "errors": [],
+      "error_count": 0,
+      "sources": 2599,
+      "cleared": 2598,
+      "clear_rate_raw": "2598/2599",
+      "clear_rate": 0.99962,
+      "missed": 1,
+      "cause_distribution": {
+        "B1_layout_gap": 1
+      },
+      "u_hard_bound_sources": 2599,
+      "u_hard_bound_raw": "2599/2599",
+      "missed_with_u_hard": 1,
+      "missed_with_u_layout": 0,
+      "missed_with_u_traj": 0,
+      "gap_to_hard_bound_sources": 1,
+      "gap_to_hard_bound_pct": 0.0385,
+      "mean_clear_time_s": 1277.3
+    }
+  },
+  "rows": {
+    "_stripped": true,
+    "n": 400,
+    "_note": "逐局明细已剥离以控体积，可用同名脚本复现",
+    "sample": [
+      {
+        "seed": 7001,
+        "directional": 10,
+        "total": 10,
+        "cleared": 10,
+        "mean_clear_time_s": 1442.5,
+        "virtual_s": 14424.8,
+        "measure_calls": 601,
+        "clear_calls": 24,
+        "missed_channels": [],
+        "budget_hit": false,
+        "missed_detail": [],
+        "variant": "baseline"
+      },
+      {
+        "seed": 7003,
+        "directional": 10,
+        "total": 15,
+        "cleared": 15,
+        "mean_clear_time_s": 1035.9,
+        "virtual_s": 15538.9,
+        "measure_calls": 398,
+        "clear_calls": 16,
+        "missed_channels": [],
+        "budget_hit": false,
+        "missed_detail": [],
+        "variant": "baseline"
+      }
+    ]
+  },
+  "elapsed_s": 364.7
+}

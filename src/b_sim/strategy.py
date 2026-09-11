@@ -605,6 +605,12 @@ class DogStrategy:
 
             if state.estimate is None:
                 if not self._dogleg(state):
+                    # 只有 1 条示向度时 estimate 永远是 None（_refresh 要求 >=2 条），
+                    # dogleg 失败后旧实现直接放弃，绕过了射线盲扫 —— 这是漏失的主因：
+                    # 真值归因显示 14/17 个漏失源都走这条路，且它们可见区非空、
+                    # /clear 只看距离，理论上全部可清除。方向已知就该沿射线铺点。
+                    if state.bearings:
+                        return self._ray_blind_clear(state)
                     return False
                 continue
 

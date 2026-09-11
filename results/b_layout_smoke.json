@@ -1,0 +1,423 @@
+{
+  "config": {
+    "episodes": 12,
+    "seed_start": 5000,
+    "directional": 0,
+    "arms": [
+      "TUNED",
+      "r1150x6"
+    ],
+    "baseline": "TUNED",
+    "workers": 4
+  },
+  "arms": {
+    "TUNED": {
+      "layers": [
+        [
+          1250.0,
+          9,
+          0.0
+        ]
+      ],
+      "summary": {
+        "episodes": 12,
+        "errors": 0,
+        "sources_total": 147,
+        "sources_cleared": 147,
+        "clear_rate_fraction": "147/147",
+        "pooled_clear_rate": 1.0,
+        "full_clear_episodes": 12,
+        "pooled_mean_clear_time_s": 421.02,
+        "mean_of_means_s": 426.24,
+        "median_of_means_s": 420.45,
+        "measure_calls_mean": 165.1,
+        "move_distance_m_mean": 20737.0
+      },
+      "episodes": [
+        {
+          "seed": 5000,
+          "total_jammers": 11,
+          "cleared": 11,
+          "cleared_ratio": 1.0,
+          "total_virtual_time_s": 5103.066,
+          "mean_clear_time_s": 463.915,
+          "measure_calls": 165,
+          "clear_calls": 11,
+          "move_distance_m": 20475.3,
+          "program_wall_s": 0.89,
+          "missed_channels": [],
+          "events": []
+        },
+        {
+          "seed": 5001,
+          "total_jammers": 14,
+          "cleared": 14,
+          "cleared_ratio": 1.0,
+          "total_virtual_time_s": 5745.666,
+          "mean_clear_time_s": 410.405,
+          "measure_calls": 186,
+          "clear_calls": 14,
+          "move_distance_m": 23053.3,
+          "program_wall_s": 0.97,
+          "missed_channels": [],
+          "events": []
+        },
+        {
+          "seed": 5002,
+          "total_jammers": 15,
+          "cleared": 15,
+          "cleared_ratio": 1.0,
+          "total_virtual_time_s": 5685.448,
+          "mean_clear_time_s": 379.03,
+          "measure_calls": 148,
+          "clear_calls": 15,
+          "move_distance_m": 23867.2,
+          "program_wall_s": 0.9,
+          "missed_channels": [],
+          "events": []
+        },
+        {
+          "seed": 5003,
+          "total_jammers": 11,
+          "cleared": 11,
+          "cleared_ratio": 1.0,
+          "total_virtual_time_s": 5281.862,
+          "mean_clear_time_s": 480.169,
+          "measure_calls": 162,
+          "clear_calls": 11,
+          "move_distance_m": 21469.3,
+          "program_wall_s": 0.89,
+          "missed_channels": [],
+          "events": []
+        },
+        {
+          "seed": 5004,
+          "total_jammers": 12,
+          "cleared": 12,
+          "cleared_ratio": 1.0,
+          "total_virtual_time_s": 4708.133,
+          "mean_clear_time_s": 392.344,
+          "measure_calls": 157,
+          "clear_calls": 12,
+          "move_distance_m": 18725.7,
+          "program_wall_s": 0.92,
+          "missed_channels": [],
+          "events": []
+        },
+        {
+          "seed": 5005,
+          "total_jammers": 11,
+          "cleared": 11,
+          "cleared_ratio": 1.0,
+          "total_virtual_time_s": 4224.277,
+          "mean_clear_time_s": 384.025,
+          "measure_calls": 173,
+          "clear_calls": 11,
+          "move_distance_m": 15831.4,
+          "program_wall_s": 0.92,
+          "missed_channels": [],
+          "events": []
+        },
+        {
+          "seed": 5006,
+          "total_jammers": 11,
+          "cleared": 11,
+          "cleared_ratio": 1.0,
+          "total_virtual_time_s": 5465.674,
+          "mean_clear_time_s": 496.879,
+          "measure_calls": 165,
+          "clear_calls": 11,
+          "move_distance_m": 22323.4,
+          "program_wall_s": 0.9,
+          "missed_channels": [],
+          "events": []
+        },
+        {
+          "seed": 5007,
+          "total_jammers": 11,
+          "cleared": 11,
+          "cleared_ratio": 1.0,
+          "total_virtual_time_s": 4735.42,
+          "mean_clear_time_s": 430.493,
+          "measure_calls": 161,
+          "clear_calls": 11,
+          "move_distance_m": 18757.1,
+          "program_wall_s": 0.86,
+          "missed_channels": [],
+          "events": []
+        },
+        {
+          "seed": 5008,
+          "total_jammers": 10,
+          "cleared": 10,
+          "cleared_ratio": 1.0,
+          "total_virtual_time_s": 4981.571,
+          "mean_clear_time_s": 498.157,
+          "measure_calls": 167,
+          "clear_calls": 10,
+          "move_distance_m": 19812.9,
+          "program_wall_s": 0.89,
+          "missed_channels": [],
+          "events": []
+        },
+        {
+          "seed": 5009,
+          "total_jammers": 14,
+          "cleared": 14,
+          "cleared_ratio": 1.0,
+          "total_virtual_time_s": 5117.077,
+          "mean_clear_time_s": 365.505,
+          "measure_calls": 155,
+          "clear_calls": 14,
+          "move_distance_m": 20810.4,
+          "program_wall_s": 0.89,
+          "missed_channels": [],
+          "events": []
+        },
+        {
+          "seed": 5010,
+          "total_jammers": 12,
+          "cleared": 12,
+          "cleared_ratio": 1.0,
+          "total_virtual_time_s": 5468.961,
+          "mean_clear_time_s": 455.747,
+          "measure_calls": 169,
+          "clear_calls": 12,
+          "move_distance_m": 22194.8,
+          "program_wall_s": 0.88,
+          "missed_channels": [],
+          "events": []
+        },
+        {
+          "seed": 5011,
+          "total_jammers": 15,
+          "cleared": 15,
+          "cleared_ratio": 1.0,
+          "total_virtual_time_s": 5373.059,
+          "mean_clear_time_s": 358.204,
+          "measure_calls": 173,
+          "clear_calls": 15,
+          "move_distance_m": 21525.3,
+          "program_wall_s": 0.92,
+          "missed_channels": [],
+          "events": []
+        }
+      ],
+      "wall_s": 2.8,
+      "paired_vs_baseline": {
+        "paired_n": 12,
+        "paired_mean_diff_s": 0.0,
+        "paired_se_s": 0.0,
+        "paired_ci95_s": [
+          0.0,
+          0.0
+        ],
+        "paired_win_frac": 0.0
+      }
+    },
+    "r1150x6": {
+      "layers": [
+        [
+          1150.0,
+          6,
+          0.0
+        ]
+      ],
+      "summary": {
+        "episodes": 12,
+        "errors": 0,
+        "sources_total": 147,
+        "sources_cleared": 147,
+        "clear_rate_fraction": "147/147",
+        "pooled_clear_rate": 1.0,
+        "full_clear_episodes": 12,
+        "pooled_mean_clear_time_s": 419.0,
+        "mean_of_means_s": 424.54,
+        "median_of_means_s": 431.16,
+        "measure_calls_mean": 140.1,
+        "move_distance_m_mean": 21370.0
+      },
+      "episodes": [
+        {
+          "seed": 5000,
+          "total_jammers": 11,
+          "cleared": 11,
+          "cleared_ratio": 1.0,
+          "total_virtual_time_s": 4840.695,
+          "mean_clear_time_s": 440.063,
+          "measure_calls": 136,
+          "clear_calls": 11,
+          "move_distance_m": 20038.5,
+          "program_wall_s": 0.85,
+          "missed_channels": [],
+          "events": []
+        },
+        {
+          "seed": 5001,
+          "total_jammers": 14,
+          "cleared": 14,
+          "cleared_ratio": 1.0,
+          "total_virtual_time_s": 5483.061,
+          "mean_clear_time_s": 391.647,
+          "measure_calls": 146,
+          "clear_calls": 14,
+          "move_distance_m": 22945.3,
+          "program_wall_s": 0.89,
+          "missed_channels": [],
+          "events": []
+        },
+        {
+          "seed": 5002,
+          "total_jammers": 15,
+          "cleared": 15,
+          "cleared_ratio": 1.0,
+          "total_virtual_time_s": 5520.28,
+          "mean_clear_time_s": 368.019,
+          "measure_calls": 128,
+          "clear_calls": 15,
+          "move_distance_m": 23626.4,
+          "program_wall_s": 0.83,
+          "missed_channels": [],
+          "events": []
+        },
+        {
+          "seed": 5003,
+          "total_jammers": 11,
+          "cleared": 11,
+          "cleared_ratio": 1.0,
+          "total_virtual_time_s": 4951.4,
+          "mean_clear_time_s": 450.127,
+          "measure_calls": 143,
+          "clear_calls": 11,
+          "move_distance_m": 20392.0,
+          "program_wall_s": 0.87,
+          "missed_channels": [],
+          "events": []
+        },
+        {
+          "seed": 5004,
+          "total_jammers": 12,
+          "cleared": 12,
+          "cleared_ratio": 1.0,
+          "total_virtual_time_s": 5579.269,
+          "mean_clear_time_s": 464.939,
+          "measure_calls": 143,
+          "clear_calls": 12,
+          "move_distance_m": 23521.3,
+          "program_wall_s": 0.84,
+          "missed_channels": [],
+          "events": []
+        },
+        {
+          "seed": 5005,
+          "total_jammers": 11,
+          "cleared": 11,
+          "cleared_ratio": 1.0,
+          "total_virtual_time_s": 4644.826,
+          "mean_clear_time_s": 422.257,
+          "measure_calls": 144,
+          "clear_calls": 11,
+          "move_distance_m": 18804.1,
+          "program_wall_s": 0.85,
+          "missed_channels": [],
+          "events": []
+        },
+        {
+          "seed": 5006,
+          "total_jammers": 11,
+          "cleared": 11,
+          "cleared_ratio": 1.0,
+          "total_virtual_time_s": 5332.948,
+          "mean_clear_time_s": 484.813,
+          "measure_calls": 140,
+          "clear_calls": 11,
+          "move_distance_m": 22434.7,
+          "program_wall_s": 0.84,
+          "missed_channels": [],
+          "events": []
+        },
+        {
+          "seed": 5007,
+          "total_jammers": 11,
+          "cleared": 11,
+          "cleared_ratio": 1.0,
+          "total_virtual_time_s": 4875.139,
+          "mean_clear_time_s": 443.194,
+          "measure_calls": 128,
+          "clear_calls": 11,
+          "move_distance_m": 20450.7,
+          "program_wall_s": 0.8,
+          "missed_channels": [],
+          "events": []
+        },
+        {
+          "seed": 5008,
+          "total_jammers": 10,
+          "cleared": 10,
+          "cleared_ratio": 1.0,
+          "total_virtual_time_s": 4979.449,
+          "mean_clear_time_s": 497.945,
+          "measure_calls": 139,
+          "clear_calls": 10,
+          "move_distance_m": 20652.2,
+          "program_wall_s": 0.89,
+          "missed_channels": [],
+          "events": []
+        },
+        {
+          "seed": 5009,
+          "total_jammers": 14,
+          "cleared": 14,
+          "cleared_ratio": 1.0,
+          "total_virtual_time_s": 4760.067,
+          "mean_clear_time_s": 340.005,
+          "measure_calls": 131,
+          "clear_calls": 14,
+          "move_distance_m": 19740.3,
+          "program_wall_s": 0.87,
+          "missed_channels": [],
+          "events": []
+        },
+        {
+          "seed": 5010,
+          "total_jammers": 12,
+          "cleared": 12,
+          "cleared_ratio": 1.0,
+          "total_virtual_time_s": 4987.731,
+          "mean_clear_time_s": 415.644,
+          "measure_calls": 145,
+          "clear_calls": 12,
+          "move_distance_m": 20493.7,
+          "program_wall_s": 0.86,
+          "missed_channels": [],
+          "events": []
+        },
+        {
+          "seed": 5011,
+          "total_jammers": 15,
+          "cleared": 15,
+          "cleared_ratio": 1.0,
+          "total_virtual_time_s": 5637.846,
+          "mean_clear_time_s": 375.856,
+          "measure_calls": 158,
+          "clear_calls": 15,
+          "move_distance_m": 23339.2,
+          "program_wall_s": 0.93,
+          "missed_channels": [],
+          "events": []
+        }
+      ],
+      "wall_s": 2.7,
+      "paired_vs_baseline": {
+        "paired_n": 12,
+        "paired_mean_diff_s": -1.7,
+        "paired_se_s": 9.34,
+        "paired_ci95_s": [
+          -20.01,
+          16.61
+        ],
+        "paired_win_frac": 0.6667
+      }
+    }
+  }
+}

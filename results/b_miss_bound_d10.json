@@ -1,0 +1,28 @@
+{
+  "episodes": 400,
+  "seed_start": 7000,
+  "directional": 10,
+  "sources": 5261,
+  "directional_sources": 4000,
+  "u_hard_nonempty": 5261,
+  "u_hard_rate": 1.0,
+  "u_layout_ok": 5245,
+  "u_layout_rate": 0.99696,
+  "dir_visible_frac_mean": 0.17149,
+  "dir_visible_frac_median": 0.17324,
+  "dir_visible_frac_p05": 0.03632,
+  "dir_visible_frac_min": 0.000157,
+  "narrow_counts": {
+    "frac<0.05": 300,
+    "frac<0.01": 48,
+    "frac<0.005": 21,
+    "frac<0.001": 5
+  },
+  "narrow_rates": {
+    "frac<0.05": 0.075,
+    "frac<0.01": 0.012,
+    "frac<0.005": 0.00525,
+    "frac<0.001": 0.00125
+  },
+  "elapsed_s": 20.7
+}

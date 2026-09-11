@@ -1,0 +1,296 @@
+{
+  "config": {
+    "samples": 200000,
+    "seed": 99
+  },
+  "omni": {
+    "samples": 200000,
+    "directional": false,
+    "stations_in_order": 13,
+    "never_visible_rate": 0.0,
+    "first_signal_index_mean": 2.298,
+    "first_signal_index_p50": 1,
+    "first_signal_index_p90": 8,
+    "first_signal_index_p99": 10,
+    "first_signal_index_max": 11,
+    "verdict_table": [
+      {
+        "k_silent_stations": 1,
+        "false_empty_kills": 102451,
+        "false_empty_rate_among_real_sources": 0.512255,
+        "stations_saved_per_empty_channel": 12
+      },
+      {
+        "k_silent_stations": 2,
+        "false_empty_kills": 73736,
+        "false_empty_rate_among_real_sources": 0.36868,
+        "stations_saved_per_empty_channel": 11
+      },
+      {
+        "k_silent_stations": 3,
+        "false_empty_kills": 65121,
+        "false_empty_rate_among_real_sources": 0.325605,
+        "stations_saved_per_empty_channel": 10
+      },
+      {
+        "k_silent_stations": 4,
+        "false_empty_kills": 56642,
+        "false_empty_rate_among_real_sources": 0.28321,
+        "stations_saved_per_empty_channel": 9
+      },
+      {
+        "k_silent_stations": 5,
+        "false_empty_kills": 48163,
+        "false_empty_rate_among_real_sources": 0.240815,
+        "stations_saved_per_empty_channel": 8
+      },
+      {
+        "k_silent_stations": 6,
+        "false_empty_kills": 39635,
+        "false_empty_rate_among_real_sources": 0.198175,
+        "stations_saved_per_empty_channel": 7
+      },
+      {
+        "k_silent_stations": 7,
+        "false_empty_kills": 31219,
+        "false_empty_rate_among_real_sources": 0.156095,
+        "stations_saved_per_empty_channel": 6
+      },
+      {
+        "k_silent_stations": 8,
+        "false_empty_kills": 22637,
+        "false_empty_rate_among_real_sources": 0.113185,
+        "stations_saved_per_empty_channel": 5
+      },
+      {
+        "k_silent_stations": 9,
+        "false_empty_kills": 14083,
+        "false_empty_rate_among_real_sources": 0.070415,
+        "stations_saved_per_empty_channel": 4
+      },
+      {
+        "k_silent_stations": 10,
+        "false_empty_kills": 5473,
+        "false_empty_rate_among_real_sources": 0.027365,
+        "stations_saved_per_empty_channel": 3
+      },
+      {
+        "k_silent_stations": 11,
+        "false_empty_kills": 508,
+        "false_empty_rate_among_real_sources": 0.00254,
+        "stations_saved_per_empty_channel": 2
+      },
+      {
+        "k_silent_stations": 12,
+        "false_empty_kills": 0,
+        "false_empty_rate_among_real_sources": 0.0,
+        "stations_saved_per_empty_channel": 1
+      },
+      {
+        "k_silent_stations": 13,
+        "false_empty_kills": 0,
+        "false_empty_rate_among_real_sources": 0.0,
+        "stations_saved_per_empty_channel": 0
+      }
+    ]
+  },
+  "directional": {
+    "samples": 200000,
+    "directional": true,
+    "stations_in_order": 31,
+    "never_visible_rate": 0.00524,
+    "first_signal_index_mean": 5.486,
+    "first_signal_index_p50": 4,
+    "first_signal_index_p90": 13,
+    "first_signal_index_p99": 27,
+    "first_signal_index_max": 30,
+    "verdict_table": [
+      {
+        "k_silent_stations": 1,
+        "false_empty_kills": 149906,
+        "false_empty_rate_among_real_sources": 0.74953,
+        "stations_saved_per_empty_channel": 30
+      },
+      {
+        "k_silent_stations": 2,
+        "false_empty_kills": 124627,
+        "false_empty_rate_among_real_sources": 0.623135,
+        "stations_saved_per_empty_channel": 29
+      },
+      {
+        "k_silent_stations": 3,
+        "false_empty_kills": 113840,
+        "false_empty_rate_among_real_sources": 0.5692,
+        "stations_saved_per_empty_channel": 28
+      },
+      {
+        "k_silent_stations": 4,
+        "false_empty_kills": 102893,
+        "false_empty_rate_among_real_sources": 0.514465,
+        "stations_saved_per_empty_channel": 27
+      },
+      {
+        "k_silent_stations": 5,
+        "false_empty_kills": 92005,
+        "false_empty_rate_among_real_sources": 0.460025,
+        "stations_saved_per_empty_channel": 26
+      },
+      {
+        "k_silent_stations": 6,
+        "false_empty_kills": 81218,
+        "false_empty_rate_among_real_sources": 0.40609,
+        "stations_saved_per_empty_channel": 25
+      },
+      {
+        "k_silent_stations": 7,
+        "false_empty_kills": 70106,
+        "false_empty_rate_among_real_sources": 0.35053,
+        "stations_saved_per_empty_channel": 24
+      },
+      {
+        "k_silent_stations": 8,
+        "false_empty_kills": 59597,
+        "false_empty_rate_among_real_sources": 0.297985,
+        "stations_saved_per_empty_channel": 23
+      },
+      {
+        "k_silent_stations": 9,
+        "false_empty_kills": 48687,
+        "false_empty_rate_among_real_sources": 0.243435,
+        "stations_saved_per_empty_channel": 22
+      },
+      {
+        "k_silent_stations": 10,
+        "false_empty_kills": 38081,
+        "false_empty_rate_among_real_sources": 0.190405,
+        "stations_saved_per_empty_channel": 21
+      },
+      {
+        "k_silent_stations": 11,
+        "false_empty_kills": 28687,
+        "false_empty_rate_among_real_sources": 0.143435,
+        "stations_saved_per_empty_channel": 20
+      },
+      {
+        "k_silent_stations": 12,
+        "false_empty_kills": 21974,
+        "false_empty_rate_among_real_sources": 0.10987,
+        "stations_saved_per_empty_channel": 19
+      },
+      {
+        "k_silent_stations": 13,
+        "false_empty_kills": 20081,
+        "false_empty_rate_among_real_sources": 0.100405,
+        "stations_saved_per_empty_channel": 18
+      },
+      {
+        "k_silent_stations": 14,
+        "false_empty_kills": 17100,
+        "false_empty_rate_among_real_sources": 0.0855,
+        "stations_saved_per_empty_channel": 17
+      },
+      {
+        "k_silent_stations": 15,
+        "false_empty_kills": 15947,
+        "false_empty_rate_among_real_sources": 0.079735,
+        "stations_saved_per_empty_channel": 16
+      },
+      {
+        "k_silent_stations": 16,
+        "false_empty_kills": 14844,
+        "false_empty_rate_among_real_sources": 0.07422,
+        "stations_saved_per_empty_channel": 15
+      },
+      {
+        "k_silent_stations": 17,
+        "false_empty_kills": 13712,
+        "false_empty_rate_among_real_sources": 0.06856,
+        "stations_saved_per_empty_channel": 14
+      },
+      {
+        "k_silent_stations": 18,
+        "false_empty_kills": 12621,
+        "false_empty_rate_among_real_sources": 0.063105,
+        "stations_saved_per_empty_channel": 13
+      },
+      {
+        "k_silent_stations": 19,
+        "false_empty_kills": 11499,
+        "false_empty_rate_among_real_sources": 0.057495,
+        "stations_saved_per_empty_channel": 12
+      },
+      {
+        "k_silent_stations": 20,
+        "false_empty_kills": 10403,
+        "false_empty_rate_among_real_sources": 0.052015,
+        "stations_saved_per_empty_channel": 11
+      },
+      {
+        "k_silent_stations": 21,
+        "false_empty_kills": 9344,
+        "false_empty_rate_among_real_sources": 0.04672,
+        "stations_saved_per_empty_channel": 10
+      },
+      {
+        "k_silent_stations": 22,
+        "false_empty_kills": 8115,
+        "false_empty_rate_among_real_sources": 0.040575,
+        "stations_saved_per_empty_channel": 9
+      },
+      {
+        "k_silent_stations": 23,
+        "false_empty_kills": 7002,
+        "false_empty_rate_among_real_sources": 0.03501,
+        "stations_saved_per_empty_channel": 8
+      },
+      {
+        "k_silent_stations": 24,
+        "false_empty_kills": 5922,
+        "false_empty_rate_among_real_sources": 0.02961,
+        "stations_saved_per_empty_channel": 7
+      },
+      {
+        "k_silent_stations": 25,
+        "false_empty_kills": 4848,
+        "false_empty_rate_among_real_sources": 0.02424,
+        "stations_saved_per_empty_channel": 6
+      },
+      {
+        "k_silent_stations": 26,
+        "false_empty_kills": 3689,
+        "false_empty_rate_among_real_sources": 0.018445,
+        "stations_saved_per_empty_channel": 5
+      },
+      {
+        "k_silent_stations": 27,
+        "false_empty_kills": 2606,
+        "false_empty_rate_among_real_sources": 0.01303,
+        "stations_saved_per_empty_channel": 4
+      },
+      {
+        "k_silent_stations": 28,
+        "false_empty_kills": 1540,
+        "false_empty_rate_among_real_sources": 0.0077,
+        "stations_saved_per_empty_channel": 3
+      },
+      {
+        "k_silent_stations": 29,
+        "false_empty_kills": 567,
+        "false_empty_rate_among_real_sources": 0.002835,
+        "stations_saved_per_empty_channel": 2
+      },
+      {
+        "k_silent_stations": 30,
+        "false_empty_kills": 66,
+        "false_empty_rate_among_real_sources": 0.00033,
+        "stations_saved_per_empty_channel": 1
+      },
+      {
+        "k_silent_stations": 31,
+        "false_empty_kills": 0,
+        "false_empty_rate_among_real_sources": 0.0,
+        "stations_saved_per_empty_channel": 0
+      }
+    ]
+  }
+}
