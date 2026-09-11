@@ -16,6 +16,7 @@ import argparse
 import json
 import sys
 import time
+import traceback
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
@@ -84,10 +85,25 @@ def main() -> None:
 
     print(f"启动: robot_id={args.robot_id} 模式={'问题4(含定向)' if args.directional else '问题3(全向)'}")
     t0 = time.time()
+    # 正式测试每题只有 3 次机会，且协议日志是支撑材料的必需项（官方模拟器不产出）。
+    # DogStrategy.run() 只在内部捕获 TestEnded / ProtocolError，任何策略自身的运行时
+    # 异常都会穿透上来。实测注入一处 RuntimeError 后：进程以退出码 1 终止、
+    # official_log_*.json 完全没有落盘 —— 已消耗的那次测试机会与全部协议记录一起作废。
+    # 因此这里兜住所有异常：先拿到 summary、后面照常落盘，再把异常信息打出来。
+    crash: BaseException | None = None
     try:
         summary = strategy.run()
     except KeyboardInterrupt:
         print("\n用户中断，尝试正常退出...")
+        try:
+            client.exit()
+        except Exception:
+            pass
+        summary = strategy.summary()
+    except BaseException as exc:  # noqa: BLE001 —— 故意兜底，保日志优先于快速失败
+        crash = exc
+        print(f"\n!! 策略异常终止: {type(exc).__name__}: {exc}")
+        print("!! 已跑到的进度与协议日志仍会落盘，请连同下方 traceback 一起保留。")
         try:
             client.exit()
         except Exception:
@@ -164,8 +180,11 @@ def main() -> None:
             "清除干扰源个数": len(cleared),
             "干扰源总数_人工抄录": args.total_jammers,
             "被清除干扰源个数的比例": (round(ratio_val, 4) if ratio_val is not None else None),
-            "平均定位清除时间_s": (round(summary["mean_clear_time_s"], 4)
-                                      if summary["mean_clear_time_s"] is not None else None),
+            # 清除数为 0 时 arena 返回 None（无法定义平均值）。此处曾直接 round(None) 而
+            # 抛 TypeError，导致整个日志写不出来 —— 恰好发生在最需要日志的场景（一个都
+            # 没清掉，必须靠日志排查）。实测：连不上模拟器时该行崩溃、日志为空。
+            "平均定位清除时间_s": (None if summary["mean_clear_time_s"] is None
+                                   else round(summary["mean_clear_time_s"], 4)),
             "程序运行时间_s": round(wall, 2),
         },
         "summary": summary,
@@ -193,6 +212,13 @@ def main() -> None:
                 "abandoned": st.abandoned,
             } for ch, st in sorted(strategy.channels.items())
         },
+        # 崩溃信息入库：否则回传的日志只是提前结束，看不出原因。
+        "crash": None if crash is None else {
+            "type": type(crash).__name__,
+            "message": str(crash),
+            "traceback": "".join(traceback.format_exception(
+                type(crash), crash, crash.__traceback__)),
+        },
         "strategy_config": vars(config),
         "protocol_log": client.log,
     }, ensure_ascii=False, indent=2), encoding="utf-8")
@@ -203,6 +229,13 @@ def main() -> None:
         print("      本局总数及比例，并保留原始日志；不要将上一局总数用于下一局。")
     if args.test_kind == "formal" and not args.case_code:
         print("提示: 正式测试请用 --case-code 记录案例编码，论文表1需要该列。")
+
+    # 日志已安全落盘，现在才允许把异常暴露出来：打完整 traceback 并以非零码退出，
+    # 便于事后定位；顺序很重要 —— 先保日志，再失败。
+    if crash is not None:
+        print("\n===== 异常详情（日志已保存，可安全排查）=====", file=sys.stderr)
+        traceback.print_exception(type(crash), crash, crash.__traceback__)
+        raise SystemExit(1)
 
 
 if __name__ == "__main__":

@@ -21,12 +21,18 @@
 在**离线环境**做完，不占测试次数：
 
 ```
-python -m src.pack_dist_windows --check      # 交付包与源码是否同步
+python -m src.pack_dist_windows --check      # src/b_sim -> dist_windows 是否同步
+python -m src.build_windows_zip --check      # dist_windows -> 交付 zip 是否同步
 python -m pytest src/b_sim/test_b_sim.py -q  # 回归
 python run_official.py --robot-id <队号> --dry-run   # 仅在演练窗口用
 ```
 
-`--check` 这一项**必须过**。曾出现 `strategy.py` 未同步到 `dist_windows/` 的情况——若不修，正式测试跑的会是旧策略。
+**两个 `--check` 都必须过**，它们各挡一层漂移，都真实出过问题：
+
+- `pack_dist_windows --check` 曾报 `strategy.py` 未同步到 `dist_windows/`
+- `build_windows_zip --check` 是为根目录那份 `CUMCM2026B_robot_windows.zip` 加的。实测发现它停留在 9-10 的旧版本（`1250x12`、**无 `route.py` 即无 TSP**、射线盲扫只 3 处）——当天若直接解压它跑，会拿到比当前 main 慢约 24% 的策略，并少一处清除率兜底。
+
+zip 打包使用固定时间戳，同样的源码打出字节相同的包，MD5 可复核。当前 MD5 见 `--check` 输出。
 
 `--dry-run` **绝不能用在正式测试窗口**：它会真的调一次 `/enter`，而一次测试只允许 enter 一次。
 
@@ -99,6 +105,26 @@ python run_official.py --robot-id <队号> --directional   # 问题 4
 ---
 
 ## 5. 出问题时
+
+**先记住一条：程序即使异常终止，`official_log_*.json` 也一定会落盘。** 这是刻意保证的
+（见下），所以出问题时**第一件事是保存那个日志**，不要急着重跑 —— 它含完整协议序列、
+崩溃类型与 traceback，是排查依据，也是支撑材料。
+
+日志里 `crash` 字段非 `null` 就说明本局异常终止：
+
+```json
+"crash": {"type": "RuntimeError", "message": "...", "traceback": "..."}
+```
+
+这两个故障模式此前真实存在过，已修并各有实测验证：
+
+| 故障 | 修前行为 | 修后 |
+|---|---|---|
+| 策略抛非协议异常 | 进程退出码 1，**日志完全不落盘** —— 已消耗的测试机会与全部协议记录一起作废 | 日志落盘（实测保住 23 条协议记录），`crash` 字段记录类型与 traceback，退出码仍为 1 |
+| 一个源都没清掉 | `round(None, 4)` 抛 `TypeError`，**日志写不出来** —— 恰好发生在最需要日志的场景 | `平均定位清除时间_s` 记为 `null`，日志正常落盘 |
+
+两者叠加时更隐蔽：第一个修好后第二个仍会让落盘失败，必须都修。
+
 
 | 症状 | 处理 |
 |---|---|

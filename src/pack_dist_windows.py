@@ -45,16 +45,21 @@ RUNTIME_MODULES = (
     "strategy.py",
 )
 
-SOURCE_DIR = Path("src/b_sim")
-TARGET_DIR = Path("dist_windows/b_sim")
-ARCHIVE = Path("CUMCM2026B_robot_windows.zip")
+ROOT = Path(__file__).resolve().parents[1]
+SOURCE_DIR = ROOT / "src/b_sim"
+DIST_DIR = ROOT / "dist_windows"
+TARGET_DIR = DIST_DIR / "b_sim"
+SOURCE_ENTRY = ROOT / "src/run_official.py"
+TARGET_ENTRY = DIST_DIR / "run_official.py"
+ARCHIVE = ROOT / "CUMCM2026B_robot_windows.zip"
 
 
 def sync(*, check_only: bool = False) -> int:
     """同步（或校验）交付包。返回需要更新的文件数。"""
     if not SOURCE_DIR.is_dir():
-        raise SystemExit(f"找不到源目录 {SOURCE_DIR}（请在仓库根目录运行）")
-    TARGET_DIR.mkdir(parents=True, exist_ok=True)
+        raise SystemExit(f"找不到源目录 {SOURCE_DIR}")
+    if not check_only:
+        TARGET_DIR.mkdir(parents=True, exist_ok=True)
 
     stale = 0
     for name in RUNTIME_MODULES:
@@ -85,8 +90,8 @@ def sync(*, check_only: bool = False) -> int:
                 path.unlink()
                 print(f"  x {path.name}（已删除：不属于运行时依赖）")
 
-    entry = TARGET_DIR.parent / "run_official.py"
-    wanted_entry = Path("src/run_official.py").read_text(encoding="utf-8")
+    entry = TARGET_ENTRY
+    wanted_entry = SOURCE_ENTRY.read_text(encoding="utf-8")
     if not entry.exists() or entry.read_text(encoding="utf-8") != wanted_entry:
         stale += 1
         if not check_only:
@@ -96,11 +101,11 @@ def sync(*, check_only: bool = False) -> int:
     files = {f"b_sim/{name}": (SOURCE_DIR / name).read_bytes().replace(b"\r\n", b"\n")
              for name in RUNTIME_MODULES}
     files["run_official.py"] = wanted_entry.replace("\r\n", "\n").encode("utf-8")
-    files["README_WINDOWS.md"] = (TARGET_DIR.parent / "README_WINDOWS.md").read_bytes().replace(b"\r\n", b"\n")
+    files["README_WINDOWS.md"] = (DIST_DIR / "README_WINDOWS.md").read_bytes().replace(b"\r\n", b"\n")
     manifest = "".join(f"{hashlib.sha256(data).hexdigest()}  {name}\n"
                        for name, data in sorted(files.items())).encode("utf-8")
     files["MANIFEST.sha256"] = manifest
-    manifest_path = TARGET_DIR.parent / "MANIFEST.sha256"
+    manifest_path = DIST_DIR / "MANIFEST.sha256"
     if not manifest_path.exists() or manifest_path.read_bytes().replace(b"\r\n", b"\n") != manifest:
         stale += 1
         if not check_only:
