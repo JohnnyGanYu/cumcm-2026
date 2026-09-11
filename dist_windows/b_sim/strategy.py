@@ -123,6 +123,20 @@ class ChannelState:
             self.cover_radius = float("inf")
 
     @property
+    def verdict_empty(self) -> bool:
+        """兼容别名：TSP 重构（23ca2ac）把「该频道已放弃」统一表达为 abandoned。
+
+        11 个离线分析脚本仍按旧名读取：b_miss_rescue / b_miss_attrib / b_colocate /
+        b_colocate_guard / b_combo / b_nearby_revive / b_survey_first / b_tail_fix /
+        b_attrib_diag 等。缺这个属性时它们只在「恰好触发判空」的种子上抛
+        AttributeError，那一局被 harness 当成 error 静默丢弃 —— 实测 seed 7052 因此
+        使两臂变成 11 vs 12 局、142 vs 157 源，一度被误判为「变体影响了案例生成」。
+
+        主策略路径不读这个字段，所以 215 项测试全绿也发现不了。只读别名，零行为改动。
+        """
+        return self.abandoned
+
+    @property
     def active(self) -> bool:
         return bool(self.bearings) and not self.cleared and not self.exhausted
 
