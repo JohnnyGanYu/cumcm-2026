@@ -1,0 +1,1153 @@
+{
+  "config": {
+    "plan": "paired",
+    "variants": "baseline,baseline@r1150x7,baseline@r1150x6,baseline@r1200x7",
+    "episodes": 300,
+    "seed_start": 11000,
+    "directional": 10,
+    "count": null,
+    "workers": 4,
+    "overrides": "{\"baseline@r1150x7\":{\"probe_ring_radius\":1150.0,\"probe_ring_stations\":7},\"baseline@r1150x6\":{\"probe_ring_radius\":1150.0,\"probe_ring_stations\":6},\"baseline@r1200x7\":{\"probe_ring_radius\":1200.0,\"probe_ring_stations\":7}}",
+    "out": "results/b_layout_final_d10.json"
+  },
+  "paired": {
+    "baseline": {
+      "paired_episodes": 300,
+      "clear_rate_raw": "3901/3905",
+      "clear_rate": 0.99898,
+      "full_clear_episodes": 296,
+      "d_cleared_sources": 0,
+      "metric_mean_s": 1258.2,
+      "d_metric_s": 0.0,
+      "d_metric_pct": 0.0,
+      "better_episodes": 0,
+      "worse_episodes": 0,
+      "measure_calls_mean": 464.5,
+      "clear_calls_mean": 67.0,
+      "still_missed": [
+        [
+          10,
+          11032,
+          3
+        ],
+        [
+          10,
+          11052,
+          1
+        ],
+        [
+          10,
+          11207,
+          20
+        ],
+        [
+          10,
+          11277,
+          16
+        ]
+      ]
+    },
+    "baseline@r1150x7": {
+      "paired_episodes": 300,
+      "clear_rate_raw": "3902/3905",
+      "clear_rate": 0.99923,
+      "full_clear_episodes": 297,
+      "d_cleared_sources": 1,
+      "metric_mean_s": 1203.3,
+      "d_metric_s": -55.0,
+      "d_metric_pct": -4.37,
+      "better_episodes": 223,
+      "worse_episodes": 73,
+      "measure_calls_mean": 412.4,
+      "clear_calls_mean": 67.4,
+      "still_missed": [
+        [
+          10,
+          11032,
+          3
+        ],
+        [
+          10,
+          11207,
+          20
+        ],
+        [
+          10,
+          11277,
+          16
+        ]
+      ]
+    },
+    "baseline@r1150x6": {
+      "paired_episodes": 300,
+      "clear_rate_raw": "3902/3905",
+      "clear_rate": 0.99923,
+      "full_clear_episodes": 297,
+      "d_cleared_sources": 1,
+      "metric_mean_s": 1196.1,
+      "d_metric_s": -62.1,
+      "d_metric_pct": -4.94,
+      "better_episodes": 235,
+      "worse_episodes": 62,
+      "measure_calls_mean": 404.7,
+      "clear_calls_mean": 70.5,
+      "still_missed": [
+        [
+          10,
+          11032,
+          3
+        ],
+        [
+          10,
+          11207,
+          20
+        ],
+        [
+          10,
+          11277,
+          16
+        ]
+      ]
+    },
+    "baseline@r1200x7": {
+      "paired_episodes": 300,
+      "clear_rate_raw": "3901/3905",
+      "clear_rate": 0.99898,
+      "full_clear_episodes": 296,
+      "d_cleared_sources": 0,
+      "metric_mean_s": 1211.8,
+      "d_metric_s": -46.5,
+      "d_metric_pct": -3.69,
+      "better_episodes": 218,
+      "worse_episodes": 81,
+      "measure_calls_mean": 414.2,
+      "clear_calls_mean": 67.3,
+      "still_missed": [
+        [
+          10,
+          11032,
+          3
+        ],
+        [
+          10,
+          11052,
+          1
+        ],
+        [
+          10,
+          11207,
+          20
+        ],
+        [
+          10,
+          11277,
+          16
+        ]
+      ]
+    }
+  },
+  "aggregate": {
+    "baseline": {
+      "episodes": 300,
+      "errors": [],
+      "error_count": 0,
+      "sources": 3905,
+      "cleared": 3901,
+      "clear_rate_raw": "3901/3905",
+      "clear_rate": 0.99898,
+      "missed": 4,
+      "cause_distribution": {
+        "B1_layout_gap": 3,
+        "C_homing_failed": 1
+      },
+      "u_hard_bound_sources": 3905,
+      "u_hard_bound_raw": "3905/3905",
+      "missed_with_u_hard": 4,
+      "missed_with_u_layout": 1,
+      "missed_with_u_traj": 1,
+      "gap_to_hard_bound_sources": 4,
+      "gap_to_hard_bound_pct": 0.1024,
+      "mean_clear_time_s": 1258.2
+    },
+    "baseline@r1150x7": {
+      "episodes": 300,
+      "errors": [],
+      "error_count": 0,
+      "sources": 3905,
+      "cleared": 3902,
+      "clear_rate_raw": "3902/3905",
+      "clear_rate": 0.99923,
+      "missed": 3,
+      "cause_distribution": {
+        "B1_layout_gap": 3
+      },
+      "u_hard_bound_sources": 3905,
+      "u_hard_bound_raw": "3905/3905",
+      "missed_with_u_hard": 3,
+      "missed_with_u_layout": 0,
+      "missed_with_u_traj": 0,
+      "gap_to_hard_bound_sources": 3,
+      "gap_to_hard_bound_pct": 0.0768,
+      "mean_clear_time_s": 1203.3
+    },
+    "baseline@r1150x6": {
+      "episodes": 300,
+      "errors": [],
+      "error_count": 0,
+      "sources": 3905,
+      "cleared": 3902,
+      "clear_rate_raw": "3902/3905",
+      "clear_rate": 0.99923,
+      "missed": 3,
+      "cause_distribution": {
+        "B1_layout_gap": 3
+      },
+      "u_hard_bound_sources": 3905,
+      "u_hard_bound_raw": "3905/3905",
+      "missed_with_u_hard": 3,
+      "missed_with_u_layout": 0,
+      "missed_with_u_traj": 0,
+      "gap_to_hard_bound_sources": 3,
+      "gap_to_hard_bound_pct": 0.0768,
+      "mean_clear_time_s": 1196.1
+    },
+    "baseline@r1200x7": {
+      "episodes": 300,
+      "errors": [],
+      "error_count": 0,
+      "sources": 3905,
+      "cleared": 3901,
+      "clear_rate_raw": "3901/3905",
+      "clear_rate": 0.99898,
+      "missed": 4,
+      "cause_distribution": {
+        "B1_layout_gap": 3,
+        "C_homing_failed": 1
+      },
+      "u_hard_bound_sources": 3905,
+      "u_hard_bound_raw": "3905/3905",
+      "missed_with_u_hard": 4,
+      "missed_with_u_layout": 1,
+      "missed_with_u_traj": 1,
+      "gap_to_hard_bound_sources": 4,
+      "gap_to_hard_bound_pct": 0.1024,
+      "mean_clear_time_s": 1211.8
+    }
+  },
+  "rows": [
+    {
+      "seed": 11032,
+      "directional": 10,
+      "total": 16,
+      "cleared": 15,
+      "mean_clear_time_s": 1022.0,
+      "virtual_s": 15329.6,
+      "measure_calls": 374,
+      "clear_calls": 81,
+      "missed_channels": [
+        3
+      ],
+      "budget_hit": false,
+      "missed_detail": [
+        {
+          "seed": 11032,
+          "channel": 3,
+          "cause": "B1_layout_gap",
+          "x": 1732.6,
+          "y": -388.5,
+          "r_from_origin": 1775.6,
+          "r_recv": 1345.9,
+          "directional": true,
+          "directional_deg": 346.4,
+          "dist_to_edge_m": 24.4,
+          "aim_outward_gap_deg": 0.9,
+          "u_hard": true,
+          "u_layout": false,
+          "u_traj": false,
+          "nearest_visible_m": 0.5,
+          "visible_area_frac": 0.00094,
+          "measures_on_ch": 47,
+          "measures_in_range": 13,
+          "measures_receivable": 0,
+          "got_signal": false,
+          "got_bearing": false,
+          "bearings": 0,
+          "silent_points": 47,
+          "clear_calls": 0,
+          "min_clear_dist_m": null,
+          "min_measure_dist_m": 85.1,
+          "min_visited_dist_m": 85.1,
+          "belief_alive": false,
+          "belief_positions": 0,
+          "truth_in_belief": {
+            "pos_cell_alive": false,
+            "pos_heading_alive": false,
+            "truth_cell_dist_m": 59.8
+          },
+          "state_exhausted": false,
+          "verdict_empty": false,
+          "path_tail": [],
+          "phases_measured": [
+            "belief",
+            "ring",
+            "sweep"
+          ],
+          "phases_cleared": [],
+          "t_first_signal": null,
+          "events": []
+        }
+      ],
+      "variant": "baseline"
+    },
+    {
+      "seed": 11052,
+      "directional": 10,
+      "total": 10,
+      "cleared": 9,
+      "mean_clear_time_s": 1922.4,
+      "virtual_s": 17301.2,
+      "measure_calls": 659,
+      "clear_calls": 77,
+      "missed_channels": [
+        1
+      ],
+      "budget_hit": false,
+      "missed_detail": [
+        {
+          "seed": 11052,
+          "channel": 1,
+          "cause": "C_homing_failed",
+          "x": 993.6,
+          "y": 1500.4,
+          "r_from_origin": 1799.5,
+          "r_recv": 1212.4,
+          "directional": true,
+          "directional_deg": 20.8,
+          "dist_to_edge_m": 0.5,
+          "aim_outward_gap_deg": 35.7,
+          "u_hard": true,
+          "u_layout": true,
+          "u_traj": true,
+          "nearest_visible_m": 0.5,
+          "visible_area_frac": 0.02881,
+          "measures_on_ch": 37,
+          "measures_in_range": 9,
+          "measures_receivable": 3,
+          "got_signal": true,
+          "got_bearing": true,
+          "bearings": 3,
+          "silent_points": 34,
+          "clear_calls": 0,
+          "min_clear_dist_m": null,
+          "min_measure_dist_m": 170.2,
+          "min_visited_dist_m": 82.4,
+          "belief_alive": false,
+          "belief_positions": 0,
+          "truth_in_belief": {
+            "pos_cell_alive": false,
+            "pos_heading_alive": false,
+            "truth_cell_dist_m": 69.1
+          },
+          "state_exhausted": true,
+          "verdict_empty": false,
+          "path_tail": [
+            "dogleg=ok",
+            "home=GIVEUP",
+            "home=GIVEUP",
+            "home=GIVEUP",
+            "home=GIVEUP",
+            "home=GIVEUP",
+            "home=GIVEUP"
+          ],
+          "phases_measured": [
+            "post_ring",
+            "ring",
+            "sweep"
+          ],
+          "phases_cleared": [],
+          "t_first_signal": 8145,
+          "events": []
+        }
+      ],
+      "variant": "baseline"
+    },
+    {
+      "seed": 11207,
+      "directional": 10,
+      "total": 11,
+      "cleared": 10,
+      "mean_clear_time_s": 1545.7,
+      "virtual_s": 15457.2,
+      "measure_calls": 584,
+      "clear_calls": 44,
+      "missed_channels": [
+        20
+      ],
+      "budget_hit": false,
+      "missed_detail": [
+        {
+          "seed": 11207,
+          "channel": 20,
+          "cause": "B1_layout_gap",
+          "x": -71.3,
+          "y": 1798.2,
+          "r_from_origin": 1799.6,
+          "r_recv": 1394.3,
+          "directional": true,
+          "directional_deg": 100.4,
+          "dist_to_edge_m": 0.4,
+          "aim_outward_gap_deg": 8.2,
+          "u_hard": true,
+          "u_layout": false,
+          "u_traj": false,
+          "nearest_visible_m": 0.5,
+          "visible_area_frac": 0.00063,
+          "measures_on_ch": 47,
+          "measures_in_range": 12,
+          "measures_receivable": 0,
+          "got_signal": false,
+          "got_bearing": false,
+          "bearings": 0,
+          "silent_points": 47,
+          "clear_calls": 0,
+          "min_clear_dist_m": null,
+          "min_measure_dist_m": 71.3,
+          "min_visited_dist_m": 71.3,
+          "belief_alive": false,
+          "belief_positions": 0,
+          "truth_in_belief": {
+            "pos_cell_alive": false,
+            "pos_heading_alive": false,
+            "truth_cell_dist_m": 71.3
+          },
+          "state_exhausted": false,
+          "verdict_empty": false,
+          "path_tail": [],
+          "phases_measured": [
+            "belief",
+            "ring",
+            "sweep"
+          ],
+          "phases_cleared": [],
+          "t_first_signal": null,
+          "events": []
+        }
+      ],
+      "variant": "baseline"
+    },
+    {
+      "seed": 11277,
+      "directional": 10,
+      "total": 16,
+      "cleared": 15,
+      "mean_clear_time_s": 1057.9,
+      "virtual_s": 15868.3,
+      "measure_calls": 389,
+      "clear_calls": 72,
+      "missed_channels": [
+        16
+      ],
+      "budget_hit": false,
+      "missed_detail": [
+        {
+          "seed": 11277,
+          "channel": 16,
+          "cause": "B1_layout_gap",
+          "x": 419.8,
+          "y": -1714.8,
+          "r_from_origin": 1765.4,
+          "r_recv": 1429.6,
+          "directional": true,
+          "directional_deg": 284.4,
+          "dist_to_edge_m": 34.6,
+          "aim_outward_gap_deg": 0.6,
+          "u_hard": true,
+          "u_layout": false,
+          "u_traj": false,
+          "nearest_visible_m": 0.5,
+          "visible_area_frac": 0.00161,
+          "measures_on_ch": 47,
+          "measures_in_range": 14,
+          "measures_receivable": 0,
+          "got_signal": false,
+          "got_bearing": false,
+          "bearings": 0,
+          "silent_points": 47,
+          "clear_calls": 0,
+          "min_clear_dist_m": null,
+          "min_measure_dist_m": 192.1,
+          "min_visited_dist_m": 192.1,
+          "belief_alive": false,
+          "belief_positions": 0,
+          "truth_in_belief": {
+            "pos_cell_alive": false,
+            "pos_heading_alive": false,
+            "truth_cell_dist_m": 69.2
+          },
+          "state_exhausted": false,
+          "verdict_empty": false,
+          "path_tail": [],
+          "phases_measured": [
+            "belief",
+            "ring",
+            "sweep"
+          ],
+          "phases_cleared": [],
+          "t_first_signal": null,
+          "events": []
+        }
+      ],
+      "variant": "baseline"
+    },
+    {
+      "seed": 11032,
+      "directional": 10,
+      "total": 16,
+      "cleared": 15,
+      "mean_clear_time_s": 944.9,
+      "virtual_s": 14173.6,
+      "measure_calls": 328,
+      "clear_calls": 36,
+      "missed_channels": [
+        3
+      ],
+      "budget_hit": false,
+      "missed_detail": [
+        {
+          "seed": 11032,
+          "channel": 3,
+          "cause": "B1_layout_gap",
+          "x": 1732.6,
+          "y": -388.5,
+          "r_from_origin": 1775.6,
+          "r_recv": 1345.9,
+          "directional": true,
+          "directional_deg": 346.4,
+          "dist_to_edge_m": 24.4,
+          "aim_outward_gap_deg": 0.9,
+          "u_hard": true,
+          "u_layout": false,
+          "u_traj": false,
+          "nearest_visible_m": 0.5,
+          "visible_area_frac": 0.00094,
+          "measures_on_ch": 41,
+          "measures_in_range": 10,
+          "measures_receivable": 0,
+          "got_signal": false,
+          "got_bearing": false,
+          "bearings": 0,
+          "silent_points": 41,
+          "clear_calls": 0,
+          "min_clear_dist_m": null,
+          "min_measure_dist_m": 85.1,
+          "min_visited_dist_m": 85.1,
+          "belief_alive": false,
+          "belief_positions": 0,
+          "truth_in_belief": {
+            "pos_cell_alive": false,
+            "pos_heading_alive": false,
+            "truth_cell_dist_m": 59.8
+          },
+          "state_exhausted": false,
+          "verdict_empty": false,
+          "path_tail": [],
+          "phases_measured": [
+            "belief",
+            "ring",
+            "sweep"
+          ],
+          "phases_cleared": [],
+          "t_first_signal": null,
+          "events": []
+        }
+      ],
+      "variant": "baseline@r1150x7"
+    },
+    {
+      "seed": 11207,
+      "directional": 10,
+      "total": 11,
+      "cleared": 10,
+      "mean_clear_time_s": 1433.4,
+      "virtual_s": 14333.8,
+      "measure_calls": 509,
+      "clear_calls": 27,
+      "missed_channels": [
+        20
+      ],
+      "budget_hit": false,
+      "missed_detail": [
+        {
+          "seed": 11207,
+          "channel": 20,
+          "cause": "B1_layout_gap",
+          "x": -71.3,
+          "y": 1798.2,
+          "r_from_origin": 1799.6,
+          "r_recv": 1394.3,
+          "directional": true,
+          "directional_deg": 100.4,
+          "dist_to_edge_m": 0.4,
+          "aim_outward_gap_deg": 8.2,
+          "u_hard": true,
+          "u_layout": false,
+          "u_traj": false,
+          "nearest_visible_m": 0.5,
+          "visible_area_frac": 0.00063,
+          "measures_on_ch": 42,
+          "measures_in_range": 10,
+          "measures_receivable": 0,
+          "got_signal": false,
+          "got_bearing": false,
+          "bearings": 0,
+          "silent_points": 42,
+          "clear_calls": 0,
+          "min_clear_dist_m": null,
+          "min_measure_dist_m": 71.3,
+          "min_visited_dist_m": 71.3,
+          "belief_alive": false,
+          "belief_positions": 0,
+          "truth_in_belief": {
+            "pos_cell_alive": false,
+            "pos_heading_alive": false,
+            "truth_cell_dist_m": 71.3
+          },
+          "state_exhausted": false,
+          "verdict_empty": false,
+          "path_tail": [],
+          "phases_measured": [
+            "belief",
+            "ring",
+            "sweep"
+          ],
+          "phases_cleared": [],
+          "t_first_signal": null,
+          "events": []
+        }
+      ],
+      "variant": "baseline@r1150x7"
+    },
+    {
+      "seed": 11277,
+      "directional": 10,
+      "total": 16,
+      "cleared": 15,
+      "mean_clear_time_s": 1041.4,
+      "virtual_s": 15621.5,
+      "measure_calls": 356,
+      "clear_calls": 102,
+      "missed_channels": [
+        16
+      ],
+      "budget_hit": false,
+      "missed_detail": [
+        {
+          "seed": 11277,
+          "channel": 16,
+          "cause": "B1_layout_gap",
+          "x": 419.8,
+          "y": -1714.8,
+          "r_from_origin": 1765.4,
+          "r_recv": 1429.6,
+          "directional": true,
+          "directional_deg": 284.4,
+          "dist_to_edge_m": 34.6,
+          "aim_outward_gap_deg": 0.6,
+          "u_hard": true,
+          "u_layout": false,
+          "u_traj": false,
+          "nearest_visible_m": 0.5,
+          "visible_area_frac": 0.00161,
+          "measures_on_ch": 42,
+          "measures_in_range": 12,
+          "measures_receivable": 0,
+          "got_signal": false,
+          "got_bearing": false,
+          "bearings": 0,
+          "silent_points": 42,
+          "clear_calls": 0,
+          "min_clear_dist_m": null,
+          "min_measure_dist_m": 192.1,
+          "min_visited_dist_m": 192.1,
+          "belief_alive": false,
+          "belief_positions": 0,
+          "truth_in_belief": {
+            "pos_cell_alive": false,
+            "pos_heading_alive": false,
+            "truth_cell_dist_m": 69.2
+          },
+          "state_exhausted": false,
+          "verdict_empty": false,
+          "path_tail": [],
+          "phases_measured": [
+            "belief",
+            "ring",
+            "sweep"
+          ],
+          "phases_cleared": [],
+          "t_first_signal": null,
+          "events": []
+        }
+      ],
+      "variant": "baseline@r1150x7"
+    },
+    {
+      "seed": 11032,
+      "directional": 10,
+      "total": 16,
+      "cleared": 15,
+      "mean_clear_time_s": 980.5,
+      "virtual_s": 14707.7,
+      "measure_calls": 314,
+      "clear_calls": 78,
+      "missed_channels": [
+        3
+      ],
+      "budget_hit": false,
+      "missed_detail": [
+        {
+          "seed": 11032,
+          "channel": 3,
+          "cause": "B1_layout_gap",
+          "x": 1732.6,
+          "y": -388.5,
+          "r_from_origin": 1775.6,
+          "r_recv": 1345.9,
+          "directional": true,
+          "directional_deg": 346.4,
+          "dist_to_edge_m": 24.4,
+          "aim_outward_gap_deg": 0.9,
+          "u_hard": true,
+          "u_layout": false,
+          "u_traj": false,
+          "nearest_visible_m": 0.5,
+          "visible_area_frac": 0.00094,
+          "measures_on_ch": 40,
+          "measures_in_range": 10,
+          "measures_receivable": 0,
+          "got_signal": false,
+          "got_bearing": false,
+          "bearings": 0,
+          "silent_points": 40,
+          "clear_calls": 0,
+          "min_clear_dist_m": null,
+          "min_measure_dist_m": 85.1,
+          "min_visited_dist_m": 85.1,
+          "belief_alive": false,
+          "belief_positions": 0,
+          "truth_in_belief": {
+            "pos_cell_alive": false,
+            "pos_heading_alive": false,
+            "truth_cell_dist_m": 59.8
+          },
+          "state_exhausted": false,
+          "verdict_empty": false,
+          "path_tail": [],
+          "phases_measured": [
+            "belief",
+            "ring",
+            "sweep"
+          ],
+          "phases_cleared": [],
+          "t_first_signal": null,
+          "events": []
+        }
+      ],
+      "variant": "baseline@r1150x6"
+    },
+    {
+      "seed": 11207,
+      "directional": 10,
+      "total": 11,
+      "cleared": 10,
+      "mean_clear_time_s": 1411.8,
+      "virtual_s": 14118.0,
+      "measure_calls": 493,
+      "clear_calls": 27,
+      "missed_channels": [
+        20
+      ],
+      "budget_hit": false,
+      "missed_detail": [
+        {
+          "seed": 11207,
+          "channel": 20,
+          "cause": "B1_layout_gap",
+          "x": -71.3,
+          "y": 1798.2,
+          "r_from_origin": 1799.6,
+          "r_recv": 1394.3,
+          "directional": true,
+          "directional_deg": 100.4,
+          "dist_to_edge_m": 0.4,
+          "aim_outward_gap_deg": 8.2,
+          "u_hard": true,
+          "u_layout": false,
+          "u_traj": false,
+          "nearest_visible_m": 0.5,
+          "visible_area_frac": 0.00063,
+          "measures_on_ch": 41,
+          "measures_in_range": 10,
+          "measures_receivable": 0,
+          "got_signal": false,
+          "got_bearing": false,
+          "bearings": 0,
+          "silent_points": 41,
+          "clear_calls": 0,
+          "min_clear_dist_m": null,
+          "min_measure_dist_m": 71.3,
+          "min_visited_dist_m": 71.3,
+          "belief_alive": false,
+          "belief_positions": 0,
+          "truth_in_belief": {
+            "pos_cell_alive": false,
+            "pos_heading_alive": false,
+            "truth_cell_dist_m": 71.3
+          },
+          "state_exhausted": false,
+          "verdict_empty": false,
+          "path_tail": [],
+          "phases_measured": [
+            "belief",
+            "ring",
+            "sweep"
+          ],
+          "phases_cleared": [],
+          "t_first_signal": null,
+          "events": []
+        }
+      ],
+      "variant": "baseline@r1150x6"
+    },
+    {
+      "seed": 11277,
+      "directional": 10,
+      "total": 16,
+      "cleared": 15,
+      "mean_clear_time_s": 1046.3,
+      "virtual_s": 15694.0,
+      "measure_calls": 334,
+      "clear_calls": 95,
+      "missed_channels": [
+        16
+      ],
+      "budget_hit": false,
+      "missed_detail": [
+        {
+          "seed": 11277,
+          "channel": 16,
+          "cause": "B1_layout_gap",
+          "x": 419.8,
+          "y": -1714.8,
+          "r_from_origin": 1765.4,
+          "r_recv": 1429.6,
+          "directional": true,
+          "directional_deg": 284.4,
+          "dist_to_edge_m": 34.6,
+          "aim_outward_gap_deg": 0.6,
+          "u_hard": true,
+          "u_layout": false,
+          "u_traj": false,
+          "nearest_visible_m": 0.5,
+          "visible_area_frac": 0.00161,
+          "measures_on_ch": 41,
+          "measures_in_range": 12,
+          "measures_receivable": 0,
+          "got_signal": false,
+          "got_bearing": false,
+          "bearings": 0,
+          "silent_points": 41,
+          "clear_calls": 0,
+          "min_clear_dist_m": null,
+          "min_measure_dist_m": 192.1,
+          "min_visited_dist_m": 192.1,
+          "belief_alive": false,
+          "belief_positions": 0,
+          "truth_in_belief": {
+            "pos_cell_alive": false,
+            "pos_heading_alive": false,
+            "truth_cell_dist_m": 69.2
+          },
+          "state_exhausted": false,
+          "verdict_empty": false,
+          "path_tail": [],
+          "phases_measured": [
+            "belief",
+            "ring",
+            "sweep"
+          ],
+          "phases_cleared": [],
+          "t_first_signal": null,
+          "events": []
+        }
+      ],
+      "variant": "baseline@r1150x6"
+    },
+    {
+      "seed": 11032,
+      "directional": 10,
+      "total": 16,
+      "cleared": 15,
+      "mean_clear_time_s": 1040.3,
+      "virtual_s": 15604.0,
+      "measure_calls": 346,
+      "clear_calls": 33,
+      "missed_channels": [
+        3
+      ],
+      "budget_hit": false,
+      "missed_detail": [
+        {
+          "seed": 11032,
+          "channel": 3,
+          "cause": "B1_layout_gap",
+          "x": 1732.6,
+          "y": -388.5,
+          "r_from_origin": 1775.6,
+          "r_recv": 1345.9,
+          "directional": true,
+          "directional_deg": 346.4,
+          "dist_to_edge_m": 24.4,
+          "aim_outward_gap_deg": 0.9,
+          "u_hard": true,
+          "u_layout": false,
+          "u_traj": false,
+          "nearest_visible_m": 0.5,
+          "visible_area_frac": 0.00094,
+          "measures_on_ch": 42,
+          "measures_in_range": 10,
+          "measures_receivable": 0,
+          "got_signal": false,
+          "got_bearing": false,
+          "bearings": 0,
+          "silent_points": 42,
+          "clear_calls": 0,
+          "min_clear_dist_m": null,
+          "min_measure_dist_m": 85.1,
+          "min_visited_dist_m": 85.1,
+          "belief_alive": false,
+          "belief_positions": 0,
+          "truth_in_belief": {
+            "pos_cell_alive": false,
+            "pos_heading_alive": false,
+            "truth_cell_dist_m": 59.8
+          },
+          "state_exhausted": false,
+          "verdict_empty": false,
+          "path_tail": [],
+          "phases_measured": [
+            "belief",
+            "ring",
+            "sweep"
+          ],
+          "phases_cleared": [],
+          "t_first_signal": null,
+          "events": []
+        }
+      ],
+      "variant": "baseline@r1200x7"
+    },
+    {
+      "seed": 11052,
+      "directional": 10,
+      "total": 10,
+      "cleared": 9,
+      "mean_clear_time_s": 1777.7,
+      "virtual_s": 15999.1,
+      "measure_calls": 566,
+      "clear_calls": 62,
+      "missed_channels": [
+        1
+      ],
+      "budget_hit": false,
+      "missed_detail": [
+        {
+          "seed": 11052,
+          "channel": 1,
+          "cause": "C_homing_failed",
+          "x": 993.6,
+          "y": 1500.4,
+          "r_from_origin": 1799.5,
+          "r_recv": 1212.4,
+          "directional": true,
+          "directional_deg": 20.8,
+          "dist_to_edge_m": 0.5,
+          "aim_outward_gap_deg": 35.7,
+          "u_hard": true,
+          "u_layout": true,
+          "u_traj": true,
+          "nearest_visible_m": 0.5,
+          "visible_area_frac": 0.02881,
+          "measures_on_ch": 32,
+          "measures_in_range": 7,
+          "measures_receivable": 3,
+          "got_signal": true,
+          "got_bearing": true,
+          "bearings": 3,
+          "silent_points": 29,
+          "clear_calls": 0,
+          "min_clear_dist_m": null,
+          "min_measure_dist_m": 170.2,
+          "min_visited_dist_m": 82.4,
+          "belief_alive": false,
+          "belief_positions": 0,
+          "truth_in_belief": {
+            "pos_cell_alive": false,
+            "pos_heading_alive": false,
+            "truth_cell_dist_m": 69.1
+          },
+          "state_exhausted": true,
+          "verdict_empty": false,
+          "path_tail": [
+            "dogleg=ok",
+            "home=GIVEUP",
+            "home=GIVEUP",
+            "home=GIVEUP",
+            "home=GIVEUP",
+            "home=GIVEUP",
+            "home=GIVEUP"
+          ],
+          "phases_measured": [
+            "post_ring",
+            "ring",
+            "sweep"
+          ],
+          "phases_cleared": [],
+          "t_first_signal": 6869,
+          "events": []
+        }
+      ],
+      "variant": "baseline@r1200x7"
+    },
+    {
+      "seed": 11207,
+      "directional": 10,
+      "total": 11,
+      "cleared": 10,
+      "mean_clear_time_s": 1455.7,
+      "virtual_s": 14557.4,
+      "measure_calls": 508,
+      "clear_calls": 27,
+      "missed_channels": [
+        20
+      ],
+      "budget_hit": false,
+      "missed_detail": [
+        {
+          "seed": 11207,
+          "channel": 20,
+          "cause": "B1_layout_gap",
+          "x": -71.3,
+          "y": 1798.2,
+          "r_from_origin": 1799.6,
+          "r_recv": 1394.3,
+          "directional": true,
+          "directional_deg": 100.4,
+          "dist_to_edge_m": 0.4,
+          "aim_outward_gap_deg": 8.2,
+          "u_hard": true,
+          "u_layout": false,
+          "u_traj": false,
+          "nearest_visible_m": 0.5,
+          "visible_area_frac": 0.00063,
+          "measures_on_ch": 42,
+          "measures_in_range": 11,
+          "measures_receivable": 0,
+          "got_signal": false,
+          "got_bearing": false,
+          "bearings": 0,
+          "silent_points": 42,
+          "clear_calls": 0,
+          "min_clear_dist_m": null,
+          "min_measure_dist_m": 71.3,
+          "min_visited_dist_m": 71.3,
+          "belief_alive": false,
+          "belief_positions": 0,
+          "truth_in_belief": {
+            "pos_cell_alive": false,
+            "pos_heading_alive": false,
+            "truth_cell_dist_m": 71.3
+          },
+          "state_exhausted": false,
+          "verdict_empty": false,
+          "path_tail": [],
+          "phases_measured": [
+            "belief",
+            "ring",
+            "sweep"
+          ],
+          "phases_cleared": [],
+          "t_first_signal": null,
+          "events": []
+        }
+      ],
+      "variant": "baseline@r1200x7"
+    },
+    {
+      "seed": 11277,
+      "directional": 10,
+      "total": 16,
+      "cleared": 15,
+      "mean_clear_time_s": 1035.5,
+      "virtual_s": 15532.2,
+      "measure_calls": 362,
+      "clear_calls": 77,
+      "missed_channels": [
+        16
+      ],
+      "budget_hit": false,
+      "missed_detail": [
+        {
+          "seed": 11277,
+          "channel": 16,
+          "cause": "B1_layout_gap",
+          "x": 419.8,
+          "y": -1714.8,
+          "r_from_origin": 1765.4,
+          "r_recv": 1429.6,
+          "directional": true,
+          "directional_deg": 284.4,
+          "dist_to_edge_m": 34.6,
+          "aim_outward_gap_deg": 0.6,
+          "u_hard": true,
+          "u_layout": false,
+          "u_traj": false,
+          "nearest_visible_m": 0.5,
+          "visible_area_frac": 0.00161,
+          "measures_on_ch": 42,
+          "measures_in_range": 12,
+          "measures_receivable": 0,
+          "got_signal": false,
+          "got_bearing": false,
+          "bearings": 0,
+          "silent_points": 42,
+          "clear_calls": 0,
+          "min_clear_dist_m": null,
+          "min_measure_dist_m": 192.1,
+          "min_visited_dist_m": 192.1,
+          "belief_alive": false,
+          "belief_positions": 0,
+          "truth_in_belief": {
+            "pos_cell_alive": false,
+            "pos_heading_alive": false,
+            "truth_cell_dist_m": 69.2
+          },
+          "state_exhausted": false,
+          "verdict_empty": false,
+          "path_tail": [],
+          "phases_measured": [
+            "belief",
+            "ring",
+            "sweep"
+          ],
+          "phases_cleared": [],
+          "t_first_signal": null,
+          "events": []
+        }
+      ],
+      "variant": "baseline@r1200x7"
+    }
+  ],
+  "elapsed_s": 423.8,
+  "rows_note": "逐局明细已剥离控体积(原 1200 行),仅留有漏失或报错的局;聚合见 paired/aggregate"
+}

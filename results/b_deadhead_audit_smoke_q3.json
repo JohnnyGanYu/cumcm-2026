@@ -1,0 +1,216 @@
+{
+  "report": {
+    "episodes": 4,
+    "config": {
+      "directional": 0,
+      "count": null,
+      "seed_start": 310000
+    },
+    "selfcheck_run": true,
+    "selfcheck_mismatched_seeds": [],
+    "clear_rate": 1.0,
+    "full_clear_rate": 1.0,
+    "move_m_mean": 20798.8,
+    "virtual_s_mean": 5341.3,
+    "mean_clear_time_s_mean": 441.8,
+    "move_share_by_phase_pct": {
+      "homing": 64.7,
+      "ring": 35.3
+    },
+    "ring_circumference_m_mean": 7764.6,
+    "ring_laps_mean": 0.9,
+    "switches_ring_homing_mean": 4.8,
+    "D1_reentry_deadhead_m_mean": 580.8,
+    "D1_pct_of_total_move": 2.8,
+    "D1_offring_share_m_mean": 580.8,
+    "link_actual_m_mean": 7091.5,
+    "link_best_m_mean": 6510.8,
+    "n_links_mean": 12.0,
+    "n_offring_links_mean": 4.8,
+    "reentry_actual_m_mean": 2679.3,
+    "D2_excursion_overhead_m_mean": 1112.2,
+    "D2_pct_of_total_move": 5.3,
+    "n_excursions_mean": 4.8,
+    "excursion_path_m_mean": 5421.4,
+    "excursion_net_m_mean": 4309.2,
+    "tsp_all_m_mean": 12486.6,
+    "tsp_scan_only_m_mean": 8367.5,
+    "D3_interleaving_excess_m_mean": 8312.2,
+    "D3_excess_pct_mean": 38.5,
+    "note": "D1/D2/D3 是互相重叠的三种视角，不可相加。D3 为乐观下界差值。"
+  },
+  "rows": [
+    {
+      "seed": 310000,
+      "total": 14,
+      "cleared": 14,
+      "ratio": 1.0,
+      "virtual_s": 5908.519164,
+      "mean_clear_time_s": 422.03708314285717,
+      "move_m": 23932.595815024117,
+      "move_m_traced": 23932.6,
+      "by_phase": {
+        "homing": {
+          "m": 15963.9,
+          "n": 73,
+          "pct": 66.7
+        },
+        "ring": {
+          "m": 7968.7,
+          "n": 12,
+          "pct": 33.3
+        }
+      },
+      "ring_circumference_m": 7764.6,
+      "ring_stations_planned": 12,
+      "ring_stations_visited": 12,
+      "ring_laps": 1.03,
+      "switches_ring_homing": 5,
+      "d1_reentry_deadhead_m": 1256.7,
+      "d1_offring_share_m": 1256.7,
+      "link_actual_m": 7968.7,
+      "link_best_m": 6712.0,
+      "n_links": 12,
+      "n_offring_links": 5,
+      "reentry_actual_m": 3827.7,
+      "n_excursions": 5,
+      "excursion_path_m": 6362.4,
+      "excursion_net_m": 5013.2,
+      "d2_excursion_overhead_m": 1349.2,
+      "tsp_all_m": 13194.6,
+      "tsp_scan_only_m": 8367.5,
+      "d3_interleaving_excess_m": 10738.0,
+      "d3_excess_pct": 44.9,
+      "selfcheck_mismatch": null
+    },
+    {
+      "seed": 310001,
+      "total": 10,
+      "cleared": 10,
+      "ratio": 1.0,
+      "virtual_s": 4379.824922,
+      "mean_clear_time_s": 437.98249219999997,
+      "move_m": 15934.124604002087,
+      "move_m_traced": 15934.1,
+      "by_phase": {
+        "homing": {
+          "m": 8669.9,
+          "n": 45,
+          "pct": 54.4
+        },
+        "ring": {
+          "m": 7264.2,
+          "n": 12,
+          "pct": 45.6
+        }
+      },
+      "ring_circumference_m": 7764.6,
+      "ring_stations_planned": 12,
+      "ring_stations_visited": 12,
+      "ring_laps": 0.94,
+      "switches_ring_homing": 5,
+      "d1_reentry_deadhead_m": 842.2,
+      "d1_offring_share_m": 842.2,
+      "link_actual_m": 7264.2,
+      "link_best_m": 6422.0,
+      "n_links": 12,
+      "n_offring_links": 5,
+      "reentry_actual_m": 2836.3,
+      "n_excursions": 5,
+      "excursion_path_m": 5013.5,
+      "excursion_net_m": 4025.3,
+      "d2_excursion_overhead_m": 988.2,
+      "tsp_all_m": 11588.6,
+      "tsp_scan_only_m": 8367.5,
+      "d3_interleaving_excess_m": 4345.6,
+      "d3_excess_pct": 27.3,
+      "selfcheck_mismatch": null
+    },
+    {
+      "seed": 310002,
+      "total": 15,
+      "cleared": 15,
+      "ratio": 1.0,
+      "virtual_s": 6017.26478,
+      "mean_clear_time_s": 401.1509853333334,
+      "move_m": 24381.3238925305,
+      "move_m_traced": 24381.3,
+      "by_phase": {
+        "homing": {
+          "m": 18271.6,
+          "n": 82,
+          "pct": 74.9
+        },
+        "ring": {
+          "m": 6109.8,
+          "n": 12,
+          "pct": 25.1
+        }
+      },
+      "ring_circumference_m": 7764.6,
+      "ring_stations_planned": 12,
+      "ring_stations_visited": 12,
+      "ring_laps": 0.79,
+      "switches_ring_homing": 5,
+      "d1_reentry_deadhead_m": 0.0,
+      "d1_offring_share_m": 0.0,
+      "link_actual_m": 6109.8,
+      "link_best_m": 6109.8,
+      "n_links": 12,
+      "n_offring_links": 5,
+      "reentry_actual_m": 1855.7,
+      "n_excursions": 5,
+      "excursion_path_m": 5566.0,
+      "excursion_net_m": 3902.2,
+      "d2_excursion_overhead_m": 1663.8,
+      "tsp_all_m": 12546.9,
+      "tsp_scan_only_m": 8367.5,
+      "d3_interleaving_excess_m": 11834.4,
+      "d3_excess_pct": 48.5,
+      "selfcheck_mismatch": null
+    },
+    {
+      "seed": 310003,
+      "total": 10,
+      "cleared": 10,
+      "ratio": 1.0,
+      "virtual_s": 5059.44153,
+      "mean_clear_time_s": 505.94415300000003,
+      "move_m": 18947.207632321624,
+      "move_m_traced": 18947.2,
+      "by_phase": {
+        "homing": {
+          "m": 11923.8,
+          "n": 53,
+          "pct": 62.9
+        },
+        "ring": {
+          "m": 7023.4,
+          "n": 12,
+          "pct": 37.1
+        }
+      },
+      "ring_circumference_m": 7764.6,
+      "ring_stations_planned": 12,
+      "ring_stations_visited": 12,
+      "ring_laps": 0.9,
+      "switches_ring_homing": 4,
+      "d1_reentry_deadhead_m": 224.1,
+      "d1_offring_share_m": 224.1,
+      "link_actual_m": 7023.4,
+      "link_best_m": 6799.3,
+      "n_links": 12,
+      "n_offring_links": 4,
+      "reentry_actual_m": 2197.4,
+      "n_excursions": 4,
+      "excursion_path_m": 4743.8,
+      "excursion_net_m": 4296.1,
+      "d2_excursion_overhead_m": 447.7,
+      "tsp_all_m": 12616.2,
+      "tsp_scan_only_m": 8367.5,
+      "d3_interleaving_excess_m": 6331.0,
+      "d3_excess_pct": 33.4,
+      "selfcheck_mismatch": null
+    }
+  ]
+}

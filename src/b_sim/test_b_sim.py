@@ -1547,23 +1547,35 @@ def test_run_order_origin_sweep_precedes_ring_and_retry():
 
 # ---- (b) R3.2：覆盖站位 {原点} ∪ Ring(1250,12) 最坏间隙 ≈670 m < 1000 m ----
 
-def test_coverage_stations_are_origin_plus_ring_1250_x12():
-    """R3.2：策略配置的覆盖环参数即 Ring(1250 m, 12)，合计 13 站位（含原点）。"""
+def test_coverage_stations_are_origin_plus_ring():
+    """R3.2：覆盖环 = 原点 + Ring(probe_ring_radius, probe_ring_stations)。
+
+    只断言「结构与覆盖充分性」这一规格，不把具体环参数写死 —— 参数是可调优的
+    设计变量（900 局配对实测把 1250x12 收缩到 1150x6，见 StrategyConfig 注释），
+    真正必须守住的性质是最坏覆盖间隙 < 全向源最小有效接收半径。
+    """
     cfg = _StrategyConfig61()
-    assert cfg.probe_ring_radius == pytest.approx(1250.0)
-    assert cfg.probe_ring_stations == 12
     # 单环情形（全向 Q3）不启用外环。
     assert cfg.use_outer_ring is False
     assert cfg.directional_probe is False
     stations = [(0.0, 0.0)] + _cov_ring(cfg.probe_ring_radius, cfg.probe_ring_stations)
-    assert len(stations) == 13
-    # 环站位均在半径 1250 m 上。
+    assert len(stations) == cfg.probe_ring_stations + 1
+    # 环站位均落在配置半径上。
     for px, py in stations[1:]:
-        assert math.hypot(px, py) == pytest.approx(1250.0, abs=1e-6)
+        assert math.hypot(px, py) == pytest.approx(cfg.probe_ring_radius, abs=1e-6)
+    # 覆盖充分性：最坏间隙必须严格小于接收半径下限，否则存在收不到的全向源。
+    gap, _ = _worst_gap(stations, grid=300)
+    assert gap < _RECEPTION_MIN_61, (
+        f"环({cfg.probe_ring_radius:.0f} m, {cfg.probe_ring_stations}) 最坏间隙 "
+        f"{gap:.1f} m 未小于接收半径下限 {_RECEPTION_MIN_61:.0f} m")
 
 
 def test_worst_coverage_gap_is_about_670m_and_below_reception_min():
-    """R3.2：coverage_design.worst_coverage_gap({原点}∪Ring(1250,12)) ≈ 670 m 且 < 1000 m。"""
+    """R3.2：worst_coverage_gap({原点}∪Ring(1250,12)) ≈ 670 m 且 < 1000 m。
+
+    这是对「几何工具函数」的定值校验，锁的是 _worst_gap 的正确性，而非当前默认
+    配置（默认已收缩为 1150x6，见 StrategyConfig）。故此处继续显式传 1250/12。
+    """
     stations = [(0.0, 0.0)] + _cov_ring(1250.0, 12)
     gap, worst_point = _worst_gap(stations, grid=300)
     # 设计文档 §2.4 / coverage_design 结论表载明最坏间隙 = 670 m。
@@ -1575,13 +1587,17 @@ def test_worst_coverage_gap_is_about_670m_and_below_reception_min():
 
 
 def test_probe_stations_single_ring_for_omni_case():
-    """R3.2：全向情形 _probe_stations 只产生一层内环（12 站位），不含外环。"""
-    strategy = _DogStrategy61(client=None, config=_StrategyConfig61())  # 不触网，仅算站位
+    """R3.2：全向情形 _probe_stations 只产生一层内环，不含外环。
+
+    站位数与半径取自配置（可调优），此处只断言「单层」与「半径一致」。
+    """
+    cfg = _StrategyConfig61()
+    strategy = _DogStrategy61(client=None, config=cfg)  # 不触网，仅算站位
     rings = strategy._probe_stations()
     assert len(rings) == 1, "全向情形应只有内环一层"
-    assert len(rings[0]) == 12
+    assert len(rings[0]) == cfg.probe_ring_stations
     for px, py in rings[0]:
-        assert math.hypot(px, py) == pytest.approx(1250.0, abs=1e-6)
+        assert math.hypot(px, py) == pytest.approx(cfg.probe_ring_radius, abs=1e-6)
 
 
 # ---- (c) R3.11：_home_all / _walk_ring 就近贪心排序 ----

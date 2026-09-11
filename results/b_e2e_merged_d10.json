@@ -1,0 +1,127 @@
+{
+  "config": {
+    "plan": "paired",
+    "variants": "baseline",
+    "episodes": 200,
+    "seed_start": 9000,
+    "directional": 10,
+    "count": null,
+    "workers": 4,
+    "overrides": null,
+    "out": "results/b_e2e_merged_d10.json"
+  },
+  "paired": {
+    "baseline": {
+      "paired_episodes": 200,
+      "clear_rate_raw": "2570/2571",
+      "clear_rate": 0.99961,
+      "full_clear_episodes": 199,
+      "d_cleared_sources": 0,
+      "metric_mean_s": 1277.2,
+      "d_metric_s": 0.0,
+      "d_metric_pct": 0.0,
+      "better_episodes": 0,
+      "worse_episodes": 0,
+      "measure_calls_mean": 469.9,
+      "clear_calls_mean": 70.0,
+      "still_missed": [
+        [
+          10,
+          9158,
+          13
+        ]
+      ]
+    }
+  },
+  "aggregate": {
+    "baseline": {
+      "episodes": 200,
+      "errors": [],
+      "error_count": 0,
+      "sources": 2571,
+      "cleared": 2570,
+      "clear_rate_raw": "2570/2571",
+      "clear_rate": 0.99961,
+      "missed": 1,
+      "cause_distribution": {
+        "B1_layout_gap": 1
+      },
+      "u_hard_bound_sources": 2571,
+      "u_hard_bound_raw": "2571/2571",
+      "missed_with_u_hard": 1,
+      "missed_with_u_layout": 0,
+      "missed_with_u_traj": 0,
+      "gap_to_hard_bound_sources": 1,
+      "gap_to_hard_bound_pct": 0.0389,
+      "mean_clear_time_s": 1277.2
+    }
+  },
+  "rows": [
+    {
+      "seed": 9158,
+      "directional": 10,
+      "total": 10,
+      "cleared": 9,
+      "mean_clear_time_s": 1859.6,
+      "virtual_s": 16736.1,
+      "measure_calls": 650,
+      "clear_calls": 32,
+      "missed_channels": [
+        13
+      ],
+      "budget_hit": false,
+      "missed_detail": [
+        {
+          "seed": 9158,
+          "channel": 13,
+          "cause": "B1_layout_gap",
+          "x": 759.1,
+          "y": -1630.4,
+          "r_from_origin": 1798.4,
+          "r_recv": 1447.9,
+          "directional": true,
+          "directional_deg": 285.8,
+          "dist_to_edge_m": 1.6,
+          "aim_outward_gap_deg": 9.2,
+          "u_hard": true,
+          "u_layout": false,
+          "u_traj": false,
+          "nearest_visible_m": 0.5,
+          "visible_area_frac": 0.00094,
+          "measures_on_ch": 47,
+          "measures_in_range": 11,
+          "measures_receivable": 0,
+          "got_signal": false,
+          "got_bearing": false,
+          "bearings": 0,
+          "silent_points": 47,
+          "clear_calls": 0,
+          "min_clear_dist_m": null,
+          "min_measure_dist_m": 111.1,
+          "min_visited_dist_m": 111.1,
+          "belief_alive": false,
+          "belief_positions": 0,
+          "truth_in_belief": {
+            "pos_cell_alive": false,
+            "pos_heading_alive": false,
+            "truth_cell_dist_m": 80.5
+          },
+          "state_exhausted": false,
+          "verdict_empty": false,
+          "path_tail": [],
+          "phases_measured": [
+            "belief",
+            "ring",
+            "sweep"
+          ],
+          "phases_cleared": [],
+          "t_first_signal": null,
+          "events": []
+        }
+      ],
+      "variant": "baseline"
+    }
+  ],
+  "elapsed_s": 89.1,
+  "rows_note": "逐局明细已剥离控体积(原 200 行),仅留有漏失或报错的局;聚合见 paired/aggregate"
+}

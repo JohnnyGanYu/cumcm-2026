@@ -1,0 +1,18 @@
+{
+  "episodes": 30,
+  "directional": 0,
+  "multi_target_batches": 63,
+  "batches_all_keys_tied": 63,
+  "tied_share": 1.0,
+  "batches_with_any_estimate": 0,
+  "batch_size_range": [
+    2,
+    11
+  ],
+  "truth_tour_channel_order_m_mean": 4842.4,
+  "truth_tour_bearing_order_m_mean": 3543.3,
+  "bearing_vs_channel_pct": -26.8,
+  "truth_tour_optimal_m_mean": 2180.2,
+  "optimal_vs_channel_pct": -28.6,
+  "note": "L_* 为真值巡回长度，衡量批内顺序质量；不含检测/逼近开销，是顺序优化的乐观上限"
+}
