@@ -10,7 +10,7 @@ dist_windows/    Windows 交付包（跑官方模拟器用）
 official_runs/   官方模拟器实测记录（仅脱敏版）
 results/         机器可读结果
 figures/         论文图表
-paper/           论文源与渲染
+paper/           论文源与渲染（成稿 = paper/main.md，各文件定位见 paper/README.md）
 supporting/      支撑材料
 state/           决策日志、AI 台账、主张-证据台账
 ```
