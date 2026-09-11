@@ -5,6 +5,17 @@
   python -m src.b_sim.rehearse --episodes 30 --directional 5 # 问题 4（含定向）
 
 输出 results/b_rehearsal_*.json，含每局种子、真值、统计与失败频道，便于定位策略缺陷。
+
+批量规模（R6.3）：Q3（全向）至少跑 60 局（`--episodes 60`），Q4（含定向源）至少
+跑 40 局（`--episodes 40 --directional N`）。`aggregate()` 汇总平均定位清除时间 `T̄`
+（`mean_clear_time_s_mean`）、清除率（`clear_rate` = 累计已清除 / 真实源总数，另有
+逐局全清率 `full_clear_rate`）与程序运行时长（`program_wall_s_mean/_max`）。
+
+官方校准流程（R6.4 / R6.5）：本地 mock 仿真偏乐观（时间更短、检测更少）。已测得
+离线↔官方在评分项 `T̄` 上的相对偏差 Q3 ≈ 5.4%、Q4 ≈ 9.6%（详见
+`official_runs/README.md`）。据此在正式测试的时间预期上按官方偏大值留保守余量。
+任何离线与官方实测不一致处，一律**以官方模拟器实测为最终判据**，并据此重新校准
+离线仿真参数——本地仿真只用于无限次调参，不作最终判定。
 """
 
 from __future__ import annotations
@@ -66,15 +77,30 @@ def run_episode(seed: int, *, directional: int = 0, count: int | None = None,
 
 
 def aggregate(episodes: list[dict]) -> dict:
+    """汇总一批彩排局的评分项（R6.3）。
+
+    产出字段（供 official_runs 校准与论文 Table 1 对齐）：
+      - episodes / full_clear_episodes / full_clear_rate：局数与全清率（清除率）
+      - cleared_total / total_jammers_total：累计已清除个数与真实源总数
+      - cleared_ratio_mean / cleared_ratio_min：逐局清除率的均值/下界
+      - mean_clear_time_s_mean / _max：平均定位清除时间 T̄（评分项）的均值/最坏
+      - total_virtual_time_s_mean / _max：虚拟时间
+      - program_wall_s_mean / _max：程序运行时长（现实秒，上限 1200 s）
+    """
     ratios = [e["cleared_ratio"] for e in episodes]
     means = [e["mean_clear_time_s"] for e in episodes if e["mean_clear_time_s"] is not None]
     virtual = [e["total_virtual_time_s"] for e in episodes]
     wall = [e["program_wall_s"] for e in episodes]
+    cleared_total = sum(e["cleared"] for e in episodes)
+    total_jammers = sum(e["total_jammers"] for e in episodes)
     full = sum(1 for e in episodes if e["cleared_ratio"] >= 1.0 - 1e-9)
     return {
         "episodes": len(episodes),
         "full_clear_episodes": full,
         "full_clear_rate": full / len(episodes) if episodes else 0.0,
+        "cleared_total": cleared_total,
+        "total_jammers_total": total_jammers,
+        "clear_rate": round(cleared_total / total_jammers, 4) if total_jammers else 0.0,
         "cleared_ratio_mean": round(statistics.fmean(ratios), 4) if ratios else 0.0,
         "cleared_ratio_min": round(min(ratios), 4) if ratios else 0.0,
         "mean_clear_time_s_mean": round(statistics.fmean(means), 2) if means else None,
