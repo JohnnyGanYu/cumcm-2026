@@ -1,0 +1,436 @@
+{
+  "report": {
+    "episodes_total": 24,
+    "step_m": 25.0,
+    "scenarios": {
+      "Q3_omni": {
+        "episodes": 6,
+        "sources": 71,
+        "cleared": 71,
+        "clear_rate_pct": 100.0,
+        "full_clear_episodes_pct": 100.0,
+        "mean_clear_time_s": 494.9,
+        "missed_total": 0,
+        "missed_per_episode": 0.0,
+        "miss_attribution": {
+          "observability_failure_never_observed": 0,
+          "strategy_failure_observed_not_cleared": 0,
+          "never_observed_pct_of_misses": null,
+          "strategy_pct_of_misses": null
+        },
+        "never_observed_directional_share_pct": null,
+        "never_observed_vis_frac_pct": {
+          "p50": NaN,
+          "p90": NaN,
+          "max": null,
+          "mean": null,
+          "n_zero_unobservable": 0,
+          "n_below_0p5pct": 0
+        },
+        "strategy_failure_vis_frac_pct": {
+          "p50": null,
+          "mean": null
+        },
+        "worst_misses": []
+      },
+      "Q4_d5": {
+        "episodes": 6,
+        "sources": 71,
+        "cleared": 71,
+        "clear_rate_pct": 100.0,
+        "full_clear_episodes_pct": 100.0,
+        "mean_clear_time_s": 1291.1,
+        "missed_total": 0,
+        "missed_per_episode": 0.0,
+        "miss_attribution": {
+          "observability_failure_never_observed": 0,
+          "strategy_failure_observed_not_cleared": 0,
+          "never_observed_pct_of_misses": null,
+          "strategy_pct_of_misses": null
+        },
+        "never_observed_directional_share_pct": null,
+        "never_observed_vis_frac_pct": {
+          "p50": NaN,
+          "p90": NaN,
+          "max": null,
+          "mean": null,
+          "n_zero_unobservable": 0,
+          "n_below_0p5pct": 0
+        },
+        "strategy_failure_vis_frac_pct": {
+          "p50": null,
+          "mean": null
+        },
+        "worst_misses": []
+      },
+      "Q4_d10": {
+        "episodes": 6,
+        "sources": 71,
+        "cleared": 71,
+        "clear_rate_pct": 100.0,
+        "full_clear_episodes_pct": 100.0,
+        "mean_clear_time_s": 1379.5,
+        "missed_total": 0,
+        "missed_per_episode": 0.0,
+        "miss_attribution": {
+          "observability_failure_never_observed": 0,
+          "strategy_failure_observed_not_cleared": 0,
+          "never_observed_pct_of_misses": null,
+          "strategy_pct_of_misses": null
+        },
+        "never_observed_directional_share_pct": null,
+        "never_observed_vis_frac_pct": {
+          "p50": NaN,
+          "p90": NaN,
+          "max": null,
+          "mean": null,
+          "n_zero_unobservable": 0,
+          "n_below_0p5pct": 0
+        },
+        "strategy_failure_vis_frac_pct": {
+          "p50": null,
+          "mean": null
+        },
+        "worst_misses": []
+      },
+      "Q4_d16": {
+        "episodes": 6,
+        "sources": 96,
+        "cleared": 94,
+        "clear_rate_pct": 97.917,
+        "full_clear_episodes_pct": 83.33,
+        "mean_clear_time_s": 1153.5,
+        "missed_total": 2,
+        "missed_per_episode": 0.3333,
+        "miss_attribution": {
+          "observability_failure_never_observed": 2,
+          "strategy_failure_observed_not_cleared": 0,
+          "never_observed_pct_of_misses": 100.0,
+          "strategy_pct_of_misses": 0.0
+        },
+        "never_observed_directional_share_pct": 100.0,
+        "never_observed_vis_frac_pct": {
+          "p50": 0.1324,
+          "p90": 0.1595,
+          "max": 0.1663,
+          "mean": 0.1324,
+          "n_zero_unobservable": 0,
+          "n_below_0p5pct": 2
+        },
+        "strategy_failure_vis_frac_pct": {
+          "p50": null,
+          "mean": null
+        },
+        "worst_misses": [
+          {
+            "channel": 2,
+            "directional": true,
+            "bearings_obtained": 0,
+            "never_observed": true,
+            "vis_frac_pct": 0.09852,
+            "observable": true,
+            "rho": 1788.8,
+            "r": 1195.5
+          },
+          {
+            "channel": 5,
+            "directional": true,
+            "bearings_obtained": 0,
+            "never_observed": true,
+            "vis_frac_pct": 0.16625,
+            "observable": true,
+            "rho": 1764.9,
+            "r": 1497.4
+          }
+        ]
+      }
+    }
+  },
+  "rows": [
+    {
+      "seed": 600000,
+      "dcount": 0,
+      "total": 13,
+      "cleared": 13,
+      "ratio": 1.0,
+      "mean_clear_time_s": 484.35300300000006,
+      "measure_calls": 180,
+      "missed": [],
+      "scenario": "Q3_omni"
+    },
+    {
+      "seed": 600001,
+      "dcount": 0,
+      "total": 11,
+      "cleared": 11,
+      "ratio": 1.0,
+      "mean_clear_time_s": 466.38735136363636,
+      "measure_calls": 198,
+      "missed": [],
+      "scenario": "Q3_omni"
+    },
+    {
+      "seed": 600002,
+      "dcount": 0,
+      "total": 11,
+      "cleared": 11,
+      "ratio": 1.0,
+      "mean_clear_time_s": 481.54081881818183,
+      "measure_calls": 228,
+      "missed": [],
+      "scenario": "Q3_omni"
+    },
+    {
+      "seed": 600003,
+      "dcount": 0,
+      "total": 16,
+      "cleared": 16,
+      "ratio": 1.0,
+      "mean_clear_time_s": 475.1839324375,
+      "measure_calls": 185,
+      "missed": [],
+      "scenario": "Q3_omni"
+    },
+    {
+      "seed": 600004,
+      "dcount": 0,
+      "total": 10,
+      "cleared": 10,
+      "ratio": 1.0,
+      "mean_clear_time_s": 504.6878211,
+      "measure_calls": 201,
+      "missed": [],
+      "scenario": "Q3_omni"
+    },
+    {
+      "seed": 600005,
+      "dcount": 0,
+      "total": 10,
+      "cleared": 10,
+      "ratio": 1.0,
+      "mean_clear_time_s": 557.4148524999999,
+      "measure_calls": 209,
+      "missed": [],
+      "scenario": "Q3_omni"
+    },
+    {
+      "seed": 600000,
+      "dcount": 5,
+      "total": 13,
+      "cleared": 13,
+      "ratio": 1.0,
+      "mean_clear_time_s": 1227.7169794615386,
+      "measure_calls": 535,
+      "missed": [],
+      "scenario": "Q4_d5"
+    },
+    {
+      "seed": 600001,
+      "dcount": 5,
+      "total": 11,
+      "cleared": 11,
+      "ratio": 1.0,
+      "mean_clear_time_s": 1366.0580223636364,
+      "measure_calls": 549,
+      "missed": [],
+      "scenario": "Q4_d5"
+    },
+    {
+      "seed": 600002,
+      "dcount": 5,
+      "total": 11,
+      "cleared": 11,
+      "ratio": 1.0,
+      "mean_clear_time_s": 1271.7849484545454,
+      "measure_calls": 573,
+      "missed": [],
+      "scenario": "Q4_d5"
+    },
+    {
+      "seed": 600003,
+      "dcount": 5,
+      "total": 16,
+      "cleared": 16,
+      "ratio": 1.0,
+      "mean_clear_time_s": 909.842163625,
+      "measure_calls": 352,
+      "missed": [],
+      "scenario": "Q4_d5"
+    },
+    {
+      "seed": 600004,
+      "dcount": 5,
+      "total": 10,
+      "cleared": 10,
+      "ratio": 1.0,
+      "mean_clear_time_s": 1494.0014928,
+      "measure_calls": 556,
+      "missed": [],
+      "scenario": "Q4_d5"
+    },
+    {
+      "seed": 600005,
+      "dcount": 5,
+      "total": 10,
+      "cleared": 10,
+      "ratio": 1.0,
+      "mean_clear_time_s": 1477.1908371,
+      "measure_calls": 579,
+      "missed": [],
+      "scenario": "Q4_d5"
+    },
+    {
+      "seed": 600000,
+      "dcount": 10,
+      "total": 13,
+      "cleared": 13,
+      "ratio": 1.0,
+      "mean_clear_time_s": 1264.0766317692307,
+      "measure_calls": 508,
+      "missed": [],
+      "scenario": "Q4_d10"
+    },
+    {
+      "seed": 600001,
+      "dcount": 10,
+      "total": 11,
+      "cleared": 11,
+      "ratio": 1.0,
+      "mean_clear_time_s": 1404.0909773636363,
+      "measure_calls": 597,
+      "missed": [],
+      "scenario": "Q4_d10"
+    },
+    {
+      "seed": 600002,
+      "dcount": 10,
+      "total": 11,
+      "cleared": 11,
+      "ratio": 1.0,
+      "mean_clear_time_s": 1476.3135994545455,
+      "measure_calls": 584,
+      "missed": [],
+      "scenario": "Q4_d10"
+    },
+    {
+      "seed": 600003,
+      "dcount": 10,
+      "total": 16,
+      "cleared": 16,
+      "ratio": 1.0,
+      "mean_clear_time_s": 1020.8598150625,
+      "measure_calls": 396,
+      "missed": [],
+      "scenario": "Q4_d10"
+    },
+    {
+      "seed": 600004,
+      "dcount": 10,
+      "total": 10,
+      "cleared": 10,
+      "ratio": 1.0,
+      "mean_clear_time_s": 1502.2829646,
+      "measure_calls": 593,
+      "missed": [],
+      "scenario": "Q4_d10"
+    },
+    {
+      "seed": 600005,
+      "dcount": 10,
+      "total": 10,
+      "cleared": 10,
+      "ratio": 1.0,
+      "mean_clear_time_s": 1609.5350129,
+      "measure_calls": 640,
+      "missed": [],
+      "scenario": "Q4_d10"
+    },
+    {
+      "seed": 600000,
+      "dcount": 16,
+      "total": 16,
+      "cleared": 16,
+      "ratio": 1.0,
+      "mean_clear_time_s": 1319.7289264375,
+      "measure_calls": 465,
+      "missed": [],
+      "scenario": "Q4_d16"
+    },
+    {
+      "seed": 600001,
+      "dcount": 16,
+      "total": 16,
+      "cleared": 16,
+      "ratio": 1.0,
+      "mean_clear_time_s": 1080.3114869375,
+      "measure_calls": 432,
+      "missed": [],
+      "scenario": "Q4_d16"
+    },
+    {
+      "seed": 600002,
+      "dcount": 16,
+      "total": 16,
+      "cleared": 16,
+      "ratio": 1.0,
+      "mean_clear_time_s": 1065.139555125,
+      "measure_calls": 465,
+      "missed": [],
+      "scenario": "Q4_d16"
+    },
+    {
+      "seed": 600003,
+      "dcount": 16,
+      "total": 16,
+      "cleared": 16,
+      "ratio": 1.0,
+      "mean_clear_time_s": 1114.729588875,
+      "measure_calls": 469,
+      "missed": [],
+      "scenario": "Q4_d16"
+    },
+    {
+      "seed": 600004,
+      "dcount": 16,
+      "total": 16,
+      "cleared": 14,
+      "ratio": 0.875,
+      "mean_clear_time_s": 1304.5501265714286,
+      "measure_calls": 509,
+      "missed": [
+        {
+          "channel": 5,
+          "directional": true,
+          "bearings_obtained": 0,
+          "never_observed": true,
+          "vis_frac_pct": 0.16625,
+          "observable": true,
+          "rho": 1764.9,
+          "r": 1497.4
+        },
+        {
+          "channel": 2,
+          "directional": true,
+          "bearings_obtained": 0,
+          "never_observed": true,
+          "vis_frac_pct": 0.09852,
+          "observable": true,
+          "rho": 1788.8,
+          "r": 1195.5
+        }
+      ],
+      "scenario": "Q4_d16"
+    },
+    {
+      "seed": 600005,
+      "dcount": 16,
+      "total": 16,
+      "cleared": 16,
+      "ratio": 1.0,
+      "mean_clear_time_s": 1036.671190625,
+      "measure_calls": 479,
+      "missed": [],
+      "scenario": "Q4_d16"
+    }
+  ]
+}

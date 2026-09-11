@@ -1,0 +1,258 @@
+{
+  "config": {
+    "samples": 120000,
+    "seed": 4242
+  },
+  "omni": {
+    "samples": 120000,
+    "directional": false,
+    "layout_visibility": {
+      "current_q3(origin+1250x12+inner4)": {
+        "visible": 120000,
+        "rate": 1.0,
+        "stations": 17,
+        "blind_per_1000": 0.0
+      },
+      "current_q4(origin+1250x12+1750x18+inner4)": {
+        "visible": 120000,
+        "rate": 1.0,
+        "stations": 35,
+        "blind_per_1000": 0.0
+      },
+      "alt_origin+1250x12+1750x24": {
+        "visible": 120000,
+        "rate": 1.0,
+        "stations": 37,
+        "blind_per_1000": 0.0
+      },
+      "alt_origin+900x8+1450x16+1780x24": {
+        "visible": 120000,
+        "rate": 1.0,
+        "stations": 49,
+        "blind_per_1000": 0.0
+      },
+      "alt_origin+1250x12+1750x18+1795x36": {
+        "visible": 120000,
+        "rate": 1.0,
+        "stations": 67,
+        "blind_per_1000": 0.0
+      },
+      "alt_dense_3ring_48": {
+        "visible": 120000,
+        "rate": 1.0,
+        "stations": 48,
+        "blind_per_1000": 0.0
+      }
+    },
+    "blind_profile": {
+      "group": "undiscoverable_current_layout",
+      "n": 0
+    },
+    "visible_profile_reference": {
+      "group": "visible_ref",
+      "n": 3000,
+      "share_of_samples": 0.025,
+      "directional_share": 0.0,
+      "r_from_origin_mean": 1212,
+      "r_from_origin_median": 1289,
+      "r_from_origin_p10": 575,
+      "r_from_origin_min": 12,
+      "r_recv_mean": 1251,
+      "r_recv_median": 1248,
+      "r_recv_p90": 1451,
+      "visible_area_frac_mean": 0.3372,
+      "visible_area_frac_median": 0.3105,
+      "visible_area_frac_p90": 0.4962
+    },
+    "blind_rate_by_radius_band": [
+      {
+        "band_m": "0-200",
+        "n_sampled": 1481,
+        "n_blind": 0,
+        "blind_rate": 0.0
+      },
+      {
+        "band_m": "200-400",
+        "n_sampled": 4411,
+        "n_blind": 0,
+        "blind_rate": 0.0
+      },
+      {
+        "band_m": "400-600",
+        "n_sampled": 7317,
+        "n_blind": 0,
+        "blind_rate": 0.0
+      },
+      {
+        "band_m": "600-800",
+        "n_sampled": 10373,
+        "n_blind": 0,
+        "blind_rate": 0.0
+      },
+      {
+        "band_m": "800-1000",
+        "n_sampled": 13626,
+        "n_blind": 0,
+        "blind_rate": 0.0
+      },
+      {
+        "band_m": "1000-1200",
+        "n_sampled": 16265,
+        "n_blind": 0,
+        "blind_rate": 0.0
+      },
+      {
+        "band_m": "1200-1400",
+        "n_sampled": 19207,
+        "n_blind": 0,
+        "blind_rate": 0.0
+      },
+      {
+        "band_m": "1400-1600",
+        "n_sampled": 22232,
+        "n_blind": 0,
+        "blind_rate": 0.0
+      },
+      {
+        "band_m": "1600-1800",
+        "n_sampled": 25088,
+        "n_blind": 0,
+        "blind_rate": 0.0
+      }
+    ]
+  },
+  "directional": {
+    "samples": 120000,
+    "directional": true,
+    "layout_visibility": {
+      "current_q3(origin+1250x12+inner4)": {
+        "visible": 107438,
+        "rate": 0.89532,
+        "stations": 17,
+        "blind_per_1000": 104.68
+      },
+      "current_q4(origin+1250x12+1750x18+inner4)": {
+        "visible": 119598,
+        "rate": 0.99665,
+        "stations": 35,
+        "blind_per_1000": 3.35
+      },
+      "alt_origin+1250x12+1750x24": {
+        "visible": 119425,
+        "rate": 0.99521,
+        "stations": 37,
+        "blind_per_1000": 4.79
+      },
+      "alt_origin+900x8+1450x16+1780x24": {
+        "visible": 119890,
+        "rate": 0.99908,
+        "stations": 49,
+        "blind_per_1000": 0.92
+      },
+      "alt_origin+1250x12+1750x18+1795x36": {
+        "visible": 119779,
+        "rate": 0.99816,
+        "stations": 67,
+        "blind_per_1000": 1.84
+      },
+      "alt_dense_3ring_48": {
+        "visible": 119890,
+        "rate": 0.99908,
+        "stations": 48,
+        "blind_per_1000": 0.92
+      }
+    },
+    "blind_profile": {
+      "group": "undiscoverable_current_layout",
+      "n": 402,
+      "share_of_samples": 0.00335,
+      "directional_share": 1.0,
+      "r_from_origin_mean": 1766,
+      "r_from_origin_median": 1780,
+      "r_from_origin_p10": 1755,
+      "r_from_origin_min": 183,
+      "r_recv_mean": 1260,
+      "r_recv_median": 1271,
+      "r_recv_p90": 1451,
+      "aim_inward_gap_deg_mean": 174,
+      "aim_outward_share(>90deg)": 1.0,
+      "visible_area_frac_mean": 0.0029,
+      "visible_area_frac_median": 0.0015,
+      "visible_area_frac_p90": 0.0034
+    },
+    "visible_profile_reference": {
+      "group": "visible_ref",
+      "n": 3000,
+      "share_of_samples": 0.025,
+      "directional_share": 1.0,
+      "r_from_origin_mean": 1192,
+      "r_from_origin_median": 1260,
+      "r_from_origin_p10": 560,
+      "r_from_origin_min": 39,
+      "r_recv_mean": 1248,
+      "r_recv_median": 1245,
+      "r_recv_p90": 1450,
+      "aim_inward_gap_deg_mean": 91,
+      "aim_outward_share(>90deg)": 0.502,
+      "visible_area_frac_mean": 0.1684,
+      "visible_area_frac_median": 0.1698,
+      "visible_area_frac_p90": 0.2717
+    },
+    "blind_rate_by_radius_band": [
+      {
+        "band_m": "0-200",
+        "n_sampled": 1556,
+        "n_blind": 2,
+        "blind_rate": 0.00129
+      },
+      {
+        "band_m": "200-400",
+        "n_sampled": 4410,
+        "n_blind": 1,
+        "blind_rate": 0.00023
+      },
+      {
+        "band_m": "400-600",
+        "n_sampled": 7418,
+        "n_blind": 0,
+        "blind_rate": 0.0
+      },
+      {
+        "band_m": "600-800",
+        "n_sampled": 10437,
+        "n_blind": 0,
+        "blind_rate": 0.0
+      },
+      {
+        "band_m": "800-1000",
+        "n_sampled": 13352,
+        "n_blind": 0,
+        "blind_rate": 0.0
+      },
+      {
+        "band_m": "1000-1200",
+        "n_sampled": 16158,
+        "n_blind": 0,
+        "blind_rate": 0.0
+      },
+      {
+        "band_m": "1200-1400",
+        "n_sampled": 19289,
+        "n_blind": 0,
+        "blind_rate": 0.0
+      },
+      {
+        "band_m": "1400-1600",
+        "n_sampled": 22176,
+        "n_blind": 0,
+        "blind_rate": 0.0
+      },
+      {
+        "band_m": "1600-1800",
+        "n_sampled": 25204,
+        "n_blind": 399,
+        "blind_rate": 0.01583
+      }
+    ]
+  }
+}

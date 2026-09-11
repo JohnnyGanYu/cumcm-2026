@@ -1,0 +1,671 @@
+{
+  "config": {
+    "episodes": 80,
+    "seed_start": 5000,
+    "directional": 0,
+    "arms": [
+      "base",
+      "r1150x7",
+      "r1200x7",
+      "r1250x7",
+      "r1300x7",
+      "r1050x7",
+      "r1000x7",
+      "r1150x6",
+      "r1200x6",
+      "r1250x8"
+    ]
+  },
+  "arms": {
+    "base": {
+      "layers": [
+        [
+          1250.0,
+          12,
+          0.0
+        ]
+      ],
+      "summary": {
+        "episodes": 80,
+        "errors": 0,
+        "full_clear_episodes": 80,
+        "full_clear_rate": 1.0,
+        "cleared_ratio_mean": 1.0,
+        "cleared_ratio_min": 1.0,
+        "sources_total": 1029,
+        "sources_cleared": 1029,
+        "pooled_clear_rate": 1.0,
+        "pooled_mean_clear_time_s": 454.47,
+        "mean_clear_time_s_mean": 460.27,
+        "mean_clear_time_s_median": 455.23,
+        "mean_clear_time_s_max": 645.29,
+        "total_virtual_time_s_mean": 5845.6,
+        "measure_calls_mean": 197.0,
+        "clear_calls_mean": 12.9,
+        "move_distance_m_mean": 23226.0,
+        "program_wall_s_max": 0.89
+      },
+      "episodes": {
+        "_stripped": true,
+        "n": 80,
+        "_note": "逐局明细已剥离以控体积，可用同名脚本复现",
+        "sample": [
+          {
+            "seed": 5000,
+            "total_jammers": 11,
+            "cleared": 11,
+            "cleared_ratio": 1.0,
+            "total_virtual_time_s": 5430.458,
+            "mean_clear_time_s": 493.678,
+            "measure_calls": 197,
+            "clear_calls": 11,
+            "move_distance_m": 21157.3,
+            "program_wall_s": 0.73,
+            "missed_channels": [],
+            "events": []
+          },
+          {
+            "seed": 5001,
+            "total_jammers": 14,
+            "cleared": 14,
+            "cleared_ratio": 1.0,
+            "total_virtual_time_s": 5999.185,
+            "mean_clear_time_s": 428.513,
+            "measure_calls": 184,
+            "clear_calls": 14,
+            "move_distance_m": 24385.9,
+            "program_wall_s": 0.68,
+            "missed_channels": [],
+            "events": []
+          }
+        ]
+      },
+      "wall_s": 14.7
+    },
+    "r1150x7": {
+      "layers": [
+        [
+          1150.0,
+          7,
+          0.0
+        ]
+      ],
+      "summary": {
+        "episodes": 80,
+        "errors": 0,
+        "full_clear_episodes": 80,
+        "full_clear_rate": 1.0,
+        "cleared_ratio_mean": 1.0,
+        "cleared_ratio_min": 1.0,
+        "sources_total": 1029,
+        "sources_cleared": 1029,
+        "pooled_clear_rate": 1.0,
+        "pooled_mean_clear_time_s": 409.79,
+        "mean_clear_time_s_mean": 413.67,
+        "mean_clear_time_s_median": 403.66,
+        "mean_clear_time_s_max": 571.62,
+        "total_virtual_time_s_mean": 5270.9,
+        "measure_calls_mean": 150.5,
+        "clear_calls_mean": 12.9,
+        "move_distance_m_mean": 21744.0,
+        "program_wall_s_max": 0.95
+      },
+      "episodes": {
+        "_stripped": true,
+        "n": 80,
+        "_note": "逐局明细已剥离以控体积，可用同名脚本复现",
+        "sample": [
+          {
+            "seed": 5000,
+            "total_jammers": 11,
+            "cleared": 11,
+            "cleared_ratio": 1.0,
+            "total_virtual_time_s": 4989.044,
+            "mean_clear_time_s": 453.549,
+            "measure_calls": 146,
+            "clear_calls": 11,
+            "move_distance_m": 20495.2,
+            "program_wall_s": 0.65,
+            "missed_channels": [],
+            "events": []
+          },
+          {
+            "seed": 5001,
+            "total_jammers": 14,
+            "cleared": 14,
+            "cleared_ratio": 1.0,
+            "total_virtual_time_s": 5590.769,
+            "mean_clear_time_s": 399.341,
+            "measure_calls": 165,
+            "clear_calls": 14,
+            "move_distance_m": 22903.8,
+            "program_wall_s": 0.72,
+            "missed_channels": [],
+            "events": []
+          }
+        ]
+      },
+      "wall_s": 16.1
+    },
+    "r1200x7": {
+      "layers": [
+        [
+          1200.0,
+          7,
+          0.0
+        ]
+      ],
+      "summary": {
+        "episodes": 80,
+        "errors": 0,
+        "full_clear_episodes": 79,
+        "full_clear_rate": 0.9875,
+        "cleared_ratio_mean": 0.9992,
+        "cleared_ratio_min": 0.9333,
+        "sources_total": 1029,
+        "sources_cleared": 1028,
+        "pooled_clear_rate": 0.999,
+        "pooled_mean_clear_time_s": 417.35,
+        "mean_clear_time_s_mean": 421.55,
+        "mean_clear_time_s_median": 415.62,
+        "mean_clear_time_s_max": 577.21,
+        "total_virtual_time_s_mean": 5362.9,
+        "measure_calls_mean": 151.1,
+        "clear_calls_mean": 12.8,
+        "move_distance_m_mean": 22189.0,
+        "program_wall_s_max": 0.89
+      },
+      "episodes": {
+        "_stripped": true,
+        "n": 80,
+        "_note": "逐局明细已剥离以控体积，可用同名脚本复现",
+        "sample": [
+          {
+            "seed": 5000,
+            "total_jammers": 11,
+            "cleared": 11,
+            "cleared_ratio": 1.0,
+            "total_virtual_time_s": 5088.776,
+            "mean_clear_time_s": 462.616,
+            "measure_calls": 143,
+            "clear_calls": 11,
+            "move_distance_m": 21078.9,
+            "program_wall_s": 0.79,
+            "missed_channels": [],
+            "events": []
+          },
+          {
+            "seed": 5001,
+            "total_jammers": 14,
+            "cleared": 14,
+            "cleared_ratio": 1.0,
+            "total_virtual_time_s": 5602.08,
+            "mean_clear_time_s": 400.149,
+            "measure_calls": 165,
+            "clear_calls": 14,
+            "move_distance_m": 22960.4,
+            "program_wall_s": 0.77,
+            "missed_channels": [],
+            "events": []
+          }
+        ]
+      },
+      "wall_s": 14.7
+    },
+    "r1250x7": {
+      "layers": [
+        [
+          1250.0,
+          7,
+          0.0
+        ]
+      ],
+      "summary": {
+        "episodes": 80,
+        "errors": 0,
+        "full_clear_episodes": 80,
+        "full_clear_rate": 1.0,
+        "cleared_ratio_mean": 1.0,
+        "cleared_ratio_min": 1.0,
+        "sources_total": 1029,
+        "sources_cleared": 1029,
+        "pooled_clear_rate": 1.0,
+        "pooled_mean_clear_time_s": 419.61,
+        "mean_clear_time_s_mean": 423.77,
+        "mean_clear_time_s_median": 413.17,
+        "mean_clear_time_s_max": 583.99,
+        "total_virtual_time_s_mean": 5397.3,
+        "measure_calls_mean": 150.9,
+        "clear_calls_mean": 12.9,
+        "move_distance_m_mean": 22365.0,
+        "program_wall_s_max": 0.91
+      },
+      "episodes": {
+        "_stripped": true,
+        "n": 80,
+        "_note": "逐局明细已剥离以控体积，可用同名脚本复现",
+        "sample": [
+          {
+            "seed": 5000,
+            "total_jammers": 11,
+            "cleared": 11,
+            "cleared_ratio": 1.0,
+            "total_virtual_time_s": 5109.567,
+            "mean_clear_time_s": 464.506,
+            "measure_calls": 143,
+            "clear_calls": 11,
+            "move_distance_m": 21182.8,
+            "program_wall_s": 0.85,
+            "missed_channels": [],
+            "events": []
+          },
+          {
+            "seed": 5001,
+            "total_jammers": 14,
+            "cleared": 14,
+            "cleared_ratio": 1.0,
+            "total_virtual_time_s": 5802.684,
+            "mean_clear_time_s": 414.477,
+            "measure_calls": 168,
+            "clear_calls": 14,
+            "move_distance_m": 23873.4,
+            "program_wall_s": 0.3,
+            "missed_channels": [],
+            "events": []
+          }
+        ]
+      },
+      "wall_s": 14.9
+    },
+    "r1300x7": {
+      "layers": [
+        [
+          1300.0,
+          7,
+          0.0
+        ]
+      ],
+      "summary": {
+        "episodes": 80,
+        "errors": 0,
+        "full_clear_episodes": 79,
+        "full_clear_rate": 0.9875,
+        "cleared_ratio_mean": 0.9992,
+        "cleared_ratio_min": 0.9333,
+        "sources_total": 1029,
+        "sources_cleared": 1028,
+        "pooled_clear_rate": 0.999,
+        "pooled_mean_clear_time_s": 413.92,
+        "mean_clear_time_s_mean": 418.24,
+        "mean_clear_time_s_median": 416.6,
+        "mean_clear_time_s_max": 589.3,
+        "total_virtual_time_s_mean": 5318.9,
+        "measure_calls_mean": 150.2,
+        "clear_calls_mean": 12.8,
+        "move_distance_m_mean": 21989.0,
+        "program_wall_s_max": 0.99
+      },
+      "episodes": {
+        "_stripped": true,
+        "n": 80,
+        "_note": "逐局明细已剥离以控体积，可用同名脚本复现",
+        "sample": [
+          {
+            "seed": 5000,
+            "total_jammers": 11,
+            "cleared": 11,
+            "cleared_ratio": 1.0,
+            "total_virtual_time_s": 5022.872,
+            "mean_clear_time_s": 456.625,
+            "measure_calls": 145,
+            "clear_calls": 11,
+            "move_distance_m": 20689.4,
+            "program_wall_s": 0.79,
+            "missed_channels": [],
+            "events": []
+          },
+          {
+            "seed": 5001,
+            "total_jammers": 14,
+            "cleared": 14,
+            "cleared_ratio": 1.0,
+            "total_virtual_time_s": 5865.435,
+            "mean_clear_time_s": 418.96,
+            "measure_calls": 167,
+            "clear_calls": 14,
+            "move_distance_m": 24212.2,
+            "program_wall_s": 0.64,
+            "missed_channels": [],
+            "events": []
+          }
+        ]
+      },
+      "wall_s": 16.0
+    },
+    "r1050x7": {
+      "layers": [
+        [
+          1050.0,
+          7,
+          0.0
+        ]
+      ],
+      "summary": {
+        "episodes": 80,
+        "errors": 0,
+        "full_clear_episodes": 80,
+        "full_clear_rate": 1.0,
+        "cleared_ratio_mean": 1.0,
+        "cleared_ratio_min": 1.0,
+        "sources_total": 1029,
+        "sources_cleared": 1029,
+        "pooled_clear_rate": 1.0,
+        "pooled_mean_clear_time_s": 420.09,
+        "mean_clear_time_s_mean": 423.31,
+        "mean_clear_time_s_median": 419.42,
+        "mean_clear_time_s_max": 578.25,
+        "total_virtual_time_s_mean": 5403.4,
+        "measure_calls_mean": 152.4,
+        "clear_calls_mean": 12.9,
+        "move_distance_m_mean": 22355.0,
+        "program_wall_s_max": 15.0
+      },
+      "episodes": {
+        "_stripped": true,
+        "n": 80,
+        "_note": "逐局明细已剥离以控体积，可用同名脚本复现",
+        "sample": [
+          {
+            "seed": 5000,
+            "total_jammers": 11,
+            "cleared": 11,
+            "cleared_ratio": 1.0,
+            "total_virtual_time_s": 4972.201,
+            "mean_clear_time_s": 452.018,
+            "measure_calls": 146,
+            "clear_calls": 11,
+            "move_distance_m": 20411.0,
+            "program_wall_s": 13.95,
+            "missed_channels": [],
+            "events": []
+          },
+          {
+            "seed": 5001,
+            "total_jammers": 14,
+            "cleared": 14,
+            "cleared_ratio": 1.0,
+            "total_virtual_time_s": 5647.179,
+            "mean_clear_time_s": 403.37,
+            "measure_calls": 166,
+            "clear_calls": 14,
+            "move_distance_m": 23145.9,
+            "program_wall_s": 0.89,
+            "missed_channels": [],
+            "events": []
+          }
+        ]
+      },
+      "wall_s": 44.9
+    },
+    "r1000x7": {
+      "layers": [
+        [
+          1000.0,
+          7,
+          0.0
+        ]
+      ],
+      "summary": {
+        "episodes": 80,
+        "errors": 0,
+        "full_clear_episodes": 79,
+        "full_clear_rate": 0.9875,
+        "cleared_ratio_mean": 0.9992,
+        "cleared_ratio_min": 0.9375,
+        "sources_total": 1029,
+        "sources_cleared": 1028,
+        "pooled_clear_rate": 0.999,
+        "pooled_mean_clear_time_s": 420.56,
+        "mean_clear_time_s_mean": 423.82,
+        "mean_clear_time_s_median": 417.17,
+        "mean_clear_time_s_max": 572.37,
+        "total_virtual_time_s_mean": 5404.2,
+        "measure_calls_mean": 152.3,
+        "clear_calls_mean": 12.9,
+        "move_distance_m_mean": 22362.0,
+        "program_wall_s_max": 1.29
+      },
+      "episodes": {
+        "_stripped": true,
+        "n": 80,
+        "_note": "逐局明细已剥离以控体积，可用同名脚本复现",
+        "sample": [
+          {
+            "seed": 5000,
+            "total_jammers": 11,
+            "cleared": 11,
+            "cleared_ratio": 1.0,
+            "total_virtual_time_s": 4965.81,
+            "mean_clear_time_s": 451.437,
+            "measure_calls": 146,
+            "clear_calls": 11,
+            "move_distance_m": 20379.0,
+            "program_wall_s": 1.17,
+            "missed_channels": [],
+            "events": []
+          },
+          {
+            "seed": 5001,
+            "total_jammers": 14,
+            "cleared": 14,
+            "cleared_ratio": 1.0,
+            "total_virtual_time_s": 5484.578,
+            "mean_clear_time_s": 391.756,
+            "measure_calls": 164,
+            "clear_calls": 14,
+            "move_distance_m": 22387.9,
+            "program_wall_s": 1.1,
+            "missed_channels": [],
+            "events": []
+          }
+        ]
+      },
+      "wall_s": 19.5
+    },
+    "r1150x6": {
+      "layers": [
+        [
+          1150.0,
+          6,
+          0.0
+        ]
+      ],
+      "summary": {
+        "episodes": 80,
+        "errors": 0,
+        "full_clear_episodes": 79,
+        "full_clear_rate": 0.9875,
+        "cleared_ratio_mean": 0.9989,
+        "cleared_ratio_min": 0.9091,
+        "sources_total": 1029,
+        "sources_cleared": 1028,
+        "pooled_clear_rate": 0.999,
+        "pooled_mean_clear_time_s": 415.57,
+        "mean_clear_time_s_mean": 419.58,
+        "mean_clear_time_s_median": 417.88,
+        "mean_clear_time_s_max": 591.59,
+        "total_virtual_time_s_mean": 5340.1,
+        "measure_calls_mean": 141.4,
+        "clear_calls_mean": 12.8,
+        "move_distance_m_mean": 22365.0,
+        "program_wall_s_max": 16.9
+      },
+      "episodes": {
+        "_stripped": true,
+        "n": 80,
+        "_note": "逐局明细已剥离以控体积，可用同名脚本复现",
+        "sample": [
+          {
+            "seed": 5000,
+            "total_jammers": 11,
+            "cleared": 11,
+            "cleared_ratio": 1.0,
+            "total_virtual_time_s": 4840.695,
+            "mean_clear_time_s": 440.063,
+            "measure_calls": 136,
+            "clear_calls": 11,
+            "move_distance_m": 20038.5,
+            "program_wall_s": 1.01,
+            "missed_channels": [],
+            "events": []
+          },
+          {
+            "seed": 5001,
+            "total_jammers": 14,
+            "cleared": 14,
+            "cleared_ratio": 1.0,
+            "total_virtual_time_s": 5483.061,
+            "mean_clear_time_s": 391.647,
+            "measure_calls": 146,
+            "clear_calls": 14,
+            "move_distance_m": 22945.3,
+            "program_wall_s": 1.14,
+            "missed_channels": [],
+            "events": []
+          }
+        ]
+      },
+      "wall_s": 37.8
+    },
+    "r1200x6": {
+      "layers": [
+        [
+          1200.0,
+          6,
+          0.0
+        ]
+      ],
+      "summary": {
+        "episodes": 80,
+        "errors": 0,
+        "full_clear_episodes": 78,
+        "full_clear_rate": 0.975,
+        "cleared_ratio_mean": 0.9976,
+        "cleared_ratio_min": 0.9,
+        "sources_total": 1029,
+        "sources_cleared": 1027,
+        "pooled_clear_rate": 0.9981,
+        "pooled_mean_clear_time_s": 417.19,
+        "mean_clear_time_s_mean": 420.7,
+        "mean_clear_time_s_median": 419.59,
+        "mean_clear_time_s_max": 597.09,
+        "total_virtual_time_s_mean": 5355.7,
+        "measure_calls_mean": 141.3,
+        "clear_calls_mean": 12.8,
+        "move_distance_m_mean": 22448.0,
+        "program_wall_s_max": 1.09
+      },
+      "episodes": {
+        "_stripped": true,
+        "n": 80,
+        "_note": "逐局明细已剥离以控体积，可用同名脚本复现",
+        "sample": [
+          {
+            "seed": 5000,
+            "total_jammers": 11,
+            "cleared": 11,
+            "cleared_ratio": 1.0,
+            "total_virtual_time_s": 4985.059,
+            "mean_clear_time_s": 453.187,
+            "measure_calls": 140,
+            "clear_calls": 11,
+            "move_distance_m": 20630.3,
+            "program_wall_s": 1.06,
+            "missed_channels": [],
+            "events": []
+          },
+          {
+            "seed": 5001,
+            "total_jammers": 14,
+            "cleared": 14,
+            "cleared_ratio": 1.0,
+            "total_virtual_time_s": 5494.462,
+            "mean_clear_time_s": 392.462,
+            "measure_calls": 145,
+            "clear_calls": 14,
+            "move_distance_m": 23027.3,
+            "program_wall_s": 0.98,
+            "missed_channels": [],
+            "events": []
+          }
+        ]
+      },
+      "wall_s": 18.6
+    },
+    "r1250x8": {
+      "layers": [
+        [
+          1250.0,
+          8,
+          0.0
+        ]
+      ],
+      "summary": {
+        "episodes": 80,
+        "errors": 0,
+        "full_clear_episodes": 80,
+        "full_clear_rate": 1.0,
+        "cleared_ratio_mean": 1.0,
+        "cleared_ratio_min": 1.0,
+        "sources_total": 1029,
+        "sources_cleared": 1029,
+        "pooled_clear_rate": 1.0,
+        "pooled_mean_clear_time_s": 422.31,
+        "mean_clear_time_s_mean": 426.86,
+        "mean_clear_time_s_median": 416.77,
+        "mean_clear_time_s_max": 597.67,
+        "total_virtual_time_s_mean": 5432.0,
+        "measure_calls_mean": 159.4,
+        "clear_calls_mean": 12.9,
+        "move_distance_m_mean": 22282.0,
+        "program_wall_s_max": 26.27
+      },
+      "episodes": {
+        "_stripped": true,
+        "n": 80,
+        "_note": "逐局明细已剥离以控体积，可用同名脚本复现",
+        "sample": [
+          {
+            "seed": 5000,
+            "total_jammers": 11,
+            "cleared": 11,
+            "cleared_ratio": 1.0,
+            "total_virtual_time_s": 4679.323,
+            "mean_clear_time_s": 425.393,
+            "measure_calls": 156,
+            "clear_calls": 11,
+            "move_distance_m": 18636.6,
+            "program_wall_s": 0.98,
+            "missed_channels": [],
+            "events": []
+          },
+          {
+            "seed": 5001,
+            "total_jammers": 14,
+            "cleared": 14,
+            "cleared_ratio": 1.0,
+            "total_virtual_time_s": 5608.351,
+            "mean_clear_time_s": 400.596,
+            "measure_calls": 152,
+            "clear_calls": 14,
+            "move_distance_m": 23381.8,
+            "program_wall_s": 0.99,
+            "missed_channels": [],
+            "events": []
+          }
+        ]
+      },
+      "wall_s": 45.6
+    }
+  }
+}

@@ -1,0 +1,156 @@
+{
+  "config": {
+    "episodes": 8,
+    "seed_start": 5000,
+    "directional": 0,
+    "arms": [
+      "base"
+    ]
+  },
+  "arms": {
+    "base": {
+      "layers": [
+        [
+          1250.0,
+          12,
+          0.0
+        ]
+      ],
+      "summary": {
+        "episodes": 8,
+        "errors": 0,
+        "full_clear_episodes": 8,
+        "full_clear_rate": 1.0,
+        "cleared_ratio_mean": 1.0,
+        "cleared_ratio_min": 1.0,
+        "sources_total": 96,
+        "sources_cleared": 96,
+        "pooled_clear_rate": 1.0,
+        "pooled_mean_clear_time_s": 471.77,
+        "mean_clear_time_s_mean": 476.24,
+        "mean_clear_time_s_median": 477.89,
+        "mean_clear_time_s_max": 550.52,
+        "total_virtual_time_s_mean": 5661.2,
+        "measure_calls_mean": 193.9,
+        "clear_calls_mean": 12.0,
+        "move_distance_m_mean": 22406.0,
+        "program_wall_s_max": 0.99
+      },
+      "episodes": [
+        {
+          "seed": 5000,
+          "total_jammers": 11,
+          "cleared": 11,
+          "cleared_ratio": 1.0,
+          "total_virtual_time_s": 5430.458,
+          "mean_clear_time_s": 493.678,
+          "measure_calls": 197,
+          "clear_calls": 11,
+          "move_distance_m": 21157.3,
+          "program_wall_s": 0.47,
+          "missed_channels": [],
+          "events": []
+        },
+        {
+          "seed": 5001,
+          "total_jammers": 14,
+          "cleared": 14,
+          "cleared_ratio": 1.0,
+          "total_virtual_time_s": 5999.185,
+          "mean_clear_time_s": 428.513,
+          "measure_calls": 184,
+          "clear_calls": 14,
+          "move_distance_m": 24385.9,
+          "program_wall_s": 0.95,
+          "missed_channels": [],
+          "events": []
+        },
+        {
+          "seed": 5002,
+          "total_jammers": 15,
+          "cleared": 15,
+          "cleared_ratio": 1.0,
+          "total_virtual_time_s": 6104.013,
+          "mean_clear_time_s": 406.934,
+          "measure_calls": 167,
+          "clear_calls": 15,
+          "move_distance_m": 25395.1,
+          "program_wall_s": 0.9,
+          "missed_channels": [],
+          "events": []
+        },
+        {
+          "seed": 5003,
+          "total_jammers": 11,
+          "cleared": 11,
+          "cleared_ratio": 1.0,
+          "total_virtual_time_s": 5922.833,
+          "mean_clear_time_s": 538.439,
+          "measure_calls": 217,
+          "clear_calls": 11,
+          "move_distance_m": 23049.2,
+          "program_wall_s": 0.99,
+          "missed_channels": [],
+          "events": []
+        },
+        {
+          "seed": 5004,
+          "total_jammers": 12,
+          "cleared": 12,
+          "cleared_ratio": 1.0,
+          "total_virtual_time_s": 5612.346,
+          "mean_clear_time_s": 467.695,
+          "measure_calls": 200,
+          "clear_calls": 12,
+          "move_distance_m": 21971.7,
+          "program_wall_s": 0.9,
+          "missed_channels": [],
+          "events": []
+        },
+        {
+          "seed": 5005,
+          "total_jammers": 11,
+          "cleared": 11,
+          "cleared_ratio": 1.0,
+          "total_virtual_time_s": 4796.21,
+          "mean_clear_time_s": 436.019,
+          "measure_calls": 200,
+          "clear_calls": 11,
+          "move_distance_m": 17871.1,
+          "program_wall_s": 0.93,
+          "missed_channels": [],
+          "events": []
+        },
+        {
+          "seed": 5006,
+          "total_jammers": 11,
+          "cleared": 11,
+          "cleared_ratio": 1.0,
+          "total_virtual_time_s": 6055.736,
+          "mean_clear_time_s": 550.521,
+          "measure_calls": 196,
+          "clear_calls": 11,
+          "move_distance_m": 24363.7,
+          "program_wall_s": 0.45,
+          "missed_channels": [],
+          "events": []
+        },
+        {
+          "seed": 5007,
+          "total_jammers": 11,
+          "cleared": 11,
+          "cleared_ratio": 1.0,
+          "total_virtual_time_s": 5368.946,
+          "mean_clear_time_s": 488.086,
+          "measure_calls": 190,
+          "clear_calls": 11,
+          "move_distance_m": 21054.7,
+          "program_wall_s": 0.37,
+          "missed_channels": [],
+          "events": []
+        }
+      ],
+      "wall_s": 1.0
+    }
+  }
+}
