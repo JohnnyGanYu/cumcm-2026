@@ -33,11 +33,14 @@ from .arena import (
     CLEAR_RADIUS_M,
     MAX_VIRTUAL_SECONDS,
     RECEPTION_MIN_M,
+    SOURCE_COUNT_MAX,
     norm_deg,
 )
 from .client import ClearResult, MeasureResult, ProtocolError, RobotClient, TestEnded
 from .directional import DirectionalBelief
 from .geometry import Bearing, estimate_position, localization_polygon, polygon_diameter
+from .homing import bounded_estimate, certified_clear_point
+from .silence_coverage import SilenceCoverage, certified_stations, silence_certificate
 
 
 @dataclass
@@ -59,6 +62,7 @@ class ChannelState:
     belief: DirectionalBelief | None = None   # 问题 4：定向源候选集合
     estimate: tuple[float, float] | None = None
     diameter: float = float("inf")
+    bounded_homing: bool = False
 
     def add_bearing(self, x: float, y: float, svd_deg: float) -> None:
         first = not self.bearings
@@ -72,6 +76,10 @@ class ChannelState:
         self._refresh()
 
     def _refresh(self) -> None:
+        if self.bounded_homing:
+            estimate = bounded_estimate(self.bearings)
+            self.estimate, self.diameter = estimate if estimate is not None else (None, float("inf"))
+            return
         if len(self.bearings) < 2:
             self.estimate = None
             self.diameter = float("inf")
@@ -88,6 +96,17 @@ class ChannelState:
 
 @dataclass
 class StrategyConfig:
+    # 连续覆盖布局：观测点可在源分布圆域外；仅真实无信号观测可判空。
+    certified_search: bool = True
+    anchored_dogleg: bool = True
+    bounded_homing: bool = True
+    certified_clear: bool = True
+    omni_prior_routing: bool = True
+    omni_fast_homing: bool = True
+    coverage_outer_first: bool = True
+    coverage_pruning: bool = False
+    coverage_colocate: bool = False
+    coverage_colocate_spacing_m: float = 600.0
     # 阶段 1
     sweep_origin: bool = True
     # 阶段 3 覆盖环。设计依据（数值实测，见 results/b_coverage_design.json）：
@@ -227,7 +246,8 @@ class DogStrategy:
         self.client = client
         self.config = config or StrategyConfig()
         self.channels: dict[int, ChannelState] = {
-            ch: ChannelState(ch) for ch in range(CHANNEL_MIN, CHANNEL_MAX + 1)
+            ch: ChannelState(ch, bounded_homing=self.config.bounded_homing)
+            for ch in range(CHANNEL_MIN, CHANNEL_MAX + 1)
         }
         self.pos = (0.0, 0.0)
         self.radio_channel = 1
@@ -240,13 +260,14 @@ class DogStrategy:
         self.colo_measures = 0
         self.colo_new_estimates = 0
         self._in_colocate = False
+        self.coverage_skipped_stations = 0
 
     # ---- 入口 ----
 
     def run(self) -> dict:
         self.client.enter()
         try:
-            if self.config.directional_probe:
+            if self.config.directional_probe and not self.config.certified_search:
                 for state in self.channels.values():
                     state.belief = DirectionalBelief.fresh()
             if self.config.sweep_origin:
@@ -256,7 +277,7 @@ class DogStrategy:
             self._revive_exhausted()
             self._home_all()
             self._inner_retry()
-            if self.config.directional_probe:
+            if self.config.directional_probe and not self.config.certified_search:
                 self._belief_search()
                 self._home_all()
                 self._blind_clear_sweep()
@@ -271,6 +292,11 @@ class DogStrategy:
 
     def summary(self) -> dict:
         cleared = sorted(ch for ch, st in self.channels.items() if st.cleared)
+        certified = sorted(ch for ch, st in self.channels.items()
+                           if self.config.certified_search and st.verdict_empty and not st.cleared)
+        unresolved = sorted(set(self.channels) - set(cleared) - set(certified))
+        completion_basis = ("source_count_upper_bound" if len(cleared) >= SOURCE_COUNT_MAX
+                            else "continuous_coverage" if not unresolved else "unresolved")
         measures = sum(1 for e in self.client.log if e["path"] == "/measure")
         clears = sum(1 for e in self.client.log if e["path"] == "/clear")
         return {
@@ -280,6 +306,10 @@ class DogStrategy:
             "measure_calls": measures,
             "clear_calls": clears,
             "mean_clear_time_s": self.client.virtual_time_s / len(cleared) if cleared else None,
+            "certified_empty_channels": certified,
+            "unresolved_channels": [] if len(cleared) >= SOURCE_COUNT_MAX else unresolved,
+            "completion_basis": completion_basis,
+            "coverage_skipped_stations": self.coverage_skipped_stations,
             "events": self.events,
         }
 
@@ -330,6 +360,11 @@ class DogStrategy:
         """
         if state.verdict_empty or state.bearings or state.cleared:
             return
+        if self.config.certified_search:
+            if silence_certificate(state.silent_points, self.config.directional_probe):
+                state.verdict_empty = True
+                self.events.append(f"ch{state.channel}: empty by continuous coverage certificate")
+            return
         if self.config.directional_probe:
             return
         # 按"互相距离 >= 接收半径下限一半"去重，避免同一片区域的多次沉默被重复计数
@@ -350,6 +385,12 @@ class DogStrategy:
         因为定向源仅在 180 度扇区内可见，方位采样必须比全向情形更密。
         """
         cfg = self.config
+        if cfg.certified_search and cfg.directional_probe:
+            # 交错双环 + 原点的三角剖分：所有边小于 1000 m，
+            # 外环凸包内切半径 1870*cos(15°)>1800 m。
+            stations = certified_stations("rings25")
+            rings = [stations[1:13], stations[13:]]
+            return list(reversed(rings)) if cfg.coverage_outer_first else rings
         layers = [(cfg.probe_ring_radius, cfg.probe_ring_stations, 0.0)]
         if cfg.directional_probe or cfg.use_outer_ring:
             outer_n = cfg.directional_ring_stations if cfg.directional_probe else cfg.outer_ring_stations
@@ -366,6 +407,9 @@ class DogStrategy:
     def _probe_ring(self) -> None:
         """覆盖环补扫：处理远距离源，并为定向源提供方位多样性。"""
         cfg = self.config
+        if cfg.certified_search and cfg.coverage_pruning:
+            self._walk_coverage()
+            return
         if not self._needs_probe():
             return
         stations = self._probe_stations()
@@ -375,6 +419,71 @@ class DogStrategy:
             if not self._needs_probe() or self._stop():
                 return
             self._walk_ring(ring)
+
+    def _walk_coverage(self) -> None:
+        """Drop future stops only when the remaining plan still guarantees discovery.
+
+        Future silent results may be assumed for planning, never for stopping.
+        Each channel's actual observations alone must certify its empty verdict.
+        Known, uncleared targets remain in the normal homing/recovery pipeline.
+        """
+        rings = self._probe_stations()
+        remaining = self._order_ring(rings[0]) + [p for ring in rings[1:] for p in ring]
+        first_layer = set(rings[0])
+        outer_ordered = len(rings) == 1
+        if not self.config.sweep_origin:
+            remaining.insert(0, (0.0, 0.0))
+        while remaining and not self._stop():
+            unknown = [s for s in self.channels.values()
+                       if not s.cleared and not s.bearings and not s.verdict_empty]
+            failed = any(s.bearings and not s.cleared and s.exhausted for s in self.channels.values())
+            if unknown and not failed:
+                common = set(unknown[0].silent_points)
+                for state in unknown[1:]:
+                    common.intersection_update(state.silent_points)
+                # A removed point must remain redundant after earlier removals.
+                for point in remaining[:]:
+                    trial = [p for p in remaining if p != point]
+                    if silence_certificate(list(common) + trial, self.config.directional_probe):
+                        remaining.remove(point)
+                        self.coverage_skipped_stations += 1
+            if not outer_ordered and not any(p in first_layer for p in remaining):
+                # Choose the outer-ring entry after inner homing has finished.
+                remaining = self._order_ring(remaining)
+                outer_ordered = True
+            todo = [s for s in self.channels.values() if self._probe_target(s)]
+            if not todo or not remaining:
+                break
+            station = remaining.pop(0)
+            for state in sorted(todo, key=lambda s: s.channel):
+                if self._stop():
+                    return
+                self._probe_channel_at(station, state)
+            self._home_all()
+            if not self._stop():
+                self._revive_nearby()
+
+    def _coverage_colocate_probe(self) -> None:
+        """Collect useful silent evidence at paid-for clearing stops."""
+        if self._in_colocate or self._stop():
+            return
+        here = self.pos
+        todo = [s for s in self.channels.values()
+                if not s.cleared and not s.bearings and not s.verdict_empty
+                and all(math.dist(here, p) >= self.config.coverage_colocate_spacing_m
+                        for p in s.silent_points)]
+        self._in_colocate = True
+        try:
+            for state in todo:
+                if self._stop():
+                    return
+                coverage = SilenceCoverage(self.config.directional_probe)
+                for point in state.silent_points:
+                    coverage.add(point)
+                if coverage.gain(here) > 0.5:
+                    self._probe_channel_at(here, state)
+        finally:
+            self._in_colocate = False
 
     def _order_ring(self, ring: list[tuple[float, float]]) -> list[tuple[float, float]]:
         """把一层环的站位按方位角单调排序，并从离当前位置最近的那个开始。
@@ -660,6 +769,12 @@ class DogStrategy:
         if not state.bearings:
             return 1e9
         last = state.bearings[-1]
+        if (self.config.omni_prior_routing and not self.config.directional_probe
+                and len(state.bearings) == 1):
+            from .routing import single_bearing_proxy
+            point = single_bearing_proxy(last, state.silent_points)
+            if point is not None:
+                return math.dist(self.pos, point)
         rad = math.radians(last.svd_deg)
         nominal = self.config.home_sort_nominal_range_m
         px = last.x + nominal * math.cos(rad)
@@ -681,6 +796,11 @@ class DogStrategy:
         while not self._stop():
             if state.cleared:      # 循环内某步已清除成功，立刻收工
                 return True
+            if self.config.certified_clear:
+                point = certified_clear_point(state.bearings)
+                if point is not None and self._clear_at(point, state.channel):
+                    self.events.append(f"ch{state.channel}: cleared with 18m region certificate")
+                    return True
             budget = self.config.max_homing_measures + (6 if state.revived else 0)
             # 可见区极小的定向源需要更多归航试探：实测 seed 7001 ch11 / 7015 ch20 /
             # 7039 ch4 的可见区仅占目标区域 2.3%-5.4% 且朝区域外辐射，一旦走出扇区
@@ -749,8 +869,9 @@ class DogStrategy:
         for offset in (cfg.dogleg_offset_deg, cfg.dogleg_offset_deg * 0.5, 0.0):
             for sign in (1.0, -1.0) if offset else (1.0,):
                 angle = math.radians(last.svd_deg + sign * offset)
-                candidate = (self.pos[0] + cfg.dogleg_length_m * math.cos(angle),
-                             self.pos[1] + cfg.dogleg_length_m * math.sin(angle))
+                anchor = (last.x, last.y) if cfg.anchored_dogleg else self.pos
+                candidate = (anchor[0] + cfg.dogleg_length_m * math.cos(angle),
+                             anchor[1] + cfg.dogleg_length_m * math.sin(angle))
                 if math.hypot(*candidate) > ARENA_RADIUS:
                     continue
                 before = len(state.bearings)
@@ -772,11 +893,14 @@ class DogStrategy:
         dx, dy = ex - self.pos[0], ey - self.pos[1]
         norm = math.hypot(dx, dy) or 1.0
         ux, uy = dx / norm, dy / norm
-        advance = max(cfg.clear_distance_m * 0.8, distance * cfg.approach_fraction)
+        approach, lateral_fraction = cfg.approach_fraction, cfg.lateral_fraction
+        if cfg.omni_fast_homing and not cfg.directional_probe:
+            approach, lateral_fraction = 0.82, 0.10
+        advance = max(cfg.clear_distance_m * 0.8, distance * approach)
         advance = min(advance, distance - cfg.clear_distance_m * 0.35) if distance > cfg.clear_distance_m else advance
         # R3.3：横向偏移按 lateral_fraction × 前进距离(advance) 叠加（而非 × 剩余距离），
         # 与设计 §3.3「lateral_fraction·前进距离」一致；上限 220 m 防止在远距离退化成大幅横向平移。
-        lateral = min(advance * cfg.lateral_fraction, 220.0)
+        lateral = min(advance * lateral_fraction, 220.0)
         for sign in (1.0, -1.0):
             candidate = (self.pos[0] + ux * advance - uy * lateral * sign,
                          self.pos[1] + uy * advance + ux * lateral * sign)
@@ -911,6 +1035,8 @@ class DogStrategy:
             # 共址补测：移动费已付，顺手给其他频道挣第二条基线。见 colocate_probe。
             if self.config.colocate_probe and not self._in_colocate:
                 self._colocate_probe()
+            if self.config.certified_search and self.config.coverage_colocate and not self._in_colocate:
+                self._coverage_colocate_probe()
         return result.ok
 
     def _range_to(self, state: ChannelState) -> float:
@@ -946,6 +1072,17 @@ class DogStrategy:
 
     def _stop(self) -> bool:
         if self._stopped:
+            return True
+        # 题面给出总数上界；只使用本机收到的成功回执，不读取模拟器真值。
+        # 第 16 次成功后仍须由 run() 的 finally 正常调用 /exit。
+        if sum(state.cleared for state in self.channels.values()) >= SOURCE_COUNT_MAX:
+            self.events.append("all sources cleared: reached source-count upper bound")
+            self._stopped = True
+            return True
+        if self.config.certified_search and all(state.cleared or state.verdict_empty
+                                               for state in self.channels.values()):
+            self.events.append("all sources cleared: continuous coverage certificate")
+            self._stopped = True
             return True
         if self.client.real_budget_left_s() <= self.config.real_time_reserve_s:
             self.events.append("real time budget reached")

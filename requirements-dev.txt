@@ -1,0 +1,4 @@
+# Runtime and Windows delivery use only the Python standard library.
+# Versions used for the 2026-09-11 regression suite (Python 3.12).
+pytest==9.1.1
+hypothesis==6.168.0

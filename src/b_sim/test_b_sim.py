@@ -334,12 +334,57 @@ def test_duplicate_json_key_returns_400(server):
 
 
 def test_protocol_surface_errors(server):
-    url, _ = server
+    url, session = server
     assert raw_post(url, "/unknown", base("u"))[0] == 404
     assert raw_post(url, "/enter", base("v"), method="GET")[0] == 405
     assert raw_post(url, "/enter", base("w"), ctype="text/plain")[0] == 415
     assert raw_post(url, "/enter", b"{not json", ctype="application/json")[0] == 400
-    assert raw_post(url, "/enter", b"x" * 70000)[0] == 413
+    # Exercise the Windows upload/early-response race more than once. A rejected
+    # request must receive 413 and cannot enter or advance the arena.
+    for _ in range(10):
+        status, body = raw_post(url, "/enter", b"x" * 70000)
+        assert status == 413
+        assert body["accepted"] is False
+        assert body["virtual_time_s"] == 0
+    assert not session.arena.robot.entered
+
+
+def test_rejected_body_drain_is_bounded_and_restores_timeout():
+    import io
+    from src.b_sim.server import Handler, MAX_REJECT_DRAIN_BYTES
+
+    class Connection:
+        timeout = None
+
+        def gettimeout(self):
+            return self.timeout
+
+        def settimeout(self, value):
+            self.timeout = value
+
+    handler = object.__new__(Handler)
+    handler.connection = Connection()
+    handler.rfile = io.BytesIO(b"x" * (MAX_REJECT_DRAIN_BYTES + 100))
+    handler._drain_rejected_body(10**12)
+    assert handler.rfile.tell() == MAX_REJECT_DRAIN_BYTES
+    assert handler.connection.gettimeout() is None
+
+
+def test_oversized_request_with_stalled_body_still_returns_413(server):
+    import socket
+    from urllib.parse import urlsplit
+
+    url, session = server
+    address = urlsplit(url)
+    with socket.create_connection((address.hostname, address.port), timeout=3) as peer:
+        peer.sendall(b"POST /enter HTTP/1.1\r\nHost: localhost\r\n"
+                     b"Content-Type: application/json\r\nContent-Length: 1000000000\r\n\r\nx")
+        response = peer.makefile("rb")
+        try:
+            assert response.readline().startswith(b"HTTP/1.1 413 ")
+        finally:
+            response.close()
+    assert not session.arena.robot.entered
 
 
 def test_client_raises_protocol_error_on_rejection(server):
@@ -1941,18 +1986,22 @@ def _make_strategy62(arena: _FakeArena62, config=None):
     strat.radio_channel = 1
     strat.events = []
     strat._stopped = False
+    strat.coverage_skipped_stations = 0
     return strat
 
 
 # ---- (a) R3.3：_step_closer 前进/横向几何 ----
 
-def test_step_closer_advance_is_062_of_distance_and_lateral_016_of_advance():
-    """R3.3：前进 ≈0.62×剩余距离，横向偏移 ≈0.16×前进距离(advance)。
+@pytest.mark.parametrize("fast,directional,approach,lateral", [
+    (False, False, 0.62, 0.16), (True, False, 0.82, 0.10), (True, True, 0.62, 0.16),
+])
+def test_step_closer_advance_and_lateral_follow_the_selected_mode(fast, directional, approach, lateral):
+    """R3.3：Q3快逼近和Q4保守配置都按实际前进距离计算横向偏移。
 
     构造一个远距离估计（避免 clear_distance 附近的截断项主导），验证新观测点相对
     起点的沿视线前进分量 ≈0.62×distance，横向（垂直视线）分量 ≈0.16×advance。
     """
-    cfg = _StrategyConfig62()
+    cfg = _StrategyConfig62(omni_fast_homing=fast, directional_probe=directional)
     # 估计位于正东 1000 m 处，狗在原点；no_signal 使 _step_closer 不会因取得示向度而提前返回。
     arena = _FakeArena62(measure_script=[{"measure_result": "no_signal", "virtual_time_s": 0.0}] * 4)
     strat = _make_strategy62(arena, cfg)
@@ -1968,18 +2017,19 @@ def test_step_closer_advance_is_062_of_distance_and_lateral_016_of_advance():
     # sign=+1 时候选 = pos + u*advance - (0,1)*lateral。
     cx, cy, _ch = arena.measure_calls[0]
     # 起点为原点、视线沿 +x：前进分量 = cx，横向分量 = |cy|。
-    expected_advance = distance * cfg.approach_fraction        # 620 m
-    expected_lateral = expected_advance * cfg.lateral_fraction  # 0.16×advance
+    expected_advance = distance * approach
+    expected_lateral = expected_advance * lateral
     assert cx == pytest.approx(expected_advance, rel=1e-6)
     assert abs(cy) == pytest.approx(expected_lateral, rel=1e-6)
     # 明确区分「×advance」与「旧口径 ×distance」：两者数值不同。
-    assert abs(cy) < distance * cfg.lateral_fraction - 1.0
+    assert abs(cy) < distance * lateral - 1.0
 
 
-def test_step_closer_advance_capped_near_clear_distance():
+@pytest.mark.parametrize("fast,approach,lateral", [(False, 0.62, 0.16), (True, 0.82, 0.10)])
+def test_step_closer_advance_capped_near_clear_distance(fast, approach, lateral):
     """R3.3：距离接近 clear_distance 时前进被 (distance − clear_distance×0.35) 截断，
     仍保持沿视线单调靠近（advance>0 且不越过目标）。"""
-    cfg = _StrategyConfig62()
+    cfg = _StrategyConfig62(omni_fast_homing=fast)
     arena = _FakeArena62(measure_script=[{"measure_result": "no_signal", "virtual_time_s": 0.0}] * 4)
     strat = _make_strategy62(arena, cfg)
     state = strat.channels[1]
@@ -1990,10 +2040,10 @@ def test_step_closer_advance_capped_near_clear_distance():
     cx, cy, _ = arena.measure_calls[0]
     upper = distance - cfg.clear_distance_m * 0.35
     lower = cfg.clear_distance_m * 0.8
-    expected_advance = min(max(lower, distance * cfg.approach_fraction), upper)
+    expected_advance = min(max(lower, distance * approach), upper)
     assert cx == pytest.approx(expected_advance, rel=1e-6)
     assert 0.0 < cx < distance             # 前进但不越过目标
-    assert abs(cy) == pytest.approx(expected_advance * cfg.lateral_fraction, rel=1e-6)
+    assert abs(cy) == pytest.approx(expected_advance * lateral, rel=1e-6)
 
 
 def test_localization_diameter_non_increasing_while_approaching():
@@ -2643,6 +2693,7 @@ def _make_strategy_with_client64(client, config=None):
     strat.radio_channel = 1
     strat.events = []
     strat._stopped = False
+    strat.coverage_skipped_stations = 0
     return strat
 
 
