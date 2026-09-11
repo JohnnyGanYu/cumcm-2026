@@ -1,5 +1,9 @@
 # 统稿任务背景（给论文统稿 agent）
 
+> **状态：已完成，仅存档。** 本文是 2026-09-11 交给论文统稿用的一次性交底材料，
+> 其中的成绩数字与配置停留在当时（如「204 项测试」「基线 n=9」）。**论文成稿见
+> `paper/main.md`，当前权威数字见根目录 `README.md`「当前成绩」节。** 不要再引用本文的数字。
+
 ## 环境
 - 仓库：/home/opsuser/.hermes/profiles/instance2/work/cumcm-2026
 - Python：/home/opsuser/.venvs/cumcm-2026/bin/python
