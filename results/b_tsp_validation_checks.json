@@ -2,7 +2,7 @@
   "passed": true,
   "candidate_source_sha256": "bd83d680bc8a58dd3266f8a63e72ce2cbb5fb889e5018db3b8339ece7f51b152",
   "python": "3.12.13 (main, Aug  7 2026, 02:26:41) [MSC v.1944 64 bit (AMD64)]",
-  "platform": "Windows-11-10.0.26100-SP0",
+  "platform": "Windows-11-10.0.26200-SP0",
   "test_command": "python -X utf8 -m pytest src/b_sim src/test_b_optimization_benchmark.py src/test_b_optimization_process.py src/test_b_silence_audit.py -q --tb=short",
   "test_exit_code": 0,
   "tests_passed": 287,
@@ -22,8 +22,206 @@
   "package_check_exit_code": 0,
   "windows_zip": {
     "path": "CUMCM2026B_robot_windows.zip",
-    "sha256": "a24b9321cd22350cb730b6a780e104785c7928102148557bd8d0b9efe8062f44",
+    "sha256": "31a14a82c8aa73e0247cb75290c089df6b8055628d97a89bf326d77fd08fb892",
     "entry_smoke_report": "results/b_tsp_windows_smoke.json",
+    "passed": true
+  },
+  "entry_failure_checks_report": "results/b_tsp_entry_failures.json",
+  "entry_failure_checks": {
+    "schema_version": 1,
+    "test_scope": "Real merged entry main with run() overridden for deliberate failures; loopback baseline mock, no official service",
+    "baseline_ref": "d560cbae",
+    "entries": {
+      "src\\run_official.py": "6567a572d9bf3c94647562abfef67fca91cdb3be0555f9f9674d4efcac31d985",
+      "dist_windows\\run_official.py": "6567a572d9bf3c94647562abfef67fca91cdb3be0555f9f9674d4efcac31d985"
+    },
+    "rows": [
+      {
+        "entry": "src\\run_official.py",
+        "mode": "exception_before_clear",
+        "command": [
+          "D:\\26CUMCM\\cumcm-2026\\.venv\\Scripts\\python.exe",
+          "-I",
+          "-S",
+          "-X",
+          "utf8",
+          "D:\\26CUMCM\\cumcm-2026\\results\\tmp\\check_entry_failures.py",
+          "--child",
+          "--entry",
+          "D:\\26CUMCM\\cumcm-2026\\src\\run_official.py",
+          "--mode",
+          "exception_before_clear",
+          "--base-url",
+          "http://127.0.0.1:63938"
+        ],
+        "returncode": 1,
+        "log_written": true,
+        "log": "D:\\26CUMCM\\cumcm-2026\\results\\tmp\\entry-failures-rwket1fl\\src\\exception_before_clear\\official_log_q3_practice_20260911_173132.json",
+        "crash": {
+          "type": "RuntimeError",
+          "message": "Injected entry failure: exception_before_clear",
+          "traceback": "Traceback (most recent call last):\n  File \"D:\\26CUMCM\\cumcm-2026\\src\\run_official.py\", line 95, in main\n    summary = strategy.run()\n              ^^^^^^^^^^^^^^\n  File \"D:\\26CUMCM\\cumcm-2026\\results\\tmp\\check_entry_failures.py\", line 26, in run\n    raise RuntimeError('Injected entry failure: '+mode)\nRuntimeError: Injected entry failure: exception_before_clear\n"
+        },
+        "cleared_count": 0,
+        "mean_clear_time_s": null,
+        "completion_basis": "unresolved",
+        "finished": true,
+        "verified": true
+      },
+      {
+        "entry": "src\\run_official.py",
+        "mode": "exception_after_one_clear",
+        "command": [
+          "D:\\26CUMCM\\cumcm-2026\\.venv\\Scripts\\python.exe",
+          "-I",
+          "-S",
+          "-X",
+          "utf8",
+          "D:\\26CUMCM\\cumcm-2026\\results\\tmp\\check_entry_failures.py",
+          "--child",
+          "--entry",
+          "D:\\26CUMCM\\cumcm-2026\\src\\run_official.py",
+          "--mode",
+          "exception_after_one_clear",
+          "--base-url",
+          "http://127.0.0.1:63942"
+        ],
+        "returncode": 1,
+        "log_written": true,
+        "log": "D:\\26CUMCM\\cumcm-2026\\results\\tmp\\entry-failures-rwket1fl\\src\\exception_after_one_clear\\official_log_q3_practice_20260911_173133.json",
+        "crash": {
+          "type": "RuntimeError",
+          "message": "Injected entry failure: exception_after_one_clear",
+          "traceback": "Traceback (most recent call last):\n  File \"D:\\26CUMCM\\cumcm-2026\\src\\run_official.py\", line 95, in main\n    summary = strategy.run()\n              ^^^^^^^^^^^^^^\n  File \"D:\\26CUMCM\\cumcm-2026\\results\\tmp\\check_entry_failures.py\", line 26, in run\n    raise RuntimeError('Injected entry failure: '+mode)\nRuntimeError: Injected entry failure: exception_after_one_clear\n"
+        },
+        "cleared_count": 1,
+        "mean_clear_time_s": 10.0,
+        "completion_basis": "unresolved",
+        "finished": true,
+        "verified": true
+      },
+      {
+        "entry": "src\\run_official.py",
+        "mode": "zero_clear_normal_return",
+        "command": [
+          "D:\\26CUMCM\\cumcm-2026\\.venv\\Scripts\\python.exe",
+          "-I",
+          "-S",
+          "-X",
+          "utf8",
+          "D:\\26CUMCM\\cumcm-2026\\results\\tmp\\check_entry_failures.py",
+          "--child",
+          "--entry",
+          "D:\\26CUMCM\\cumcm-2026\\src\\run_official.py",
+          "--mode",
+          "zero_clear_normal_return",
+          "--base-url",
+          "http://127.0.0.1:63947"
+        ],
+        "returncode": 0,
+        "log_written": true,
+        "log": "D:\\26CUMCM\\cumcm-2026\\results\\tmp\\entry-failures-rwket1fl\\src\\zero_clear_normal_return\\official_log_q3_practice_20260911_173134.json",
+        "crash": null,
+        "cleared_count": 0,
+        "mean_clear_time_s": null,
+        "completion_basis": "unresolved",
+        "finished": true,
+        "verified": true
+      },
+      {
+        "entry": "dist_windows\\run_official.py",
+        "mode": "exception_before_clear",
+        "command": [
+          "D:\\26CUMCM\\cumcm-2026\\.venv\\Scripts\\python.exe",
+          "-I",
+          "-S",
+          "-X",
+          "utf8",
+          "D:\\26CUMCM\\cumcm-2026\\results\\tmp\\check_entry_failures.py",
+          "--child",
+          "--entry",
+          "D:\\26CUMCM\\cumcm-2026\\dist_windows\\run_official.py",
+          "--mode",
+          "exception_before_clear",
+          "--base-url",
+          "http://127.0.0.1:63951"
+        ],
+        "returncode": 1,
+        "log_written": true,
+        "log": "D:\\26CUMCM\\cumcm-2026\\results\\tmp\\entry-failures-rwket1fl\\dist_windows\\exception_before_clear\\official_log_q3_practice_20260911_173136.json",
+        "crash": {
+          "type": "RuntimeError",
+          "message": "Injected entry failure: exception_before_clear",
+          "traceback": "Traceback (most recent call last):\n  File \"D:\\26CUMCM\\cumcm-2026\\dist_windows\\run_official.py\", line 95, in main\n    summary = strategy.run()\n              ^^^^^^^^^^^^^^\n  File \"D:\\26CUMCM\\cumcm-2026\\results\\tmp\\check_entry_failures.py\", line 26, in run\n    raise RuntimeError('Injected entry failure: '+mode)\nRuntimeError: Injected entry failure: exception_before_clear\n"
+        },
+        "cleared_count": 0,
+        "mean_clear_time_s": null,
+        "completion_basis": "unresolved",
+        "finished": true,
+        "verified": true
+      },
+      {
+        "entry": "dist_windows\\run_official.py",
+        "mode": "exception_after_one_clear",
+        "command": [
+          "D:\\26CUMCM\\cumcm-2026\\.venv\\Scripts\\python.exe",
+          "-I",
+          "-S",
+          "-X",
+          "utf8",
+          "D:\\26CUMCM\\cumcm-2026\\results\\tmp\\check_entry_failures.py",
+          "--child",
+          "--entry",
+          "D:\\26CUMCM\\cumcm-2026\\dist_windows\\run_official.py",
+          "--mode",
+          "exception_after_one_clear",
+          "--base-url",
+          "http://127.0.0.1:63958"
+        ],
+        "returncode": 1,
+        "log_written": true,
+        "log": "D:\\26CUMCM\\cumcm-2026\\results\\tmp\\entry-failures-rwket1fl\\dist_windows\\exception_after_one_clear\\official_log_q3_practice_20260911_173137.json",
+        "crash": {
+          "type": "RuntimeError",
+          "message": "Injected entry failure: exception_after_one_clear",
+          "traceback": "Traceback (most recent call last):\n  File \"D:\\26CUMCM\\cumcm-2026\\dist_windows\\run_official.py\", line 95, in main\n    summary = strategy.run()\n              ^^^^^^^^^^^^^^\n  File \"D:\\26CUMCM\\cumcm-2026\\results\\tmp\\check_entry_failures.py\", line 26, in run\n    raise RuntimeError('Injected entry failure: '+mode)\nRuntimeError: Injected entry failure: exception_after_one_clear\n"
+        },
+        "cleared_count": 1,
+        "mean_clear_time_s": 10.0,
+        "completion_basis": "unresolved",
+        "finished": true,
+        "verified": true
+      },
+      {
+        "entry": "dist_windows\\run_official.py",
+        "mode": "zero_clear_normal_return",
+        "command": [
+          "D:\\26CUMCM\\cumcm-2026\\.venv\\Scripts\\python.exe",
+          "-I",
+          "-S",
+          "-X",
+          "utf8",
+          "D:\\26CUMCM\\cumcm-2026\\results\\tmp\\check_entry_failures.py",
+          "--child",
+          "--entry",
+          "D:\\26CUMCM\\cumcm-2026\\dist_windows\\run_official.py",
+          "--mode",
+          "zero_clear_normal_return",
+          "--base-url",
+          "http://127.0.0.1:63965"
+        ],
+        "returncode": 0,
+        "log_written": true,
+        "log": "D:\\26CUMCM\\cumcm-2026\\results\\tmp\\entry-failures-rwket1fl\\dist_windows\\zero_clear_normal_return\\official_log_q3_practice_20260911_173138.json",
+        "crash": null,
+        "cleared_count": 0,
+        "mean_clear_time_s": null,
+        "completion_basis": "unresolved",
+        "finished": true,
+        "verified": true
+      }
+    ],
+    "baseline_commit": "d560cbae6675314541391cc8c7e0bd628a1cf50b",
     "passed": true
   },
   "scope": "Final default-policy source, full test suite and real extracted ZIP entry; paired performance results are recorded separately."

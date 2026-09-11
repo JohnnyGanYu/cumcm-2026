@@ -1,0 +1,197 @@
+{
+  "schema_version": 1,
+  "test_scope": "Real merged entry main with run() overridden for deliberate failures; loopback baseline mock, no official service",
+  "baseline_ref": "d560cbae",
+  "entries": {
+    "src\\run_official.py": "6567a572d9bf3c94647562abfef67fca91cdb3be0555f9f9674d4efcac31d985",
+    "dist_windows\\run_official.py": "6567a572d9bf3c94647562abfef67fca91cdb3be0555f9f9674d4efcac31d985"
+  },
+  "rows": [
+    {
+      "entry": "src\\run_official.py",
+      "mode": "exception_before_clear",
+      "command": [
+        "D:\\26CUMCM\\cumcm-2026\\.venv\\Scripts\\python.exe",
+        "-I",
+        "-S",
+        "-X",
+        "utf8",
+        "D:\\26CUMCM\\cumcm-2026\\results\\tmp\\check_entry_failures.py",
+        "--child",
+        "--entry",
+        "D:\\26CUMCM\\cumcm-2026\\src\\run_official.py",
+        "--mode",
+        "exception_before_clear",
+        "--base-url",
+        "http://127.0.0.1:63938"
+      ],
+      "returncode": 1,
+      "log_written": true,
+      "log": "D:\\26CUMCM\\cumcm-2026\\results\\tmp\\entry-failures-rwket1fl\\src\\exception_before_clear\\official_log_q3_practice_20260911_173132.json",
+      "crash": {
+        "type": "RuntimeError",
+        "message": "Injected entry failure: exception_before_clear",
+        "traceback": "Traceback (most recent call last):\n  File \"D:\\26CUMCM\\cumcm-2026\\src\\run_official.py\", line 95, in main\n    summary = strategy.run()\n              ^^^^^^^^^^^^^^\n  File \"D:\\26CUMCM\\cumcm-2026\\results\\tmp\\check_entry_failures.py\", line 26, in run\n    raise RuntimeError('Injected entry failure: '+mode)\nRuntimeError: Injected entry failure: exception_before_clear\n"
+      },
+      "cleared_count": 0,
+      "mean_clear_time_s": null,
+      "completion_basis": "unresolved",
+      "finished": true,
+      "verified": true
+    },
+    {
+      "entry": "src\\run_official.py",
+      "mode": "exception_after_one_clear",
+      "command": [
+        "D:\\26CUMCM\\cumcm-2026\\.venv\\Scripts\\python.exe",
+        "-I",
+        "-S",
+        "-X",
+        "utf8",
+        "D:\\26CUMCM\\cumcm-2026\\results\\tmp\\check_entry_failures.py",
+        "--child",
+        "--entry",
+        "D:\\26CUMCM\\cumcm-2026\\src\\run_official.py",
+        "--mode",
+        "exception_after_one_clear",
+        "--base-url",
+        "http://127.0.0.1:63942"
+      ],
+      "returncode": 1,
+      "log_written": true,
+      "log": "D:\\26CUMCM\\cumcm-2026\\results\\tmp\\entry-failures-rwket1fl\\src\\exception_after_one_clear\\official_log_q3_practice_20260911_173133.json",
+      "crash": {
+        "type": "RuntimeError",
+        "message": "Injected entry failure: exception_after_one_clear",
+        "traceback": "Traceback (most recent call last):\n  File \"D:\\26CUMCM\\cumcm-2026\\src\\run_official.py\", line 95, in main\n    summary = strategy.run()\n              ^^^^^^^^^^^^^^\n  File \"D:\\26CUMCM\\cumcm-2026\\results\\tmp\\check_entry_failures.py\", line 26, in run\n    raise RuntimeError('Injected entry failure: '+mode)\nRuntimeError: Injected entry failure: exception_after_one_clear\n"
+      },
+      "cleared_count": 1,
+      "mean_clear_time_s": 10.0,
+      "completion_basis": "unresolved",
+      "finished": true,
+      "verified": true
+    },
+    {
+      "entry": "src\\run_official.py",
+      "mode": "zero_clear_normal_return",
+      "command": [
+        "D:\\26CUMCM\\cumcm-2026\\.venv\\Scripts\\python.exe",
+        "-I",
+        "-S",
+        "-X",
+        "utf8",
+        "D:\\26CUMCM\\cumcm-2026\\results\\tmp\\check_entry_failures.py",
+        "--child",
+        "--entry",
+        "D:\\26CUMCM\\cumcm-2026\\src\\run_official.py",
+        "--mode",
+        "zero_clear_normal_return",
+        "--base-url",
+        "http://127.0.0.1:63947"
+      ],
+      "returncode": 0,
+      "log_written": true,
+      "log": "D:\\26CUMCM\\cumcm-2026\\results\\tmp\\entry-failures-rwket1fl\\src\\zero_clear_normal_return\\official_log_q3_practice_20260911_173134.json",
+      "crash": null,
+      "cleared_count": 0,
+      "mean_clear_time_s": null,
+      "completion_basis": "unresolved",
+      "finished": true,
+      "verified": true
+    },
+    {
+      "entry": "dist_windows\\run_official.py",
+      "mode": "exception_before_clear",
+      "command": [
+        "D:\\26CUMCM\\cumcm-2026\\.venv\\Scripts\\python.exe",
+        "-I",
+        "-S",
+        "-X",
+        "utf8",
+        "D:\\26CUMCM\\cumcm-2026\\results\\tmp\\check_entry_failures.py",
+        "--child",
+        "--entry",
+        "D:\\26CUMCM\\cumcm-2026\\dist_windows\\run_official.py",
+        "--mode",
+        "exception_before_clear",
+        "--base-url",
+        "http://127.0.0.1:63951"
+      ],
+      "returncode": 1,
+      "log_written": true,
+      "log": "D:\\26CUMCM\\cumcm-2026\\results\\tmp\\entry-failures-rwket1fl\\dist_windows\\exception_before_clear\\official_log_q3_practice_20260911_173136.json",
+      "crash": {
+        "type": "RuntimeError",
+        "message": "Injected entry failure: exception_before_clear",
+        "traceback": "Traceback (most recent call last):\n  File \"D:\\26CUMCM\\cumcm-2026\\dist_windows\\run_official.py\", line 95, in main\n    summary = strategy.run()\n              ^^^^^^^^^^^^^^\n  File \"D:\\26CUMCM\\cumcm-2026\\results\\tmp\\check_entry_failures.py\", line 26, in run\n    raise RuntimeError('Injected entry failure: '+mode)\nRuntimeError: Injected entry failure: exception_before_clear\n"
+      },
+      "cleared_count": 0,
+      "mean_clear_time_s": null,
+      "completion_basis": "unresolved",
+      "finished": true,
+      "verified": true
+    },
+    {
+      "entry": "dist_windows\\run_official.py",
+      "mode": "exception_after_one_clear",
+      "command": [
+        "D:\\26CUMCM\\cumcm-2026\\.venv\\Scripts\\python.exe",
+        "-I",
+        "-S",
+        "-X",
+        "utf8",
+        "D:\\26CUMCM\\cumcm-2026\\results\\tmp\\check_entry_failures.py",
+        "--child",
+        "--entry",
+        "D:\\26CUMCM\\cumcm-2026\\dist_windows\\run_official.py",
+        "--mode",
+        "exception_after_one_clear",
+        "--base-url",
+        "http://127.0.0.1:63958"
+      ],
+      "returncode": 1,
+      "log_written": true,
+      "log": "D:\\26CUMCM\\cumcm-2026\\results\\tmp\\entry-failures-rwket1fl\\dist_windows\\exception_after_one_clear\\official_log_q3_practice_20260911_173137.json",
+      "crash": {
+        "type": "RuntimeError",
+        "message": "Injected entry failure: exception_after_one_clear",
+        "traceback": "Traceback (most recent call last):\n  File \"D:\\26CUMCM\\cumcm-2026\\dist_windows\\run_official.py\", line 95, in main\n    summary = strategy.run()\n              ^^^^^^^^^^^^^^\n  File \"D:\\26CUMCM\\cumcm-2026\\results\\tmp\\check_entry_failures.py\", line 26, in run\n    raise RuntimeError('Injected entry failure: '+mode)\nRuntimeError: Injected entry failure: exception_after_one_clear\n"
+      },
+      "cleared_count": 1,
+      "mean_clear_time_s": 10.0,
+      "completion_basis": "unresolved",
+      "finished": true,
+      "verified": true
+    },
+    {
+      "entry": "dist_windows\\run_official.py",
+      "mode": "zero_clear_normal_return",
+      "command": [
+        "D:\\26CUMCM\\cumcm-2026\\.venv\\Scripts\\python.exe",
+        "-I",
+        "-S",
+        "-X",
+        "utf8",
+        "D:\\26CUMCM\\cumcm-2026\\results\\tmp\\check_entry_failures.py",
+        "--child",
+        "--entry",
+        "D:\\26CUMCM\\cumcm-2026\\dist_windows\\run_official.py",
+        "--mode",
+        "zero_clear_normal_return",
+        "--base-url",
+        "http://127.0.0.1:63965"
+      ],
+      "returncode": 0,
+      "log_written": true,
+      "log": "D:\\26CUMCM\\cumcm-2026\\results\\tmp\\entry-failures-rwket1fl\\dist_windows\\zero_clear_normal_return\\official_log_q3_practice_20260911_173138.json",
+      "crash": null,
+      "cleared_count": 0,
+      "mean_clear_time_s": null,
+      "completion_basis": "unresolved",
+      "finished": true,
+      "verified": true
+    }
+  ],
+  "baseline_commit": "d560cbae6675314541391cc8c7e0bd628a1cf50b",
+  "passed": true
+}
