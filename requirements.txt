@@ -1,0 +1,8 @@
+# CUMCM 2026 B 题 —— 运行与测试依赖（版本按本机实测环境钉住）
+#
+#   uv pip install --python /path/to/venv/bin/python -r requirements.txt
+#
+# 说明：test_b_pbt.py（33 项面向性质测试）需要 hypothesis。此前仓库无依赖声明
+# 文件，该套件在干净环境下会 ModuleNotFoundError 直接无法收集，故补上本文件。
+
+# 数值与...[truncated]
