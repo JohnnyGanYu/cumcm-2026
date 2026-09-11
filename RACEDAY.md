@@ -21,12 +21,18 @@
 在**离线环境**做完，不占测试次数：
 
 ```
-python -m src.pack_dist_windows --check      # 交付包与源码是否同步
+python -m src.pack_dist_windows --check      # src/b_sim -> dist_windows 是否同步
+python -m src.build_windows_zip --check      # dist_windows -> 交付 zip 是否同步
 python -m pytest src/b_sim/test_b_sim.py -q  # 回归
 python run_official.py --robot-id <队号> --dry-run   # 仅在演练窗口用
 ```
 
-`--check` 这一项**必须过**。曾出现 `strategy.py` 未同步到 `dist_windows/` 的情况——若不修，正式测试跑的会是旧策略。
+**两个 `--check` 都必须过**，它们各挡一层漂移，都真实出过问题：
+
+- `pack_dist_windows --check` 曾报 `strategy.py` 未同步到 `dist_windows/`
+- `build_windows_zip --check` 是为根目录那份 `CUMCM2026B_robot_windows.zip` 加的。实测发现它停留在 9-10 的旧版本（`1250x12`、**无 `route.py` 即无 TSP**、射线盲扫只 3 处）——当天若直接解压它跑，会拿到比当前 main 慢约 24% 的策略，并少一处清除率兜底。
+
+zip 打包使用固定时间戳，同样的源码打出字节相同的包，MD5 可复核。当前 MD5 见 `--check` 输出。
 
 `--dry-run` **绝不能用在正式测试窗口**：它会真的调一次 `/enter`，而一次测试只允许 enter 一次。
 
