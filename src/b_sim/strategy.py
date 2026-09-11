@@ -169,6 +169,29 @@ class StrategyConfig:
     #   加权 -48.5 s，清除率与漏失数完全不变（2->2）。
     nearby_revive_radius_m: float = 900.0
     nearby_revive_max_per_channel: int = 2
+    # 共址补测：每次清除成功后机器狗已停在该点、移动成本已付清，此时给其余
+    # 仍缺定位估计（estimate is None）的频道原地各补测一次，用于挣第二条基线。
+    #
+    # 根因（见 results/b_deadhead_interleaving_verdict.md）：归航占总移动 68.1%，
+    # 而 _range_to 在归航时刻恒返回 0.0（回退到"到最后一条示向度观测点的距离"，
+    # 那条恰在当前位置测得），实测 63/63 批次完全并列，就近排序退化为按频道号取。
+    # 更深一层是原点只在单点采样，故每个频道都得先走 380 m dogleg 才有第二条基线。
+    # 共址补测直接消除这段 dogleg：站在原地换频再测一次，代价仅 1 s 切频 + 5 s 检测。
+    #
+    # 实测（40 局同种子配对，环 1150x6，results/b_colocate_*_ring1150x6.json）：
+    #   Q3 全向    400.9 -> 322.8 s  -19.47%  p=3.2e-15  38胜/2负
+    #   Q4 5定向  1136.1 -> 1067.5 s  -6.04%  p=1.1e-09  35胜/5负
+    #   Q4 16定向 1031.3 ->  966.2 s  -6.31%  p=2.7e-06  33胜/7负
+    # 三档清除数逐局持平（d=0.0，40/40 tie），总移动降 7.2%-24.4%。
+    #
+    # min_baseline 的作用：基线过短则三角化无意义还白烧 5 s，故要求当前位置距
+    # 该频道最后一次观测点至少 250 m。已证伪的变体：600 m 门限触发太少收益减半。
+    colocate_probe: bool = True
+    colocate_min_baseline_m: float = 250.0
+    colocate_max_per_stop: int = 99
+    # 归航排序代理距离：无 estimate 时沿示向度射线取该标称距离处的点作代理，
+    # 避免 _range_to 恒为 0 导致的排序退化。900 m 取自接收半径下限量级。
+    home_sort_nominal_range_m: float = 900.0
     # 批量归航：扫过几个站位后才统一归航清除（1 = 逐站归航）。
     # 实测被证伪，保留参数供论文写"试过但无效"：Q4 20局 同种子
     #   batch=1 -> 1261.9s (20/20)    batch=2 -> 1291.8s
@@ -193,6 +216,13 @@ class StrategyConfig:
 
 
 class DogStrategy:
+    # 类级默认值：部分测试用打桩方式绕过 __init__ 构造实例，这些属性必须在
+    # 类上就有默认值，否则 _clear_at 里的共址补测判断会 AttributeError。
+    _in_colocate = False
+    colo_stops = 0
+    colo_measures = 0
+    colo_new_estimates = 0
+
     def __init__(self, client: RobotClient, config: StrategyConfig | None = None) -> None:
         self.client = client
         self.config = config or StrategyConfig()
@@ -205,6 +235,11 @@ class DogStrategy:
         self._stopped = False
         # 每频道就近复活次数，防止在同一频道上反复烧预算
         self._revive_counts: dict[int, int] = {}
+        # 共址补测计数（用于实验归因，不影响策略）
+        self.colo_stops = 0
+        self.colo_measures = 0
+        self.colo_new_estimates = 0
+        self._in_colocate = False
 
     # ---- 入口 ----
 
@@ -576,12 +611,68 @@ class DogStrategy:
         points.sort(key=lambda q: math.hypot(q[0] - cx, q[1] - cy))
         return points
 
+    def _colocate_probe(self) -> None:
+        """在当前位置给仍缺定位估计的频道原地补测。移动成本为 0。
+
+        只处理"已有示向度但还凑不出交会"的频道：完全沉默的频道属覆盖问题，
+        应交给环形补扫，在此原地重测无意义。见 StrategyConfig.colocate_probe。
+        """
+        if self._in_colocate or self._stop():
+            return
+        here = self.pos
+        cands: list[ChannelState] = []
+        for state in self.channels.values():
+            if state.cleared or state.verdict_empty or state.estimate is not None:
+                continue
+            if not state.bearings:
+                continue
+            last = state.bearings[-1]
+            if math.hypot(last.x - here[0], last.y - here[1]) < self.config.colocate_min_baseline_m:
+                continue
+            cands.append(state)
+        if not cands:
+            return
+        cands.sort(key=lambda st: st.channel)   # 切频代价与频道号距离无关
+        self._in_colocate = True
+        self.colo_stops += 1
+        try:
+            for state in cands[: self.config.colocate_max_per_stop]:
+                if self._stop() or state.cleared:
+                    break
+                had_est = state.estimate is not None
+                self.colo_measures += 1
+                self._probe_channel_at(here, state)
+                if not had_est and state.estimate is not None:
+                    self.colo_new_estimates += 1
+        finally:
+            self._in_colocate = False
+
+    def _proxy_range(self, state: ChannelState) -> float:
+        """归航排序用的代理距离。
+
+        _range_to 在"刚测完就归航"时恒为 0（最后一条示向度就在当前位置测得），
+        导致就近排序完全并列、退化为按频道号取。这里对尚无 estimate 的频道改用
+        "沿示向度射线走标称距离"处的点作代理，恢复排序的区分度。
+        """
+        if state.estimate is not None:
+            return math.hypot(state.estimate[0] - self.pos[0],
+                              state.estimate[1] - self.pos[1])
+        if not state.bearings:
+            return 1e9
+        last = state.bearings[-1]
+        rad = math.radians(last.svd_deg)
+        nominal = self.config.home_sort_nominal_range_m
+        px = last.x + nominal * math.cos(rad)
+        py = last.y + nominal * math.sin(rad)
+        return math.hypot(px - self.pos[0], py - self.pos[1])
+
     def _home_all(self) -> None:
         while not self._stop():
             targets = [st for st in self.channels.values() if st.active]
             if not targets:
                 return
-            targets.sort(key=lambda st: self._range_to(st))
+            # 用 _proxy_range 而非 _range_to：后者在归航时刻恒为 0，排序退化。
+            targets.sort(key=lambda st: self._proxy_range(st))
             if not self._home_channel(targets[0]):
                 targets[0].exhausted = True
 
@@ -817,6 +908,9 @@ class DogStrategy:
         self.pos = point
         if result.ok:
             state.cleared = True
+            # 共址补测：移动费已付，顺手给其他频道挣第二条基线。见 colocate_probe。
+            if self.config.colocate_probe and not self._in_colocate:
+                self._colocate_probe()
         return result.ok
 
     def _range_to(self, state: ChannelState) -> float:

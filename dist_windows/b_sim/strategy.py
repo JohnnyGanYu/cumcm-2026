@@ -155,6 +155,43 @@ class StrategyConfig:
     # 一分钱不省，反而因误杀真源触发复活绕路（3 局实测 477->545 s，变慢 14%）。
     # 故默认关闭（999）。若将来 Q3 也启用外环（31 站位），可设 13 生效。
     empty_verdict_stations: int = 999       # 全向：不同站位沉默数达此值即判空
+    # 就近复活：归航失败的频道不必等整环走完，机器狗路过其估计位置附近时立即重试。
+    # 根因实测（`src/b_tail_diag.py`，8 局）：
+    #   评分指标 mean_clear_time_s 的 55% 来自最慢 3 个源；
+    #   尾部源 = 第一次归航失败的源（头部源 fails=0，尾部源 fails=1）；
+    #   典型样本 t=119 s 就拿到示向度，却到 t=9398 s 才清除；
+    #   失败后等 p50=6809 s 才重试，而重试仅需 p50=248 s 就成功。
+    #   => 浪费的是**等待**，因为 `_revive_exhausted` 只在整环走完后调用。
+    # 半径标定（98 局 4 档配对实测，`src/b_nearby_revive.py`）：
+    #   600 m: -3.0%   900 m: -4.1%(最优)   1400 m: -3.2%
+    #   过小则很少触发，过大则退化为"原地重试同一失败几何"（已证伪：+6.8 s）。
+    # 全量验证：Q3 -0.6% / 5定向 -4.1% / 10定向 -5.3% / 16定向 -6.1%，
+    #   加权 -48.5 s，清除率与漏失数完全不变（2->2）。
+    nearby_revive_radius_m: float = 900.0
+    nearby_revive_max_per_channel: int = 2
+    # 共址补测：每次清除成功后机器狗已停在该点、移动成本已付清，此时给其余
+    # 仍缺定位估计（estimate is None）的频道原地各补测一次，用于挣第二条基线。
+    #
+    # 根因（见 results/b_deadhead_interleaving_verdict.md）：归航占总移动 68.1%，
+    # 而 _range_to 在归航时刻恒返回 0.0（回退到"到最后一条示向度观测点的距离"，
+    # 那条恰在当前位置测得），实测 63/63 批次完全并列，就近排序退化为按频道号取。
+    # 更深一层是原点只在单点采样，故每个频道都得先走 380 m dogleg 才有第二条基线。
+    # 共址补测直接消除这段 dogleg：站在原地换频再测一次，代价仅 1 s 切频 + 5 s 检测。
+    #
+    # 实测（40 局同种子配对，环 1150x6，results/b_colocate_*_ring1150x6.json）：
+    #   Q3 全向    400.9 -> 322.8 s  -19.47%  p=3.2e-15  38胜/2负
+    #   Q4 5定向  1136.1 -> 1067.5 s  -6.04%  p=1.1e-09  35胜/5负
+    #   Q4 16定向 1031.3 ->  966.2 s  -6.31%  p=2.7e-06  33胜/7负
+    # 三档清除数逐局持平（d=0.0，40/40 tie），总移动降 7.2%-24.4%。
+    #
+    # min_baseline 的作用：基线过短则三角化无意义还白烧 5 s，故要求当前位置距
+    # 该频道最后一次观测点至少 250 m。已证伪的变体：600 m 门限触发太少收益减半。
+    colocate_probe: bool = True
+    colocate_min_baseline_m: float = 250.0
+    colocate_max_per_stop: int = 99
+    # 归航排序代理距离：无 estimate 时沿示向度射线取该标称距离处的点作代理，
+    # 避免 _range_to 恒为 0 导致的排序退化。900 m 取自接收半径下限量级。
+    home_sort_nominal_range_m: float = 900.0
     # 批量归航：扫过几个站位后才统一归航清除（1 = 逐站归航）。
     # 实测被证伪，保留参数供论文写"试过但无效"：Q4 20局 同种子
     #   batch=1 -> 1261.9s (20/20)    batch=2 -> 1291.8s
@@ -179,6 +216,13 @@ class StrategyConfig:
 
 
 class DogStrategy:
+    # 类级默认值：部分测试用打桩方式绕过 __init__ 构造实例，这些属性必须在
+    # 类上就有默认值，否则 _clear_at 里的共址补测判断会 AttributeError。
+    _in_colocate = False
+    colo_stops = 0
+    colo_measures = 0
+    colo_new_estimates = 0
+
     def __init__(self, client: RobotClient, config: StrategyConfig | None = None) -> None:
         self.client = client
         self.config = config or StrategyConfig()
@@ -189,6 +233,13 @@ class DogStrategy:
         self.radio_channel = 1
         self.events: list[str] = []
         self._stopped = False
+        # 每频道就近复活次数，防止在同一频道上反复烧预算
+        self._revive_counts: dict[int, int] = {}
+        # 共址补测计数（用于实验归因，不影响策略）
+        self.colo_stops = 0
+        self.colo_measures = 0
+        self.colo_new_estimates = 0
+        self._in_colocate = False
 
     # ---- 入口 ----
 
@@ -386,8 +437,49 @@ class DogStrategy:
             if ready and (since_home >= self.config.home_batch_stations or not remaining):
                 self._home_all()
                 since_home = 0
+            # 就近复活：路过时立即重试归航失败的频道，不等整环走完。见 StrategyConfig
+            # 的 nearby_revive_radius_m 注释（根因与 98 局标定数据）。
+            if self._stop():
+                return
+            self._revive_nearby()
         if not self._stop():
             self._home_all()
+
+    def _revive_nearby(self) -> None:
+        """机器狗当前位置附近若有\"归航失败但已定位\"的频道，立刻重试一个。
+
+        与 `_revive_exhausted` 的区别是**触发条件**：后者按时间（整环走完），
+        前者按几何（走到附近）。实测尾部源的第二次归航只需 248 s 就成功，
+        却要等 6809 s 才被调度到——这个等待是评分指标的主要损失来源。
+
+        只取最近的一个：复活后 `_home_channel` 会带着机器狗离开当前站位，
+        批量复活会退化成\"专程往返\"（已证伪：eager 变体 +74 s / 7-of-8 更差）。
+        """
+        cfg = self.config
+        best: tuple[float, ChannelState] | None = None
+        for state in self.channels.values():
+            if state.cleared or state.verdict_empty or not state.exhausted:
+                continue
+            if not state.bearings or state.estimate is None:
+                continue
+            if self._revive_counts.get(state.channel, 0) >= cfg.nearby_revive_max_per_channel:
+                continue
+            distance = math.hypot(state.estimate[0] - self.pos[0],
+                                  state.estimate[1] - self.pos[1])
+            if distance <= cfg.nearby_revive_radius_m and (best is None or distance < best[0]):
+                best = (distance, state)
+        if best is None:
+            return
+        state = best[1]
+        self._revive_counts[state.channel] = self._revive_counts.get(state.channel, 0) + 1
+        # 归航预算重新起算：失败可能只是当时几何差，新站位给了更好的交会角
+        state.exhausted = False
+        state.consecutive_silent = 0
+        state.homing_measures = 0
+        state.clear_attempts = 0
+        state.ray_swept = False
+        if not self._home_channel(state):
+            state.exhausted = True
 
     # ---- 阶段 2：归航 ----
 
@@ -519,12 +611,68 @@ class DogStrategy:
         points.sort(key=lambda q: math.hypot(q[0] - cx, q[1] - cy))
         return points
 
+    def _colocate_probe(self) -> None:
+        """在当前位置给仍缺定位估计的频道原地补测。移动成本为 0。
+
+        只处理"已有示向度但还凑不出交会"的频道：完全沉默的频道属覆盖问题，
+        应交给环形补扫，在此原地重测无意义。见 StrategyConfig.colocate_probe。
+        """
+        if self._in_colocate or self._stop():
+            return
+        here = self.pos
+        cands: list[ChannelState] = []
+        for state in self.channels.values():
+            if state.cleared or state.verdict_empty or state.estimate is not None:
+                continue
+            if not state.bearings:
+                continue
+            last = state.bearings[-1]
+            if math.hypot(last.x - here[0], last.y - here[1]) < self.config.colocate_min_baseline_m:
+                continue
+            cands.append(state)
+        if not cands:
+            return
+        cands.sort(key=lambda st: st.channel)   # 切频代价与频道号距离无关
+        self._in_colocate = True
+        self.colo_stops += 1
+        try:
+            for state in cands[: self.config.colocate_max_per_stop]:
+                if self._stop() or state.cleared:
+                    break
+                had_est = state.estimate is not None
+                self.colo_measures += 1
+                self._probe_channel_at(here, state)
+                if not had_est and state.estimate is not None:
+                    self.colo_new_estimates += 1
+        finally:
+            self._in_colocate = False
+
+    def _proxy_range(self, state: ChannelState) -> float:
+        """归航排序用的代理距离。
+
+        _range_to 在"刚测完就归航"时恒为 0（最后一条示向度就在当前位置测得），
+        导致就近排序完全并列、退化为按频道号取。这里对尚无 estimate 的频道改用
+        "沿示向度射线走标称距离"处的点作代理，恢复排序的区分度。
+        """
+        if state.estimate is not None:
+            return math.hypot(state.estimate[0] - self.pos[0],
+                              state.estimate[1] - self.pos[1])
+        if not state.bearings:
+            return 1e9
+        last = state.bearings[-1]
+        rad = math.radians(last.svd_deg)
+        nominal = self.config.home_sort_nominal_range_m
+        px = last.x + nominal * math.cos(rad)
+        py = last.y + nominal * math.sin(rad)
+        return math.hypot(px - self.pos[0], py - self.pos[1])
+
     def _home_all(self) -> None:
         while not self._stop():
             targets = [st for st in self.channels.values() if st.active]
             if not targets:
                 return
-            targets.sort(key=lambda st: self._range_to(st))
+            # 用 _proxy_range 而非 _range_to：后者在归航时刻恒为 0，排序退化。
+            targets.sort(key=lambda st: self._proxy_range(st))
             if not self._home_channel(targets[0]):
                 targets[0].exhausted = True
 
@@ -568,6 +716,12 @@ class DogStrategy:
 
             if state.estimate is None:
                 if not self._dogleg(state):
+                    # 只有 1 条示向度时 estimate 永远是 None（_refresh 要求 >=2 条），
+                    # dogleg 失败后旧实现直接放弃，绕过了射线盲扫 —— 这是漏失的主因：
+                    # 真值归因显示 14/17 个漏失源都走这条路，且它们可见区非空、
+                    # /clear 只看距离，理论上全部可清除。方向已知就该沿射线铺点。
+                    if state.bearings:
+                        return self._ray_blind_clear(state)
                     return False
                 continue
 
@@ -620,7 +774,9 @@ class DogStrategy:
         ux, uy = dx / norm, dy / norm
         advance = max(cfg.clear_distance_m * 0.8, distance * cfg.approach_fraction)
         advance = min(advance, distance - cfg.clear_distance_m * 0.35) if distance > cfg.clear_distance_m else advance
-        lateral = min(distance * cfg.lateral_fraction, 220.0)
+        # R3.3：横向偏移按 lateral_fraction × 前进距离(advance) 叠加（而非 × 剩余距离），
+        # 与设计 §3.3「lateral_fraction·前进距离」一致；上限 220 m 防止在远距离退化成大幅横向平移。
+        lateral = min(advance * cfg.lateral_fraction, 220.0)
         for sign in (1.0, -1.0):
             candidate = (self.pos[0] + ux * advance - uy * lateral * sign,
                          self.pos[1] + uy * advance + ux * lateral * sign)
@@ -752,9 +908,35 @@ class DogStrategy:
         self.pos = point
         if result.ok:
             state.cleared = True
+            # 共址补测：移动费已付，顺手给其他频道挣第二条基线。见 colocate_probe。
+            if self.config.colocate_probe and not self._in_colocate:
+                self._colocate_probe()
         return result.ok
 
     def _range_to(self, state: ChannelState) -> float:
+        """到目标的排序距离。**已知缺陷，见下**。
+
+        缺陷（`src/b_home_order.py --diagnose` 实测，Q3 30 局）：`estimate` 需要 >= 2 条
+        示向度（`_refresh` 的要求）才非 None。而 `_walk_ring` 是"在同一站位把所有待测
+        频道扫一遍"，所以一批目标的**首条**示向度全部记在**同一个观测点**上，而那个
+        观测点恰是机器狗当前位置 —— 于是下面的回退分支对整批目标全返回 0.0。
+        实测 63/63 个多目标归航批次排序键完全并列、批内持有 estimate 的目标数为 0，
+        `_home_all` 里的 `sorted` 是稳定排序，"按距离取最近"因此退化为**按频道号取**，
+        而频道号与空间位置无关。批内真值巡回长度：频道号序 4842 m、示向度方位角序
+        3543 m(-26.8%)、真值最优 2180 m。
+        更深一层的原因（也是更值得修的）：`estimate` 恒为 None 是因为**原点普扫只在一个
+        点取样**，所以普扫结束时每个频道都得先走一次 `dogleg_length_m=380 m` 去挣第二条
+        基线。这是 `homing_origin` 占 Q3 总移动 38.6% 的来源。
+
+        两种修法的配对检验（真实闭环，同种子逐局配对，详见
+        `results/b_deadhead_verdict.md`）：
+          1. 只修排序（`src/b_raysort.py`，并列时按示向度射线代理点取最近）：
+             Q3 24 局移动 -5.6%(t=-2.44, p=0.023)。有效但有限。
+          2. 共址补测（`src/b_colocate.py`，在已付过移动费的停靠点原地给其余频道补测，
+             移动成本 0）：Q3 40 局移动 -20.9%(t=-10.30, p=1.1e-12, 40/0/0 全胜)、
+             Q4-5定向 -8.0%(p=7.4e-10)、Q4-全定向 -2.8%(p=0.0080)，清除率三档持平。
+        两者均未合入本文件（生产路径未改），合入需队员决定。
+        """
         if state.estimate is None:
             if state.bearings:
                 last = state.bearings[-1]
