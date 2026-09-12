@@ -36,7 +36,11 @@
 
 ## QUALITY — team verification
 
-- [ ] Every subproblem is answered.
+- [x] Every subproblem is answered — 按 B题.pdf 原文逐条核对，`test_paper_answers_all_subquestions.py`
+      锁住六个子问的覆盖。2026-09-13 核对时补了两处遗漏：问题 1 的「以定位区域直径为直径的圆
+      能否覆盖此定位区域」原先只在图注里带过一句（补 2.2 节，给正三角形反例与 Jung 紧上界）；
+      问题 2 的「第二个检测点的候选区域」原先写成了具体参数（偏转 32°、基线 380 m），
+      不是题目要的区域（补 3.3 节，四约束求交、面积 3.88e4 m²、97 格点、蒙特卡洛校验）。
 - [ ] Every key number is linked in `claim_evidence.csv`.
 - [ ] Clean-environment rerun succeeded.
 - [ ] Figures are generated from locked results.
