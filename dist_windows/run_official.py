@@ -222,7 +222,9 @@ def main() -> None:
             "traceback": "".join(traceback.format_exception(
                 type(crash), crash, crash.__traceback__)),
         },
-        "strategy_config": vars(strategy.config),
+        # 记录真正跑的策略类：交付入口现在按 --legacy-q3/q4 在 Fast 与 DogStrategy 间切换，
+        # 若不落盘，赛后无法从日志确认这一局用的是哪个策略，成绩也就无法归因。
+        "strategy_class": type(strategy).__name__,
         "protocol_log": client.log,
     }, ensure_ascii=False, indent=2), encoding="utf-8")
     print(f"\n完整协议日志已写入: {out.resolve()}")
