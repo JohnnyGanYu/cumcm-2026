@@ -370,12 +370,17 @@ Q3 无法做同样拆解：只留了官方二进制 `.jlog`，缺 `run_official.
 | `src/test_q3_200_homing_candidates.py` Q3 归航候选 | **5** |
 | `src/test_q4_outer_radius.py` Q4 外环半径几何下界 | **4** |
 | `src/test_q4_near_field.py` 近场定向约束 | **2** |
-| 合计 | **314，全绿（481.7 s）** |
+| `src/test_run_official_inputs.py` 正式入口输入护栏 | **2** |
+| 合计 | **316，全绿（481.3 s）** |
 
 `test_q4_outer_radius.py` 是把 `outer_radius >= 1800/cos(π/12)` 这条几何下界写成断言，
 防止再有人凭随机场景的均值指标把外环缩回 1800（详见 PR #9 与论文 7.1 节）。
 
-**跑法**：`pytest src` 会在收集阶段卡死（A/C 题脚本在导入期执行重活），必须显式列出上表文件。
+**跑法**：`pytest src` 现在可直接全量跑（316 项、约 8 分钟），前提是仓库根目录的 `pytest.ini` 在位。
+
+删掉那个文件就会退回旧行为：收集阶段挂死，20 分钟无输出。根源是 `src/` 混有非 B 题脚本在
+模块级执行重活（如 `src/c_q1.py` 第 55 行直接 `pd.read_excel` 并往下算，无 `if __name__` 保护）。
+显式列文件的老跑法仍然可用，见 `OPTIMIZE_HERE.md`。
 完整命令见 [`OPTIMIZE_HERE.md`](OPTIMIZE_HERE.md) 的「环境」一节。测试依赖 `pytest` /
 `hypothesis` / `numpy` / `scipy`（`requirements.txt`），交付的策略代码本身仍是纯标准库。
 

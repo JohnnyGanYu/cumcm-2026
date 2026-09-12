@@ -31,8 +31,15 @@ python3 -m pytest src/b_sim/test_b_sim.py -q    # 快速回归，应 172 passed�
 （见 `requirements.txt`）。本机没有裸 `python`，用 `python3` 或
 `~/.venvs/cumcm-2026/bin/python3`（pytest 装在这个 venv 里）。
 
-`pytest src` 全量收集会卡死 —— A/C 题脚本在导入期执行重活。B 题自检要显式列文件，
-完整回归 314 项约 8 分钟：
+仓库根目录有 `pytest.ini` 后，`pytest src` 可直接全量跑，**316 项约 8 分钟**：
+
+```bash
+~/.venvs/cumcm-2026/bin/python3 -m pytest src -q
+```
+
+删掉 `pytest.ini` 会退回收集阶段挂死（20 分钟无输出）—— `src/` 混有非 B 题脚本在模块级
+执行重活，如 `src/c_q1.py` 第 55 行直接 `pd.read_excel` 并往下算。下面显式列文件的写法
+仍然有效，机器上没有 `pytest.ini` 时用它：
 
 ```bash
 ~/.venvs/cumcm-2026/bin/python3 -m pytest \
