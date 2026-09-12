@@ -1,0 +1,247 @@
+{
+  "robot_id": "TTTTTTTTTTTT",
+  "directional": false,
+  "test_kind": "practice",
+  "case_code": null,
+  "note": null,
+  "reported_total_jammers": null,
+  "paper_table1_row": {
+    "测试案例编码": null,
+    "清除干扰源个数": 0,
+    "干扰源总数_人工抄录": null,
+    "被清除干扰源个数的比例": null,
+    "平均定位清除时间_s": null,
+    "程序运行时间_s": 0.11
+  },
+  "summary": {
+    "cleared_channels": [],
+    "cleared_count": 0,
+    "virtual_time_s": 0.0,
+    "measure_calls": 0,
+    "clear_calls": 0,
+    "mean_clear_time_s": null,
+    "events": [],
+    "strategy_profile": "q3-fast-v1",
+    "q3_parameters": {
+      "approach_fraction": 0.85,
+      "lateral_fraction": 0.04,
+      "dogleg_angle_deg": 12.0,
+      "dogleg_range_fraction": 0.65,
+      "clearance_guarantee_radius_m": 19.9,
+      "public_source_count_max": 16,
+      "all_historical_bearings": true
+    }
+  },
+  "program_wall_s": 0.11,
+  "full_clear_assessment": {
+    "cleared_channels": [],
+    "cleared_count": 0,
+    "suspect_missed_channels": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20
+    ],
+    "silent_only_channels": [],
+    "likely_full_clear": false,
+    "note": "干扰源总数官方接口不返回；suspect=曾收到信号却未清除，非空即很可能漏失"
+  },
+  "per_channel_state": {
+    "1": {
+      "cleared": false,
+      "bearing_count": 0,
+      "silent_count": 0,
+      "measure_count": 0,
+      "clear_attempts": 0
+    },
+    "2": {
+      "cleared": false,
+      "bearing_count": 0,
+      "silent_count": 0,
+      "measure_count": 0,
+      "clear_attempts": 0
+    },
+    "3": {
+      "cleared": false,
+      "bearing_count": 0,
+      "silent_count": 0,
+      "measure_count": 0,
+      "clear_attempts": 0
+    },
+    "4": {
+      "cleared": false,
+      "bearing_count": 0,
+      "silent_count": 0,
+      "measure_count": 0,
+      "clear_attempts": 0
+    },
+    "5": {
+      "cleared": false,
+      "bearing_count": 0,
+      "silent_count": 0,
+      "measure_count": 0,
+      "clear_attempts": 0
+    },
+    "6": {
+      "cleared": false,
+      "bearing_count": 0,
+      "silent_count": 0,
+      "measure_count": 0,
+      "clear_attempts": 0
+    },
+    "7": {
+      "cleared": false,
+      "bearing_count": 0,
+      "silent_count": 0,
+      "measure_count": 0,
+      "clear_attempts": 0
+    },
+    "8": {
+      "cleared": false,
+      "bearing_count": 0,
+      "silent_count": 0,
+      "measure_count": 0,
+      "clear_attempts": 0
+    },
+    "9": {
+      "cleared": false,
+      "bearing_count": 0,
+      "silent_count": 0,
+      "measure_count": 0,
+      "clear_attempts": 0
+    },
+    "10": {
+      "cleared": false,
+      "bearing_count": 0,
+      "silent_count": 0,
+      "measure_count": 0,
+      "clear_attempts": 0
+    },
+    "11": {
+      "cleared": false,
+      "bearing_count": 0,
+      "silent_count": 0,
+      "measure_count": 0,
+      "clear_attempts": 0
+    },
+    "12": {
+      "cleared": false,
+      "bearing_count": 0,
+      "silent_count": 0,
+      "measure_count": 0,
+      "clear_attempts": 0
+    },
+    "13": {
+      "cleared": false,
+      "bearing_count": 0,
+      "silent_count": 0,
+      "measure_count": 0,
+      "clear_attempts": 0
+    },
+    "14": {
+      "cleared": false,
+      "bearing_count": 0,
+      "silent_count": 0,
+      "measure_count": 0,
+      "clear_attempts": 0
+    },
+    "15": {
+      "cleared": false,
+      "bearing_count": 0,
+      "silent_count": 0,
+      "measure_count": 0,
+      "clear_attempts": 0
+    },
+    "16": {
+      "cleared": false,
+      "bearing_count": 0,
+      "silent_count": 0,
+      "measure_count": 0,
+      "clear_attempts": 0
+    },
+    "17": {
+      "cleared": false,
+      "bearing_count": 0,
+      "silent_count": 0,
+      "measure_count": 0,
+      "clear_attempts": 0
+    },
+    "18": {
+      "cleared": false,
+      "bearing_count": 0,
+      "silent_count": 0,
+      "measure_count": 0,
+      "clear_attempts": 0
+    },
+    "19": {
+      "cleared": false,
+      "bearing_count": 0,
+      "silent_count": 0,
+      "measure_count": 0,
+      "clear_attempts": 0
+    },
+    "20": {
+      "cleared": false,
+      "bearing_count": 0,
+      "silent_count": 0,
+      "measure_count": 0,
+      "clear_attempts": 0
+    }
+  },
+  "crash": {
+    "type": "ProtocolError",
+    "message": "/enter 未执行 http=200 body={'accepted': False, 'real_timestamp_ms': 1789216115753, 'virtual_time_s': 0}",
+    "traceback": "Traceback (most recent call last):\n  File \"C:\\Users\\cn-juliaju\\Downloads\\CUMCM2026B_robot_windows (1)\\run_official.py\", line 111, in main\n    summary = strategy.run()\n  File \"C:\\Users\\cn-juliaju\\Downloads\\CUMCM2026B_robot_windows (1)\\b_sim\\strategy.py\", line 338, in run\n    self.client.enter()\n    ~~~~~~~~~~~~~~~~~^^\n  File \"C:\\Users\\cn-juliaju\\Downloads\\CUMCM2026B_robot_windows (1)\\b_sim\\client.py\", line 69, in enter\n    body = self._post(\"/enter\", self._base_payload(\"enter\"))\n  File \"C:\\Users\\cn-juliaju\\Downloads\\CUMCM2026B_robot_windows (1)\\b_sim\\client.py\", line 186, in _post\n    raise ProtocolError(f\"{path} 未执行 http={status} body={body}\")\nb_sim.client.ProtocolError: /enter 未执行 http=200 body={'accepted': False, 'real_timestamp_ms': 1789216115753, 'virtual_time_s': 0}\n"
+  },
+  "strategy_class": "Q3FastStrategy",
+  "protocol_log": [
+    {
+      "ts": 1789216115.7703905,
+      "path": "/enter",
+      "request_id": "enter-1",
+      "request": {
+        "arena_id": "default",
+        "robot_id": "TTTTTTTTTTTT",
+        "request_id": "enter-1"
+      },
+      "http_status": 200,
+      "response": {
+        "accepted": false,
+        "real_timestamp_ms": 1789216115753,
+        "virtual_time_s": 0
+      }
+    },
+    {
+      "ts": 1789216115.7894514,
+      "path": "/exit",
+      "request_id": "exit-2",
+      "request": {
+        "arena_id": "default",
+        "robot_id": "TTTTTTTTTTTT",
+        "request_id": "exit-2"
+      },
+      "http_status": 200,
+      "response": {
+        "accepted": false,
+        "real_timestamp_ms": 1789216115774,
+        "virtual_time_s": 0
+      }
+    }
+  ]
+}
