@@ -170,7 +170,7 @@ def test_official_entry_writes_complete_result_log(tmp_path, monkeypatch):
     assert len(logs) == 1
     result = json.loads(logs[0].read_text(encoding='utf-8'))
     assert result['crash'] is None
-    assert result['summary']['strategy_profile'] == 'q4-fast-v2'
+    assert result['summary']['strategy_profile'] == 'q4-fast-v3'
     assert result['summary']['cleared_count'] == arena.case.total
     assert result['strategy_config']['directional_probe'] is True
     assert result['paper_table1_row']['平均定位清除时间_s'] == round(arena.stats()['mean_clear_time_s'],4)

@@ -31,3 +31,21 @@
 /dist_windows/Q3_OPTIMIZATION_REPORT.md -text
 # Generated evaluation records stay available but collapse in the PR diff.
 /results/q3_220_*.json linguist-generated=true
+
+# Preserve exact evaluated sources, including historical final blank lines.
+/src/b_q3_200*.py -text whitespace=blank-at-eol,-blank-at-eof,space-before-tab,cr-at-eol
+/src/b_q4_410*.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+/src/test*q3_200*.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+/src/test*q4_410*.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+# Keep evidence bytes stable and collapse generated records in PR review.
+/results/q3_200* -text linguist-generated=true whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+/results/q4_410* -text linguist-generated=true whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+/results/q3_200_baseline/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+/results/q4_410_baseline/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+/paper/q3_200*.md -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+/paper/q4_410*.md -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+# Delivery copies preserve validated CRLF bytes; review the corresponding src files.
+/dist_windows/b_sim/*.py linguist-generated=true whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+/dist_windows/run_official.py linguist-generated=true whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+/dist_windows/Q3_OPTIMIZATION_REPORT.md whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+/dist_windows/Q4_OPTIMIZATION_REPORT.md -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol

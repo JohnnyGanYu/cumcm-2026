@@ -1,0 +1,62 @@
+{
+  "seeds": [
+    261912201,
+    261912202,
+    261912203,
+    261912204,
+    261912205,
+    261912206,
+    261912207,
+    261912208,
+    261912209,
+    261912210,
+    261912211,
+    261912212,
+    261912213,
+    261912214,
+    261912215,
+    261912216,
+    261912217,
+    261912218,
+    261912219,
+    261912220
+  ],
+  "scenarios": [
+    "10:5",
+    "10:10",
+    "13:5",
+    "13:13",
+    "16:5",
+    "16:16"
+  ],
+  "variants": [
+    "baseline",
+    "candidate"
+  ],
+  "expected_records": 240,
+  "source_sha256": {
+    "results/q4_410_baseline/q4_fast.py": "9601781d24165fc183503f5c51bb6a8229b7d5ed0c222c4771c8a56eb9c8ad6e",
+    "src/b_eval/dev_measure.py": "9551a9f912ebf3cc6150b51fb0474cd6e886aa7409e6a2d0075e5c38c0905704",
+    "src/b_q4_410_eval.py": "6fd9e93208525bd1fb7a597071fa5199d920fba63b54741925978614583f8761",
+    "src/b_sim/__init__.py": "aea216ad14244a26ee6dea8dfb1ef7ac52a7bd69eb01a2549718c3bc4ccf014f",
+    "src/b_sim/arena.py": "618113bcab45950d766ff7c70fcd98a294b0f895deeae3888f1277e1f8dc5335",
+    "src/b_sim/client.py": "1067d467e9d60b8b867f01feb1cde502faea9a572ca28254b54d833e7968917a",
+    "src/b_sim/coverage_audit.py": "1eeca7bd6456237b89a489abdbaebfeb917d81321dd125a453c6a6254af05a23",
+    "src/b_sim/coverage_design.py": "1f2e8b23d6f32afc04471f0cb89b4b9a68fb3f9f591b893f41214de2afabad32",
+    "src/b_sim/directional.py": "c066ddee791fa2deaa55d45122757c64c53207dfc6f7674416f4b1496107309e",
+    "src/b_sim/feasible.py": "9d155abeff6460801b5a1952c81aa1b3b40c0e32ef4b7b37ba0176cd16d67465",
+    "src/b_sim/geometry.py": "d2b9828582fc56a488b53c22fa3080a0a0efe4a3f5a0caec75e97d3c017d6279",
+    "src/b_sim/phase_probe.py": "6d09e5da48da8bfd1a7ce5d0bbf3e6f703932e33aa541597f9e917cc8a748bc7",
+    "src/b_sim/q3_fast.py": "53655dd5f783cc86baec6b008e42ee029b80db01c808ff69fd15d3a2c296a8eb",
+    "src/b_sim/q4_fast.py": "7a6cf4c4d392ba97f74492065da50df428fbce0ec550fa2590a96e984798b2e9",
+    "src/b_sim/rehearse.py": "5e328881742045b075ad6fc5a5e0612f6bc413a18d75d2326066f67746dc9d62",
+    "src/b_sim/route.py": "50c8c26590f70ce4e54fc098cd59b03ebe8c7da2358ce14ad135eaade7817689",
+    "src/b_sim/server.py": "e90efa2a37e4fb679f2add8eab6f0bcae2beefc00016230f59315be682278898",
+    "src/b_sim/strategy.py": "a5d7506caf35e950723b86144ac71b56d20f4d4819df14b48a6335c653c224ce",
+    "src/b_sim/timeline.py": "3b383d15a65e0d09ae0e014d5e370d993beae4ffd23a0436849a3f3fee147d22",
+    "src/b_sim/tune.py": "e02869c769eb998ff38abea82fada7fbf670e43fc04394c486898dcd747d150d"
+  },
+  "created_utc": "2026-09-12T13:46:31Z",
+  "python": "3.14.4 (tags/v3.14.4:23116f9, Apr  7 2026, 14:10:54) [MSC v.1944 64 bit (AMD64)]",
+  "timeout_s": 240
+}

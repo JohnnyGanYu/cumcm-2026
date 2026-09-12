@@ -1,0 +1,23 @@
+{
+  "all_identical": true,
+  "cases": [
+    {
+      "seed": 993001,
+      "differences": []
+    },
+    {
+      "seed": 993008,
+      "differences": []
+    },
+    {
+      "seed": 2631101,
+      "differences": []
+    },
+    {
+      "seed": 2631109,
+      "differences": []
+    }
+  ],
+  "helper_unchanged": true,
+  "q4_core_unchanged": true
+}

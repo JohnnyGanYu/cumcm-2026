@@ -1,0 +1,16 @@
+
+=================================== ERRORS ====================================
+__________________ ERROR collecting src/b_sim/test_b_pbt.py ___________________
+ImportError while importing test module 'D:\CUMCM3.0\cumcm-2026-main\src\b_sim\test_b_pbt.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+D:\python\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\b_sim\test_b_pbt.py:26: in <module>
+    from hypothesis import HealthCheck, given, settings
+E   ModuleNotFoundError: No module named 'hypothesis'
+=========================== short test summary info ===========================
+ERROR src/b_sim/test_b_pbt.py
+!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!
+1 error in 0.83s

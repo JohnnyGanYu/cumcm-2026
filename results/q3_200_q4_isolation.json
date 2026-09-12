@@ -1,0 +1,54 @@
+{
+  "offline_only": true,
+  "before": "results/q3_200_q4_before.json",
+  "after": "results/q3_200_q4_after.json",
+  "before_source_unchanged": true,
+  "after_source_unchanged": true,
+  "source_changes": {
+    "src/b_sim/q3_fast.py": {
+      "before": "53655dd5f783cc86baec6b008e42ee029b80db01c808ff69fd15d3a2c296a8eb",
+      "after": "560a235fc0eefca6e27eebc9734daeaed926ddae4c8e0f2b756d44421e62a467"
+    }
+  },
+  "only_q3_runtime_changed": true,
+  "comparison_method": "Exact equality of all episode result fields except wall_s; no rounding or tolerance.",
+  "comparisons": [
+    {
+      "seed": 2631401,
+      "count": 10,
+      "directional": 5,
+      "identical_excluding_wall": true,
+      "differences": {}
+    },
+    {
+      "seed": 2631402,
+      "count": 10,
+      "directional": 10,
+      "identical_excluding_wall": true,
+      "differences": {}
+    },
+    {
+      "seed": 2631403,
+      "count": 13,
+      "directional": 13,
+      "identical_excluding_wall": true,
+      "differences": {}
+    },
+    {
+      "seed": 2631404,
+      "count": 16,
+      "directional": 16,
+      "identical_excluding_wall": true,
+      "differences": {}
+    }
+  ],
+  "all_behavior_identical": true,
+  "all_cases_cleared": true,
+  "q4_imported_q3_helper": {
+    "name": "nearest_cover_point",
+    "source_text_identical": true,
+    "ast_identical": true,
+    "before_sha256": "251b4cd7621b65adeaf306eddfb639b4579987d5888b355f3b3db46c8cb792cc",
+    "after_sha256": "251b4cd7621b65adeaf306eddfb639b4579987d5888b355f3b3db46c8cb792cc"
+  }
+}

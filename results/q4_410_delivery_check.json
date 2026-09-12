@@ -1,0 +1,26 @@
+{
+  "package": "CUMCM2026B_robot_windows.zip",
+  "entries": [
+    "b_sim/__init__.py",
+    "b_sim/arena.py",
+    "b_sim/client.py",
+    "b_sim/directional.py",
+    "b_sim/feasible.py",
+    "b_sim/geometry.py",
+    "b_sim/q3_fast.py",
+    "b_sim/q4_fast.py",
+    "b_sim/route.py",
+    "b_sim/strategy.py",
+    "Q3_OPTIMIZATION_REPORT.md",
+    "Q4_OPTIMIZATION_REPORT.md",
+    "README_WINDOWS.md",
+    "run_official.py"
+  ],
+  "sha256": "419f5719e43376fda8949b42040dc063521c7c3ce489c819c550d55132c98e0c",
+  "bytes": 90088,
+  "crc_ok": true,
+  "runtime_matches_source": true,
+  "all_python_compiles": true,
+  "profile": "q4-fast-v3",
+  "regression_passed": 271
+}

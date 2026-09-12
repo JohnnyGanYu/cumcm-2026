@@ -1,0 +1,13 @@
+{
+  "target_repository": "JohnnyGanYu/cumcm-2026",
+  "base_commit": "6d8d003357f0d598f9ee0f9ea15188a6e705e1b0",
+  "branch": "codex/q3-v2-q4-v3-20260912",
+  "python": "3.14.4 (tags/v3.14.4:23116f9, Apr  7 2026, 14:10:54) [MSC v.1944 64 bit (AMD64)]",
+  "regression_passed": 262,
+  "regression_log": "results/q3_q4_pr_regression.txt",
+  "source_matches_independent_q3_validation": true,
+  "source_dist_zip_check": "passed",
+  "zip_sha256": "c217c8620fb05601815fad0c6e3539e5322671d56077852597a3bce8e0404479",
+  "zip_md5": "ceeda74838c19967530098e077c7d801",
+  "official_simulator_called": false
+}
