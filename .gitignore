@@ -41,3 +41,7 @@ results/b_belief_replay_q4.json
 # Kiro IDE 本地工作区（spec/steering/hooks 等），不入库：
 # 属编辑器私有状态，随人随机器不同，且 PR #3 曾把它带进仓库。
 .kiro/
+
+# 论文构建产物：由 src/build_paper.py 从 paper/main.md 生成，每次重建字节都变。
+# 提交源与脚本，不提交产物（submission.pdf 约 5.7 MB、docx 约 1.7 MB）。
+paper/build/

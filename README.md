@@ -374,9 +374,9 @@ Q3 无法做同样拆解：只留了官方二进制 `.jlog`，缺 `run_official.
 
 ## 交付包
 
-当前分支包 MD5 `980f73e78de653363b25db1c1ee949e5`，14 个文件，纯 Python 标准库，含 `q3-fast-v2` / `q4-fast-v3`。
-[Release v1.0.2](https://github.com/JohnnyGanYu/cumcm-2026/releases/tag/v1.0.2) 的资产（MD5 `a22bdd503a625df243ed5378664427d8`）为外环 1800 那版，
-因贴边定向源漏清已回退至 1870，正式使用请取分支包。
+当前版本 **[v1.0.3](https://github.com/JohnnyGanYu/cumcm-2026/releases/tag/v1.0.3)**，MD5 `980f73e78de653363b25db1c1ee949e5`，14 个文件，纯 Python 标准库。
+含 `q3-fast-v2` / `q4-fast-v3`，Q4 外环 1870 m。
+v1.0.2 已弃用：那版外环 1800 m 会漏清贴边朝外的定向源（见 PR #9）。
 
 v1.0.1（MD5 `bd90df7b406a66921afe8cfaec556f03`）为上一代基线，其官方六局实测成绩见上文「官方模拟器演练（2026-09-12）」，仅在需要对照时使用。
 

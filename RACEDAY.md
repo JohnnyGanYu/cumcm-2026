@@ -18,10 +18,10 @@
 
 ## 0. 拿交付包
 
-**[Release v1.0.2](https://github.com/JohnnyGanYu/cumcm-2026/releases/tag/v1.0.2)** 下载 `CUMCM2026B_robot_windows.zip`（仓库私有，需登录）。
-**注意**：Release v1.0.2 的资产仍是外环 1800 的旧包（MD5 `a22bdd503a625df243ed5378664427d8`），该值已因边界漏源回退；
-当前分支包 MD5 `980f73e78de653363b25db1c1ee949e5`，以分支包为准，或等新 Release。
+**[Release v1.0.3](https://github.com/JohnnyGanYu/cumcm-2026/releases/tag/v1.0.3)** 下载 `CUMCM2026B_robot_windows.zip`（仓库私有，需登录），MD5 `980f73e78de653363b25db1c1ee949e5`。
 解压后先核对 MD5，运行后检查日志：`strategy_class` 应为 `Q3FastStrategy` / `Q4FastStrategy`，`summary.search_layout.outer_radius_m` 应为 `1870.0`。
+
+**v1.0.2 已弃用**：那版外环为 1800 m，会漏清贴边且辐射轴径向朝外的定向源（60 局压力样本每局都漏），别拿错。
 
 v1.0.1（MD5 `bd90df7b406a66921afe8cfaec556f03`）是上一代基线，不含 `q3-fast-v2` / `q4-fast-v3` 优化，仅在需要对照时使用。
 
@@ -99,7 +99,7 @@ python run_official.py --robot-id <队号> --test-kind formal --case-code <案�
 | Q4 | 6 全向 + 5 定向 | 11/11 | 794.1 s |
 | Q4 | 4 全向 + 7 定向 | 11/11 | 900.5 s |
 
-9-12 六局演练实测（`q3-fast-v1` / `q4-fast-v2`，比当天要用的 v1.0.2 略慢，**这才是接近的量级**）：
+9-12 六局演练实测（`q3-fast-v1` / `q4-fast-v2`，比当天要用的 v1.0.3 略慢，**这才是接近的量级**）：
 
 | 问题 | 清除 | 虚拟时间 | T̄ |
 |---|---|---|---|
@@ -244,9 +244,9 @@ grep -c '<真实队号>' *.sanitized.*      # 应为 0
 
 **跑完必看的三个字段**：`strategy_class` 为 `Q3FastStrategy` / `Q4FastStrategy`、
 `summary.strategy_profile` 为 `q3-fast-v2` / `q4-fast-v3`、Q4 的 `outer_radius_m` 为 `1870.0`。
-若看到 `1800.0`，说明拿的是被回退的那版包（边界定向源会漏清），换分支最新包。
+若看到 `1800.0`，说明拿的是已弃用的 v1.0.2（边界定向源会漏清），换 v1.0.3。
 9-12 那七局演练日志里 profile 是 `q3-fast-v1` / `q4-fast-v2`、外环 1900×14，那是上一版，
 当天若看到这些值说明拿错了交付包。
 
 离线成绩（留出集）：Q3 247.1 s / 2640-2640。官方演练池化：9-11 六局 Q3 269.7 s、Q4 776.4 s（旧策略）；
-9-12 六局 Q3 209.0 s、Q4 486.9 s（对应 v1.0.1 的第一轮优化，**非当前 v1.0.2**）。
+9-12 六局 Q3 209.0 s、Q4 486.9 s（对应 v1.0.1 的第一轮优化，**非当前 v1.0.3**）。
