@@ -15,6 +15,10 @@ import re
 from pathlib import Path
 
 # 需要置空的敏感 JSON 字段（值可能是 base64 票据或指纹）
+# 需要置空的敏感 JSON 字段（值可能是 base64 票据、包裹密钥或指纹）。
+# 这份清单必须与 supporting/README.md 第 2 节列出的字段一致 —— 曾经不一致：
+# 文档声称会清除 wrapped_dek_b64（RSA-OAEP 包裹的数据加密密钥），脚本里却漏了它，
+# 于是「只有脱敏件可入库」这条硬约束在最敏感的那一项上是空的。
 REDACT_KEYS = (
     "server_ticket_b64",
     "authorization_nonce_b64",
@@ -22,8 +26,25 @@ REDACT_KEYS = (
     "device_digest",
     "signature_b64",
     "payload_signature_b64",
+    "wrapped_dek_b64",
+    # 无 _b64 后缀的写法，官方字段命名若有差异也能覆盖
+    "wrapped_dek",
+    "server_ticket",
+    "authorization_nonce",
 )
 
+
+# 复核用的独立清单：无论 REDACT_KEYS 怎么改，这些字段一旦带非零值就必须报错。
+# 与 supporting/README.md 第 2 节的声称一一对应。
+MUST_BE_ZEROED = (
+    "server_ticket_b64",
+    "authorization_nonce_b64",
+    "package_signing_public_key_b64",
+    "device_digest",
+    "signature_b64",
+    "payload_signature_b64",
+    "wrapped_dek_b64",
+)
 
 def sanitize_bytes(raw: bytes, team_no: str) -> tuple[bytes, list[str]]:
     """对原始字节做脱敏，返回 (结果, 命中项说明)。
@@ -96,6 +117,16 @@ def main() -> int:
             leftovers.append("team_no")
         if re.search(rb"C:\\Users\\(?!U+\b)[A-Za-z0-9._-]+", out):
             leftovers.append("windows_user")
+        # 密钥/票据字段的落地复核。
+        # 这里刻意用独立的 MUST_BE_ZEROED 而不是 REDACT_KEYS —— 若复用后者，
+        # 从 REDACT_KEYS 摘掉一个字段会同时使它退出复核范围，变成自证清白。
+        for key in MUST_BE_ZEROED:
+            pat = rb'"' + key.encode() + rb'"\s*:\s*"([^"]*)"'
+            for m in re.finditer(pat, out):
+                val = m.group(1)
+                if val and set(val) != {ord("0")}:
+                    leftovers.append(f"{key}(未置零)")
+                    break
         if leftovers:
             print(f"    !! 仍残留: {leftovers}")
             return 1

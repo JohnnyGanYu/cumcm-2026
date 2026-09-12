@@ -374,7 +374,8 @@ Q3 无法做同样拆解：只留了官方二进制 `.jlog`，缺 `run_official.
 | `src/test_figures_match_strategy.py` 配图与策略参数一致性 | **2** |
 | `src/test_docs_match_code.py` 文档声称参数与代码一致性 | **4** |
 | `src/test_build_table1.py` 表 1 生成器（池化口径/作废局过滤） | **5** |
-| 合计 | **327，全绿（480.5 s）** |
+| `src/test_sanitize_official_run.py` 脱敏完整性与复核独立性 | **6** |
+| 合计 | **333，全绿（481.8 s）** |
 
 `test_q4_outer_radius.py` 是把 `outer_radius >= 1800/cos(π/12)` 这条几何下界写成断言，
 防止再有人凭随机场景的均值指标把外环缩回 1800（详见 PR #9 与论文 7.1 节）。
@@ -389,7 +390,7 @@ python scripts/raceday_preflight.py --quick   # 跳过回归，约 1.5 s
 它串起交付包同步、zip 同步、论文匿名与附录覆盖、四组一致性断言、全量回归，
 任一不过即非零退出，并说明该闸门挡的是什么错。
 
-**跑法**：`pytest src` 现在可直接全量跑（327 项、约 8 分钟），前提是仓库根目录的 `pytest.ini` 在位。
+**跑法**：`pytest src` 现在可直接全量跑（333 项、约 8 分钟），前提是仓库根目录的 `pytest.ini` 在位。
 
 删掉那个文件就会退回旧行为：收集阶段挂死，20 分钟无输出。根源是 `src/` 混有非 B 题脚本在
 模块级执行重活（如 `src/c_q1.py` 第 55 行直接 `pd.read_excel` 并往下算，无 `if __name__` 保护）。

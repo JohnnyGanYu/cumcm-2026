@@ -59,7 +59,10 @@ python src/sanitize_official_run.py \
 - **敏感 JSON 字段置零**（`REDACT_KEYS`）：`server_ticket_b64`、`authorization_nonce_b64`、
   `package_signing_public_key_b64`、`device_digest`、`signature_b64`、
   `payload_signature_b64`、`wrapped_dek_b64` → 同长 `0…` 填充；
-- 运行结束**自动复核**：若队号或非占位 Windows 用户名仍残留，脚本以非零码退出并告警。
+- 运行结束**自动复核**：队号、非占位 Windows 用户名，以及上列每个密钥/票据字段
+  若仍带非零值，脚本以非零码退出并指名字段。密钥字段的复核清单（`MUST_BE_ZEROED`）
+  与替换清单（`REDACT_KEYS`）刻意分开 —— 若复用同一份，从替换清单里摘掉某字段
+  会同时使它退出复核范围，变成自证清白（该缺陷曾真实存在于 `wrapped_dek_b64`）。
 
 ---
 
