@@ -16,6 +16,17 @@
 
 ---
 
+## 0. 拿交付包
+
+**[Releases](https://github.com/JohnnyGanYu/cumcm-2026/releases/latest)** 下载 `CUMCM2026B_robot_windows.zip`（仓库私有，需登录）。
+
+当前 `v1.0.0`，MD5 `b136bf73730f31d6131221f695abbd3a`。**解压后先核对 MD5**，
+对不上说明拿到了旧包 —— 此前真出过这事，旧包会让策略慢约 24%。
+
+跑完确认一下日志里 `strategy_class` 是 `Q3FastStrategy` / `Q4FastStrategy`；
+若显示 `DogStrategy`，说明误加了 `--legacy-*` 开关，那是优化前的版本。
+
+---
 ## 1. 开跑前三项自检
 
 在**离线环境**做完，不占测试次数：

@@ -340,6 +340,24 @@ Q3 无法做同样拆解：只留了官方二进制 `.jlog`，缺 `run_official.
 
 ---
 
+## 交付包
+
+正式测试用的 Windows 交付包发布在 **[Releases](https://github.com/JohnnyGanYu/cumcm-2026/releases/latest)**（仓库私有，需登录下载）。
+
+当前版本 `v1.0.0`，MD5 `b136bf73730f31d6131221f695abbd3a`，14 个文件，纯 Python 标准库。
+
+```
+python run_official.py --robot-id 你的参赛队号                 # 问题 3
+python run_official.py --robot-id 你的参赛队号 --directional    # 问题 4
+```
+
+出意外要回退到优化前策略时加 `--legacy-q3` / `--legacy-q4`。日志的 `strategy_class`
+字段记录了这一局实际跑的策略类，赛后凭它归因成绩。
+
+根目录那份同名 zip 是构建产物，由 `python -m src.build_windows_zip` 生成、
+`--check` 校验它与 `dist_windows/` 一致。**它存在的唯一目的是防版本漂移**：
+此前它曾停留在旧版本，当天若直接解压会拿到慢约 24% 的策略（见 `RACEDAY.md`）。
+要发给队友或自己下载，走 Releases，版本明确。
 ## 怎么跑
 
 离线演练（本机，无需官方模拟器）：
