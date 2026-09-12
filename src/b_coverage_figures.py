@@ -2,7 +2,7 @@
 
 由 ``coverage_design`` 的几何内核生成论文用图，写入 ``figures/``：
 
-* ``figures/b_coverage_stations.png`` —— 主图：原点 + 1250 m × 12（13 站位）
+* ``figures/b_coverage_stations.png`` —— 主图：原点 + 1150 m × 6（7 站位，交付布局）
   布局散点、每站 1000 m 接收下限覆盖圆、竞技场边界，并高亮最坏覆盖间隙点。
 * ``figures/b_coverage_worstgap.png`` —— 辅图：各候选布局最坏覆盖间隙条形图，
   标注 1000 m 保证发现下限线。
@@ -62,9 +62,18 @@ FIG_DIR = Path("figures")
 RESULTS = Path("results/b_coverage_design.json")
 
 
+RING_RADIUS_M = 1150.0
+RING_STATIONS = 6
+
+
 def _chosen_stations() -> list[tuple[float, float]]:
-    """论文选定布局：原点 + 1250 m 环 12 站位（13 站位）。"""
-    return [(0.0, 0.0)] + ring(1250.0, 12)
+    """交付布局：原点 + 1150 m 环 6 站位，共 7 站，对应 Q3FastStrategy.ring_radius。
+
+    早期这里画的是 1250 m x 12，那是论文 4.2/4.3 节里被否决的初始基线。
+    布局此后改过两轮而图未重生成，会让读者以为交付用的是 13 站位。
+    改此处务必同时重跑本模块并核对论文图注。
+    """
+    return [(0.0, 0.0)] + ring(RING_RADIUS_M, RING_STATIONS)
 
 
 def plot_coverage_stations(out: Path) -> Path:
@@ -93,7 +102,8 @@ def plot_coverage_stations(out: Path) -> Path:
                label=_t("原点站位 (0,0)", "Origin station (0,0)"))
     ax.scatter([p[0] for p in ring_pts], [p[1] for p in ring_pts],
                c="#1f77b4", s=48, marker="o", zorder=5,
-               label=_t("1250 m 环站位 × 12", "Ring stations @1250 m x12"))
+               label=_t(f"{RING_RADIUS_M:.0f} m 环站位 × {RING_STATIONS}",
+                        f"Ring stations @{RING_RADIUS_M:.0f} m x{RING_STATIONS}"))
 
     # 最坏覆盖间隙点及其到最近站位的连线
     wx, wy = argmax
@@ -110,9 +120,9 @@ def plot_coverage_stations(out: Path) -> Path:
     ax.set_xlabel("x / m")
     ax.set_ylabel("y / m")
     ax.set_title(_t(
-        "覆盖站位布局：原点 + 1250 m × 12（13 站位）\n"
+        f"覆盖站位布局：原点 + {RING_RADIUS_M:.0f} m × {RING_STATIONS}（{RING_STATIONS+1} 站位）\n"
         f"最坏覆盖间隙 g = {gap:.1f} m < 1000 m ⇒ 保证发现任一全向源",
-        "Coverage layout: origin + 1250 m ring x12 (13 stations)\n"
+        f"Coverage layout: origin + {RING_RADIUS_M:.0f} m ring x{RING_STATIONS} ({RING_STATIONS+1} stations)\n"
         f"worst gap g = {gap:.1f} m < 1000 m => detection guaranteed"))
     ax.legend(loc="upper right", fontsize=8, framealpha=0.9)
     ax.grid(True, ls=":", alpha=0.4)
@@ -131,7 +141,18 @@ def plot_worst_gap_bars(out: Path) -> Path:
             f"{RESULTS} 不存在，请先运行 `python -m src.b_sim.coverage_design`。"
         )
     payload = json.loads(RESULTS.read_text(encoding="utf-8"))
-    rows = payload["coverage"]
+    rows = list(payload["coverage"])
+    # JSON 是早期候选扫描的产物，不含交付布局；实算补一条，否则图里高亮无处落脚。
+    delivered = f"原点+{RING_RADIUS_M:.0f}x{RING_STATIONS}"
+    if not any(r["layout"] == delivered for r in rows):
+        _st = _chosen_stations()
+        _gap, _ = worst_coverage_gap(_st)
+        rows.append({
+            "layout": delivered,
+            "stations": len(_st),
+            "worst_gap_m": _gap,
+            "guarantees_detection": _gap < RECEPTION_MIN_M,
+        })
     # 布局名 ASCII 化，避免无 CJK 字体时出现缺字方块（数值不变）。
     def _ascii_layout(name: str) -> str:
         return name.replace("仅原点", "origin-only").replace("原点", "origin")
@@ -139,7 +160,7 @@ def plot_worst_gap_bars(out: Path) -> Path:
               f"({r['stations']})" for r in rows]
     gaps = [r["worst_gap_m"] for r in rows]
     colors = ["#2ca02c" if r["guarantees_detection"] else "#d62728" for r in rows]
-    chosen = "原点+1250x12"
+    chosen = delivered
 
     fig, ax = plt.subplots(figsize=(11, 5.2))
     bars = ax.bar(range(len(rows)), gaps, color=colors, alpha=0.85)
