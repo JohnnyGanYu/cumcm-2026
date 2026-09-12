@@ -44,14 +44,14 @@ v1.0.1（MD5 `bd90df7b406a66921afe8cfaec556f03`）是上一代基线，不含 `q
 ```
 python -m src.pack_dist_windows --check      # src/b_sim -> dist_windows 是否同步
 python -m src.build_windows_zip --check      # dist_windows -> 交付 zip 是否同步
-python -m pytest src/b_sim/test_b_sim.py -q  # 回归
+python -m pytest src/b_sim/test_b_sim.py -q  # 快速回归，应 172 passed（约 32 s）
 python run_official.py --robot-id <队号> --dry-run   # 仅在演练窗口用
 ```
 
 **两个 `--check` 都必须过**，它们各挡一层漂移，都真实出过问题：
 
 - `pack_dist_windows --check` 曾报 `strategy.py` 未同步到 `dist_windows/`
-- `build_windows_zip --check` 是为根目录那份 `CUMCM2026B_robot_windows.zip` 加的。实测发现它停留在 9-10 的旧版本（`1250x12`、**无 `route.py` 即无 TSP**、射线盲扫只 3 处）——当天若直接解压它跑，会拿到比当前 main 慢约 24% 的策略，并少一处清除率兜底。
+- `build_windows_zip --check` 是为根目录那份 `CUMCM2026B_robot_windows.zip` 加的。它曾停留在 9-10 的旧版本（`1250x12`、无 `route.py` 即无 TSP），当天直接解压会拿到慢约 24% 的策略。现已随 v1.0.3 重打并通过校验，这条保留是提醒：**每次改完 `src/b_sim/` 都要重跑这两个 `--check`**，只改源码不同步，正式测试跑的还是旧代码。
 
 zip 打包使用固定时间戳，同样的源码打出字节相同的包，MD5 可复核。当前 MD5 见 `--check` 输出。
 
