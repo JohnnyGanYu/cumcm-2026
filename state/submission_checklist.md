@@ -2,6 +2,9 @@
 
 ## 2026 OFFICIAL — re-check current mcm.edu.cn documents and the latest local notice
 
+- [ ] `python scripts/raceday_preflight.py` 全部通过（rc=0）。它串起交付包同步、
+      zip 同步、论文匿名与附录覆盖、四组一致性断言、全量回归共五个闸门，
+      失败时会说明每个闸门挡的是什么错。`--quick` 跳过 8 分钟回归。
 - [ ] 2026 time windows recorded: MD5 before 9/13 20:00; file upload 9/13 20:30–9/14 14:00.
 - [ ] Team leader account is ready; MD5 order is paper first, supporting material second.
 - [ ] Final paper is `校内编号.pdf`, PDF, no larger than 20 MiB.

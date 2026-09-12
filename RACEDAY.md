@@ -39,11 +39,21 @@ v1.0.1（MD5 `bd90df7b406a66921afe8cfaec556f03`）是上一代基线，不含 `q
 ---
 ## 1. 开跑前三项自检
 
-在**离线环境**做完，不占测试次数：
+在**离线环境**做完，不占测试次数。**一条命令跑完全部闸门**：
+
+```
+python scripts/raceday_preflight.py           # 全部，含 8 min 全量回归
+python scripts/raceday_preflight.py --quick   # 跳过全量回归，约 1.5 s
+```
+
+它串起五个闸门并打印结果表，任一不过即以非零码退出，且会说明「这个闸门挡的是什么错」。
+别在赛日逐条敲下面这些 —— 漏掉的往往正是最贵的那类（交付包没同步、文档 MD5 过期、
+配图停在旧参数）。单独排查时才用：
 
 ```
 python -m src.pack_dist_windows --check      # src/b_sim -> dist_windows 是否同步
 python -m src.build_windows_zip --check      # dist_windows -> 交付 zip 是否同步
+python -m src.build_paper --check            # 匿名扫描 + 附录覆盖
 python -m pytest src/b_sim/test_b_sim.py -q  # 快速回归，应 172 passed（约 32 s）
 python -m pytest src -q                      # 全量回归，应 327 passed（约 8 min）
 python run_official.py --robot-id <队号> --dry-run   # 仅在演练窗口用
