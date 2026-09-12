@@ -46,7 +46,10 @@
       "clearance_guarantee_radius_m": 19.9,
       "public_source_count_max": 16,
       "all_historical_bearings": true
-    }
+    },
+    "total_jammers_reported": 15,
+    "clear_rate": 1.0,
+    "total_jammers_source": "演练结束时模拟器告示，由参赛者事后录入；六局均为全清，故源总数等于清除数"
   },
   "program_wall_s": 11.33,
   "full_clear_assessment": {

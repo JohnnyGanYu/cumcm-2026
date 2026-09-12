@@ -51,7 +51,10 @@
       "outer_stations": 14,
       "inner_relocation_limit_m": 450.0,
       "inner_relocation_enabled": false
-    }
+    },
+    "total_jammers_reported": 15,
+    "clear_rate": 1.0,
+    "total_jammers_source": "演练结束时模拟器告示，由参赛者事后录入；六局均为全清，故源总数等于清除数"
   },
   "program_wall_s": 4.83,
   "full_clear_assessment": {
