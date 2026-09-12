@@ -374,9 +374,9 @@ Q3 无法做同样拆解：只留了官方二进制 `.jlog`，缺 `run_official.
 
 ## 交付包
 
-本轮 `q3-fast-v2` / `q4-fast-v3` 运行包位于当前分支的 **[CUMCM2026B_robot_windows.zip](CUMCM2026B_robot_windows.zip)**，MD5 `ceeda74838c19967530098e077c7d801`，14 个文件，纯 Python 标准库。
+当前版本 **[v1.0.2](https://github.com/JohnnyGanYu/cumcm-2026/releases/tag/v1.0.2)**，MD5 `a22bdd503a625df243ed5378664427d8`，14 个文件，纯 Python 标准库。含 `q3-fast-v2` / `q4-fast-v3` 与外环 1800 修正。
 
-已有 **[Release v1.0.1](https://github.com/JohnnyGanYu/cumcm-2026/releases/tag/v1.0.1)** 是此前基线包，MD5 `bd90df7b406a66921afe8cfaec556f03`，未包含这次 Q3/Q4 优化。新版本正式发布前，复测请使用本分支构建包并核对日志版本。
+v1.0.1（MD5 `bd90df7b406a66921afe8cfaec556f03`）为上一代基线，其官方六局实测成绩见上文「官方模拟器演练（2026-09-12）」，仅在需要对照时使用。
 
 ```
 python run_official.py --robot-id 你的参赛队号                 # 问题 3

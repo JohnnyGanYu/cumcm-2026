@@ -18,9 +18,10 @@
 
 ## 0. 拿交付包
 
-本轮 `q3-fast-v2` / `q4-fast-v3` 的复测包为本分支根目录的 **[CUMCM2026B_robot_windows.zip](CUMCM2026B_robot_windows.zip)**，MD5 `ceeda74838c19967530098e077c7d801`。解压前核对 ZIP 的 MD5，运行后检查日志 `summary.strategy_profile`。
+**[Release v1.0.2](https://github.com/JohnnyGanYu/cumcm-2026/releases/tag/v1.0.2)** 下载 `CUMCM2026B_robot_windows.zip`（仓库私有，需登录），MD5 `a22bdd503a625df243ed5378664427d8`。
+解压后先核对 MD5，运行后检查日志：`strategy_class` 应为 `Q3FastStrategy` / `Q4FastStrategy`，`summary.search_layout.outer_radius_m` 应为 `1800.0`。
 
-已有 **[Release v1.0.1](https://github.com/JohnnyGanYu/cumcm-2026/releases/tag/v1.0.1)** 的 MD5 为 `bd90df7b406a66921afe8cfaec556f03`，属于此前基线，不包含本轮优化。新版本正式分发时应使用对应 Release 及其校验值。
+v1.0.1（MD5 `bd90df7b406a66921afe8cfaec556f03`）是上一代基线，不含 `q3-fast-v2` / `q4-fast-v3` 优化，仅在需要对照时使用。
 
 跑完确认一下日志里 `strategy_class` 是 `Q3FastStrategy` / `Q4FastStrategy`；
 若显示 `DogStrategy`，说明误加了 `--legacy-*` 开关，那是优化前的版本。
