@@ -215,6 +215,25 @@ python run_official.py --robot-id <队号> --test-kind formal --case-code <案�
 
 ---
 
+## 5.5 论文 PDF 只生成一次
+
+**PDF 无法字节复现。** 实测同一份 `paper/main.md` 连续构建两次，PDF 字节数相同但 MD5 不同
+（LibreOffice 写入 `CreationDate`，且把时间戳抹掉后仍有差异）。所以第一阶段交完 MD5 之后
+**不要为任何理由重跑构建** —— 哪怕内容一个字没改，重跑出来的 PDF 哈希也是新的，已交的 MD5 立刻失效。
+
+流程：数据回填完成 → 生成 PDF → `scripts/submission_hashes.py freeze` 冻结基线 →
+客户端交 MD5 → 上传前 `verify`（返回 0 才继续，返回 1 会打印基线与当前的 md5 及字节数）。
+
+```
+python -m src.build_paper                  # 出 DOCX
+soffice --headless --convert-to pdf paper/build/submission.docx --outdir paper/build
+python -m src.build_ai_usage_pdf           # 出 AI工具使用详情.pdf
+python scripts/submission_hashes.py freeze paper/build/submission.pdf paper/build/AI工具使用详情.pdf
+python scripts/submission_hashes.py verify # 上传前再跑一次，须 rc=0
+```
+
+---
+
 ## 6. 测试后脱敏（当日必做）
 
 原始 `.jlog` / `.json` 内嵌真实队号与 `server_ticket`，控制台输出含 Windows 用户名。**只有脱敏件可入库。**
