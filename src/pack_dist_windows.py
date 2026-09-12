@@ -39,6 +39,7 @@ RUNTIME_MODULES = (
     "geometry.py",
     "route.py",
     "strategy.py",
+    "q4_fast.py",
 )
 
 SOURCE_DIR = Path("src/b_sim")
@@ -69,6 +70,19 @@ def sync(*, check_only: bool = False) -> int:
         else:
             target.write_text(wanted, encoding="utf-8")
             print(f"  > {name}（已更新）")
+
+    # The actual entry point is part of the delivery contract as well.
+    entry_source = SOURCE_DIR.parent / "run_official.py"
+    entry_target = TARGET_DIR.parent / "run_official.py"
+    wanted = entry_source.read_text(encoding="utf-8")
+    current = entry_target.read_text(encoding="utf-8") if entry_target.exists() else None
+    if wanted != current:
+        stale += 1
+        if check_only:
+            print("  ! run_official.py（入口未同步）")
+        else:
+            entry_target.write_text(wanted, encoding="utf-8")
+            print("  > run_official.py（入口已更新）")
 
     # 交付包里不应残留 src/ 已经删掉或不属于运行时的模块
     for path in sorted(TARGET_DIR.glob("*.py")):

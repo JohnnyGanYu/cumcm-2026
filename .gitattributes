@@ -1,0 +1,9 @@
+# Preserve the exact evaluated bytes used by q4_450_final_validation.json.
+# The archived experiment module was evaluated with CRLF line endings.
+/src/b_sim/strategy.py -text
+/src/b_sim/arena.py -text
+/src/b_sim/q4_fast.py -text
+/src/b_q4_450_eval.py -text
+/src/b_q4_450_experiments.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+# Keep original final evidence files intact as well.
+/results/q4_450_final_*.json -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol

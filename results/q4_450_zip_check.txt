@@ -1,0 +1,16 @@
+已打包 12 个文件 -> CUMCM2026B_robot_windows.zip (78784 bytes)
+  MD5: 62455e730d7807760b899e44322ae335
+  b_sim/__init__.py
+  b_sim/arena.py
+  b_sim/client.py
+  b_sim/directional.py
+  b_sim/feasible.py
+  b_sim/geometry.py
+  b_sim/q4_fast.py
+  b_sim/route.py
+  b_sim/strategy.py
+  Q4_OPTIMIZATION_REPORT.md
+  README_WINDOWS.md
+  run_official.py
+CUMCM2026B_robot_windows.zip 与 dist_windows 一致（12 个文件）
+  MD5: 62455e730d7807760b899e44322ae335

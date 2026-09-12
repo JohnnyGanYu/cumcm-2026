@@ -1,0 +1,12 @@
+校验 src\b_sim -> dist_windows\b_sim
+  = __init__.py
+  = arena.py
+  = client.py
+  = directional.py
+  = feasible.py
+  = geometry.py
+  = route.py
+  = strategy.py
+  = q4_fast.py
+
+交付包已是最新

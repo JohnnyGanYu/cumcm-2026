@@ -24,6 +24,15 @@ python run_official.py --robot-id 你的参赛队号
 python run_official.py --robot-id 你的参赛队号 --directional
 ```
 
+2026-09-12 更新：问题四默认使用 `q4-fast-v2`，采用 950 米内环 6 站、1900 米外环 14 站的统一巡回，
+并修正旧观测点方位角被套用到当前位置的问题。日志 `summary.strategy_profile` 记录实际策略版本。
+最新离线结果见交付包内的 `Q4_OPTIMIZATION_REPORT.md`；下方早期成绩表仅为历史记录。
+如需与原版对照，可加 `--legacy-q4`：
+
+```
+python run_official.py --robot-id 你的参赛队号 --directional --legacy-q4
+```
+
 `--robot-id` 必须和模拟器登录的参赛队号**逐字节一致**，否则返回 accepted=false。
 
 ## 重要注意
