@@ -1,18 +1,18 @@
 ﻿claim_id,paper_location,claim,value,evidence_file,code_entry,verification,status,owner
-B-INFO-01,问题3/4 信息论下界,单个干扰源定位到20m清除半径所需信息量,12.98 bit,results/b_info_bound.json,src/b_info_bound.py,解析式 2*log2(1800/20)，脚本实算,待核实,Leo
-B-INFO-02,问题3/4 信息论下界,12个源完整辨识（位置+频道子集+源数）所需信息量,175.55 bit,results/b_info_bound.json,src/b_info_bound.py,脚本实算，组合数+微分熵离散化,待核实,Leo
-B-INFO-03,问题4 信息论下界,含定向讨厌参数的总需求（12源/5定向）,222.64 bit,results/b_info_bound.json,src/b_info_bound.py,脚本实算,待核实,Leo
-B-INFO-04,问题3/4 单次检测容量,单次 /measure 的噪声受限容量,7.4919 bit,results/b_info_bound.json,src/b_info_bound.py,log2(36002)-log2(200)，与 log2(180) 交叉核对一致,待核实,Leo
-B-INFO-05,问题3/4 单次检测互信息,最优站位(圆心)单次检测互信息，全向源,4.6551 bit,results/b_info_bound.json,src/b_info_bound.py,蒙特卡洛 4e5 样本,待核实,Leo
-B-INFO-06,问题4 实测信息量,官方 run1 的 610 次检测供给信息量（容量口径上界）,4570.1 bit,results/b_info_bound.json,src/b_info_bound.py,610 × 7.4919，检测数由协议日志去重实算,待核实,Leo
-B-INFO-07,问题4 实测信息量,610 次检测供给信息量（实测输出分布经验上界）,820.7 bit,results/b_info_bound.json,src/b_info_bound.py,官方日志 no_signal 88.4%/direction 11.6% 实算,待核实,Leo
-B-INFO-08,问题4 信息效率,信息效率比（核心需求/容量供给）,3.84%,results/b_info_bound.json,src/b_info_bound.py,175.55/4570.1,待核实,Leo
-B-INFO-09,问题4 信息效率,信息效率比（核心需求/实测分布供给）,21.39%,results/b_info_bound.json,src/b_info_bound.py,175.55/820.7,待核实,Leo
-B-INFO-10,问题3 信息效率,问题3 效率 9.59%，为问题4 的 2.50 倍,9.59%,results/b_info_bound.json,src/b_info_bound.py,150.14/(209×7.4919),待核实,Leo
-B-INFO-11,问题3/4 下界可达性,"理论最少检测次数 24 次，与构造性下界 max(20频道,2×12交会)=24 一致",24 次,results/b_info_bound.json,src/b_info_bound.py,两条独立下界交叉核对,待核实,Leo
-B-INFO-12,问题4 优化方向,实测 610 次为下界的 25.4 倍；88.4% 检测为 no_signal，单次仅 0.179 bit,25.4 倍,results/b_info_bound.json,src/b_info_bound.py,官方日志类型分布实算,待核实,Leo
-B-GEOM-01,问题2/3/4 定位精度,示向度±1°在距离r处的横向不确定度,0.0349 r,-,解析式 2*r*tan(1°),解析推导,待核实,Leo
-B-GEOM-02,问题3/4 策略设计,单条示向度即可满足20m清除半径的最大距离阈值,573 m,-,解析式 20/(2*tan(1°)),解析推导；573m内无需交会即可直接归航清除,待核实,Leo
+B-INFO-01,问题3/4 信息论下界,单个干扰源定位到20m清除半径所需信息量,12.98 bit,results/b_info_bound.json,src/b_info_bound.py,解析式 2*log2(1800/20)，脚本实算；2026-09-13 逐项复算 results/b_info_bound.json 对应字段，数值精确吻合,已核实,Leo
+B-INFO-02,问题3/4 信息论下界,12个源完整辨识（位置+频道子集+源数）所需信息量,175.55 bit,results/b_info_bound.json,src/b_info_bound.py,脚本实算，组合数+微分熵离散化；2026-09-13 逐项复算 results/b_info_bound.json 对应字段，数值精确吻合,已核实,Leo
+B-INFO-03,问题4 信息论下界,含定向讨厌参数的总需求（12源/5定向）,222.64 bit,results/b_info_bound.json,src/b_info_bound.py,脚本实算；2026-09-13 逐项复算 results/b_info_bound.json 对应字段，数值精确吻合,已核实,Leo
+B-INFO-04,问题3/4 单次检测容量,单次 /measure 的噪声受限容量,7.4919 bit,results/b_info_bound.json,src/b_info_bound.py,log2(36002)-log2(200)，与 log2(180) 交叉核对一致；2026-09-13 逐项复算 results/b_info_bound.json 对应字段，数值精确吻合,已核实,Leo
+B-INFO-05,问题3/4 单次检测互信息,最优站位(圆心)单次检测互信息，全向源,4.6551 bit,results/b_info_bound.json,src/b_info_bound.py,蒙特卡洛 4e5 样本；2026-09-13 逐项复算 results/b_info_bound.json 对应字段，数值精确吻合,已核实,Leo
+B-INFO-06,问题4 实测信息量,官方 run1 的 610 次检测供给信息量（容量口径上界）,4570.1 bit,results/b_info_bound.json,src/b_info_bound.py,610 × 7.4919，检测数由协议日志去重实算；2026-09-13 逐项复算 results/b_info_bound.json 对应字段，数值精确吻合,已核实,Leo
+B-INFO-07,问题4 实测信息量,610 次检测供给信息量（实测输出分布经验上界）,820.7 bit,results/b_info_bound.json,src/b_info_bound.py,官方日志 no_signal 88.4%/direction 11.6% 实算；2026-09-13 逐项复算 results/b_info_bound.json 对应字段，数值精确吻合,已核实,Leo
+B-INFO-08,问题4 信息效率,信息效率比（核心需求/容量供给）,3.84%,results/b_info_bound.json,src/b_info_bound.py,175.55/4570.1；2026-09-13 逐项复算 results/b_info_bound.json 对应字段，数值精确吻合,已核实,Leo
+B-INFO-09,问题4 信息效率,信息效率比（核心需求/实测分布供给）,21.39%,results/b_info_bound.json,src/b_info_bound.py,175.55/820.7；2026-09-13 逐项复算 results/b_info_bound.json 对应字段，数值精确吻合,已核实,Leo
+B-INFO-10,问题3 信息效率,问题3 效率 9.59%，为问题4 的 2.50 倍,9.59%,results/b_info_bound.json,src/b_info_bound.py,150.14/(209×7.4919)；2026-09-13 逐项复算 results/b_info_bound.json 对应字段，数值精确吻合,已核实,Leo
+B-INFO-11,问题3/4 下界可达性,"理论最少检测次数 24 次，与构造性下界 max(20频道,2×12交会)=24 一致",24 次,results/b_info_bound.json,src/b_info_bound.py,两条独立下界交叉核对；2026-09-13 逐项复算 results/b_info_bound.json 对应字段，数值精确吻合,已核实,Leo
+B-INFO-12,问题4 优化方向,实测 610 次为下界的 25.4 倍；88.4% 检测为 no_signal，单次仅 0.179 bit,25.4 倍,results/b_info_bound.json,src/b_info_bound.py,官方日志类型分布实算；2026-09-13 逐项复算 results/b_info_bound.json 对应字段，数值精确吻合,已核实,Leo
+B-GEOM-01,问题2/3/4 定位精度,示向度±1°在距离r处的横向不确定度,0.0349 r,解析式（无需数据文件）,解析式 2*r*tan(1°),解析推导 2*tan(1°)=0.034910；2026-09-13 实算复核一致,已核实,Leo
+B-GEOM-02,问题3/4 策略设计,单条示向度即可满足20m清除半径的最大距离阈值,573 m,解析式（无需数据文件）,解析式 20/(2*tan(1°)),解析推导 20/(2*tan(1°))=572.90 m；2026-09-13 实算复核一致,已核实,Leo
 B-TIME-01,问题3/4 时间预算,官方四局虚拟时间构成：移动占比,77.4%,results/b_tsp_bound.json,src/b_tsp_bound.py,"新成本模型逐调用残差反解: measure5s+切频道1s, clear成功5s; 对账误差<3.2e-6s。旧值81.0%因漏计切频道与清除成功耗时",已核实,Leo
 B-TIME-02,问题3/4 时间预算,官方四局虚拟时间构成：检测占比,21.7%,results/b_tsp_bound.json,src/b_tsp_bound.py,同上；含切频道1s/次(每局约560s=3.4%),已核实,Leo
 B-TIME-03,问题3/4 时间预算,官方四局虚拟时间构成：清除占比,0.91%,results/b_tsp_bound.json,src/b_tsp_bound.py,同上；清除成功实为5s非3s,已核实,Leo
@@ -34,7 +34,7 @@ B-BOUND-L4,问题3/4 优化空间,L4 仅改访问顺序的下界（全局路径�
 B-BOUND-04,问题3/4 优化取舍,全局路径规划可兑现收益上限,-28.1%,results/b_tsp_bound.json,src/b_tsp_bound.py,"1397.4->1004.1s；实际是L0的9.4倍但其中约39个百分点是信息获取代价, TSP拿不到",已核实,Leo
 B-RING-01,问题3/4 实现缺陷,环内站位未按方位角顺扫导致的跨场弦跳损失,10846 m/局,results/b_tsp_bound.json,src/b_tsp_bound.py,= 2169 s/局；顺扫每步647m vs 实际弦跳2.5-2.9km,已核实,Leo
 B-RING-02,问题3/4 实现缺陷,环序损失的局间差异（同一份代码）,3.2%-58%,results/b_tsp_bound.json,src/b_tsp_bound.py,run2环序单调仅损失3.2%; run1/3/4非单调损失54-58%,已核实,Leo
-B-RING-03,问题3/4 实现核对,实际站位结构与strategy_config声明不符,31-47站/3-4层环,results/b_tsp_bound.json,src/b_tsp_bound.py,"实际12@1250+18@1750+12@1800+内圈, 非声称的12站单环, 待查代码",待核实,Leo
+B-RING-03,问题3/4 实现核对,（历史）旧实现站位结构与 strategy_config 声明不符,31-47站/3-4层环,results/b_tsp_bound.json,src/b_tsp_bound.py,该条记录的是 2026-09-11 前的旧结构 12@1250+18@1750+12@1800；交付版已改为 Q3 环 1150×6、Q4 内环 1000×7 + 外环 1870×12（相位15°）加原点共20站，日志 search_layout 字段如实上报，声明不符问题已不存在,已失效,Leo
 B-MOVE-01,问题3/4 移动构成,移动距离拆分：站位空驶占比,60.2%,results/b_tsp_bound.json,src/b_tsp_bound.py,归航38.8% 清除微调0.9%,已核实,Leo
 B-RING-04,问题3/4 优化实测,环内站位按方位角单调排序的实测收益（隔离实验，12局Q4）,-2.4%,results/b_ringsort_ablation.json,src/b_sim/strategy.py::_order_ring,同案例同种子对照: 贪心1321.6s vs 顺扫1290.2s; 移动-3.4%; 两组均12/12全清,已核实,Leo
 B-RING-05,问题3/4 归因更正,跨场弦跳的主体是批量归航往返而非环内乱序,长跳仅-2.4%,results/b_ringsort_ablation.json,src/b_sim/strategy.py::_order_ring,"排序后>2km长跳16971->16567m几乎不变; 子agent估算的10846m环序损失含归航接入跳, 排序无法消除",已核实,Leo
