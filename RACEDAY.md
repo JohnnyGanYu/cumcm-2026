@@ -20,7 +20,7 @@
 
 **[Releases](https://github.com/JohnnyGanYu/cumcm-2026/releases/latest)** 下载 `CUMCM2026B_robot_windows.zip`（仓库私有，需登录）。
 
-当前 `v1.0.0`，MD5 `b136bf73730f31d6131221f695abbd3a`。**解压后先核对 MD5**，
+当前 `v1.0.1`，MD5 `bd90df7b406a66921afe8cfaec556f03`。**解压后先核对 MD5**，
 对不上说明拿到了旧包 —— 此前真出过这事，旧包会让策略慢约 24%。
 
 跑完确认一下日志里 `strategy_class` 是 `Q3FastStrategy` / `Q4FastStrategy`；

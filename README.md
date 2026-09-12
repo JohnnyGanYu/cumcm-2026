@@ -375,7 +375,7 @@ Q3 无法做同样拆解：只留了官方二进制 `.jlog`，缺 `run_official.
 
 正式测试用的 Windows 交付包发布在 **[Releases](https://github.com/JohnnyGanYu/cumcm-2026/releases/latest)**（仓库私有，需登录下载）。
 
-当前版本 `v1.0.0`，MD5 `b136bf73730f31d6131221f695abbd3a`，14 个文件，纯 Python 标准库。
+当前版本 `v1.0.1`，MD5 `bd90df7b406a66921afe8cfaec556f03`，14 个文件，纯 Python 标准库。
 
 ```
 python run_official.py --robot-id 你的参赛队号                 # 问题 3
