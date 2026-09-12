@@ -132,8 +132,11 @@ def make_reference_docx(dest: Path) -> None:
             data = zin.read(item.filename)
             if item.filename == "word/document.xml":
                 txt = data.decode("utf-8")
-                txt = re.sub(r"<w:sectPr>.*?</w:sectPr>", sect, txt, flags=re.S)
-                if "<w:sectPr>" not in txt:
+                # 骨架里的 sectPr 是自闭合的 <w:sectPr />，成对标签的正则匹配不到它，
+                # 漏替换会让 pandoc 取到那个空 sectPr，A4 与页边距全部失效（实测过）。
+                txt, n = re.subn(r"<w:sectPr\b[^>]*/>|<w:sectPr\b.*?</w:sectPr>",
+                                 sect, txt, count=1, flags=re.S)
+                if n == 0:
                     txt = txt.replace("</w:body>", sect + "</w:body>")
                 data = txt.encode("utf-8")
             elif item.filename == "word/_rels/document.xml.rels":
@@ -148,6 +151,110 @@ def make_reference_docx(dest: Path) -> None:
     seed.unlink(missing_ok=True)
     seed_md.unlink(missing_ok=True)
     print(f"已生成页面设置模板: {dest.name}（A4 / 2.5 cm 边距 / 页脚页码）")
+
+
+SECT_PR = ('<w:sectPr>'
+           '<w:footerReference w:type="default" r:id="rIdFtr1"/>'
+           '<w:pgSz w:w="11906" w:h="16838"/>'
+           '<w:pgMar w:top="1417" w:right="1417" w:bottom="1417" w:left="1417"'
+           ' w:header="708" w:footer="708" w:gutter="0"/>'
+           '</w:sectPr>')
+
+
+def enforce_page_setup(docx: Path) -> None:
+    """在成品 DOCX 上落实 A4 / 2.5 cm 边距 / 页脚居中页码，并自查生效。
+
+    只改 sectPr 与 footer 关系，不触碰正文与图片流。
+    """
+    import zipfile
+
+    footer = (
+        '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+        '<w:ftr xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">'
+        '<w:p><w:pPr><w:jc w:val="center"/></w:pPr>'
+        '<w:r><w:fldChar w:fldCharType="begin"/></w:r>'
+        '<w:r><w:instrText xml:space="preserve"> PAGE </w:instrText></w:r>'
+        '<w:r><w:fldChar w:fldCharType="end"/></w:r>'
+        '</w:p></w:ftr>')
+    rel = ('<Relationship Id="rIdFtr1" Type="http://schemas.openxmlformats.org/'
+           'officeDocument/2006/relationships/footer" Target="footer1.xml"/>')
+    ct = ('<Override PartName="/word/footer1.xml" ContentType="application/'
+          'vnd.openxmlformats-officedocument.wordprocessingml.footer+xml"/>')
+
+    tmp = docx.with_suffix(".tmp.docx")
+    with zipfile.ZipFile(docx) as zin, \
+            zipfile.ZipFile(tmp, "w", zipfile.ZIP_DEFLATED) as zout:
+        names = set(zin.namelist())
+        for item in zin.infolist():
+            if item.filename == "word/footer1.xml":
+                continue
+            data = zin.read(item.filename)
+            if item.filename == "word/document.xml":
+                txt = data.decode("utf-8")
+                txt, n = re.subn(r"<w:sectPr\b[^>]*/>|<w:sectPr\b.*?</w:sectPr>",
+                                 SECT_PR, txt, count=1, flags=re.S)
+                if n == 0:
+                    txt = txt.replace("</w:body>", SECT_PR + "</w:body>")
+                data = txt.encode("utf-8")
+            elif item.filename == "word/_rels/document.xml.rels":
+                txt = data.decode("utf-8")
+                if 'Id="rIdFtr1"' not in txt:
+                    txt = txt.replace("</Relationships>", rel + "</Relationships>")
+                data = txt.encode("utf-8")
+            elif item.filename == "[Content_Types].xml":
+                txt = data.decode("utf-8")
+                if "/word/footer1.xml" not in txt:
+                    txt = txt.replace("</Types>", ct + "</Types>")
+                data = txt.encode("utf-8")
+            zout.writestr(item, data)
+        zout.writestr("word/footer1.xml", footer)
+
+    tmp.replace(docx)
+
+    with zipfile.ZipFile(docx) as z:
+        doc = z.read("word/document.xml").decode("utf-8")
+    if 'w:w="11906"' not in doc or 'w:top="1417"' not in doc:
+        raise SystemExit("页面设置未写入成品，A4/页边距会不合规")
+    print("页面设置已落实: A4 11906x16838 twips / 四边 2.5 cm / 页脚居中页码")
+
+
+def shrink_code_font(docx: Path, half_points: int = 14) -> None:
+    """把代码样式字号压到 7 pt，避免附录源码长行被硬折断。
+
+    第五条要求附录源程序完整可运行；行被折断后评审照抄会报语法错误，
+    所以这不是排版偏好而是合规问题。half_points=14 即 7 pt。
+    """
+    import zipfile
+
+    tmp = docx.with_suffix(".tmp2.docx")
+    changed = 0
+    with zipfile.ZipFile(docx) as zin, \
+            zipfile.ZipFile(tmp, "w", zipfile.ZIP_DEFLATED) as zout:
+        for item in zin.infolist():
+            data = zin.read(item.filename)
+            if item.filename == "word/styles.xml":
+                txt = data.decode("utf-8")
+                for style in ("SourceCode", "VerbatimChar"):
+                    pat = (r'(<w:style\b[^>]*w:styleId="' + style + r'".*?</w:style>)')
+                    m = re.search(pat, txt, flags=re.S)
+                    if not m:
+                        continue
+                    block = m.group(1)
+                    new = re.sub(r'<w:sz w:val="\d+"\s*/>',
+                                 f'<w:sz w:val="{half_points}"/>', block)
+                    new = re.sub(r'<w:szCs w:val="\d+"\s*/>',
+                                 f'<w:szCs w:val="{half_points}"/>', new)
+                    if '<w:sz ' not in new:
+                        new = new.replace("<w:rPr>",
+                                          f'<w:rPr><w:sz w:val="{half_points}"/>'
+                                          f'<w:szCs w:val="{half_points}"/>', 1)
+                    if new != block:
+                        txt = txt.replace(block, new)
+                        changed += 1
+                data = txt.encode("utf-8")
+            zout.writestr(item, data)
+    tmp.replace(docx)
+    print(f"代码字号已压至 {half_points / 2:g} pt（命中 {changed} 个样式），减少长行折断")
 
 
 def scan_identity(text: str) -> list[str]:
@@ -208,6 +315,11 @@ def main() -> None:
         print(res.stdout[-3000:])
         print(res.stderr[-3000:], file=sys.stderr)
         raise SystemExit("pandoc 生成 DOCX 失败")
+
+    # pandoc 不保证把 reference-doc 的 sectPr 带进产物（实测 A4 被丢回 Letter），
+    # 故在成品上直接落一次页面设置，并自查生效。
+    enforce_page_setup(docx)
+    shrink_code_font(docx)
     print(f"已生成: {docx}  ({docx.stat().st_size / 1e6:.2f} MB)")
 
 
