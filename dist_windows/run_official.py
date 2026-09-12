@@ -23,6 +23,18 @@ sys.path.insert(0, str(Path(__file__).parent))
 
 from b_sim.client import ProtocolError, RobotClient, TestEnded
 from b_sim.strategy import DogStrategy, StrategyConfig
+from b_sim.q3_fast import Q3FastStrategy
+from b_sim.q4_fast import Q4FastStrategy
+
+
+def make_strategy(client, *, directional: bool, legacy_q3: bool = False,
+                  legacy_q4: bool = False):
+    config = StrategyConfig(directional_probe=directional)
+    if directional:
+        strategy_class = DogStrategy if legacy_q4 else Q4FastStrategy
+    else:
+        strategy_class = DogStrategy if legacy_q3 else Q3FastStrategy
+    return strategy_class(client, config)
 
 
 def probe(base_url: str, robot_id: str) -> bool:
@@ -62,6 +74,10 @@ def main() -> None:
     ap.add_argument("--base-url", default="http://127.0.0.1:2026")
     ap.add_argument("--directional", action="store_true",
                     help="问题4：启用定向源推理与盲清除")
+    ap.add_argument("--legacy-q4", action="store_true",
+                    help="问题4回退到优化前的 DogStrategy（配合 --directional）")
+    ap.add_argument("--legacy-q3", action="store_true",
+                    help="问题3回退到优化前的 DogStrategy")
     ap.add_argument("--total-jammers", type=int, default=None, metavar="N",
                     help="演练测试结束时模拟器界面告示的干扰源总数（人工抄录）。"
                          "官方接口不返回该值，填入后才能算出题目要求的"
@@ -80,8 +96,8 @@ def main() -> None:
 
     client = RobotClient(robot_id=args.robot_id, base_url=args.base_url,
                          timeout_s=args.timeout)
-    config = StrategyConfig(directional_probe=args.directional)
-    strategy = DogStrategy(client, config)
+    strategy = make_strategy(client, directional=args.directional,
+                             legacy_q3=args.legacy_q3, legacy_q4=args.legacy_q4)
 
     print(f"启动: robot_id={args.robot_id} 模式={'问题4(含定向)' if args.directional else '问题3(全向)'}")
     t0 = time.time()
@@ -206,7 +222,7 @@ def main() -> None:
             "traceback": "".join(traceback.format_exception(
                 type(crash), crash, crash.__traceback__)),
         },
-        "strategy_config": vars(config),
+        "strategy_config": vars(strategy.config),
         "protocol_log": client.log,
     }, ensure_ascii=False, indent=2), encoding="utf-8")
     print(f"\n完整协议日志已写入: {out.resolve()}")

@@ -1,0 +1,249 @@
+{
+  "development_only": true,
+  "warning": "Different seed blocks are not interchangeable; use paired arms within each block.",
+  "experiments": {
+    "results/q3_220_clearance_pilot.json": {
+      "source_unchanged": true,
+      "seeds": [
+        7001,
+        7002,
+        7003,
+        7004,
+        7005,
+        7006,
+        7007,
+        7008
+      ],
+      "arms": [
+        {
+          "arm": "baseline",
+          "episodes": 8,
+          "errors": 0,
+          "arithmetic_mean_s": 256.4128920087501,
+          "cleared": 105,
+          "sources": 105
+        },
+        {
+          "arm": "src.b_q3_clearance_experiment:ClearanceStrategy",
+          "episodes": 8,
+          "errors": 0,
+          "arithmetic_mean_s": 252.47776315450696,
+          "cleared": 105,
+          "sources": 105
+        },
+        {
+          "arm": "src.b_q3_clearance_experiment:KnownCountStrategy",
+          "episodes": 8,
+          "errors": 0,
+          "arithmetic_mean_s": 256.0422007665626,
+          "cleared": 105,
+          "sources": 105
+        }
+      ]
+    },
+    "results/q3_220_combined_development.json": {
+      "source_unchanged": true,
+      "seeds": [
+        7001,
+        7002,
+        7003,
+        7004,
+        7005,
+        7006,
+        7007,
+        7008,
+        7009,
+        7010,
+        7011,
+        7012
+      ],
+      "arms": [
+        {
+          "arm": "src.b_q3_combined_experiment:Fast",
+          "episodes": 12,
+          "errors": 0,
+          "arithmetic_mean_s": 245.72617020535577,
+          "cleared": 158,
+          "sources": 158
+        },
+        {
+          "arm": "src.b_q3_combined_experiment:FastClear",
+          "episodes": 12,
+          "errors": 0,
+          "arithmetic_mean_s": 244.47572201874132,
+          "cleared": 158,
+          "sources": 158
+        },
+        {
+          "arm": "src.b_q3_combined_experiment:FastClearMulti",
+          "episodes": 12,
+          "errors": 0,
+          "arithmetic_mean_s": 247.2953918807231,
+          "cleared": 158,
+          "sources": 158
+        },
+        {
+          "arm": "src.b_q3_combined_experiment:FastMulti",
+          "episodes": 12,
+          "errors": 0,
+          "arithmetic_mean_s": 249.08395407185387,
+          "cleared": 158,
+          "sources": 158
+        },
+        {
+          "arm": "src.b_q3_combined_experiment:FastPigMulti",
+          "episodes": 12,
+          "errors": 0,
+          "arithmetic_mean_s": 247.550406405746,
+          "cleared": 158,
+          "sources": 158
+        }
+      ]
+    },
+    "results/q3_220_schedule_development.json": {
+      "source_unchanged": true,
+      "seeds": [
+        7001,
+        7002,
+        7003,
+        7004,
+        7005,
+        7006,
+        7007,
+        7008
+      ],
+      "arms": [
+        {
+          "arm": "src.b_q3_schedule_experiment:DeferredFast",
+          "episodes": 8,
+          "errors": 0,
+          "arithmetic_mean_s": 301.30113812267575,
+          "cleared": 105,
+          "sources": 105
+        },
+        {
+          "arm": "src.b_q3_schedule_experiment:StableFast",
+          "episodes": 8,
+          "errors": 0,
+          "arithmetic_mean_s": 243.17523108046433,
+          "cleared": 105,
+          "sources": 105
+        },
+        {
+          "arm": "src.b_q3_schedule_experiment:StablePig",
+          "episodes": 8,
+          "errors": 0,
+          "arithmetic_mean_s": 245.62300789279834,
+          "cleared": 105,
+          "sources": 105
+        }
+      ]
+    },
+    "results/q3_220_expanded_development.json": {
+      "source_unchanged": true,
+      "seeds": [
+        880121,
+        880122,
+        880123,
+        880124,
+        880125,
+        880126,
+        880127,
+        880128,
+        880129,
+        880130,
+        880131,
+        880132,
+        880133,
+        880134,
+        880135,
+        880136,
+        880137,
+        880138,
+        880139,
+        880140,
+        880141,
+        880142,
+        880143,
+        880144
+      ],
+      "arms": [
+        {
+          "arm": "baseline",
+          "episodes": 24,
+          "errors": 0,
+          "arithmetic_mean_s": 247.17908584474102,
+          "cleared": 318,
+          "sources": 318
+        },
+        {
+          "arm": "src.b_q3_selected_experiment:AllBearings",
+          "episodes": 24,
+          "errors": 0,
+          "arithmetic_mean_s": 236.97949634818409,
+          "cleared": 318,
+          "sources": 318
+        },
+        {
+          "arm": "src.b_q3_selected_experiment:Candidate",
+          "episodes": 24,
+          "errors": 0,
+          "arithmetic_mean_s": 236.8238426540926,
+          "cleared": 318,
+          "sources": 318
+        },
+        {
+          "arm": "src.b_q3_selected_experiment:SelectedPig",
+          "episodes": 24,
+          "errors": 0,
+          "arithmetic_mean_s": 242.1141013665813,
+          "cleared": 318,
+          "sources": 318
+        },
+        {
+          "arm": "src.b_q3_selected_experiment:SelectedRefine",
+          "episodes": 24,
+          "errors": 0,
+          "arithmetic_mean_s": 235.95054474106539,
+          "cleared": 318,
+          "sources": 318
+        }
+      ]
+    },
+    "results/q3_220_refine_confirmation.json": {
+      "source_unchanged": true,
+      "seeds": [
+        7001,
+        7002,
+        7003,
+        7004,
+        7005,
+        7006,
+        7007,
+        7008,
+        7009,
+        7010,
+        7011,
+        7012
+      ],
+      "arms": [
+        {
+          "arm": "src.b_q3_selected_experiment:Candidate",
+          "episodes": 12,
+          "errors": 0,
+          "arithmetic_mean_s": 243.48047712995788,
+          "cleared": 158,
+          "sources": 158
+        },
+        {
+          "arm": "src.b_q3_selected_experiment:SelectedRefine",
+          "episodes": 12,
+          "errors": 0,
+          "arithmetic_mean_s": 244.03013510267616,
+          "cleared": 158,
+          "sources": 158
+        }
+      ]
+    }
+  }
+}

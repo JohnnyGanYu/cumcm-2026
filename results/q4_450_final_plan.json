@@ -1,0 +1,41 @@
+{
+  "phase": "independent final validation, registered before execution",
+  "profile": "q4-fast-v2",
+  "seeds": [
+    261212101,
+    261212102,
+    261212103,
+    261212104,
+    261212105,
+    261212106,
+    261212107,
+    261212108,
+    261212109,
+    261212110,
+    261212111,
+    261212112,
+    261212113,
+    261212114,
+    261212115,
+    261212116
+  ],
+  "directional_counts": [
+    5,
+    10,
+    16
+  ],
+  "episodes_per_arm": 48,
+  "arms": [
+    "baseline",
+    "candidate"
+  ],
+  "primary_metric": "arithmetic mean of episode virtual time / cleared count",
+  "secondary_metric": "pooled total virtual time / total cleared",
+  "acceptance": "candidate must clear every source in all 48 episodes; report all cases and source hashes",
+  "physics_unchanged": true,
+  "sha256": {
+    "src/b_sim/q4_fast.py": "6bf5543945a0db38cb0cd05bddc0c5844c1ca8d1f1c316ee5dca44f6f7beade1",
+    "src/b_sim/strategy.py": "c8d1ebfdfc67563d801a958285e18dc5642f92fb1abc035242b4854bcdcdf08d",
+    "src/b_sim/arena.py": "618113bcab45950d766ff7c70fcd98a294b0f895deeae3888f1277e1f8dc5335"
+  }
+}

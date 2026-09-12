@@ -1,0 +1,33 @@
+# Preserve the exact evaluated bytes used by q4_450_final_validation.json.
+# The archived experiment module was evaluated with CRLF line endings.
+/src/b_sim/strategy.py -text
+/src/b_sim/arena.py -text
+/src/b_sim/q4_fast.py -text
+/src/b_q4_450_eval.py -text
+/src/b_q4_450_experiments.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+# Keep original final evidence files intact as well.
+/results/q4_450_final_*.json -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+
+# Preserve the exact frozen Q3 evaluation and delivery bytes across checkouts.
+/src/b_q3_220_client.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+/src/b_q3_220_eval.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+/src/b_q3_220_report.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+/src/b_sim/__init__.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+/src/b_sim/client.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+/src/b_sim/directional.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+/src/b_sim/feasible.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+/src/b_sim/geometry.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+/src/b_sim/q3_fast.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+/src/b_sim/route.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+/src/build_windows_zip.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+/src/pack_dist_windows.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+/src/run_official.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+/src/b_q3_*.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+/src/test_q3_fast.py -text
+/results/q3_220_* -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+/paper/q3_220_*.md -text
+/dist_windows/b_sim/*.py -text
+/dist_windows/run_official.py -text
+/dist_windows/Q3_OPTIMIZATION_REPORT.md -text
+# Generated evaluation records stay available but collapse in the PR diff.
+/results/q3_220_*.json linguist-generated=true

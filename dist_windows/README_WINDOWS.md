@@ -18,10 +18,25 @@
 python run_official.py --robot-id 你的参赛队号
 ```
 
+问题三默认使用 `q3-fast-v1`。新版修正观测点坐标、调整归航参数，并在保守定位区域允许时缩短清除移动；日志记录实际版本与配置。最新结果见 `Q3_OPTIMIZATION_REPORT.md`，属于离线验证，尚无新版官方成绩。如需与原版对照，加 `--legacy-q3`：
+
+```
+python run_official.py --robot-id 你的参赛队号 --legacy-q3
+```
+
 问题 4 加 `--directional`：
 
 ```
 python run_official.py --robot-id 你的参赛队号 --directional
+```
+
+2026-09-12 更新：问题四默认使用 `q4-fast-v2`，采用 950 米内环 6 站、1900 米外环 14 站的统一巡回，
+并修正旧观测点方位角被套用到当前位置的问题。日志 `summary.strategy_profile` 记录实际策略版本。
+最新离线结果见交付包内的 `Q4_OPTIMIZATION_REPORT.md`；下方早期成绩表仅为历史记录。
+如需与原版对照，可加 `--legacy-q4`：
+
+```
+python run_official.py --robot-id 你的参赛队号 --directional --legacy-q4
 ```
 
 `--robot-id` 必须和模拟器登录的参赛队号**逐字节一致**，否则返回 accepted=false。
@@ -44,7 +59,9 @@ python run_official.py --robot-id 你的参赛队号 --directional
 - 程序运行时间远低于 1200 s
 - 虚拟时间远低于 360000 s
 
-## 离线仿真器上的当前成绩（供对照）
+## 旧版早期离线成绩（历史记录）
+
+下表不是当前交付版成绩。当前问题三、四的独立评估分别见 `Q3_OPTIMIZATION_REPORT.md` 和 `Q4_OPTIMIZATION_REPORT.md`。
 
 | 场景 | 局数 | 全清 | 清除率 | 平均定位清除时间 |
 |---|---|---|---|---|

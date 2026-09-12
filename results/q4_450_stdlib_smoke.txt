@@ -1,0 +1,20 @@
+usage: run_official.py [-h] --robot-id ROBOT_ID [--base-url BASE_URL]
+                       [--directional] [--legacy-q4] [--total-jammers N]
+                       [--test-kind {practice,formal}] [--case-code CASE_CODE]
+                       [--note NOTE] [--dry-run] [--timeout TIMEOUT]
+
+options:
+  -h, --help            show this help message and exit
+  --robot-id ROBOT_ID   参赛队号，必须与模拟器登录账号完全一致
+  --base-url BASE_URL
+  --directional         问题4：启用定向源推理与盲清除
+  --legacy-q4           问题4回退到优化前的 DogStrategy（配合 --directional）
+  --total-jammers N     演练测试结束时模拟器界面告示的干扰源总数（人工抄录）。官方接口不返回该值，填入后才能算出题目要求的"被清除干
+                        扰源个数的比例"。正式测试不告示，留空即可。
+  --test-kind {practice,formal}
+                        practice=演练测试, formal=正式测试（写入日志便于归档区分）
+  --case-code CASE_CODE
+                        测试案例编码（正式测试须记录，论文表1要求该列）
+  --note NOTE           本次测试备注，写入日志
+  --dry-run             只探测接口连通性
+  --timeout TIMEOUT     单请求超时秒数

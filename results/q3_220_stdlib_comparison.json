@@ -1,0 +1,64 @@
+{
+  "python_version": "3.14.4",
+  "ordinary_site_packages_contains_numpy": true,
+  "isolated_no_site": true,
+  "isolated_numpy_spec": null,
+  "comparison_excludes": [
+    "wall_s"
+  ],
+  "runs": [
+    {
+      "file": "q3_220_stdlib_smoke.json",
+      "source_unchanged": true,
+      "expected_records": 2,
+      "completed_records": 2,
+      "cases": [
+        {
+          "seed": 7002,
+          "all_non_wall_fields_exactly_equal": true,
+          "differences": {},
+          "cleared": 14,
+          "total": 14,
+          "mean_clear_time_s": 187.36074749999997,
+          "wall_s": 8.051485700008925
+        },
+        {
+          "seed": 7008,
+          "all_non_wall_fields_exactly_equal": true,
+          "differences": {},
+          "cleared": 16,
+          "total": 16,
+          "mean_clear_time_s": 203.06098275,
+          "wall_s": 8.50539380000555
+        }
+      ]
+    },
+    {
+      "file": "q3_220_stdlib_isolated_smoke.json",
+      "source_unchanged": true,
+      "expected_records": 2,
+      "completed_records": 2,
+      "cases": [
+        {
+          "seed": 7002,
+          "all_non_wall_fields_exactly_equal": true,
+          "differences": {},
+          "cleared": 14,
+          "total": 14,
+          "mean_clear_time_s": 187.36074749999997,
+          "wall_s": 8.214469900005497
+        },
+        {
+          "seed": 7008,
+          "all_non_wall_fields_exactly_equal": true,
+          "differences": {},
+          "cleared": 16,
+          "total": 16,
+          "mean_clear_time_s": 203.06098275,
+          "wall_s": 8.719287100015208
+        }
+      ]
+    }
+  ],
+  "passed": true
+}

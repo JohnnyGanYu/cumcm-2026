@@ -184,7 +184,7 @@ def _beam_stencil(step: float, reach: float, headings: int
     """
     span = int(math.floor(reach / step))
     half = half_diagonal(step)
-    _, _, half_band, all_mask = _mode_geometry(headings)
+    _, _, half_band, _ = _mode_geometry(headings)
     masks: list[int] = []
     bucket: dict[int, int] = {}
     offsets: list[tuple[int, int, int]] = []
@@ -194,7 +194,9 @@ def _beam_stencil(step: float, reach: float, headings: int
             if d > reach:
                 continue
             if d <= half:
-                mask = all_mask
+                # 与 `FeasibleSet._visible_mask(conservative_drop=True)` 一致：
+                # 近场内定向模式不能被判定为必然可见，只有全向位可以。
+                mask = 1
             else:
                 slack = half_band + math.degrees(math.atan2(half, d - half))
                 mask = 1 | _arc_mask(headings, math.degrees(math.atan2(dj, di)),
@@ -319,7 +321,10 @@ class FeasibleSet:
         dx, dy = px - cell[0], py - cell[1]
         d = math.hypot(dx, dy)
         if d <= self._half:
-            return self._all_mask          # 紧贴格点，任何朝向都可能覆盖它
+            # 紧贴格点：源到观测点的方位完全不受格心约束，因此**没有**定向模式可以被
+            # 判定为"必然覆盖"（删除方向必须只保留全向位，否则会误删真值）；
+            # 保留方向仍然认为任何朝向都可能覆盖它。
+            return 1 if conservative_drop else self._all_mask
         slack = self._half_band + math.degrees(math.atan2(self._half, d - self._half))
         half_width = DIRECTIONAL_HALF_ANGLE_DEG + (-slack if conservative_drop else slack)
         bearing = math.degrees(math.atan2(dy, dx))     # 源 -> 观测点 的方位

@@ -1,0 +1,164 @@
+{
+  "profile": "q4-fast-v2",
+  "summary": {
+    "baseline": {
+      "episodes": 48,
+      "cleared": 709,
+      "total_sources": 710,
+      "full_clear_episodes": 47,
+      "clear_rate": 0.9985915492957746,
+      "arithmetic_mean_s": 637.1992578317031,
+      "pooled_mean_s": 627.6523039280677,
+      "median_s": 623.3884807880952,
+      "p95_s": 998.9594713,
+      "worst_s": 1052.8329064,
+      "within_450_episodes": 4,
+      "mean_move_distance_m": 36607.44619036756,
+      "mean_measure_calls": 289.2083333333333,
+      "mean_clear_calls": 70.64583333333333,
+      "max_wall_s": 60.235000000015134
+    },
+    "candidate": {
+      "episodes": 48,
+      "cleared": 710,
+      "total_sources": 710,
+      "full_clear_episodes": 48,
+      "clear_rate": 1.0,
+      "arithmetic_mean_s": 465.64257333659765,
+      "pooled_mean_s": 459.33011798028167,
+      "median_s": 446.69530601785715,
+      "p95_s": 632.2709370833334,
+      "worst_s": 744.0115398,
+      "within_450_episodes": 24,
+      "mean_move_distance_m": 26161.081632651807,
+      "mean_measure_calls": 237.85416666666666,
+      "mean_clear_calls": 41.854166666666664,
+      "max_wall_s": 1.2039999999979045
+    }
+  },
+  "strata": {
+    "5": {
+      "baseline": {
+        "episodes": 16,
+        "cleared": 227,
+        "total_sources": 227,
+        "full_clear_episodes": 16,
+        "clear_rate": 1.0,
+        "arithmetic_mean_s": 592.5271791444483,
+        "pooled_mean_s": 577.7645372290749,
+        "median_s": 588.6079907708333,
+        "p95_s": 998.9594713,
+        "worst_s": 998.9594713,
+        "within_450_episodes": 1,
+        "mean_move_distance_m": 31888.921857988378,
+        "mean_measure_calls": 283.4375,
+        "mean_clear_calls": 38.625,
+        "max_wall_s": 52.73499999998603
+      },
+      "candidate": {
+        "episodes": 16,
+        "cleared": 227,
+        "total_sources": 227,
+        "full_clear_episodes": 16,
+        "clear_rate": 1.0,
+        "arithmetic_mean_s": 438.1435611167439,
+        "pooled_mean_s": 428.1801316211454,
+        "median_s": 408.1770822238095,
+        "p95_s": 744.0115398,
+        "worst_s": 744.0115398,
+        "within_450_episodes": 10,
+        "mean_move_distance_m": 23096.528076386818,
+        "mean_measure_calls": 226.0,
+        "mean_clear_calls": 28.5625,
+        "max_wall_s": 1.125
+      }
+    },
+    "10": {
+      "baseline": {
+        "episodes": 16,
+        "cleared": 227,
+        "total_sources": 227,
+        "full_clear_episodes": 16,
+        "clear_rate": 1.0,
+        "arithmetic_mean_s": 669.7218892959736,
+        "pooled_mean_s": 653.2654755594713,
+        "median_s": 627.3035610461538,
+        "p95_s": 1052.8329064,
+        "worst_s": 1052.8329064,
+        "within_450_episodes": 1,
+        "mean_move_distance_m": 36097.58216414404,
+        "mean_measure_calls": 305.1875,
+        "mean_clear_calls": 71.875,
+        "max_wall_s": 60.235000000015134
+      },
+      "candidate": {
+        "episodes": 16,
+        "cleared": 227,
+        "total_sources": 227,
+        "full_clear_episodes": 16,
+        "clear_rate": 1.0,
+        "arithmetic_mean_s": 487.4678299321114,
+        "pooled_mean_s": 476.96261530396475,
+        "median_s": 444.68898159285715,
+        "p95_s": 673.7458764,
+        "worst_s": 673.7458764,
+        "within_450_episodes": 8,
+        "mean_move_distance_m": 26016.098011378246,
+        "mean_measure_calls": 241.4375,
+        "mean_clear_calls": 36.25,
+        "max_wall_s": 1.2039999999979045
+      }
+    },
+    "16": {
+      "baseline": {
+        "episodes": 16,
+        "cleared": 255,
+        "total_sources": 256,
+        "full_clear_episodes": 15,
+        "clear_rate": 0.99609375,
+        "arithmetic_mean_s": 649.3487050546875,
+        "pooled_mean_s": 649.261453262745,
+        "median_s": 666.5352894062501,
+        "p95_s": 851.9944651875,
+        "worst_s": 851.9944651875,
+        "within_450_episodes": 2,
+        "mean_move_distance_m": 41835.83454897026,
+        "mean_measure_calls": 279.0,
+        "mean_clear_calls": 101.4375,
+        "max_wall_s": 59.062000000005355
+      },
+      "candidate": {
+        "episodes": 16,
+        "cleared": 256,
+        "total_sources": 256,
+        "full_clear_episodes": 16,
+        "clear_rate": 1.0,
+        "arithmetic_mean_s": 471.3163289609375,
+        "pooled_mean_s": 471.3163289609375,
+        "median_s": 459.778094375,
+        "p95_s": 580.6728700625,
+        "worst_s": 580.6728700625,
+        "within_450_episodes": 6,
+        "mean_move_distance_m": 29370.618810190354,
+        "mean_measure_calls": 246.125,
+        "mean_clear_calls": 60.75,
+        "max_wall_s": 1.2030000000086147
+      }
+    }
+  },
+  "relative_reduction": 0.26923553721466664,
+  "paired_seed_cluster_bootstrap_95pct": [
+    0.2278044874533912,
+    0.3053891135075557
+  ],
+  "all_clear_gate_passed": true,
+  "target_450_met": false,
+  "source_sha256": {
+    "src/b_sim/strategy.py": "c8d1ebfdfc67563d801a958285e18dc5642f92fb1abc035242b4854bcdcdf08d",
+    "src/b_sim/q4_fast.py": "6bf5543945a0db38cb0cd05bddc0c5844c1ca8d1f1c316ee5dca44f6f7beade1",
+    "src/b_sim/arena.py": "618113bcab45950d766ff7c70fcd98a294b0f895deeae3888f1277e1f8dc5335",
+    "src/b_q4_450_experiments.py": "6bd3df7a6946e85184b06912faa651b43f1a52d4eec1ade1bc95ad7934fba572",
+    "src/b_q4_450_eval.py": "e568457ce01402ae5d9d89eda7ae5fd2926bdf245cb11399e842dfb4a8cd50ca"
+  },
+  "interpretation": "Offline simulator validation; not official test results. All pre-registered episodes included."
+}

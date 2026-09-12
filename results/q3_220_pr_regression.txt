@@ -1,0 +1,7 @@
+Command: D:\cumcm-2026-main\.venv\Scripts\python.exe -m pytest src/test_q3_fast.py src/test_q4_fast.py src/test_q4_near_field.py src/b_eval/test_provenance.py -q
+Started UTC: 2026-09-12T10:32:36.411146+00:00
+.....................................                                    [100%]
+37 passed in 39.05s
+
+Exit code: 0
+Finished UTC: 2026-09-12T10:33:17.199893+00:00

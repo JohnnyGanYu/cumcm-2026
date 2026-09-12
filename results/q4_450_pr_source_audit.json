@@ -1,0 +1,44 @@
+{
+  "stage": "PR assembly audit; supplemental hashes recorded after original final validation, not pre-registration",
+  "upstream_base_commit": "ab42f5d02365c9d74072ff6ae03d45abb26ec390",
+  "baseline_definition": "DogStrategy with the same near-field feasible.py correction as candidate",
+  "in_process_client_class_ast_matches_evaluated_workspace": true,
+  "client_constants_match": true,
+  "source_sha256": {
+    "src/b_sim/__init__.py": "aea216ad14244a26ee6dea8dfb1ef7ac52a7bd69eb01a2549718c3bc4ccf014f",
+    "src/b_sim/arena.py": "618113bcab45950d766ff7c70fcd98a294b0f895deeae3888f1277e1f8dc5335",
+    "src/b_sim/client.py": "1067d467e9d60b8b867f01feb1cde502faea9a572ca28254b54d833e7968917a",
+    "src/b_sim/directional.py": "c066ddee791fa2deaa55d45122757c64c53207dfc6f7674416f4b1496107309e",
+    "src/b_sim/feasible.py": "9d155abeff6460801b5a1952c81aa1b3b40c0e32ef4b7b37ba0176cd16d67465",
+    "src/b_sim/geometry.py": "d2b9828582fc56a488b53c22fa3080a0a0efe4a3f5a0caec75e97d3c017d6279",
+    "src/b_sim/route.py": "50c8c26590f70ce4e54fc098cd59b03ebe8c7da2358ce14ad135eaade7817689",
+    "src/b_sim/strategy.py": "c8d1ebfdfc67563d801a958285e18dc5642f92fb1abc035242b4854bcdcdf08d",
+    "src/b_sim/q4_fast.py": "6bf5543945a0db38cb0cd05bddc0c5844c1ca8d1f1c316ee5dca44f6f7beade1",
+    "src/run_official.py": "4c95ccc0cc6138c0e1078e663e5794f389c8c23ac7882b5062d444d56deb036a",
+    "src/b_eval/dev_measure.py": "299c55822cdcdf1510fb5350b0481728feff3dab34dfd2c66459e50349236d17",
+    "src/b_q4_450_eval.py": "e568457ce01402ae5d9d89eda7ae5fd2926bdf245cb11399e842dfb4a8cd50ca",
+    "src/b_q4_450_experiments.py": "6bd3df7a6946e85184b06912faa651b43f1a52d4eec1ade1bc95ad7934fba572"
+  },
+  "committed_source_sha256": {
+    "src/b_sim/__init__.py": "aea216ad14244a26ee6dea8dfb1ef7ac52a7bd69eb01a2549718c3bc4ccf014f",
+    "src/b_sim/arena.py": "618113bcab45950d766ff7c70fcd98a294b0f895deeae3888f1277e1f8dc5335",
+    "src/b_sim/client.py": "1067d467e9d60b8b867f01feb1cde502faea9a572ca28254b54d833e7968917a",
+    "src/b_sim/directional.py": "c066ddee791fa2deaa55d45122757c64c53207dfc6f7674416f4b1496107309e",
+    "src/b_sim/feasible.py": "9d155abeff6460801b5a1952c81aa1b3b40c0e32ef4b7b37ba0176cd16d67465",
+    "src/b_sim/geometry.py": "d2b9828582fc56a488b53c22fa3080a0a0efe4a3f5a0caec75e97d3c017d6279",
+    "src/b_sim/route.py": "50c8c26590f70ce4e54fc098cd59b03ebe8c7da2358ce14ad135eaade7817689",
+    "src/b_sim/strategy.py": "c8d1ebfdfc67563d801a958285e18dc5642f92fb1abc035242b4854bcdcdf08d",
+    "src/b_sim/q4_fast.py": "6bf5543945a0db38cb0cd05bddc0c5844c1ca8d1f1c316ee5dca44f6f7beade1",
+    "src/run_official.py": "4c95ccc0cc6138c0e1078e663e5794f389c8c23ac7882b5062d444d56deb036a",
+    "src/b_eval/dev_measure.py": "9551a9f912ebf3cc6150b51fb0474cd6e886aa7409e6a2d0075e5c38c0905704",
+    "src/b_q4_450_eval.py": "e568457ce01402ae5d9d89eda7ae5fd2926bdf245cb11399e842dfb4a8cd50ca",
+    "src/b_q4_450_experiments.py": "6bd3df7a6946e85184b06912faa651b43f1a52d4eec1ade1bc95ad7934fba572"
+  },
+  "changes_after_replay": [
+    {
+      "file": "src/b_eval/dev_measure.py",
+      "change": "Trim trailing blank lines only",
+      "ast_equivalent": true
+    }
+  ]
+}
