@@ -40,6 +40,7 @@ RUNTIME_MODULES = (
     "route.py",
     "strategy.py",
     "q4_fast.py",
+    "q3_fast.py",
 )
 
 SOURCE_DIR = Path("src/b_sim")

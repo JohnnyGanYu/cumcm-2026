@@ -133,7 +133,8 @@ def test_official_factory_keeps_q3_and_rollback_on_legacy():
     from src.run_official import make_strategy
     client = SimpleNamespace(log=[], virtual_time_s=0)
     # The script imports the same runtime under its delivery-package namespace.
-    assert type(make_strategy(client, directional=False)).__name__ == 'DogStrategy'
+    assert type(make_strategy(client, directional=False)).__name__ == 'Q3FastStrategy'
+    assert type(make_strategy(client, directional=False, legacy_q3=True)).__name__ == 'DogStrategy'
     assert type(make_strategy(client, directional=True, legacy_q4=True)).__name__ == 'DogStrategy'
     assert type(make_strategy(client, directional=True)).__name__ == 'Q4FastStrategy'
 

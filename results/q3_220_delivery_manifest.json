@@ -1,0 +1,72 @@
+{
+  "created_utc": "2026-09-12T10:35:13.790621+00:00",
+  "profile": "q3-fast-v1",
+  "random_case_mean_s": 246.03861514552946,
+  "relative_reduction": 0.03166551322594735,
+  "full_clear_episodes": 160,
+  "total_episodes": 160,
+  "cleared_sources": 2043,
+  "total_sources": 2043,
+  "target_220_met": false,
+  "offline_only": true,
+  "tests": {
+    "passed": 240,
+    "exit_code": 0,
+    "log": "results/q3_220_regression.txt",
+    "http_equivalence_seeds": [
+      7002,
+      7008
+    ],
+    "stdlib_isolated_equivalence_seeds": [
+      7002,
+      7008
+    ]
+  },
+  "runtime_and_entry_match_dist": true,
+  "zip_matches_dist": true,
+  "zip_file_count": 14,
+  "source_sha256": {
+    "src/b_q3_220_client.py": "9551a9f912ebf3cc6150b51fb0474cd6e886aa7409e6a2d0075e5c38c0905704",
+    "src/b_q3_220_eval.py": "67bb89b7a9802bc40949c2302892f3fdfd2eba8977439b78cd33b5525b76c1d1",
+    "src/b_q3_220_report.py": "22b7ecfd4656e1427351a537dcc221793f71104864401d9c4c48c61fbb79722d",
+    "src/b_sim/__init__.py": "aea216ad14244a26ee6dea8dfb1ef7ac52a7bd69eb01a2549718c3bc4ccf014f",
+    "src/b_sim/arena.py": "618113bcab45950d766ff7c70fcd98a294b0f895deeae3888f1277e1f8dc5335",
+    "src/b_sim/client.py": "1067d467e9d60b8b867f01feb1cde502faea9a572ca28254b54d833e7968917a",
+    "src/b_sim/directional.py": "c066ddee791fa2deaa55d45122757c64c53207dfc6f7674416f4b1496107309e",
+    "src/b_sim/feasible.py": "9d155abeff6460801b5a1952c81aa1b3b40c0e32ef4b7b37ba0176cd16d67465",
+    "src/b_sim/geometry.py": "d2b9828582fc56a488b53c22fa3080a0a0efe4a3f5a0caec75e97d3c017d6279",
+    "src/b_sim/q3_fast.py": "3f4ed9defefd68f1958fa0c7b0797df044d9d1dda7b1ea45a7811fcb5fb7f1d3",
+    "src/b_sim/q4_fast.py": "6bf5543945a0db38cb0cd05bddc0c5844c1ca8d1f1c316ee5dca44f6f7beade1",
+    "src/b_sim/route.py": "50c8c26590f70ce4e54fc098cd59b03ebe8c7da2358ce14ad135eaade7817689",
+    "src/b_sim/strategy.py": "c8d1ebfdfc67563d801a958285e18dc5642f92fb1abc035242b4854bcdcdf08d",
+    "src/build_windows_zip.py": "554515be2138a1159d55f7490a52d7eaea7c75f684693d3ea3a3992a3d591c56",
+    "src/pack_dist_windows.py": "a42b38646bfe0b66abb4abb11c416e4299d8a070878bb38609433d00fd958674",
+    "src/run_official.py": "d9ad1137d1a5c8a249a8eac447ac0bd8804c8ca9e412f31ab39cd91f8fc2cc5a"
+  },
+  "artifacts_sha256": {
+    "CUMCM2026B_robot_windows.zip": "f88aca9a2a17dce17ddbf8397dfd89e371282bc2a4b11cdcb0089e078b49b394",
+    "paper/q3_220_optimization.md": "9aa48daf23e8464de1f94445a5b60f71a3c2867b1dccab1f63de3511512b8f70",
+    "paper/q3_220_development.md": "48c219acb60497eeede1d3a4323df48e359b98a4618f19470c00c187bf8fe8c5",
+    "results/q3_220_final_plan.json": "0b3b0108cc103efad75a49be7b12cf86ee74004a6654d8dd2b4483a26f17a358",
+    "results/q3_220_final_summary.json": "049402dd5ef9338d9171a64f6286873dee038bed5b960dbae898a3c959a16d2e",
+    "results/q3_220_regression.txt": "1176890a653e3848f7c00c218e2c35d40a3532c8a9a288006ecb69c2b70f6d4f",
+    "results/q3_220_stdlib_isolated_smoke.json": "f3cd115bbceb857d004102c54a864fc93dc7f7820ee001b8b44d2cddd1c5f2e5",
+    "results/q3_220_stdlib_comparison.json": "56b35219d479c5236e8dfbeb0056a5c947287405f2adae317bbd7fc0eb3eb53e",
+    "src/test_q3_fast.py": "081644a227689b322a557abf7a3b82c59d7299f49da5e2aabed5f8eea9837165",
+    "results/q3_220_final_random.json": "8429f6c28c75130a15a4d46634ecbb8bd8fea82ed2dcc7f72b357beea427ff79",
+    "results/q3_220_final_count10.json": "70aabf5778ab531e40003df94e3bf8aae37a673c77f846196715fc58d5df2e4d",
+    "results/q3_220_final_count13.json": "4409f00d0c2b0b1d8fe499666d64d21285ae05f7e1b92c7c8ea271fc1b638d24",
+    "results/q3_220_final_count16.json": "38d6dae28670e8b55f0934f038607ba71f2f90d4fa940e552ee0ceaa26096b56",
+    "results/q3_220_local_delivery_manifest.json": "c8e0e5744f4f59a6ed339028d495931cfe3f0267720515583bbb92b233cd5eed",
+    "results/q3_220_pr_regression.txt": "02940490b26b0f730fd8dc8de22744320251766de5a22c469c555f6adcc37c89"
+  },
+  "local_manifest_file": "results/q3_220_local_delivery_manifest.json",
+  "prior_pr_delivery_git_ref": "3ca849f3b477d940a7814659fa934b05958c34c9:CUMCM2026B_robot_windows.zip",
+  "pr_validation": {
+    "targeted_tests_passed": 37,
+    "exit_code": 0,
+    "log": "results/q3_220_pr_regression.txt",
+    "source_hashes_match_registered_plan": true,
+    "note": "Preserves prior Q4 audit notes when regenerating the delivery ZIP; frozen Q3 runtime and evaluation results are unchanged."
+  }
+}

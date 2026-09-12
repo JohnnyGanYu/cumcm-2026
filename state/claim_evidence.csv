@@ -41,3 +41,4 @@ B-RING-05,问题3/4 归因更正,跨场弦跳的主体是批量归航往返而�
 B-RING-06,问题3 优化实测,环序排序对问题3的收益,-0.5%,results/b_q3_ringsort.json,src/b_sim/rehearse.py,"40局: 464.3->462.1s, 保持40/40全清",已核实,Leo
 B-RING-07,问题4 优化实测,环序排序对问题4的收益（40局全量）,-1.5%,results/b_q4_ringsort.json,src/b_sim/rehearse.py,"40局: 1274.9->1255.4s, 保持40/40全清",已核实,Leo
 B-Q4-450-V2,main.md 5.6/7.1,问题四独立48局配对优化：全清且虚拟时间下降,637.20s -> 465.64s; -26.92%; 710/710; 未达到450s综合目标,results/q4_450_final_validation.json; results/q4_450_final_summary.json,src/b_sim/q4_fast.py; src/b_q4_450_report.py,冻结源码与种子；48对；227项测试通过,已离线验证，官方待测,Codex
+B-Q3-220-V1,main.md 5.7/7.1,问题三独立100随机案例配对均值下降，四组样本全清,254.08s -> 246.04s; -3.17%; 160/160局; 2043/2043源; 未达到220s综合目标,results/q3_220_final_plan.json; results/q3_220_final_summary.json; results/q3_220_final_*.json,src/b_sim/q3_fast.py; src/b_q3_220_report.py,160对冻结源码评估；15项专项测试；HTTP/标准库隔离等价；完整回归见results/q3_220_regression.txt,已离线验证，官方待测,Codex

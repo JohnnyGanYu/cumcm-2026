@@ -1,0 +1,19 @@
+D:\python\python.exe -S -c <following exact Python program>
+import importlib.util
+import json
+import sys
+import src.b_q3_220_eval as evaluator
+print('python_version=' + sys.version.replace('\n', ' '), flush=True)
+print('outer_no_site=' + str(sys.flags.no_site), flush=True)
+print('numpy_spec=' + str(importlib.util.find_spec('numpy')), flush=True)
+print('sys_path=' + json.dumps(sys.path), flush=True)
+assert sys.flags.no_site == 1
+assert importlib.util.find_spec('numpy') is None
+original_run = evaluator.subprocess.run
+def isolated_run(args, **kwargs):
+    command = [args[0], '-S', *args[1:]]
+    print('worker_command=' + json.dumps(command), flush=True)
+    return original_run(command, **kwargs)
+evaluator.subprocess.run = isolated_run
+sys.argv = ['src.b_q3_220_eval', '--seeds', '7002', '7008', '--arms', 'src.b_sim.q3_fast:Q3FastStrategy', '--workers', '1', '--timeout', '180', '--out', 'results/q3_220_stdlib_isolated_smoke.json']
+evaluator.main()

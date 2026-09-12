@@ -1,0 +1,18 @@
+Command: python -m pytest src/b_sim/test_b_sim.py src/b_sim/test_b_pbt.py src/b_eval/test_provenance.py src/test_q4_fast.py src/test_q3_fast.py -q
+Interpreter: D:\cumcm-2026-main\.venv\Scripts\python.exe
+Version: Python 3.12.13
+Started: 2026-09-12T17:59:10.0519586+08:00
+Runtime source SHA256:
+3F4ED9DEFEFD68F1958FA0C7B0797DF044D9D1DDA7B1EA45A7811FCB5FB7F1D3 D:\cumcm-2026-main\src\b_sim\q3_fast.py
+6BF5543945A0DB38CB0CD05BDDC0C5844C1CA8D1F1C316EE5DCA44F6F7BEADE1 D:\cumcm-2026-main\src\b_sim\q4_fast.py
+C8D1EBFDFC67563D801A958285E18DC5642F92FB1ABC035242B4854BCDCDF08D D:\cumcm-2026-main\src\b_sim\strategy.py
+618113BCAB45950D766FF7C70FCD98A294B0F895DEEAE3888F1277E1F8DC5335 D:\cumcm-2026-main\src\b_sim\arena.py
+D9AD1137D1A5C8A249A8EAC447AC0BD8804C8CA9E412F31AB39CD91F8FC2CC5A D:\cumcm-2026-main\src\run_official.py
+........................................................................ [ 30%]
+........................................................................ [ 60%]
+........................................................................ [ 90%]
+........................                                                 [100%]
+240 passed in 980.19s (0:16:20)
+Exit code: 0
+Finished: 2026-09-12T18:15:32.9937397+08:00
+Runtime source unchanged after test: True

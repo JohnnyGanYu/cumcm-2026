@@ -1,0 +1,8 @@
+python_version=3.14.4 (tags/v3.14.4:23116f9, Apr  7 2026, 14:10:54) [MSC v.1944 64 bit (AMD64)]
+outer_no_site=1
+numpy_spec=None
+sys_path=["", "D:\\python\\python314.zip", "D:\\python\\DLLs", "D:\\python\\Lib", "D:\\python"]
+worker_command=["D:\\python\\python.exe", "-S", "-m", "src.b_q3_220_eval", "--worker", "--seeds", "7002", "--arms", "src.b_sim.q3_fast:Q3FastStrategy"]
+worker_command=["D:\\python\\python.exe", "-S", "-m", "src.b_q3_220_eval", "--worker", "--seeds", "7008", "--arms", "src.b_sim.q3_fast:Q3FastStrategy"]
+{"seed": 7002, "arm": "src.b_sim.q3_fast:Q3FastStrategy", "cleared": 14, "total_jammers": 14, "mean_clear_time_s": 187.36074749999997, "wall_s": 8.214469900005497, "error": null}
+{"seed": 7008, "arm": "src.b_sim.q3_fast:Q3FastStrategy", "cleared": 16, "total_jammers": 16, "mean_clear_time_s": 203.06098275, "wall_s": 8.719287100015208, "error": null}
