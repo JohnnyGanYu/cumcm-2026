@@ -24,10 +24,27 @@
 
 ```bash
 cd <仓库根目录>
-python -m pytest src/b_sim/test_b_sim.py -q     # 应 171 passed，跑不过先说
+python3 -m pytest src/b_sim/test_b_sim.py -q    # 快速回归，应 172 passed（约 32 s）
 ```
 
-纯标准库，无需装依赖。本机只有 4 核，`--workers 4` 是上限，开多了会互相抢 CPU 反而更慢。
+交付的策略代码纯标准库，但**测试与实验脚本需要 pytest / hypothesis / numpy / scipy**
+（见 `requirements.txt`）。本机没有裸 `python`，用 `python3` 或
+`~/.venvs/cumcm-2026/bin/python3`（pytest 装在这个 venv 里）。
+
+`pytest src` 全量收集会卡死 —— A/C 题脚本在导入期执行重活。B 题自检要显式列文件，
+完整回归 314 项约 8 分钟：
+
+```bash
+~/.venvs/cumcm-2026/bin/python3 -m pytest \
+    src/b_sim/test_b_sim.py src/b_sim/test_b_pbt.py \
+    src/test_q3_fast.py src/test_q4_fast.py src/test_q4_outer_radius.py \
+    src/test_q4_410_geometry.py src/test_q4_410_route.py src/test_q4_near_field.py \
+    src/test_q3_200_search.py src/test_q3_200_homing.py \
+    src/test_q3_200_homing_candidates.py src/test_b_optimization_benchmark.py \
+    src/b_eval/test_provenance.py -q
+```
+
+本机只有 4 核，`--workers 4` 是上限，开多了会互相抢 CPU 反而更慢。
 
 ## 当前成绩（官方模拟器实测，2026-09-12）
 
@@ -124,12 +141,17 @@ python -m src.b_miss_rescue --plan paired \
 ## 改完之后
 
 ```bash
-python -m pytest src/b_sim/test_b_sim.py -q      # 回归必须全绿
-python -m src.pack_dist_windows --check          # 同步到交付副本
+python3 -m pytest src/b_sim/test_b_sim.py -q     # 回归必须全绿（172 项）
+python3 -m src.pack_dist_windows --check         # 同步到交付副本
+python3 -m src.build_windows_zip --check         # 交付 zip 也要同步
 ```
 
-第二条会提示 `dist_windows/` 需要更新 —— 交付包是从那里打的，
-只改 `src/` 不同步的话正式测试跑的还是旧代码。这个坑我们踩过一次。
+后两条各挡一层漂移：`pack_dist_windows` 管 `src/b_sim/` -> `dist_windows/`，
+`build_windows_zip` 管 `dist_windows/` -> 根目录交付 zip。交付包是从 `dist_windows/`
+打的，只改 `src/` 不同步的话正式测试跑的还是旧代码。这两个坑都踩过。
+
+`dist_windows/` 用 CRLF 行尾，手工同步时要用 `newline=''` 写入，别让整个文件
+变成一行 diff。
 
 ## 时间不够时的优先级
 
