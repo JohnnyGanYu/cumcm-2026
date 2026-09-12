@@ -1,12 +1,18 @@
 # CUMCM 2026 — B 题
 
-> ## 🔧 来做两小时优化的同学：先看 [`OPTIMIZE_HERE.md`](OPTIMIZE_HERE.md)
+> ## 策略已冻结，正式测试当日先看 [`RACEDAY.md`](RACEDAY.md)
 >
-> 那份文件写了当前成绩、还剩哪处可打（Q4 有 160 次清除打在 100 m 开外）、
-> 怎么跑配对验证、以及**已经试过没用的 7 个方向**。不用读本文件就能开工。
+> 交付版本 **v1.0.5**，Q3 `q3-fast-v2`（环 1150 m×6）、Q4 `q4-fast-v3`
+> （内环 1000 m×7 + 外环 1870 m×12）。开跑前跑一条总闸即可：
 >
-> 一句话避坑：改 `src/b_sim/q3_fast.py` / `q4_fast.py`，
-> **不要**改 `strategy.py` 里的 `DogStrategy` —— 那个已经不上场了。
+> ```
+> python scripts/raceday_preflight.py     # 五个闸门，任一不过不要提交
+> ```
+>
+> 仍要动策略时才看 [`OPTIMIZE_HERE.md`](OPTIMIZE_HERE.md)（含已试过没用的 7 个方向）。
+> 改的是 `src/b_sim/q3_fast.py` / `q4_fast.py`，**不要**改 `strategy.py` 里的
+> `DogStrategy` —— 那是 `--legacy-*` 回退版。改完必须重跑 `pack_dist_windows`
+> 与 `build_windows_zip`，否则正式测试跑的还是旧代码。
 
 私有仓库，队内只读协作。**本队选定 B 题**（无线电干扰源定位与清除），仓库只保留 B 题相关内容。
 
