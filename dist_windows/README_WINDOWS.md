@@ -18,7 +18,7 @@
 python run_official.py --robot-id 你的参赛队号
 ```
 
-问题三默认使用 `q3-fast-v1`。新版修正观测点坐标、调整归航参数，并在保守定位区域允许时缩短清除移动；日志记录实际版本与配置。最新结果见 `Q3_OPTIMIZATION_REPORT.md`，属于离线验证，尚无新版官方成绩。如需与原版对照，加 `--legacy-q3`：
+问题三默认使用 `q3-fast-v2`。新增自适应/六站环选择、逐频道实际观测的覆盖认证，并优化安全清除落点。独立100局随机配对合计平均时间241.24→237.47秒，两版1265/1265全清；200秒目标尚未达到。本次为离线验证，尚无新版官方成绩，详见 `Q3_OPTIMIZATION_REPORT.md`。日志 `summary.strategy_profile` 应为 `q3-fast-v2`。如需回退到更早的DogStrategy，加 `--legacy-q3`（不是精确Q3v1基线）：
 
 ```
 python run_official.py --robot-id 你的参赛队号 --legacy-q3
@@ -30,8 +30,8 @@ python run_official.py --robot-id 你的参赛队号 --legacy-q3
 python run_official.py --robot-id 你的参赛队号 --directional
 ```
 
-2026-09-12 更新：问题四默认使用 `q4-fast-v2`，采用 950 米内环 6 站、1900 米外环 14 站的统一巡回，
-并修正旧观测点方位角被套用到当前位置的问题。日志 `summary.strategy_profile` 记录实际策略版本。
+2026-09-12 更新：问题四默认使用 `q4-fast-v3`，采用 1000 米内环 7 站、1870 米外环 12 站（外环错开 15°），
+增加多起点路线优化与保守定位区域清除。160 局独立离线配对的合计平均时间为 454.60 秒，2082/2082 个源全清；410 秒目标尚未达成，尚无新版官方成绩。日志 `summary.strategy_profile` 记录实际策略版本。
 最新离线结果见交付包内的 `Q4_OPTIMIZATION_REPORT.md`；下方早期成绩表仅为历史记录。
 如需与原版对照，可加 `--legacy-q4`：
 

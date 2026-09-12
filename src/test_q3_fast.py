@@ -190,7 +190,7 @@ def test_real_official_q3_entry_writes_complete_result_log(tmp_path, monkeypatch
     assert len(logs) == 1
     result = json.loads(logs[0].read_text(encoding='utf-8'))
     assert result['crash'] is None
-    assert result['summary']['strategy_profile'] == 'q3-fast-v1'
+    assert result['summary']['strategy_profile'] == 'q3-fast-v2'
     assert result['summary']['cleared_count'] == arena.case.total
     assert result['strategy_config']['directional_probe'] is False
     assert result['reported_total_jammers'] is None  # Protocol success does not reveal the private total.

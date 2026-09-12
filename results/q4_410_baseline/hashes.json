@@ -1,0 +1,22 @@
+[
+  {
+    "Algorithm": "SHA256",
+    "Hash": "9601781D24165FC183503F5C51BB6A8229B7D5ED0C222C4771C8A56EB9C8AD6E",
+    "Path": "D:\\CUMCM3.0\\cumcm-2026-main\\src\\b_sim\\q4_fast.py"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "618113BCAB45950D766FF7C70FCD98A294B0F895DEEAE3888F1277E1F8DC5335",
+    "Path": "D:\\CUMCM3.0\\cumcm-2026-main\\src\\b_sim\\arena.py"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "A5D7506CAF35E950723B86144AC71B56D20F4D4819DF14B48A6335C653C224CE",
+    "Path": "D:\\CUMCM3.0\\cumcm-2026-main\\src\\b_sim\\strategy.py"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "53655DD5F783CC86BAEC6B008E42EE029B80DB01C808FF69FD15D3A2C296A8EB",
+    "Path": "D:\\CUMCM3.0\\cumcm-2026-main\\src\\b_sim\\q3_fast.py"
+  }
+]

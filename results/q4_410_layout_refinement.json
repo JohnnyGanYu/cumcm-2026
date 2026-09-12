@@ -1,0 +1,379 @@
+[
+  {
+    "ni": 6,
+    "inner": 950,
+    "outer": 1900,
+    "no": 14,
+    "phase": 0,
+    "stations": 21,
+    "sampled_positions": 1793,
+    "sampled_min_radius": {
+      "uncovered_source_fraction": 0.044617958728388175,
+      "invisible_heading_fraction": 0.001228287713621382,
+      "worst_invisible_heading_fraction": 0.09313684043975318,
+      "mean_reachable_stations": 3.73675404350251
+    },
+    "open_route_m": 17663.523693167066,
+    "dense_min_radius": {
+      "uncovered_source_fraction": 0.03796423658872077,
+      "invisible_heading_fraction": 0.0013405706106560705,
+      "worst_invisible_heading_fraction": 0.11113081947669978,
+      "mean_reachable_stations": 3.714835920613087
+    },
+    "edge_min_radius": {
+      "uncovered_source_fraction": 0.11805555555555555,
+      "invisible_heading_fraction": 0.0065187158054786426,
+      "worst_invisible_heading_fraction": 0.08469967722743638,
+      "mean_reachable_stations": 3.2324074074074076
+    },
+    "uniform_radius_heading_loss": 0.00013549403357659024
+  },
+  {
+    "ni": 6,
+    "inner": 1000,
+    "outer": 1850,
+    "no": 12,
+    "phase": 15,
+    "stations": 19,
+    "sampled_positions": 1793,
+    "sampled_min_radius": {
+      "uncovered_source_fraction": 0.03680981595092025,
+      "invisible_heading_fraction": 0.0007274435463089101,
+      "worst_invisible_heading_fraction": 0.05096051788507725,
+      "mean_reachable_stations": 3.5460122699386503
+    },
+    "open_route_m": 16878.773848858313,
+    "dense_min_radius": {
+      "uncovered_source_fraction": 0.03348398506582826,
+      "invisible_heading_fraction": 0.0005726622564537072,
+      "worst_invisible_heading_fraction": 0.057649428821640834,
+      "mean_reachable_stations": 3.5467478876007075
+    },
+    "edge_min_radius": {
+      "uncovered_source_fraction": 0.2625,
+      "invisible_heading_fraction": 0.001192771453315388,
+      "worst_invisible_heading_fraction": 0.008664827444496889,
+      "mean_reachable_stations": 3.0069444444444446
+    },
+    "uniform_radius_heading_loss": 6.70748933784668e-05
+  },
+  {
+    "ni": 6,
+    "inner": 1000,
+    "outer": 1870,
+    "no": 12,
+    "phase": 15,
+    "stations": 19,
+    "sampled_positions": 1793,
+    "sampled_min_radius": {
+      "uncovered_source_fraction": 0.040156162855549356,
+      "invisible_heading_fraction": 0.0009990367773825577,
+      "worst_invisible_heading_fraction": 0.05177764076803669,
+      "mean_reachable_stations": 3.505856107083101
+    },
+    "open_route_m": 17152.213103380425,
+    "dense_min_radius": {
+      "uncovered_source_fraction": 0.038828846531735114,
+      "invisible_heading_fraction": 0.0008480085049056081,
+      "worst_invisible_heading_fraction": 0.06635408142293482,
+      "mean_reachable_stations": 3.500530556101395
+    },
+    "edge_min_radius": {
+      "uncovered_source_fraction": 0.11805555555555555,
+      "invisible_heading_fraction": 0.00128869170600773,
+      "worst_invisible_heading_fraction": 0.01920599894633903,
+      "mean_reachable_stations": 2.9902777777777776
+    },
+    "uniform_radius_heading_loss": 8.18254704136728e-05
+  },
+  {
+    "ni": 6,
+    "inner": 1000,
+    "outer": 1870,
+    "no": 12,
+    "phase": 7.5,
+    "stations": 19,
+    "sampled_positions": 1793,
+    "sampled_min_radius": {
+      "uncovered_source_fraction": 0.03234802007808143,
+      "invisible_heading_fraction": 0.0010189863576464714,
+      "worst_invisible_heading_fraction": 0.08077651150387202,
+      "mean_reachable_stations": 3.5036252091466817
+    },
+    "open_route_m": 17240.006342988174,
+    "dense_min_radius": {
+      "uncovered_source_fraction": 0.029475338966398115,
+      "invisible_heading_fraction": 0.0007957016395668396,
+      "worst_invisible_heading_fraction": 0.12946009097966052,
+      "mean_reachable_stations": 3.5019453723717824
+    },
+    "edge_min_radius": {
+      "uncovered_source_fraction": 0.11805555555555555,
+      "invisible_heading_fraction": 0.0035206768698810916,
+      "worst_invisible_heading_fraction": 0.0623669988141561,
+      "mean_reachable_stations": 2.9902777777777776
+    },
+    "uniform_radius_heading_loss": 7.590863235972439e-05
+  },
+  {
+    "ni": 6,
+    "inner": 1000,
+    "outer": 1870,
+    "no": 12,
+    "phase": 0,
+    "stations": 19,
+    "sampled_positions": 1793,
+    "sampled_min_radius": {
+      "uncovered_source_fraction": 0.015616285554935862,
+      "invisible_heading_fraction": 0.0007439949013449875,
+      "worst_invisible_heading_fraction": 0.11579678364733659,
+      "mean_reachable_stations": 3.485778025655326
+    },
+    "open_route_m": 17517.815515517705,
+    "dense_min_radius": {
+      "uncovered_source_fraction": 0.01780310473570446,
+      "invisible_heading_fraction": 0.0006882329033255317,
+      "worst_invisible_heading_fraction": 0.13294104291698933,
+      "mean_reachable_stations": 3.499901748870112
+    },
+    "edge_min_radius": {
+      "uncovered_source_fraction": 0.06388888888888888,
+      "invisible_heading_fraction": 0.005917127126184989,
+      "worst_invisible_heading_fraction": 0.13561742939444518,
+      "mean_reachable_stations": 2.9902777777777776
+    },
+    "uniform_radius_heading_loss": 6.278724002059404e-05
+  },
+  {
+    "ni": 6,
+    "inner": 975,
+    "outer": 1870,
+    "no": 12,
+    "phase": 15,
+    "stations": 19,
+    "sampled_positions": 1793,
+    "sampled_min_radius": {
+      "uncovered_source_fraction": 0.03904071388733965,
+      "invisible_heading_fraction": 0.0009204766431219331,
+      "worst_invisible_heading_fraction": 0.05296257113648472,
+      "mean_reachable_stations": 3.524261015058561
+    },
+    "open_route_m": 17363.94154226823,
+    "dense_min_radius": {
+      "uncovered_source_fraction": 0.041737079976419726,
+      "invisible_heading_fraction": 0.0008562470250806729,
+      "worst_invisible_heading_fraction": 0.06073505059920245,
+      "mean_reachable_stations": 3.5237178227549615
+    },
+    "edge_min_radius": {
+      "uncovered_source_fraction": 0.15416666666666667,
+      "invisible_heading_fraction": 0.0018047662534801505,
+      "worst_invisible_heading_fraction": 0.020970794154709177,
+      "mean_reachable_stations": 2.9541666666666666
+    },
+    "uniform_radius_heading_loss": 8.187156780674504e-05
+  },
+  {
+    "ni": 6,
+    "inner": 975,
+    "outer": 1870,
+    "no": 12,
+    "phase": 7.5,
+    "stations": 19,
+    "sampled_positions": 1793,
+    "sampled_min_radius": {
+      "uncovered_source_fraction": 0.03346346904629113,
+      "invisible_heading_fraction": 0.0009933263330304512,
+      "worst_invisible_heading_fraction": 0.07797123431410911,
+      "mean_reachable_stations": 3.5220301171221418
+    },
+    "open_route_m": 17410.0771627442,
+    "dense_min_radius": {
+      "uncovered_source_fraction": 0.03348398506582826,
+      "invisible_heading_fraction": 0.0008722948647468182,
+      "worst_invisible_heading_fraction": 0.08160999402406711,
+      "mean_reachable_stations": 3.525132639025349
+    },
+    "edge_min_radius": {
+      "uncovered_source_fraction": 0.15416666666666667,
+      "invisible_heading_fraction": 0.0051125352387303815,
+      "worst_invisible_heading_fraction": 0.09328022728346,
+      "mean_reachable_stations": 2.9541666666666666
+    },
+    "uniform_radius_heading_loss": 8.324308592010252e-05
+  },
+  {
+    "ni": 6,
+    "inner": 1000,
+    "outer": 1880,
+    "no": 12,
+    "phase": 15,
+    "stations": 19,
+    "sampled_positions": 1793,
+    "sampled_min_radius": {
+      "uncovered_source_fraction": 0.046848856664807585,
+      "invisible_heading_fraction": 0.001118723976933165,
+      "worst_invisible_heading_fraction": 0.05216196434237068,
+      "mean_reachable_stations": 3.4835471277189067
+    },
+    "open_route_m": 17289.067038353118,
+    "dense_min_radius": {
+      "uncovered_source_fraction": 0.04362350167026921,
+      "invisible_heading_fraction": 0.0009874321685332265,
+      "worst_invisible_heading_fraction": 0.06659495459470133,
+      "mean_reachable_stations": 3.4802515228925133
+    },
+    "edge_min_radius": {
+      "uncovered_source_fraction": 0.11805555555555555,
+      "invisible_heading_fraction": 0.0020399751586236714,
+      "worst_invisible_heading_fraction": 0.025582102673204647,
+      "mean_reachable_stations": 2.984722222222222
+    },
+    "uniform_radius_heading_loss": 9.695670916736784e-05
+  },
+  {
+    "ni": 6,
+    "inner": 1000,
+    "outer": 1900,
+    "no": 12,
+    "phase": 15,
+    "stations": 19,
+    "sampled_positions": 1793,
+    "sampled_min_radius": {
+      "uncovered_source_fraction": 0.05800334634690463,
+      "invisible_heading_fraction": 0.0015816644970951194,
+      "worst_invisible_heading_fraction": 0.055437243405042594,
+      "mean_reachable_stations": 3.43446737311768
+    },
+    "open_route_m": 17563.0301967462,
+    "dense_min_radius": {
+      "uncovered_source_fraction": 0.05392022008253095,
+      "invisible_heading_fraction": 0.0013935178977463603,
+      "worst_invisible_heading_fraction": 0.07126246595983438,
+      "mean_reachable_stations": 3.4352918058557673
+    },
+    "edge_min_radius": {
+      "uncovered_source_fraction": 0.11805555555555555,
+      "invisible_heading_fraction": 0.0035123492581056576,
+      "worst_invisible_heading_fraction": 0.03805051165878667,
+      "mean_reachable_stations": 2.9680555555555554
+    },
+    "uniform_radius_heading_loss": 0.0001383816295472652
+  },
+  {
+    "ni": 7,
+    "inner": 1000,
+    "outer": 1870,
+    "no": 12,
+    "phase": 15,
+    "stations": 20,
+    "sampled_positions": 1793,
+    "sampled_min_radius": {
+      "uncovered_source_fraction": 0.002230897936419409,
+      "invisible_heading_fraction": 1.2675058887684322e-05,
+      "worst_invisible_heading_fraction": 0.009258240641144017,
+      "mean_reachable_stations": 3.8020078081427773
+    },
+    "open_route_m": 17703.567604597585,
+    "dense_min_radius": {
+      "uncovered_source_fraction": 0.0021615248575358615,
+      "invisible_heading_fraction": 1.4216205360521105e-05,
+      "worst_invisible_heading_fraction": 0.016172197137417126,
+      "mean_reachable_stations": 3.7883670662212614
+    },
+    "edge_min_radius": {
+      "uncovered_source_fraction": 0.0,
+      "invisible_heading_fraction": 0.0,
+      "worst_invisible_heading_fraction": 0.0,
+      "mean_reachable_stations": 3.1381944444444443
+    },
+    "uniform_radius_heading_loss": 1.2923823055019187e-06
+  },
+  {
+    "ni": 7,
+    "inner": 1000,
+    "outer": 1870,
+    "no": 12,
+    "phase": 7.5,
+    "stations": 20,
+    "sampled_positions": 1793,
+    "sampled_min_radius": {
+      "uncovered_source_fraction": 0.0033463469046291134,
+      "invisible_heading_fraction": 2.08288317039145e-05,
+      "worst_invisible_heading_fraction": 0.008513365028344029,
+      "mean_reachable_stations": 3.799776910206358
+    },
+    "open_route_m": 17712.056062510812,
+    "dense_min_radius": {
+      "uncovered_source_fraction": 0.0015327176262527019,
+      "invisible_heading_fraction": 1.0728211542695226e-05,
+      "worst_invisible_heading_fraction": 0.018367558707156048,
+      "mean_reachable_stations": 3.7897818824916487
+    },
+    "edge_min_radius": {
+      "uncovered_source_fraction": 0.0,
+      "invisible_heading_fraction": 0.0,
+      "worst_invisible_heading_fraction": 0.0,
+      "mean_reachable_stations": 3.1381944444444443
+    },
+    "uniform_radius_heading_loss": 9.752919584268388e-07
+  },
+  {
+    "ni": 7,
+    "inner": 1000,
+    "outer": 1900,
+    "no": 13,
+    "phase": 0,
+    "stations": 21,
+    "sampled_positions": 1793,
+    "sampled_min_radius": {
+      "uncovered_source_fraction": 0.0033463469046291134,
+      "invisible_heading_fraction": 1.889456594004205e-05,
+      "worst_invisible_heading_fraction": 0.009506195650743326,
+      "mean_reachable_stations": 3.8505298382598996
+    },
+    "open_route_m": 18039.276496684604,
+    "dense_min_radius": {
+      "uncovered_source_fraction": 0.0035370406759677735,
+      "invisible_heading_fraction": 4.141738126104909e-05,
+      "worst_invisible_heading_fraction": 0.03402023910460749,
+      "mean_reachable_stations": 3.8383572411082727
+    },
+    "edge_min_radius": {
+      "uncovered_source_fraction": 0.0,
+      "invisible_heading_fraction": 0.0,
+      "worst_invisible_heading_fraction": 0.0,
+      "mean_reachable_stations": 3.2875
+    },
+    "uniform_radius_heading_loss": 3.76521647827719e-06
+  },
+  {
+    "ni": 6,
+    "inner": 1000,
+    "outer": 1850,
+    "no": 14,
+    "phase": 15,
+    "stations": 21,
+    "sampled_positions": 1793,
+    "sampled_min_radius": {
+      "uncovered_source_fraction": 0.007808142777467931,
+      "invisible_heading_fraction": 0.00018949463605833435,
+      "worst_invisible_heading_fraction": 0.046085940746042275,
+      "mean_reachable_stations": 3.802565532626882
+    },
+    "open_route_m": 17624.79364559844,
+    "dense_min_radius": {
+      "uncovered_source_fraction": 0.008135193554725879,
+      "invisible_heading_fraction": 0.00018980075252535754,
+      "worst_invisible_heading_fraction": 0.07680837884317512,
+      "mean_reachable_stations": 3.797799174690509
+    },
+    "edge_min_radius": {
+      "uncovered_source_fraction": 0.06111111111111111,
+      "invisible_heading_fraction": 0.0008583980584393753,
+      "worst_invisible_heading_fraction": 0.03491495100952129,
+      "mean_reachable_stations": 3.3583333333333334
+    },
+    "uniform_radius_heading_loss": 1.7254613865941594e-05
+  }
+]

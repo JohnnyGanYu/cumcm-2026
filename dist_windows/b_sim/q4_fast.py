@@ -13,12 +13,13 @@ channel is empty; always evaluate clear rate alongside time.
 
 from __future__ import annotations
 import math
-from .arena import ARENA_RADIUS, RECEPTION_MAX_M
+from .arena import ARENA_RADIUS, CLEAR_RADIUS_M, RECEPTION_MAX_M, SOURCE_COUNT_MAX
 from .geometry import Bearing, centroid, clip_polygon, polygon_diameter, wedge_half_planes
+from .route import nearest_neighbour, or_opt, order_route, path_length, two_opt
 from .strategy import ChannelState, DogStrategy, StrategyConfig
 
 Point = tuple[float, float]
-PROFILE = "q4-fast-v2"
+PROFILE = "q4-fast-v3"
 
 
 def bounded_region(bearings: list[Bearing]) -> list[Point]:
@@ -43,18 +44,51 @@ def bounded_region(bearings: list[Bearing]) -> list[Point]:
     return polygon
 
 
-def ring_points(radius: float, count: int) -> list[Point]:
-    return [(radius * math.cos(2 * math.pi * k / count),
-             radius * math.sin(2 * math.pi * k / count)) for k in range(count)]
+def ring_points(radius: float, count: int, phase_deg: float = 0.0) -> list[Point]:
+    points = [(radius * math.cos(2 * math.pi * k / count),
+               radius * math.sin(2 * math.pi * k / count)) for k in range(count)]
+    if not phase_deg:
+        return points
+    angle = math.radians(phase_deg)
+    return [(x * math.cos(angle) - y * math.sin(angle),
+             x * math.sin(angle) + y * math.cos(angle)) for x, y in points]
+
+
+def region_cover_points(polygon: list[Point], radius: float = 19.9) -> list[Point]:
+    """Cover the diameter-aligned bounding rectangle with at most 48 disks.
+
+    Every cell side is <= radius*sqrt(2), so its centre is within radius of
+    every cell point. The rectangle contains the entire feasible polygon.
+    Large regions return no plan and retain the original recovery path.
+    """
+    diameter, a, b = polygon_diameter(polygon)
+    if diameter <= 1e-9:
+        return polygon[:1]
+    ux, uy = (b[0] - a[0]) / diameter, (b[1] - a[1]) / diameter
+    uv = [(ux * p[0] + uy * p[1], -uy * p[0] + ux * p[1]) for p in polygon]
+    lo0, hi0 = min(p[0] for p in uv), max(p[0] for p in uv)
+    lo1, hi1 = min(p[1] for p in uv), max(p[1] for p in uv)
+    n0 = max(1, math.ceil((hi0 - lo0) / (radius * math.sqrt(2))))
+    n1 = max(1, math.ceil((hi1 - lo1) / (radius * math.sqrt(2))))
+    if n0 * n1 > 48:
+        return []
+    points = []
+    for i in range(n0):
+        for j in range(n1):
+            u = lo0 + (hi0 - lo0) * (i + .5) / n0
+            v = lo1 + (hi1 - lo1) * (j + .5) / n1
+            points.append((ux * u - uy * v, uy * u + ux * v))
+    return points
 
 
 class Q4FastStrategy(DogStrategy):
     """Candidate frozen on development cases before independent validation."""
 
-    inner_radius = 950.0
-    inner_count = 6
-    outer_radius = 1900.0
-    outer_count = 14
+    inner_radius = 1000.0
+    inner_count = 7
+    outer_radius = 1870.0
+    outer_count = 12
+    outer_phase_deg = 15.0
     relocate_inner = False
     relocate_radius = 450.0
 
@@ -75,7 +109,8 @@ class Q4FastStrategy(DogStrategy):
         # An outer ring beyond the source arena reveals outward facing sources.
         for radius, count in ((self.inner_radius, self.inner_count),
                               (self.outer_radius, self.outer_count)):
-            for point in ring_points(radius, count):
+            phase = self.outer_phase_deg if radius == self.outer_radius else 0.0
+            for point in ring_points(radius, count, phase):
                 if point in self._visited_fast_stations:
                     continue
                 if not any(not self._skip_probe(st, point) for st in pending):
@@ -90,6 +125,70 @@ class Q4FastStrategy(DogStrategy):
                     continue
                 remaining.append(point)
         return remaining
+
+    def _route_order(self, waypoints: list[Point]) -> list[Point]:
+        """Compare deterministic first stops before the final open-tour search.
+
+        Q4 combines up to 20 channels with both rings. The old 24-point guard
+        skipped all route improvement at precisely these larger early tours.
+        """
+        best = order_route(self.pos, waypoints, improve=self.config.route_improve,
+                           max_points=64)
+        if not self.config.route_improve or len(best) < 3:
+            return best
+        points = list(best)
+        length = path_length(self.pos, best)
+        for first in points:
+            candidate = [first] + nearest_neighbour(first, [p for p in points if p != first])
+            candidate = two_opt(self.pos, candidate)
+            candidate_length = path_length(self.pos, candidate)
+            if candidate_length < length - 1e-9:
+                best, length = candidate, candidate_length
+        return or_opt(self.pos, best)
+
+    def _next_waypoint(self) -> bool:
+        waypoints = []
+        kinds = []
+        for state in self.channels.values():
+            if not state.active:
+                continue
+            if state.estimate is not None:
+                waypoints.append(state.estimate)
+                kinds.append(("target", state))
+            else:
+                point = self._seed_waypoint(state)
+                if point is not None:
+                    waypoints.append(point)
+                    kinds.append(("seed", state))
+        if not (self.config.cover_defer and waypoints):
+            for station in self._cover_plan():
+                waypoints.append(station)
+                kinds.append(("station", None))
+        if not waypoints:
+            return False
+        order = self._route_order(waypoints)
+        head = order[0] if order else waypoints[0]
+        pick = min(range(len(waypoints)), key=lambda i: math.dist(waypoints[i], head))
+        kind, state = kinds[pick]
+        self._next_hint = order[1] if len(order) > 1 else None
+        if kind == "station":
+            return self._visit_cover_station(waypoints[pick])
+        assert state is not None
+        if not self._home_channel(state):
+            state.exhausted = True
+            self._invalidate_cover_plan()
+        elif kind == "target":
+            self._piggyback(exclude=state.channel)
+            self._invalidate_cover_plan()
+        return True
+
+    def _search_target(self, state: ChannelState) -> bool:
+        # Every positive channel occupies one of the public maximum 16 slots.
+        # Observed but unresolved channels retain the inherited retry logic.
+        if not state.bearings and sum(bool(st.bearings) or st.cleared
+                                      for st in self.channels.values()) >= SOURCE_COUNT_MAX:
+            return False
+        return super()._search_target(state)
 
     def _visit_cover_station(self, station: Point) -> bool:
         self._visited_fast_stations.add(station)
@@ -153,12 +252,87 @@ class Q4FastStrategy(DogStrategy):
         self._probe_channel_at(candidate, state)
         return True
 
+    def _clear_at(self, point: Point, channel: int) -> bool:
+        # Lazy import avoids the module-level Q3 -> bounded_region cycle.
+        # This existing helper computes the nearest point whose 19.9m disk
+        # contains every feasible vertex; it does not inspect simulator truth.
+        from .q3_fast import nearest_cover_point
+        state = self.channels[channel]
+        if len(state.bearings) >= 2:
+            candidate = nearest_cover_point(bounded_region(state.bearings), self.pos)
+            if candidate is not None:
+                point = candidate
+        return super()._clear_at(point, channel)
+
+    def _spiral(self, state: ChannelState) -> bool:
+        """Resolve a small silent region locally before the old spiral fallback.
+
+        This has a separate cap of 48 clears, rather than the old nine attempts
+        around one estimate. Long thin regions commonly extend well beyond
+        that spiral. Every action still obeys the global time/stop budgets.
+        """
+        if len(state.bearings) >= 2:
+            polygon = bounded_region(state.bearings)
+            if polygon:
+                for point in order_route(self.pos, region_cover_points(polygon)):
+                    if self._stop():
+                        return state.cleared
+                    if self._clear_at(point, state.channel):
+                        self.events.append(f"ch{state.channel}: cleared by bounded region sweep")
+                        return True
+        return super()._spiral(state)
+
+    def _ray_blind_clear(self, state: ChannelState) -> bool:
+        """Preserve the original ray, filtering only provably futile clear points."""
+        if not state.bearings or state.ray_swept:
+            return False
+        state.ray_swept = True
+        original_attempts = state.clear_attempts
+        last = state.bearings[-1]
+        angle = math.radians(last.svd_deg)
+        ux, uy = math.cos(angle), math.sin(angle)
+        planes = [plane for b in state.bearings for plane in wedge_half_planes(b, 1.005)]
+        points = []
+        r = self.config.ray_clear_step_m
+        while r <= self.config.ray_clear_max_range_m:
+            offsets = [0.0]
+            if r * math.radians(1.0) > self.config.ray_clear_lateral_m:
+                offsets = [0.0, self.config.ray_clear_lateral_m, -self.config.ray_clear_lateral_m]
+            for off in offsets:
+                point = (last.x + ux * r - uy * off, last.y + uy * r + ux * off)
+                if math.hypot(*point) > ARENA_RADIUS + CLEAR_RADIUS_M:
+                    continue
+                # All normals are unit length. If a centre is >20m outside
+                # even one half-plane containing the source, it cannot clear.
+                if any(nx * point[0] + ny * point[1] - c > CLEAR_RADIUS_M + 1e-6
+                       for nx, ny, c in planes):
+                    continue
+                points.append(point)
+            r += self.config.ray_clear_step_m
+        for point in points:
+            if self._stop() or state.cleared:
+                return state.cleared
+            if state.clear_attempts - original_attempts >= self.config.ray_clear_max_attempts:
+                self.events.append(f"ch{state.channel}: ray blind clear budget exhausted")
+                return state.cleared
+            if self._clear_at(point, state.channel):
+                self.events.append(f"ch{state.channel}: cleared by bounded ray sweep")
+                return True
+        return state.cleared
+
     def summary(self) -> dict:
         result = super().summary()
         result["strategy_profile"] = PROFILE
+        result["q4_parameters"] = {
+            "route_multistart": True, "route_max_points": 64,
+            "region_rescue_max_clears": 48, "region_cover_radius_m": 19.9,
+            "ray_filter_bearing_error_deg": 1.005,
+            "identified_source_count_max": SOURCE_COUNT_MAX,
+        }
         result["search_layout"] = {
             "inner_radius_m": self.inner_radius, "inner_stations": self.inner_count,
             "outer_radius_m": self.outer_radius, "outer_stations": self.outer_count,
+            "outer_phase_deg": self.outer_phase_deg,
             "inner_relocation_limit_m": self.relocate_radius,
             "inner_relocation_enabled": self.relocate_inner,
         }

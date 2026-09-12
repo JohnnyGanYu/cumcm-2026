@@ -1,7 +1,7 @@
-"""Q3-only observation-anchored homing with conservative short clear moves.
+"""Q3-only hybrid coverage and observation-anchored homing.
 
 The policy sees only protocol observations and the public source-count bound.
-Search, retries, failure recovery and all time budgets remain in DogStrategy.
+Retries, failure recovery and all time budgets remain in DogStrategy.
 """
 # ┌─────────────────────────────────────────────────────────────────┐
 # │ 这是 问题 3 的生产策略 —— 交付入口默认跑的就是本文件。          │
@@ -18,9 +18,10 @@ import math
 from .arena import SOURCE_COUNT_MAX
 from .geometry import centroid, polygon_diameter
 from .q4_fast import bounded_region
+from .route import order_route, path_length
 from .strategy import DogStrategy, StrategyConfig
 
-PROFILE = 'q3-fast-v1'
+PROFILE = 'q3-fast-v2'
 
 
 def nearest_cover_point(vertices, origin, radius=19.9):
@@ -60,6 +61,8 @@ def nearest_cover_point(vertices, origin, radius=19.9):
 class Q3FastStrategy(DogStrategy):
     """Frozen Q3 profile; Q4 continues to use its separate existing strategy."""
 
+    ring_radius = 1150.
+
     def __init__(self,client,config=None):
         config=config or StrategyConfig()
         if config.directional_probe:
@@ -68,8 +71,64 @@ class Q3FastStrategy(DogStrategy):
                        dogleg_offset_deg=12.,dogleg_range_fraction=.65,
                        dogleg_min_length_m=100.,dogleg_max_length_m=700.)
         super().__init__(client,config)
+        self._ring_plan = None
+        self._ring_visited = set()
+        self._hybrid_mode = None
+
+    def _ring_cover_plan(self):
+        pending = [s for s in self.channels.values() if self._search_target(s)]
+        if not pending:
+            return []
+        if self._ring_plan is None:
+            anchors = [s.estimate or self._seed_waypoint(s)
+                       for s in self.channels.values() if s.active]
+            anchors = [p for p in anchors if p is not None]
+            choices = [[(self.ring_radius*math.cos(2*math.pi*(k+j/12)/6),
+                         self.ring_radius*math.sin(2*math.pi*(k+j/12)/6))
+                        for k in range(6)] for j in range(12)]
+            self._ring_plan = min(choices, key=lambda p:
+                path_length(self.pos, order_route(self.pos, anchors+p)))
+        remaining = [p for p in self._ring_plan if p not in self._ring_visited]
+        return remaining or super()._cover_plan()
+
+    def _cover_plan(self):
+        if not self.config.adaptive_cover or self._hybrid_mode == 'adaptive':
+            return super()._cover_plan()
+        if self._hybrid_mode == 'ring':
+            return self._ring_cover_plan()
+        pending = [s for s in self.channels.values() if self._search_target(s)]
+        if not pending:
+            return []
+        adaptive = super()._cover_plan()
+        ring = self._ring_cover_plan()
+        anchors = [s.estimate or self._seed_waypoint(s)
+                   for s in self.channels.values() if s.active]
+        anchors = [p for p in anchors if p is not None]
+        def cost(plan):
+            # Public speed and measurement/switch costs, in virtual seconds.
+            return (path_length(self.pos, order_route(self.pos, anchors+plan))/5
+                    +len(pending)*len(plan)*6)
+        adaptive_cost, ring_cost = cost(adaptive), cost(ring)
+        self._hybrid_mode = 'ring' if ring and ring_cost < adaptive_cost else 'adaptive'
+        self.events.append(f'initial search mode {self._hybrid_mode}: '
+                           f'adaptive={adaptive_cost:.3f}s ring={ring_cost:.3f}s')
+        if self._hybrid_mode == 'ring':
+            return ring
+        self._ring_plan = None
+        self._ring_visited.clear()
+        return adaptive
+
+    def _visit_cover_station(self, station):
+        result = super()._visit_cover_station(station)
+        self._ring_visited.add(station)
+        return result
 
     def _probe_channel_at(self,point,state):
+        # The precomputed scan list can become stale after finding source 16.
+        if (not state.bearings and not state.cleared
+                and sum(bool(s.bearings) or s.cleared for s in self.channels.values())
+                >= SOURCE_COUNT_MAX):
+            return
         super()._probe_channel_at(point,state)
         if state.cleared or len(state.bearings)<2:
             return
@@ -116,12 +175,45 @@ class Q3FastStrategy(DogStrategy):
     def _clear_at(self,point,channel):
         state=self.channels[channel]
         if len(state.bearings)>=2:
-            target=nearest_cover_point(bounded_region(state.bearings),self.pos)
+            polygon=bounded_region(state.bearings)
+            target=nearest_cover_point(polygon,self.pos)
+            hint=self._next_hint
+            if target is not None and hint is not None:
+                endpoint=nearest_cover_point(polygon,hint)
+                if endpoint is not None:
+                    # Feasible clear poses are a convex intersection of disks.
+                    # Every interpolation of these two safe endpoints is safe.
+                    def at(t):
+                        return (target[0]+t*(endpoint[0]-target[0]),
+                                target[1]+t*(endpoint[1]-target[1]))
+                    def cost(t):
+                        p=at(t)
+                        return math.dist(self.pos,p)+math.dist(p,hint)
+                    lo,hi=0.,1.
+                    for _ in range(28):
+                        l=(2*lo+hi)/3
+                        r=(lo+2*hi)/3
+                        if cost(l)<cost(r):
+                            hi=r
+                        else:
+                            lo=l
+                    target=at((lo+hi)/2)
             if target is not None:
                 point=target
         return super()._clear_at(point,channel)
 
     def _search_target(self,state):
+        if (not state.bearings and self._hybrid_mode != 'adaptive'
+                and self._ring_plan is not None):
+            # Actual per-channel observations certify the continuous arena.
+            # The origin covers radius <=1000. For r in [1000,1800], the
+            # nearest ring point has angle <=pi/6. Its squared distance is
+            # convex in r, and both endpoint distances are <1000 (max 988.52).
+            # Missed scans, another channel's silence, or a mere planned visit
+            # cannot certify emptiness. Observed sources always retain retries.
+            silent=set(state.silent_points)
+            if (0.,0.) in silent and all(p in silent for p in self._ring_plan):
+                return False
         # Distinct positive channels count toward the public maximum even
         # before homing finishes. Observed-but-unresolved sources still get
         # the inherited retry/search treatment.
@@ -133,6 +225,13 @@ class Q3FastStrategy(DogStrategy):
     def summary(self):
         result=super().summary()
         result['strategy_profile']=PROFILE
+        result['search_layout']={
+            'mode':self._hybrid_mode,
+            'ring_radius_m':self.ring_radius,
+            'ring_stations':6,
+            'phase_candidates':12,
+            'selected_ring':self._ring_plan,
+        }
         result['q3_parameters']={
             'approach_fraction':self.config.approach_fraction,
             'lateral_fraction':self.config.lateral_fraction,
@@ -141,5 +240,8 @@ class Q3FastStrategy(DogStrategy):
             'clearance_guarantee_radius_m':19.9,
             'public_source_count_max':SOURCE_COUNT_MAX,
             'all_historical_bearings':True,
+            'per_channel_continuous_coverage_certificate':True,
+            'clear_pose_considers_next_leg':True,
+            'in_scan_source_count_guard':True,
         }
         return result
