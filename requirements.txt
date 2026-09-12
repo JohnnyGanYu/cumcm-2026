@@ -1,8 +1,20 @@
 # CUMCM 2026 B 题 —— 运行与测试依赖（版本按本机实测环境钉住）
 #
-#   uv pip install --python /path/to/venv/bin/python -r requirements.txt
+#   uv pip install --python ~/.venvs/cumcm-2026/bin/python3 -r requirements.txt
 #
-# 说明：test_b_pbt.py（33 项面向性质测试）需要 hypothesis。此前仓库无依赖声明
-# 文件，该套件在干净环境下会 ModuleNotFoundError 直接无法收集，故补上本文件。
+# 本机既有环境：~/.venvs/cumcm-2026（Python 3.11.15），下方版本即取自该环境。
+# 新建环境用 uv venv --python 3.11 <路径> 后同样安装本文件。
+#
+# 交付包 dist_windows/ 只依赖 Python 3.10+ 标准库，赛日现场无需安装任何包。
+# 本文件仅供离线自检与实验脚本使用。
 
-# 数值与...[truncated]
+# 测试套件（python -m pytest src 收集全部 test_*.py）
+pytest==8.4.2
+hypothesis==6.112.1   # test_b_pbt.py 的 33 项面向性质测试，缺失则无法收集
+
+# 数值与统计实验脚本（src/b_belief_*.py、src/b_tsp_bound.py 等）
+numpy==2.4.6
+scipy==1.17.1
+
+# 以下仅 A/C 题脚本与作图用，B 题自检不需要，按需单独安装：
+#   pandas matplotlib cvxpy mpmath openai

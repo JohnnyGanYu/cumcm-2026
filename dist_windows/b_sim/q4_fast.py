@@ -86,11 +86,21 @@ class Q4FastStrategy(DogStrategy):
 
     inner_radius = 1000.0
     inner_count = 7
-    # 1800 = 区域半径。站位越出圆域后覆盖圆被边界截去一块（域外无源），
-    # 有效覆盖反而变小，且每站多走 70 m。实测 240 局配对：
-    # d5 −2.99% CI95[−19.8,−8.5]、d10 −1.60% CI95[−13.8,−1.4]，清除率零退化。
-    # 详见 results/b_outer_radius_1800.json。原 PR #8 取 1870 无论证依据。
-    outer_radius = 1800.0
+    # 外环半径由定向可见性的**几何硬约束**决定，不是调出来的经验值：
+    # 贴边（|s| -> 1800）且辐射轴径向朝外的定向源，其 180 度扇区只含更外侧的点，
+    # 站位必须落在过源的切线之外。n=12 的环上最坏点在两站中间，故需
+    #     R * cos(pi/12) >= ARENA_RADIUS  =>  R >= 1800/cos(15 deg) = 1863.5 m
+    # 1870 是该下界加余量。角向加密理论上也能覆盖（R*cos(pi/n) >= |s| 即可），
+    # 但 R = 1800 时所需站数随余量收缩发散：覆盖到距边界 1 m 需约 95 站，
+    # 远贵于 12 站加 70 m 径向余量。故这是成本取舍，不是唯一可行解。
+    #
+    # 曾据「最坏覆盖间隙 / 巡回长度 / 随机场景 240 局配对」把它改成 1800，
+    # 那批随机样本里贴边朝外的源过于稀疏，均值掩盖了漏清。独立压力样本复现了漏清，
+    # 且 1800 连耗时也更差（漏清后兜底预算被耗尽）：
+    #   results/b_outer_beam_guarantee.py  1800 在 (1750,1800] 环带留 2.37% 必盲(源,朝向)对
+    #   results/b_outer_radius_boundary.json  1800 每局稳定漏 1 个，T̄ 反而更高
+    # 改此常量前先跑 src.b_outer_beam_guarantee 与 src.b_outer_radius_boundary。
+    outer_radius = 1870.0
     outer_count = 12
     outer_phase_deg = 15.0
     relocate_inner = False

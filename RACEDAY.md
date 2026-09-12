@@ -18,8 +18,10 @@
 
 ## 0. 拿交付包
 
-**[Release v1.0.2](https://github.com/JohnnyGanYu/cumcm-2026/releases/tag/v1.0.2)** 下载 `CUMCM2026B_robot_windows.zip`（仓库私有，需登录），MD5 `a22bdd503a625df243ed5378664427d8`。
-解压后先核对 MD5，运行后检查日志：`strategy_class` 应为 `Q3FastStrategy` / `Q4FastStrategy`，`summary.search_layout.outer_radius_m` 应为 `1800.0`。
+**[Release v1.0.2](https://github.com/JohnnyGanYu/cumcm-2026/releases/tag/v1.0.2)** 下载 `CUMCM2026B_robot_windows.zip`（仓库私有，需登录）。
+**注意**：Release v1.0.2 的资产仍是外环 1800 的旧包（MD5 `a22bdd503a625df243ed5378664427d8`），该值已因边界漏源回退；
+当前分支包 MD5 `980f73e78de653363b25db1c1ee949e5`，以分支包为准，或等新 Release。
+解压后先核对 MD5，运行后检查日志：`strategy_class` 应为 `Q3FastStrategy` / `Q4FastStrategy`，`summary.search_layout.outer_radius_m` 应为 `1870.0`。
 
 v1.0.1（MD5 `bd90df7b406a66921afe8cfaec556f03`）是上一代基线，不含 `q3-fast-v2` / `q4-fast-v3` 优化，仅在需要对照时使用。
 
@@ -62,11 +64,19 @@ zip 打包使用固定时间戳，同样的源码打出字节相同的包，MD5 
 模拟器里开测试 → 等 5 秒倒计时结束、接口开放 → 立刻执行：
 
 ```
-python run_official.py --robot-id <队号>                # 问题 3
-python run_official.py --robot-id <队号> --directional   # 问题 4
+python run_official.py --robot-id <队号> --test-kind formal --case-code <案例编码>
+python run_official.py --robot-id <队号> --test-kind formal --case-code <案例编码> --directional
 ```
 
+第一条是问题 3，第二条加 `--directional` 是问题 4。
+
 `--robot-id` 必须与模拟器登录队号**逐字节一致**，否则 `accepted=false`。
+
+`--test-kind formal` 把本局标记为正式测试（默认值是 `practice`，不改就会在日志里写成演练）。
+`--case-code` 记模拟器给出的案例编码，**论文表 1 需要这一列**；漏了不会中断本局，
+只在结尾打一行提示，但事后无法补——当场没抄下来就永久缺失。
+
+演练局照旧不带这两个参数，另外可用 `--total-jammers N` 把界面告示的源数直接写进日志。
 
 **每局跑完立刻做两件事：**
 1. 保存当前目录生成的 `official_log_<时间戳>.json`（支撑材料必需，模拟器自己不产出）
@@ -78,7 +88,7 @@ python run_official.py --robot-id <队号> --directional   # 问题 4
 
 **评分指标 T̄ = 总虚拟时间 / 清除个数，受本局源数支配，不完全反映策略优劣。**
 
-六局演练实测：
+9-11 六局演练实测（旧策略，仅作量级参考）：
 
 | 问题 | 源数 | 清除 | T̄ |
 |---|---|---|---|
@@ -88,6 +98,20 @@ python run_official.py --robot-id <队号> --directional   # 问题 4
 | Q4 | 3 全向 + 12 定向 | 15/15 | 672.5 s |
 | Q4 | 6 全向 + 5 定向 | 11/11 | 794.1 s |
 | Q4 | 4 全向 + 7 定向 | 11/11 | 900.5 s |
+
+9-12 六局演练实测（`q3-fast-v1` / `q4-fast-v2`，比当天要用的 v1.0.2 略慢，**这才是接近的量级**）：
+
+| 问题 | 清除 | 虚拟时间 | T̄ |
+|---|---|---|---|
+| Q3 | 11/11 | 3151.2 s | 286.5 s |
+| Q3 | 15/15 | 2521.1 s | 168.1 s |
+| Q3 | 15/15 | 2897.2 s | 193.1 s |
+| Q4 | 15/15 | 6697.6 s | 446.5 s |
+| Q4 | 10/10 | 6086.3 s | 608.6 s |
+| Q4 | 13/13 | 5717.0 s | 439.8 s |
+
+**Q3 单局区间 168.1–298.3 s、Q4 单局区间 439.8–900.5 s，均为全清。**
+注意 Q3 那局 T̄=286.5 只清了 11 个源 —— 少源导致固定成本摊薄不足，不是策略退化。
 
 **边界场景专项（各 40 局，seed 21000，共 3120 源，全部零漏失）：**
 
@@ -195,13 +219,34 @@ grep -c '<真实队号>' *.sanitized.*      # 应为 0
 
 ## 7. 当前代码版本
 
-生产配置（`src/b_sim/strategy.py`）：
+正式测试跑的是两个专用策略类，**不是** `strategy.py` 里 DogStrategy 的基类默认值。
+核日志时按下表对，`strategy.py` 的 `probe_ring_radius` / `probe_ring_stations`
+只在加了 `--legacy-q3` / `--legacy-q4` 回退时才生效。
 
-| 参数 | 值 | 依据 |
+问题 3 —— `src/b_sim/q3_fast.py`，`PROFILE = q3-fast-v2`：
+
+| 参数 | 值 | 日志字段 |
 |---|---|---|
-| `probe_ring_radius` | 1100.0 | 最坏覆盖间隙 887.3 m，对接收半径下限 1000 m 留 113 m 余量 |
-| `probe_ring_stations` | 8 | 三档 900 局实测最优 |
-| 路径规划 | TSP（最近邻 + 2-opt + Or-opt） | Q3 离线 324.2 → 247.1 s |
-| 射线盲扫兜底 | 4 处调用点 | 官方演练救回 6 个源 |
+| 环半径 | 1150.0 | `search_layout.ring_radius_m` |
+| 环上站数 | 6（12 个相位候选里按路径长度选优） | — |
+| 初始搜索模式 | 自适应与环扫按代价二选一 | `events` 里 `initial search mode ...` |
 
-离线成绩（留出集）：Q3 247.1 s / 2640-2640；官方演练池化：Q3 269.7 s、Q4 776.4 s。
+问题 4 —— `src/b_sim/q4_fast.py`，`PROFILE = q4-fast-v3`：
+
+| 参数 | 值 | 日志字段 |
+|---|---|---|
+| 内环 | 1000.0 m × 7 站 | `inner_radius_m` / `inner_stations` |
+| 外环 | 1870.0 m × 12 站，相位偏 15° | `outer_radius_m` / `outer_stations` / `outer_phase_deg` |
+| 内环重定位 | 关闭 | `inner_relocation_enabled: false` |
+
+共用机制：路径规划 TSP（最近邻 + 2-opt + Or-opt，Q3 离线 324.2 → 247.1 s）；
+射线盲扫兜底 `_ray_blind_clear` 4 处调用点，官方演练救回 6 个源。
+
+**跑完必看的三个字段**：`strategy_class` 为 `Q3FastStrategy` / `Q4FastStrategy`、
+`summary.strategy_profile` 为 `q3-fast-v2` / `q4-fast-v3`、Q4 的 `outer_radius_m` 为 `1870.0`。
+若看到 `1800.0`，说明拿的是被回退的那版包（边界定向源会漏清），换分支最新包。
+9-12 那七局演练日志里 profile 是 `q3-fast-v1` / `q4-fast-v2`、外环 1900×14，那是上一版，
+当天若看到这些值说明拿错了交付包。
+
+离线成绩（留出集）：Q3 247.1 s / 2640-2640。官方演练池化：9-11 六局 Q3 269.7 s、Q4 776.4 s（旧策略）；
+9-12 六局 Q3 209.0 s、Q4 486.9 s（对应 v1.0.1 的第一轮优化，**非当前 v1.0.2**）。

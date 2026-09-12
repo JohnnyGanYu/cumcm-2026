@@ -1,0 +1,406 @@
+{
+  "created_utc": "2026-09-12T16:35:36Z",
+  "selection": {
+    "scan_seeds": [
+      880000,
+      880600
+    ],
+    "boundary_min_m": 1700.0,
+    "aim_gap_deg": 25.0,
+    "min_hard": 1,
+    "directional": 16,
+    "count": 16,
+    "matched_seeds": 6,
+    "hard_sources": 6
+  },
+  "picked": [
+    {
+      "seed": 880051,
+      "hard": [
+        {
+          "channel": 2,
+          "radius_m": 1794.5610320378746,
+          "aim_outward_gap_deg": 7.796400870873526,
+          "stations_small": 0,
+          "stations_large": 2
+        }
+      ]
+    },
+    {
+      "seed": 880074,
+      "hard": [
+        {
+          "channel": 6,
+          "radius_m": 1782.7344079017187,
+          "aim_outward_gap_deg": 1.2282384424953534,
+          "stations_small": 0,
+          "stations_large": 2
+        }
+      ]
+    },
+    {
+      "seed": 880163,
+      "hard": [
+        {
+          "channel": 19,
+          "radius_m": 1756.5911009149363,
+          "aim_outward_gap_deg": 1.8844603073906683,
+          "stations_small": 0,
+          "stations_large": 2
+        }
+      ]
+    },
+    {
+      "seed": 880253,
+      "hard": [
+        {
+          "channel": 1,
+          "radius_m": 1795.0247367168918,
+          "aim_outward_gap_deg": 1.3323881194214664,
+          "stations_small": 0,
+          "stations_large": 1
+        }
+      ]
+    },
+    {
+      "seed": 880473,
+      "hard": [
+        {
+          "channel": 11,
+          "radius_m": 1765.5188991708885,
+          "aim_outward_gap_deg": 6.7189035863989375,
+          "stations_small": 0,
+          "stations_large": 2
+        }
+      ]
+    },
+    {
+      "seed": 880475,
+      "hard": [
+        {
+          "channel": 2,
+          "radius_m": 1783.0461595340034,
+          "aim_outward_gap_deg": 0.23491823835320247,
+          "stations_small": 0,
+          "stations_large": 1
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "R1800": {
+      "episodes": 6,
+      "cleared": 90,
+      "total": 96,
+      "clear_rate": 0.9375,
+      "full_clear_episodes": 0,
+      "mean_T": 437.88167992222225,
+      "pooled_T": 437.88167992222225,
+      "mean_move_m": 24388.62600528373
+    },
+    "R1870": {
+      "episodes": 6,
+      "cleared": 96,
+      "total": 96,
+      "clear_rate": 1.0,
+      "full_clear_episodes": 6,
+      "mean_T": 391.30247915625,
+      "pooled_T": 391.30247915625,
+      "mean_move_m": 23791.698317174232
+    }
+  },
+  "paired": {
+    "time_large_minus_small": {
+      "n": 6,
+      "mean_diff": -46.57920076597224,
+      "sd": 62.7570661786161,
+      "t": -1.8180466591372346,
+      "ci95": [
+        -96.79531213058942,
+        3.6369105986449455
+      ],
+      "wins": 5,
+      "ties": 0,
+      "losses": 1
+    },
+    "cleared_large_minus_small": {
+      "n": 6,
+      "mean_diff": 1.0,
+      "sd": 0.0,
+      "t": null,
+      "ci95": [
+        1.0,
+        1.0
+      ],
+      "wins": 0,
+      "ties": 0,
+      "losses": 6
+    }
+  },
+  "records": [
+    {
+      "seed": 880051,
+      "outer_radius_m": 1800.0,
+      "wall_s": 1.1416637003421783,
+      "cleared": 15,
+      "total": 16,
+      "mean_clear_time_s": 442.48970733333334,
+      "total_virtual_time_s": 6637.34561,
+      "move_distance_m": 24961.72803653444,
+      "measure_calls": 242,
+      "missed_channels": [
+        2
+      ],
+      "layout": {
+        "inner_radius_m": 1000.0,
+        "inner_stations": 7,
+        "outer_radius_m": 1800.0,
+        "outer_stations": 12,
+        "outer_phase_deg": 15.0,
+        "inner_relocation_limit_m": 450.0,
+        "inner_relocation_enabled": false
+      }
+    },
+    {
+      "seed": 880051,
+      "outer_radius_m": 1870.0,
+      "wall_s": 1.105699248611927,
+      "cleared": 16,
+      "total": 16,
+      "mean_clear_time_s": 353.5987363125,
+      "total_virtual_time_s": 5657.579781,
+      "move_distance_m": 21637.89888747351,
+      "measure_calls": 199,
+      "missed_channels": [],
+      "layout": {
+        "inner_radius_m": 1000.0,
+        "inner_stations": 7,
+        "outer_radius_m": 1870.0,
+        "outer_stations": 12,
+        "outer_phase_deg": 15.0,
+        "inner_relocation_limit_m": 450.0,
+        "inner_relocation_enabled": false
+      }
+    },
+    {
+      "seed": 880074,
+      "outer_radius_m": 1800.0,
+      "wall_s": 1.051822291687131,
+      "cleared": 15,
+      "total": 16,
+      "mean_clear_time_s": 473.15494673333336,
+      "total_virtual_time_s": 7097.324201,
+      "move_distance_m": 26016.62102911375,
+      "measure_calls": 285,
+      "missed_channels": [
+        6
+      ],
+      "layout": {
+        "inner_radius_m": 1000.0,
+        "inner_stations": 7,
+        "outer_radius_m": 1800.0,
+        "outer_stations": 12,
+        "outer_phase_deg": 15.0,
+        "inner_relocation_limit_m": 450.0,
+        "inner_relocation_enabled": false
+      }
+    },
+    {
+      "seed": 880074,
+      "outer_radius_m": 1870.0,
+      "wall_s": 1.0112183820456266,
+      "cleared": 16,
+      "total": 16,
+      "mean_clear_time_s": 419.0221149375,
+      "total_virtual_time_s": 6704.353839,
+      "move_distance_m": 24106.76916550151,
+      "measure_calls": 291,
+      "missed_channels": [],
+      "layout": {
+        "inner_radius_m": 1000.0,
+        "inner_stations": 7,
+        "outer_radius_m": 1870.0,
+        "outer_stations": 12,
+        "outer_phase_deg": 15.0,
+        "inner_relocation_limit_m": 450.0,
+        "inner_relocation_enabled": false
+      }
+    },
+    {
+      "seed": 880163,
+      "outer_radius_m": 1800.0,
+      "wall_s": 1.0948869530111551,
+      "cleared": 15,
+      "total": 16,
+      "mean_clear_time_s": 464.48073,
+      "total_virtual_time_s": 6967.21095,
+      "move_distance_m": 26491.054770797287,
+      "measure_calls": 251,
+      "missed_channels": [
+        19
+      ],
+      "layout": {
+        "inner_radius_m": 1000.0,
+        "inner_stations": 7,
+        "outer_radius_m": 1800.0,
+        "outer_stations": 12,
+        "outer_phase_deg": 15.0,
+        "inner_relocation_limit_m": 450.0,
+        "inner_relocation_enabled": false
+      }
+    },
+    {
+      "seed": 880163,
+      "outer_radius_m": 1870.0,
+      "wall_s": 0.996550964191556,
+      "cleared": 16,
+      "total": 16,
+      "mean_clear_time_s": 416.3571921875,
+      "total_virtual_time_s": 6661.715075,
+      "move_distance_m": 25173.575352449912,
+      "measure_calls": 252,
+      "missed_channels": [],
+      "layout": {
+        "inner_radius_m": 1000.0,
+        "inner_stations": 7,
+        "outer_radius_m": 1870.0,
+        "outer_stations": 12,
+        "outer_phase_deg": 15.0,
+        "inner_relocation_limit_m": 450.0,
+        "inner_relocation_enabled": false
+      }
+    },
+    {
+      "seed": 880253,
+      "outer_radius_m": 1800.0,
+      "wall_s": 1.0543031319975853,
+      "cleared": 15,
+      "total": 16,
+      "mean_clear_time_s": 406.38981500000006,
+      "total_virtual_time_s": 6095.847225,
+      "move_distance_m": 22559.236139352866,
+      "measure_calls": 241,
+      "missed_channels": [
+        1
+      ],
+      "layout": {
+        "inner_radius_m": 1000.0,
+        "inner_stations": 7,
+        "outer_radius_m": 1800.0,
+        "outer_stations": 12,
+        "outer_phase_deg": 15.0,
+        "inner_relocation_limit_m": 450.0,
+        "inner_relocation_enabled": false
+      }
+    },
+    {
+      "seed": 880253,
+      "outer_radius_m": 1870.0,
+      "wall_s": 1.0895216017961502,
+      "cleared": 16,
+      "total": 16,
+      "mean_clear_time_s": 363.8676240625,
+      "total_virtual_time_s": 5821.881985,
+      "move_distance_m": 21769.40990474997,
+      "measure_calls": 220,
+      "missed_channels": [],
+      "layout": {
+        "inner_radius_m": 1000.0,
+        "inner_stations": 7,
+        "outer_radius_m": 1870.0,
+        "outer_stations": 12,
+        "outer_phase_deg": 15.0,
+        "inner_relocation_limit_m": 450.0,
+        "inner_relocation_enabled": false
+      }
+    },
+    {
+      "seed": 880473,
+      "outer_radius_m": 1800.0,
+      "wall_s": 1.0985004603862762,
+      "cleared": 15,
+      "total": 16,
+      "mean_clear_time_s": 429.5457588666667,
+      "total_virtual_time_s": 6443.186383,
+      "move_distance_m": 23110.931924618733,
+      "measure_calls": 286,
+      "missed_channels": [
+        11
+      ],
+      "layout": {
+        "inner_radius_m": 1000.0,
+        "inner_stations": 7,
+        "outer_radius_m": 1800.0,
+        "outer_stations": 12,
+        "outer_phase_deg": 15.0,
+        "inner_relocation_limit_m": 450.0,
+        "inner_relocation_enabled": false
+      }
+    },
+    {
+      "seed": 880473,
+      "outer_radius_m": 1870.0,
+      "wall_s": 1.0010167844593525,
+      "cleared": 16,
+      "total": 16,
+      "mean_clear_time_s": 315.25113175,
+      "total_virtual_time_s": 5044.018108,
+      "move_distance_m": 19830.090538392757,
+      "measure_calls": 162,
+      "missed_channels": [],
+      "layout": {
+        "inner_radius_m": 1000.0,
+        "inner_stations": 7,
+        "outer_radius_m": 1870.0,
+        "outer_stations": 12,
+        "outer_phase_deg": 15.0,
+        "inner_relocation_limit_m": 450.0,
+        "inner_relocation_enabled": false
+      }
+    },
+    {
+      "seed": 880475,
+      "outer_radius_m": 1800.0,
+      "wall_s": 1.0177640356123447,
+      "cleared": 15,
+      "total": 16,
+      "mean_clear_time_s": 411.22912160000004,
+      "total_virtual_time_s": 6168.436824,
+      "move_distance_m": 23192.1841312853,
+      "measure_calls": 228,
+      "missed_channels": [
+        2
+      ],
+      "layout": {
+        "inner_radius_m": 1000.0,
+        "inner_stations": 7,
+        "outer_radius_m": 1800.0,
+        "outer_stations": 12,
+        "outer_phase_deg": 15.0,
+        "inner_relocation_limit_m": 450.0,
+        "inner_relocation_enabled": false
+      }
+    },
+    {
+      "seed": 880475,
+      "outer_radius_m": 1870.0,
+      "wall_s": 1.073660135269165,
+      "cleared": 16,
+      "total": 16,
+      "mean_clear_time_s": 479.7180756875,
+      "total_virtual_time_s": 7675.489211,
+      "move_distance_m": 30232.44605447773,
+      "measure_calls": 232,
+      "missed_channels": [],
+      "layout": {
+        "inner_radius_m": 1000.0,
+        "inner_stations": 7,
+        "outer_radius_m": 1870.0,
+        "outer_stations": 12,
+        "outer_phase_deg": 15.0,
+        "inner_relocation_limit_m": 450.0,
+        "inner_relocation_enabled": false
+      }
+    }
+  ]
+}
