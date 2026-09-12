@@ -1,0 +1,274 @@
+{
+  "arena_radius_m": 1800.0,
+  "reception_lower_bound_m": 1000.0,
+  "grid_step_m": 40.0,
+  "heading_step_deg": 10.0,
+  "analytic_min_radius_m": 1863.4971247381495,
+  "results": [
+    {
+      "outer_radius_m": 1800.0,
+      "stations": 20,
+      "blind_pairs": 312,
+      "pairs": 228996,
+      "blind_pair_share": 0.0013624692134360425,
+      "sources_with_some_blind_heading": 280,
+      "outer_ring_tour_m": 11180.982748428896,
+      "bands": [
+        {
+          "band": "(0,1000]",
+          "cells": 1961,
+          "blind_pairs": 0,
+          "blind_pair_share": 0.0,
+          "sources_with_blind_heading": 0
+        },
+        {
+          "band": "(1000,1400]",
+          "cells": 1892,
+          "blind_pairs": 0,
+          "blind_pair_share": 0.0,
+          "sources_with_blind_heading": 0
+        },
+        {
+          "band": "(1400,1600]",
+          "cells": 1172,
+          "blind_pairs": 0,
+          "blind_pair_share": 0.0,
+          "sources_with_blind_heading": 0
+        },
+        {
+          "band": "(1600,1700]",
+          "cells": 656,
+          "blind_pairs": 0,
+          "blind_pair_share": 0.0,
+          "sources_with_blind_heading": 0
+        },
+        {
+          "band": "(1700,1750]",
+          "cells": 324,
+          "blind_pairs": 8,
+          "blind_pair_share": 0.0006858710562414266,
+          "sources_with_blind_heading": 8
+        },
+        {
+          "band": "(1750,1800]",
+          "cells": 356,
+          "blind_pairs": 304,
+          "blind_pair_share": 0.02372034956304619,
+          "sources_with_blind_heading": 272
+        }
+      ]
+    },
+    {
+      "outer_radius_m": 1830.0,
+      "stations": 20,
+      "blind_pairs": 84,
+      "pairs": 228996,
+      "blind_pair_share": 0.0003668186343866268,
+      "sources_with_some_blind_heading": 84,
+      "outer_ring_tour_m": 11367.332460902711,
+      "bands": [
+        {
+          "band": "(0,1000]",
+          "cells": 1961,
+          "blind_pairs": 0,
+          "blind_pair_share": 0.0,
+          "sources_with_blind_heading": 0
+        },
+        {
+          "band": "(1000,1400]",
+          "cells": 1892,
+          "blind_pairs": 0,
+          "blind_pair_share": 0.0,
+          "sources_with_blind_heading": 0
+        },
+        {
+          "band": "(1400,1600]",
+          "cells": 1172,
+          "blind_pairs": 0,
+          "blind_pair_share": 0.0,
+          "sources_with_blind_heading": 0
+        },
+        {
+          "band": "(1600,1700]",
+          "cells": 656,
+          "blind_pairs": 0,
+          "blind_pair_share": 0.0,
+          "sources_with_blind_heading": 0
+        },
+        {
+          "band": "(1700,1750]",
+          "cells": 324,
+          "blind_pairs": 0,
+          "blind_pair_share": 0.0,
+          "sources_with_blind_heading": 0
+        },
+        {
+          "band": "(1750,1800]",
+          "cells": 356,
+          "blind_pairs": 84,
+          "blind_pair_share": 0.006554307116104869,
+          "sources_with_blind_heading": 84
+        }
+      ]
+    },
+    {
+      "outer_radius_m": 1863.6,
+      "stations": 20,
+      "blind_pairs": 1,
+      "pairs": 228996,
+      "blind_pair_share": 4.366888504602701e-06,
+      "sources_with_some_blind_heading": 1,
+      "outer_ring_tour_m": 11576.044138873382,
+      "bands": [
+        {
+          "band": "(0,1000]",
+          "cells": 1961,
+          "blind_pairs": 1,
+          "blind_pair_share": 1.4165108504731146e-05,
+          "sources_with_blind_heading": 1
+        },
+        {
+          "band": "(1000,1400]",
+          "cells": 1892,
+          "blind_pairs": 0,
+          "blind_pair_share": 0.0,
+          "sources_with_blind_heading": 0
+        },
+        {
+          "band": "(1400,1600]",
+          "cells": 1172,
+          "blind_pairs": 0,
+          "blind_pair_share": 0.0,
+          "sources_with_blind_heading": 0
+        },
+        {
+          "band": "(1600,1700]",
+          "cells": 656,
+          "blind_pairs": 0,
+          "blind_pair_share": 0.0,
+          "sources_with_blind_heading": 0
+        },
+        {
+          "band": "(1700,1750]",
+          "cells": 324,
+          "blind_pairs": 0,
+          "blind_pair_share": 0.0,
+          "sources_with_blind_heading": 0
+        },
+        {
+          "band": "(1750,1800]",
+          "cells": 356,
+          "blind_pairs": 0,
+          "blind_pair_share": 0.0,
+          "sources_with_blind_heading": 0
+        }
+      ]
+    },
+    {
+      "outer_radius_m": 1870.0,
+      "stations": 20,
+      "blind_pairs": 3,
+      "pairs": 228996,
+      "blind_pair_share": 1.3100665513808101e-05,
+      "sources_with_some_blind_heading": 3,
+      "outer_ring_tour_m": 11615.79874420113,
+      "bands": [
+        {
+          "band": "(0,1000]",
+          "cells": 1961,
+          "blind_pairs": 1,
+          "blind_pair_share": 1.4165108504731146e-05,
+          "sources_with_blind_heading": 1
+        },
+        {
+          "band": "(1000,1400]",
+          "cells": 1892,
+          "blind_pairs": 0,
+          "blind_pair_share": 0.0,
+          "sources_with_blind_heading": 0
+        },
+        {
+          "band": "(1400,1600]",
+          "cells": 1172,
+          "blind_pairs": 2,
+          "blind_pair_share": 4.7402351156617366e-05,
+          "sources_with_blind_heading": 2
+        },
+        {
+          "band": "(1600,1700]",
+          "cells": 656,
+          "blind_pairs": 0,
+          "blind_pair_share": 0.0,
+          "sources_with_blind_heading": 0
+        },
+        {
+          "band": "(1700,1750]",
+          "cells": 324,
+          "blind_pairs": 0,
+          "blind_pair_share": 0.0,
+          "sources_with_blind_heading": 0
+        },
+        {
+          "band": "(1750,1800]",
+          "cells": 356,
+          "blind_pairs": 0,
+          "blind_pair_share": 0.0,
+          "sources_with_blind_heading": 0
+        }
+      ]
+    },
+    {
+      "outer_radius_m": 1900.0,
+      "stations": 20,
+      "blind_pairs": 24,
+      "pairs": 228996,
+      "blind_pair_share": 0.00010480532411046481,
+      "sources_with_some_blind_heading": 24,
+      "outer_ring_tour_m": 11802.148456674946,
+      "bands": [
+        {
+          "band": "(0,1000]",
+          "cells": 1961,
+          "blind_pairs": 16,
+          "blind_pair_share": 0.00022664173607569833,
+          "sources_with_blind_heading": 16
+        },
+        {
+          "band": "(1000,1400]",
+          "cells": 1892,
+          "blind_pairs": 2,
+          "blind_pair_share": 2.9363401456424713e-05,
+          "sources_with_blind_heading": 2
+        },
+        {
+          "band": "(1400,1600]",
+          "cells": 1172,
+          "blind_pairs": 2,
+          "blind_pair_share": 4.7402351156617366e-05,
+          "sources_with_blind_heading": 2
+        },
+        {
+          "band": "(1600,1700]",
+          "cells": 656,
+          "blind_pairs": 4,
+          "blind_pair_share": 0.00016937669376693767,
+          "sources_with_blind_heading": 4
+        },
+        {
+          "band": "(1700,1750]",
+          "cells": 324,
+          "blind_pairs": 0,
+          "blind_pair_share": 0.0,
+          "sources_with_blind_heading": 0
+        },
+        {
+          "band": "(1750,1800]",
+          "cells": 356,
+          "blind_pairs": 0,
+          "blind_pair_share": 0.0,
+          "sources_with_blind_heading": 0
+        }
+      ]
+    }
+  ]
+}
