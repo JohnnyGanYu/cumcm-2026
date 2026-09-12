@@ -86,7 +86,11 @@ class Q4FastStrategy(DogStrategy):
 
     inner_radius = 1000.0
     inner_count = 7
-    outer_radius = 1870.0
+    # 1800 = 区域半径。站位越出圆域后覆盖圆被边界截去一块（域外无源），
+    # 有效覆盖反而变小，且每站多走 70 m。实测 240 局配对：
+    # d5 −2.99% CI95[−19.8,−8.5]、d10 −1.60% CI95[−13.8,−1.4]，清除率零退化。
+    # 详见 results/b_outer_radius_1800.json。原 PR #8 取 1870 无论证依据。
+    outer_radius = 1800.0
     outer_count = 12
     outer_phase_deg = 15.0
     relocate_inner = False
