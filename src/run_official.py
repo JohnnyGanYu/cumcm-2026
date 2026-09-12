@@ -161,7 +161,12 @@ def main() -> None:
         ratio = len(cleared) / args.total_jammers
         print(f"\n--- 题目要求的统计值（按人工抄录的总数 {args.total_jammers}）---")
         print(f"被清除干扰源个数的比例 = {len(cleared)}/{args.total_jammers} = {ratio:.4f}")
-        print(f"平均定位清除时间       = {summary['mean_clear_time_s']:.4f} s")
+        # 零清除时 arena 返回 None，`:.4f` 会抛 TypeError —— 而这里在落盘之前，
+        # 整局协议记录会连同已消耗的测试机会一起丢掉。落盘那处早已处理 None，
+        # 打印这处漏了：正是「一个源都没清掉」这个最需要日志的场景。
+        mean_s = summary["mean_clear_time_s"]
+        print("平均定位清除时间       = "
+              + ("未定义（清除数为 0）" if mean_s is None else f"{mean_s:.4f} s"))
         if len(cleared) > args.total_jammers:
             print("  ⚠ 清除数大于抄录总数，请核对界面数字")
         elif ratio < 1.0:

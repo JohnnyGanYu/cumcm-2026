@@ -18,7 +18,7 @@
 
 ## 0. 拿交付包
 
-**[Release v1.0.4](https://github.com/JohnnyGanYu/cumcm-2026/releases/tag/v1.0.4)** 下载 `CUMCM2026B_robot_windows.zip`（仓库私有，需登录），MD5 `5bc017ba322c799a611804cf5f3375d3`。
+**[Release v1.0.5](https://github.com/JohnnyGanYu/cumcm-2026/releases/tag/v1.0.5)** 下载 `CUMCM2026B_robot_windows.zip`（仓库私有，需登录），MD5 `20d5a2ff97ae8201bedf415b8f3e8a40`。
 解压后先核对 MD5，运行后检查日志：`strategy_class` 应为 `Q3FastStrategy` / `Q4FastStrategy`，`summary.search_layout.outer_radius_m` 应为 `1870.0`。
 
 **v1.0.2 已弃用**：那版外环为 1800 m，会漏清贴边且辐射轴径向朝外的定向源（60 局压力样本每局都漏），别拿错。
@@ -55,7 +55,7 @@ python -m src.pack_dist_windows --check      # src/b_sim -> dist_windows 是否�
 python -m src.build_windows_zip --check      # dist_windows -> 交付 zip 是否同步
 python -m src.build_paper --check            # 匿名扫描 + 附录覆盖
 python -m pytest src/b_sim/test_b_sim.py -q  # 快速回归，应 172 passed（约 32 s）
-python -m pytest src -q                      # 全量回归，应 333 passed（约 8 min）
+python -m pytest src -q                      # 全量回归，应 338 passed（约 8 min）
 python run_official.py --robot-id <队号> --dry-run   # 仅在演练窗口用
 ```
 
@@ -127,7 +127,7 @@ python run_official.py --robot-id <队号> --test-kind formal --case-code <案�
 | Q4 | 6 全向 + 5 定向 | 11/11 | 794.1 s |
 | Q4 | 4 全向 + 7 定向 | 11/11 | 900.5 s |
 
-9-12 六局演练实测（`q3-fast-v1` / `q4-fast-v2`，比当天要用的 v1.0.4 略慢，**这才是接近的量级**）：
+9-12 六局演练实测（`q3-fast-v1` / `q4-fast-v2`，比当天要用的 v1.0.5 略慢，**这才是接近的量级**）：
 
 | 问题 | 清除 | 虚拟时间 | T̄ |
 |---|---|---|---|
@@ -212,6 +212,13 @@ python run_official.py --robot-id <队号> --test-kind formal --case-code <案�
 | 一个源都没清掉 | `round(None, 4)` 抛 `TypeError`，**日志写不出来** —— 恰好发生在最需要日志的场景 | `平均定位清除时间_s` 记为 `null`，日志正常落盘 |
 
 两者叠加时更隐蔽：第一个修好后第二个仍会让落盘失败，必须都修。
+
+**第二个故障还有一个残留入口，9-13 凌晨才补上。** 落盘那处早已处理 `None`，
+但结果打印那处仍写着 `{mean_clear_time_s:.4f}` —— 零清除时 arena 返回 `None`，
+该格式化抛 `TypeError: unsupported format string passed to NoneType.__format__`，
+位置同样在落盘之前。触发条件是「抄了总数（`--total-jammers N`）但一个源都没清掉」，
+恰恰是最需要日志的场景。同类护栏现已有回归覆盖（`src/test_run_official_crash_safety.py`），
+并断言交付包那份入口带有同样的护栏 —— 赛日跑的是交付包，不是源码。
 
 
 | 症状 | 处理 |
@@ -311,9 +318,9 @@ Q3 池化 209.01 s、Q4 池化 486.87 s，与文档记载的 209.0 / 486.9 一�
 
 **跑完必看的三个字段**：`strategy_class` 为 `Q3FastStrategy` / `Q4FastStrategy`、
 `summary.strategy_profile` 为 `q3-fast-v2` / `q4-fast-v3`、Q4 的 `outer_radius_m` 为 `1870.0`。
-若看到 `1800.0`，说明拿的是已弃用的 v1.0.2（边界定向源会漏清），换 v1.0.4。
+若看到 `1800.0`，说明拿的是已弃用的 v1.0.2（边界定向源会漏清），换 v1.0.5。
 9-12 那七局演练日志里 profile 是 `q3-fast-v1` / `q4-fast-v2`、外环 1900×14，那是上一版，
 当天若看到这些值说明拿错了交付包。
 
 离线成绩（留出集）：Q3 247.1 s / 2640-2640。官方演练池化：9-11 六局 Q3 269.7 s、Q4 776.4 s（旧策略）；
-9-12 六局 Q3 209.0 s、Q4 486.9 s（对应 v1.0.1 的第一轮优化，**非当前 v1.0.4**）。
+9-12 六局 Q3 209.0 s、Q4 486.9 s（对应 v1.0.1 的第一轮优化，**非当前 v1.0.5**）。
