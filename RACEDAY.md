@@ -55,7 +55,7 @@ python -m src.pack_dist_windows --check      # src/b_sim -> dist_windows 是否�
 python -m src.build_windows_zip --check      # dist_windows -> 交付 zip 是否同步
 python -m src.build_paper --check            # 匿名扫描 + 附录覆盖
 python -m pytest src/b_sim/test_b_sim.py -q  # 快速回归，应 172 passed（约 32 s）
-python -m pytest src -q                      # 全量回归，应 338 passed（约 8 min）
+python -m pytest src -q                      # 全量回归，应 341 passed（约 8 min）
 python run_official.py --robot-id <队号> --dry-run   # 仅在演练窗口用
 ```
 
@@ -77,7 +77,13 @@ cd /tmp/pkg && /tmp/bare/bin/python run_official.py --robot-id <队号> \
 - `pack_dist_windows --check` 曾报 `strategy.py` 未同步到 `dist_windows/`
 - `build_windows_zip --check` 是为根目录那份 `CUMCM2026B_robot_windows.zip` 加的。它曾停留在 9-10 的旧版本（`1250x12`、无 `route.py` 即无 TSP），当天直接解压会拿到慢约 24% 的策略。现已随 v1.0.3 重打并通过校验，这条保留是提醒：**每次改完 `src/b_sim/` 都要重跑这两个 `--check`**，只改源码不同步，正式测试跑的还是旧代码。
 
-zip 打包使用固定时间戳，同样的源码打出字节相同的包，MD5 可复核。当前 MD5 见 `--check` 输出。
+zip 打包使用固定时间戳 `(2026,1,1,0,0,0)`，**同样的源码打出字节相同的包**，MD5 可复核。
+当前 MD5 见 `--check` 输出。实测同内容连打两次字节完全一致；若去掉固定时间戳，
+MD5 立即改变（已由 `src/test_zip_reproducible.py` 锁住）。
+
+**注意 zip 与论文 PDF 在这一点上相反**：zip 可复现，重打无妨；PDF 不可复现，
+生成一次就定稿（见 5.5 节）。交完 MD5 后若需重打 zip，重打即可；若重跑论文构建，
+已交的 PDF 哈希会失效。
 
 `--dry-run` **绝不能用在正式测试窗口**：它会真的调一次 `/enter`，而一次测试只允许 enter 一次。
 
