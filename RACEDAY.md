@@ -45,7 +45,7 @@ v1.0.1（MD5 `bd90df7b406a66921afe8cfaec556f03`）是上一代基线，不含 `q
 python -m src.pack_dist_windows --check      # src/b_sim -> dist_windows 是否同步
 python -m src.build_windows_zip --check      # dist_windows -> 交付 zip 是否同步
 python -m pytest src/b_sim/test_b_sim.py -q  # 快速回归，应 172 passed（约 32 s）
-python -m pytest src -q                      # 全量回归，应 322 passed（约 8 min）
+python -m pytest src -q                      # 全量回归，应 327 passed（约 8 min）
 python run_official.py --robot-id <队号> --dry-run   # 仅在演练窗口用
 ```
 
@@ -252,6 +252,26 @@ grep -c '<真实队号>' *.sanitized.*      # 应为 0
 
 匿名硬约束：提交物全程不得出现学校、姓名、队号、指导教师。
 
+### 6.1 生成论文表 1（不要手抄）
+
+脱敏件入库后直接从日志生成表格，六行数字不经人手：
+
+```
+python -m src.build_table1 --kind formal --out paper/table1_official.md
+```
+
+它按 `directional` 字段自动分 Q3/Q4，取日志里的 `paper_table1_row`（题目表 1 的四列口径），
+并附三次均值、池化 T̄、以及每行到日志文件的溯源表。
+
+三点它替你挡住的错：
+
+- **池化不是均值的均值。** 评分口径是总虚拟时间 / 总清除数，各局源数不同时两者不等。
+- **作废局自动排除。** `/enter` 被拒那局清除与虚拟时间都是 0，手抄容易带进去把均值拉低。
+- **版本混用会告警。** 溯源表列出每局的 `strategy_profile` 与 `outer_radius_m`，
+  横跨多个版本时打出警告 —— 不同策略版本的成绩不能合并成一个数报。
+
+用 `--kind practice` 可以先拿演练局验证格式。9-12 三局演练跑出来是
+Q3 池化 209.01 s、Q4 池化 486.87 s，与文档记载的 209.0 / 486.9 一致。
 ---
 
 ## 7. 当前代码版本
