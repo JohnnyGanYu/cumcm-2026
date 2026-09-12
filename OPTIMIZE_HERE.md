@@ -31,7 +31,7 @@ python3 -m pytest src/b_sim/test_b_sim.py -q    # 快速回归，应 172 passed�
 （见 `requirements.txt`）。本机没有裸 `python`，用 `python3` 或
 `~/.venvs/cumcm-2026/bin/python3`（pytest 装在这个 venv 里）。
 
-仓库根目录有 `pytest.ini` 后，`pytest src` 可直接全量跑，**341 项约 8 分钟**：
+仓库根目录有 `pytest.ini` 后，`pytest src` 可直接全量跑，**347 项约 8 分钟**：
 
 ```bash
 ~/.venvs/cumcm-2026/bin/python3 -m pytest src -q

@@ -55,7 +55,7 @@ python -m src.pack_dist_windows --check      # src/b_sim -> dist_windows 是否�
 python -m src.build_windows_zip --check      # dist_windows -> 交付 zip 是否同步
 python -m src.build_paper --check            # 匿名扫描 + 附录覆盖
 python -m pytest src/b_sim/test_b_sim.py -q  # 快速回归，应 172 passed（约 32 s）
-python -m pytest src -q                      # 全量回归，应 341 passed（约 8 min）
+python -m pytest src -q                      # 全量回归，应 347 passed（约 8 min）
 python run_official.py --robot-id <队号> --dry-run   # 仅在演练窗口用
 ```
 
@@ -158,7 +158,9 @@ python run_official.py --robot-id <队号> --test-kind formal --case-code <案�
 | 10 | 5 | 400/400 | 596.5 s | 277.9 | 1081.1 s |
 | 10 | 10（全定向） | 400/400 | **642.5 s**（最差） | 293.9 | 1168.4 s |
 
-数据源 `results/b_boundary_matrix.json`，重跑命令 `python -m src.b_boundary_matrix`。
+数据源 `results/b_boundary_matrix.json`，重跑命令 `python -m src.b_boundary_matrix`（约 12 分钟）。
+**改过 `q3_fast.py` / `q4_fast.py` 就必须重跑并更新本表**：`test_boundary_matrix.py` 会校验
+落盘 profile 等于当前交付策略、六档零漏失、且本表区间端点与 JSON 实际极值一致，脱节会直接失败。
 
 **指标区间 196.2 – 642.5 s，跨度 3.3 倍，全部来自案例参数而非策略差异。**
 最右列是同档旧策略数字（原表所载）：每档都更快，最差档降 45%。**判断当天成绩请用左侧区间**，
