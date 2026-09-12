@@ -18,7 +18,7 @@
 
 ## 0. 拿交付包
 
-**[Release v1.0.3](https://github.com/JohnnyGanYu/cumcm-2026/releases/tag/v1.0.3)** 下载 `CUMCM2026B_robot_windows.zip`（仓库私有，需登录），MD5 `980f73e78de653363b25db1c1ee949e5`。
+**[Release v1.0.4](https://github.com/JohnnyGanYu/cumcm-2026/releases/tag/v1.0.4)** 下载 `CUMCM2026B_robot_windows.zip`（仓库私有，需登录），MD5 `5bc017ba322c799a611804cf5f3375d3`。
 解压后先核对 MD5，运行后检查日志：`strategy_class` 应为 `Q3FastStrategy` / `Q4FastStrategy`，`summary.search_layout.outer_radius_m` 应为 `1870.0`。
 
 **v1.0.2 已弃用**：那版外环为 1800 m，会漏清贴边且辐射轴径向朝外的定向源（60 局压力样本每局都漏），别拿错。
@@ -47,6 +47,19 @@ python -m src.build_windows_zip --check      # dist_windows -> 交付 zip 是否
 python -m pytest src/b_sim/test_b_sim.py -q  # 快速回归，应 172 passed（约 32 s）
 python run_official.py --robot-id <队号> --dry-run   # 仅在演练窗口用
 ```
+
+**洁净环境预演（推荐，不占测试次数）**：在零第三方包的解释器里用**下载到的 zip** 跑一局，
+验的是提交物本身而不是仓库工作树。
+
+```
+uv venv --python 3.11 /tmp/bare && unzip -q CUMCM2026B_robot_windows.zip -d /tmp/pkg
+python -m src.b_sim.server --robot-id <队号> --port 2098 --seed 424242 --directional 5 &
+cd /tmp/pkg && /tmp/bare/bin/python run_official.py --robot-id <队号> \
+    --base-url http://127.0.0.1:2098 --directional
+```
+
+跑完核日志三字段（见第 7 节）。9-13 凌晨实测：Q3 15/15 全清 T̄ 221.7 s、Q4 14 清除 T̄ 410.4 s，
+`crash: null`，布局字段为 `1000×7 / 1870×12 / 相位 15°`。这一步抓出过 `--total-jammers 0` 的崩溃。
 
 **两个 `--check` 都必须过**，它们各挡一层漂移，都真实出过问题：
 
@@ -78,6 +91,10 @@ python run_official.py --robot-id <队号> --test-kind formal --case-code <案�
 
 演练局照旧不带这两个参数，另外可用 `--total-jammers N` 把界面告示的源数直接写进日志。
 
+`--total-jammers` 只填模拟器界面告示的真实总数（题面范围 10–16）。**填 0 或留空都不会中断本局**：
+0 及负数会被判非法并降级为「未抄录总数」，日志照常落盘 —— 这条护栏是洁净环境实测时补的，
+此前填 0 会在写日志之前抛 `ZeroDivisionError`，整局协议记录连同测试机会一起丢掉。
+
 **每局跑完立刻做两件事：**
 1. 保存当前目录生成的 `official_log_<时间戳>.json`（支撑材料必需，模拟器自己不产出）
 2. 记下模拟器告示的**本局干扰源总数**——程序不记录这个数，缺了就算不出真实清除率
@@ -99,7 +116,7 @@ python run_official.py --robot-id <队号> --test-kind formal --case-code <案�
 | Q4 | 6 全向 + 5 定向 | 11/11 | 794.1 s |
 | Q4 | 4 全向 + 7 定向 | 11/11 | 900.5 s |
 
-9-12 六局演练实测（`q3-fast-v1` / `q4-fast-v2`，比当天要用的 v1.0.3 略慢，**这才是接近的量级**）：
+9-12 六局演练实测（`q3-fast-v1` / `q4-fast-v2`，比当天要用的 v1.0.4 略慢，**这才是接近的量级**）：
 
 | 问题 | 清除 | 虚拟时间 | T̄ |
 |---|---|---|---|
@@ -244,9 +261,9 @@ grep -c '<真实队号>' *.sanitized.*      # 应为 0
 
 **跑完必看的三个字段**：`strategy_class` 为 `Q3FastStrategy` / `Q4FastStrategy`、
 `summary.strategy_profile` 为 `q3-fast-v2` / `q4-fast-v3`、Q4 的 `outer_radius_m` 为 `1870.0`。
-若看到 `1800.0`，说明拿的是已弃用的 v1.0.2（边界定向源会漏清），换 v1.0.3。
+若看到 `1800.0`，说明拿的是已弃用的 v1.0.2（边界定向源会漏清），换 v1.0.4。
 9-12 那七局演练日志里 profile 是 `q3-fast-v1` / `q4-fast-v2`、外环 1900×14，那是上一版，
 当天若看到这些值说明拿错了交付包。
 
 离线成绩（留出集）：Q3 247.1 s / 2640-2640。官方演练池化：9-11 六局 Q3 269.7 s、Q4 776.4 s（旧策略）；
-9-12 六局 Q3 209.0 s、Q4 486.9 s（对应 v1.0.1 的第一轮优化，**非当前 v1.0.3**）。
+9-12 六局 Q3 209.0 s、Q4 486.9 s（对应 v1.0.1 的第一轮优化，**非当前 v1.0.4**）。

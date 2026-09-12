@@ -78,6 +78,27 @@ def strip_editor_block(text: str) -> str:
     return "\n".join(out)
 
 
+def assert_appendix_covers_dist() -> None:
+    """附录必须覆盖交付包全部源文件（第五条）。
+
+    APPENDIX_SOURCES 是手写清单，交付包新增文件时极易漏收；而"缺少必要的源程序"
+    在格式规范里是可取消评奖资格的情形，故用断言兜住而不靠人记得改两处。
+    """
+    actual = {
+        str(p.relative_to(ROOT))
+        for p in (ROOT / "dist_windows").rglob("*.py")
+    }
+    listed = set(APPENDIX_SOURCES)
+    missing = sorted(actual - listed)
+    stale = sorted(listed - actual)
+    if missing:
+        raise SystemExit(
+            "交付包源文件未收进附录: " + ", ".join(missing))
+    if stale:
+        raise SystemExit(
+            "附录列了交付包里不存在的文件: " + ", ".join(stale))
+    print(f"附录覆盖检查通过: 交付包 {len(actual)} 个源文件全部收录")
+
 def build_appendix() -> str:
     parts = ["\n\\newpage\n", "# 附录\n", "## 附录 A 支撑材料文件列表\n", SUPPORTING_LIST]
     parts.append("\n## 附录 B 源程序\n")
@@ -302,6 +323,7 @@ def main() -> None:
 
     if not PAPER.exists():
         raise SystemExit(f"找不到 {PAPER}")
+    assert_appendix_covers_dist()
     body = strip_editor_block(PAPER.read_text(encoding="utf-8"))
     full = body.rstrip() + "\n" + build_appendix()
 

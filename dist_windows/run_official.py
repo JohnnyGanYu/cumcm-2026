@@ -151,6 +151,12 @@ def main() -> None:
     else:
         print(f"✓ 无\"曾收到信号却未清除\"的频道，本局很可能已全清")
     print(f"全程沉默频道 {len(silent_only)} 个（推定无源）: {sorted(silent_only)}")
+    if args.total_jammers is not None and args.total_jammers <= 0:
+        # 手误输 0 或负数时若照常走除法，会在日志落盘之前抛 ZeroDivisionError，
+        # 把整局协议记录连同已消耗的测试机会一起丢掉（题面总数下界是 10）。
+        print(f"\n⚠ --total-jammers {args.total_jammers} 非法（题面范围 10-16），"
+              "本局按未抄录总数处理，比例不计算。")
+        args.total_jammers = None
     if args.total_jammers is not None:
         ratio = len(cleared) / args.total_jammers
         print(f"\n--- 题目要求的统计值（按人工抄录的总数 {args.total_jammers}）---")
