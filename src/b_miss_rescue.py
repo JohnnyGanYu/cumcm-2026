@@ -261,6 +261,16 @@ class RayEdgeLeanRescue(RayEdgeRescue):
                 return
 
 
+def _q3_fast():
+    from .b_sim.q3_fast import Q3FastStrategy
+    return Q3FastStrategy
+
+
+def _q4_fast():
+    from .b_sim.q4_fast import Q4FastStrategy
+    return Q4FastStrategy
+
+
 VARIANTS = {
     "baseline": MissProbe,
     "r1_raygap": RayGapRescue,
@@ -269,6 +279,10 @@ VARIANTS = {
     "combo": ComboRescue,
     "r1r3_edge": RayEdgeRescue,
     "r1r3_lean": RayEdgeLeanRescue,
+    # 生产策略。上面那些变体都基于 DogStrategy，而交付入口默认跑的是下面两个 ——
+    # 想验证一个改动对成绩的真实影响，基线必须选 prod_q3 / prod_q4。
+    "prod_q3": _q3_fast,
+    "prod_q4": _q4_fast,
 }
 
 
@@ -281,7 +295,11 @@ def _job(args):
         # variant 名可带 "@" 后缀区分同一策略类的不同参数组（如 r1_raygap@ring1150x7），
         # 便于在一次配对实验里同时测「修复」与「布局」的叠加效果。
         cls_key = variant.split("@", 1)[0]
-        r = run_one(seed, directional, count, VARIANTS[cls_key], overrides or None)
+        # prod_q3 / prod_q4 存的是延迟导入的工厂函数（避免模块级循环导入），
+        # 其余是类本身。类也是 callable，故用 isinstance 而非 callable() 区分。
+        entry = VARIANTS[cls_key]
+        cls = entry if isinstance(entry, type) else entry()
+        r = run_one(seed, directional, count, cls, overrides or None)
         r["variant"] = variant
         return r
     except Exception as exc:  # noqa: BLE001
@@ -291,7 +309,18 @@ def _job(args):
 
 def paired_report(by_variant: dict[str, list[dict]], ref: str = "baseline") -> dict:
     out = {}
+    if ref not in by_variant:
+        raise SystemExit(
+            f"参照臂 '{ref}' 不在 --variants 里。配对实验至少要两个臂：一个基线加一个候选。\n"
+            f"当前只有: {sorted(by_variant)}\n"
+            f"参照臂取 --variants 的第一个，所以把基线写在最前面：\n"
+            f"  --variants prod_q4,你的变体名 --directional 5   # 问题四\n"
+            f"  --variants prod_q3,你的变体名                   # 问题三")
     base = {(r["directional"], r["seed"]): r for r in by_variant[ref] if "error" not in r}
+    if not base:
+        errs = [r.get("error") for r in by_variant[ref] if "error" in r][:3]
+        raise SystemExit(
+            f"参照臂 '{ref}' 没有任何成功局，无法配对。前几条错误：{errs}")
     for name, rows in by_variant.items():
         cur = {(r["directional"], r["seed"]): r for r in rows if "error" not in r}
         keys = [k for k in base if k in cur]

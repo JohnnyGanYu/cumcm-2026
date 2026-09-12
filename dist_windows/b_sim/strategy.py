@@ -301,6 +301,10 @@ class StrategyConfig:
 
 
 class DogStrategy:
+    # 注意：本类已不是生产策略。交付入口默认跑 q3_fast.Q3FastStrategy /
+    # q4_fast.Q4FastStrategy，本类只在 --legacy-q3/--legacy-q4 回退时使用。
+    # 在这里调参不会改变正式成绩 —— 要优化请改那两个文件，见 OPTIMIZE_HERE.md。
+
     # 类级默认值：这些是纯计数/缓存字段，给出类级默认后，即使实例被绕过 `__init__` 构造
     # （测试里用 `DogStrategy.__new__` + 手工注入替身 client 的做法），底层动作也不会因为
     # 缺属性而抛 AttributeError。`__init__` 仍会覆盖成实例属性。

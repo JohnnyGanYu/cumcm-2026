@@ -234,7 +234,7 @@ def edge_outward(sx, sy, ddeg) -> tuple[float, float]:
 
 
 def run_one(seed: int, directional: int, count: int | None = None,
-            cls=MissProbe, overrides: dict | None = None) -> dict:
+            cls: type = MissProbe, overrides: dict | None = None) -> dict:
     case = generate_case(seed, count=count, directional_count=directional)
     arena = Arena(case)
     session = Session(ROBOT_ID, arena, real_limit_s=1200.0)
@@ -362,6 +362,14 @@ def resolve_strategy(name: str):
         return MissProbe
     if name == "DogStrategy":
         return DogStrategy
+    # 生产策略：交付入口默认跑这两个，DogStrategy 只是 --legacy-* 回退路径。
+    # 调参必须打在这里，否则测的是已不上场的策略。
+    if name == "Q3FastStrategy":
+        from .b_sim.q3_fast import Q3FastStrategy
+        return Q3FastStrategy
+    if name == "Q4FastStrategy":
+        from .b_sim.q4_fast import Q4FastStrategy
+        return Q4FastStrategy
     from . import b_miss_rescue
     cls = getattr(b_miss_rescue, name, None)
     if cls is None:

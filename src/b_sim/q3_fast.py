@@ -3,6 +3,13 @@
 The policy sees only protocol observations and the public source-count bound.
 Search, retries, failure recovery and all time budgets remain in DogStrategy.
 """
+# ┌─────────────────────────────────────────────────────────────────┐
+# │ 这是 问题 3 的生产策略 —— 交付入口默认跑的就是本文件。          │
+# │ 要优化就改这里。调参前请先读仓库根目录的 OPTIMIZE_HERE.md，      │
+# │ 里面有当前成绩、剩余攻击面实测数据、配对验证命令，              │
+# │ 以及已经试过没用的 7 个方向（省你两小时）。                      │
+# └─────────────────────────────────────────────────────────────────┘
+
 from __future__ import annotations
 
 from dataclasses import replace
