@@ -223,6 +223,30 @@ def enforce_page_setup(docx: Path) -> None:
     print("页面设置已落实: A4 11906x16838 twips / 四边 2.5 cm / 页脚居中页码")
 
 
+def assert_clean_metadata(docx: Path) -> None:
+    """核查 DOCX 元数据不含身份信息（第六条 / 第十一条）。
+
+    pandoc 产出的 core.xml 本来是空的，但只要有人用 Word 打开并保存一次，
+    dc:creator 就会被写成本机账户名，且肉眼看不出来。故固化为断言。
+    """
+    import zipfile
+
+    with zipfile.ZipFile(docx) as z:
+        names = z.namelist()
+        for part in ("docProps/core.xml", "docProps/app.xml"):
+            if part not in names:
+                continue
+            xml = z.read(part).decode("utf-8", "ignore")
+            for field in ("dc:creator", "cp:lastModifiedBy", "dc:title",
+                          "Company", "Manager"):
+                m = re.search(rf"<{field}>(.*?)</{field}>", xml, flags=re.S)
+                if m and m.group(1).strip():
+                    hits = scan_identity(m.group(1))
+                    if hits:
+                        raise SystemExit(
+                            f"DOCX 元数据 {field} 含身份信息: {m.group(1)[:60]}")
+    print("元数据检查通过: 无作者/公司/标题类身份字段")
+
 def shrink_code_font(docx: Path, half_points: int = 14) -> None:
     """把代码样式字号压到 7 pt，避免附录源码长行被硬折断。
 
@@ -325,6 +349,7 @@ def main() -> None:
     # 故在成品上直接落一次页面设置，并自查生效。
     enforce_page_setup(docx)
     shrink_code_font(docx)
+    assert_clean_metadata(docx)
     print(f"已生成: {docx}  ({docx.stat().st_size / 1e6:.2f} MB)")
 
 
