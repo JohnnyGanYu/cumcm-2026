@@ -55,7 +55,7 @@ python -m src.pack_dist_windows --check      # src/b_sim -> dist_windows 是否�
 python -m src.build_windows_zip --check      # dist_windows -> 交付 zip 是否同步
 python -m src.build_paper --check            # 匿名扫描 + 附录覆盖
 python -m pytest src/b_sim/test_b_sim.py -q  # 快速回归，应 172 passed（约 32 s）
-python -m pytest src -q                      # 全量回归，应 354 passed（约 8 min）
+python -m pytest src -q                      # 全量回归，应 358 passed（约 8 min）
 python run_official.py --robot-id <队号> --dry-run   # 仅在演练窗口用
 ```
 
