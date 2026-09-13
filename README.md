@@ -1,4 +1,4 @@
-# CUMCM 2026 — B 题
+# CUMCM 2026 — B 题：无线电干扰源的快速定位与清除
 
 > ## 策略已冻结，正式测试当日先看 [`RACEDAY.md`](RACEDAY.md)
 >
@@ -14,19 +14,43 @@
 > `DogStrategy` —— 那是 `--legacy-*` 回退版。改完必须重跑 `pack_dist_windows`
 > 与 `build_windows_zip`，否则正式测试跑的还是旧代码。
 
-私有仓库，队内只读协作。**本队选定 B 题**（无线电干扰源定位与清除），仓库只保留 B 题相关内容。
+私有仓库，队内只读协作。**本队选定 B 题**，仓库只保留 B 题相关内容。
+
+## 这个仓库怎么用
+
+按用途分四类，各自只需读一份文档：
+
+| 我要做什么 | 读哪里 |
+|---|---|
+| **正式测试当日操作** | [`RACEDAY.md`](RACEDAY.md) —— 自检、跑测试、成绩判断、脱敏、表 1 生成 |
+| **提交前逐项核对** | [`state/submission_checklist.md`](state/submission_checklist.md) |
+| **继续优化策略** | [`OPTIMIZE_HERE.md`](OPTIMIZE_HERE.md) —— 当前成绩、剩余攻击面、已否决方向 |
+| **读论文 / 改论文** | [`paper/README.md`](paper/README.md) —— 成稿是 `paper/main.md` |
+
+一条命令跑完全部提交前检查：
+
+```
+python scripts/raceday_preflight.py           # 五闸门，约 8 分钟
+python scripts/raceday_preflight.py --quick   # 跳过全量回归，约 1.5 秒
+```
+
+五个闸门分别挡：交付包未同步（跑的是旧策略）、zip 未重打（MD5 与文档不符）、
+论文含身份信息或附录漏源码、文档与代码参数脱节、回归失败。
+
+## 目录
 
 ```
 problem/B题/     题目原文与附件（只读）
-src/b_sim/       离线仿真器 + 机器狗策略
-src/             B 题辅助脚本（诊断、时间预算分解、脱敏）
+src/b_sim/       离线仿真器 + 机器狗策略（交付的就是这些）
+src/             辅助脚本：诊断、时间预算分解、脱敏、论文与表格构建
+scripts/         赛日总闸、提交物哈希冻结
 dist_windows/    Windows 交付包（跑官方模拟器用）
 official_runs/   官方模拟器实测记录（仅脱敏版）
-results/         机器可读结果
-figures/         论文图表
-paper/           论文源与渲染（成稿 = paper/main.md，各文件定位见 paper/README.md）
-supporting/      支撑材料
-state/           决策日志、AI 台账、主张-证据台账
+results/         机器可读结果（论文每个数字都能在此复算）
+figures/         论文配图（8 张，与策略参数联动，改参数须重生成）
+paper/           论文源与渲染，成稿 = paper/main.md
+supporting/      支撑材料清单与脱敏说明
+state/           决策日志、AI 台账、主张-证据台账、提交检查单
 ```
 
 ## 题目要点
@@ -40,6 +64,8 @@ state/           决策日志、AI 台账、主张-证据台账
 
 问题 1、2 为解析与算法设计；问题 3（全向源）、问题 4（含定向源）需实机测试。
 
+---
+
 ## 赛制约束
 
 > **正式测试当日请先读 [`RACEDAY.md`](RACEDAY.md)** —— 开跑前自检、成绩如何判断
@@ -51,6 +77,8 @@ state/           决策日志、AI 台账、主张-证据台账
 - 问题 3、问题 4 各只有 **3 次**正式测试。
 - **9 月 13 日 17:30 之后不能开启新测试**，建议 15:30 前打完。
 - 竞赛 09-10 18:00 至 09-13 20:00；第一阶段 MD5 09-13 20:00 前，第二阶段上传 09-13 20:30–09-14 14:00。
+
+---
 
 ## 当前成绩
 
@@ -139,7 +167,149 @@ Q4 清除调用从旧策略的约 70 次降到 16–29 次，与「射线盲扫�
 数据源 `results/b_boundary_matrix.json`，重跑 `python -m src.b_boundary_matrix`。
 旧策略同档为 209.7 – 1168.4 s，每档都更慢，最差档差 45% —— 引用旧区间会把退化当成正常。
 
-## B 题：路径规划优化（本轮工作）
+---
+
+## 交付包
+
+当前版本 **[v1.0.5](https://github.com/JohnnyGanYu/cumcm-2026/releases/tag/v1.0.5)**，MD5 `20d5a2ff97ae8201bedf415b8f3e8a40`，14 个文件，纯 Python 标准库。
+含 `q3-fast-v2` / `q4-fast-v3`，Q4 外环 1870 m。
+v1.0.2 已弃用：那版外环 1800 m 会漏清贴边朝外的定向源（见 PR #9）。
+
+v1.0.1（MD5 `bd90df7b406a66921afe8cfaec556f03`）为上一代基线，其官方六局实测成绩见上文「官方模拟器演练（2026-09-12）」，仅在需要对照时使用。
+
+```
+python run_official.py --robot-id 你的参赛队号                 # 问题 3
+python run_official.py --robot-id 你的参赛队号 --directional    # 问题 4
+```
+
+出意外要回退到优化前策略时加 `--legacy-q3` / `--legacy-q4`。日志的 `strategy_class`
+字段记录了这一局实际跑的策略类，赛后凭它归因成绩。
+
+根目录那份同名 zip 是构建产物，由 `python -m src.build_windows_zip` 生成、
+`--check` 校验它与 `dist_windows/` 一致。**它存在的唯一目的是防版本漂移**：
+此前它曾停留在旧版本，当天若直接解压会拿到慢约 24% 的策略（见 `RACEDAY.md`）。
+正式分发时以对应 Release 的策略版本及 MD5 为准；当前分支构建包的信息见上方。
+## 怎么跑
+
+离线演练（本机，无需官方模拟器）：
+
+```bash
+python -m src.b_sim.rehearse --episodes 60 --seed-start 5000                  # 问题 3
+python -m src.b_sim.rehearse --episodes 40 --seed-start 7001 --directional 5   # 问题 4
+python -m pytest src/b_sim/test_b_sim.py -q                                    # 172 项单元/回归
+python -m pytest src/b_sim/test_b_pbt.py -q                                    # 33 项性质测试
+```
+
+优化诊断与调参：
+
+```bash
+python -m src.b_sim.timeline    --episodes 20                    # 四项耗时分解 + 绕路倍数
+python -m src.b_sim.phase_probe --episodes 20                    # 按阶段归因移动距离
+python -m src.b_sim.coverage_audit --episodes 12                 # 顺路覆盖审计
+python -m src.b_sim.tune --episodes 200                          # 单点评估（并行）
+python -m src.b_sim.tune --episodes 200 --ablation               # 消融实验
+python -m src.b_sim.tune --episodes 200 --sweep dogleg_offset_deg=8,13,18,24
+```
+
+生成论文配图：
+
+```bash
+python -m src.b_q1_figures          # Q1 定位区域直径 + 外接圆覆盖/反例
+python src/b_q2_figures.py          # Q2 候选区域 + 交会角 + 精度-耗时权衡
+python -m src.b_sim.coverage_design # 覆盖站位数值依据
+python -m src.b_coverage_figures    # 覆盖站位散点 + 最坏间隙条形图
+```
+
+对接官方模拟器（Windows）：先同步交付包，再见 `dist_windows/README_WINDOWS.md`。
+
+```bash
+python -m src.pack_dist_windows           # 同步 src/b_sim -> dist_windows/b_sim
+python -m src.pack_dist_windows --check   # 提交前自检是否已同步
+```
+
+测试依赖（`pytest` + `hypothesis`，仅离线测试/彩排用；提交给官方模拟器的机器狗程序本身只用标准库）：
+
+```bash
+python -m pip install -r requirements-dev.txt
+```
+
+---
+
+## 策略要点
+
+### 新增模块
+
+| 模块 | 作用 |
+|---|---|
+| `src/b_sim/route.py` | 开放 TSP 排序：最近邻 + 2-opt + Or-opt + 廉价插入 |
+| `src/b_sim/feasible.py` | 可行域集合约束 +（含定向模式的）贪心最大覆盖站位规划 |
+| `src/b_sim/timeline.py` | 四项耗时分解 + 最近邻巡回基准 + 绕路倍数 + 检测有效率 |
+| `src/b_sim/phase_probe.py` | 按策略阶段归因移动距离 |
+| `src/b_sim/coverage_audit.py` | 顺路覆盖审计：停车点已经免费覆盖了多少目标区域 |
+| `src/b_sim/tune.py` | 并行参数扫描与消融实验 |
+| `src/pack_dist_windows.py` | 把运行时同步到 Windows 交付包（含 `--check` 自检） |
+> 顺带修掉一个此前的隐患：`dist_windows/`（真正连官方模拟器的那份代码）是手抄的，已与
+> `src/b_sim/` 漂移——`client.py` 少了发送前坐标越界拦截与 400/409 处理，`geometry.py` 少了三分之二。
+> 现在由 `src/pack_dist_windows.py` 脚本化同步，避免"离线调好的策略"与"正式测试跑的策略"不是同一份。
+
+### 测试
+
+| 套件 | 数量 |
+|---|---:|
+| `src/b_sim/test_b_sim.py` 单元 / 回归 | **172** |
+| `src/b_sim/test_b_pbt.py` 面向性质测试（P1–P8，`hypothesis`） | **33** |
+| `src/test_q4_410_geometry.py` Q4 定位几何 | **17** |
+| `src/test_q3_fast.py` Q3 生产策略 | **15** |
+| `src/test_q4_410_route.py` 路径规划 | **12** |
+| `src/test_q3_200_search.py` Q3 搜索与连续覆盖判空 | **12** |
+| `src/test_q3_200_homing.py` Q3 归航 | **12** |
+| `src/test_q4_fast.py` Q4 生产策略 | **10** |
+| `src/test_b_optimization_benchmark.py` 配对评测框架自测 | **10** |
+| `src/b_eval/test_provenance.py` 评测溯源与 fail-closed | **10** |
+| `src/test_q3_200_homing_candidates.py` Q3 归航候选 | **5** |
+| `src/test_q4_outer_radius.py` Q4 外环半径几何下界 | **4** |
+| `src/test_q4_near_field.py` 近场定向约束 | **2** |
+| `src/test_run_official_inputs.py` 正式入口输入护栏 | **2** |
+| `src/test_figures_match_strategy.py` 配图与策略参数一致性 | **2** |
+| `src/test_docs_match_code.py` 文档声称参数与代码一致性 | **4** |
+| `src/test_build_table1.py` 表 1 生成器（池化口径/作废局过滤） | **5** |
+| `src/test_sanitize_official_run.py` 脱敏完整性与复核独立性 | **6** |
+| `src/test_run_official_crash_safety.py` 崩溃仍落盘与 None 指标护栏 | **5** |
+| `src/test_zip_reproducible.py` 交付 zip 字节可复现 | **3** |
+| `src/test_boundary_matrix.py` 边界矩阵池化口径与表-数据一致 | **6** |
+| `src/test_paper_answers_all_subquestions.py` 题目子问覆盖 | **3** |
+| `src/test_abstract_traceable.py` 摘要数字可溯源 | **4** |
+| `src/test_paper_citations.py` 论文引用文件存在与成绩可复算 | **4** |
+| 合计 | **358，全绿（487.4 s）** |
+
+`test_q4_outer_radius.py` 是把 `outer_radius >= 1800/cos(π/12)` 这条几何下界写成断言，
+防止再有人凭随机场景的均值指标把外环缩回 1800（详见 PR #9 与论文 7.1 节）。
+
+**提交前一条命令跑完全部闸门**：
+
+```bash
+python scripts/raceday_preflight.py           # 五闸门，含 8 min 全量回归
+python scripts/raceday_preflight.py --quick   # 跳过回归，约 1.5 s
+```
+
+它串起交付包同步、zip 同步、论文匿名与附录覆盖、四组一致性断言、全量回归，
+任一不过即非零退出，并说明该闸门挡的是什么错。
+
+**跑法**：`pytest src` 现在可直接全量跑（358 项、约 8 分钟），前提是仓库根目录的 `pytest.ini` 在位。
+
+删掉那个文件就会退回旧行为：收集阶段挂死，20 分钟无输出。根源是 `src/` 混有非 B 题脚本在
+模块级执行重活（如 `src/c_q1.py` 第 55 行直接 `pd.read_excel` 并往下算，无 `if __name__` 保护）。
+显式列文件的老跑法仍然可用，见 `OPTIMIZE_HERE.md`。
+完整命令见 [`OPTIMIZE_HERE.md`](OPTIMIZE_HERE.md) 的「环境」一节。测试依赖 `pytest` /
+`hypothesis` / `numpy` / `scipy`（`requirements.txt`），交付的策略代码本身仍是纯标准库。
+
+---
+
+---
+
+## 优化过程（归因与消融）
+
+本章是方法记录，赛日不需要读；结论已固化进交付版策略与论文第 5–6 章。
 
 评分指标是 **T̄ = 定位清除总时间 / 被清除个数**。本轮先做归因、再按归因动刀，把 T̄ 在
 **清除率保持 100%** 的前提下压掉四成以上：
@@ -300,7 +470,9 @@ Or-opt），处理完一个航点就滚动重规划：
 离线与官方偏差：问题 3 为 5.4%、问题 4 为 9.6%，量级一致，仿真器可用于策略迭代。
 离线偏乐观（时间更短、检测更少），做正式测试预期时按官方值留余量。
 
-## 时间预算：优化杠杆在哪
+---
+
+### 时间预算：优化杠杆在哪
 
 用 `python -m src.b_tsp_bound` 从官方协议日志实算（Q4 四局，高度一致）。时间常数由
 逐调用残差反解并与 `virtual_time_s` 对账，误差 < 3.2e-6 s：
@@ -317,7 +489,7 @@ measure 5 s **+ 切频道 1 s**、clear 成功 **5 s** / 失败 3 s、移动 5 m
 
 移动再往下拆：**站位空驶 60.2% / 归航逼近 38.8% / 清除微调 0.9%**。
 
-## TSP 收益上限：−28%
+### TSP 收益上限：−28%
 
 同一脚本给出理论下界（L1/L2 精确 Held-Karp，L3 启发式解/MST 下界 = 1.064，
 L4 由"实际轨迹是可行解"保证合法）：
@@ -344,193 +516,51 @@ L4 与 L1 之间约 39 个百分点是信息获取代价（不知道源在哪）
 
 Q3 无法做同样拆解：只留了官方二进制 `.jlog`，缺 `run_official.py` 的 JSON 协议日志。
 
-## 策略要点
-
-### 新增模块
-
-| 模块 | 作用 |
-|---|---|
-| `src/b_sim/route.py` | 开放 TSP 排序：最近邻 + 2-opt + Or-opt + 廉价插入 |
-| `src/b_sim/feasible.py` | 可行域集合约束 +（含定向模式的）贪心最大覆盖站位规划 |
-| `src/b_sim/timeline.py` | 四项耗时分解 + 最近邻巡回基准 + 绕路倍数 + 检测有效率 |
-| `src/b_sim/phase_probe.py` | 按策略阶段归因移动距离 |
-| `src/b_sim/coverage_audit.py` | 顺路覆盖审计：停车点已经免费覆盖了多少目标区域 |
-| `src/b_sim/tune.py` | 并行参数扫描与消融实验 |
-| `src/pack_dist_windows.py` | 把运行时同步到 Windows 交付包（含 `--check` 自检） |
-> 顺带修掉一个此前的隐患：`dist_windows/`（真正连官方模拟器的那份代码）是手抄的，已与
-> `src/b_sim/` 漂移——`client.py` 少了发送前坐标越界拦截与 400/409 处理，`geometry.py` 少了三分之二。
-> 现在由 `src/pack_dist_windows.py` 脚本化同步，避免"离线调好的策略"与"正式测试跑的策略"不是同一份。
-
-### 测试
-
-| 套件 | 数量 |
-|---|---:|
-| `src/b_sim/test_b_sim.py` 单元 / 回归 | **172** |
-| `src/b_sim/test_b_pbt.py` 面向性质测试（P1–P8，`hypothesis`） | **33** |
-| `src/test_q4_410_geometry.py` Q4 定位几何 | **17** |
-| `src/test_q3_fast.py` Q3 生产策略 | **15** |
-| `src/test_q4_410_route.py` 路径规划 | **12** |
-| `src/test_q3_200_search.py` Q3 搜索与连续覆盖判空 | **12** |
-| `src/test_q3_200_homing.py` Q3 归航 | **12** |
-| `src/test_q4_fast.py` Q4 生产策略 | **10** |
-| `src/test_b_optimization_benchmark.py` 配对评测框架自测 | **10** |
-| `src/b_eval/test_provenance.py` 评测溯源与 fail-closed | **10** |
-| `src/test_q3_200_homing_candidates.py` Q3 归航候选 | **5** |
-| `src/test_q4_outer_radius.py` Q4 外环半径几何下界 | **4** |
-| `src/test_q4_near_field.py` 近场定向约束 | **2** |
-| `src/test_run_official_inputs.py` 正式入口输入护栏 | **2** |
-| `src/test_figures_match_strategy.py` 配图与策略参数一致性 | **2** |
-| `src/test_docs_match_code.py` 文档声称参数与代码一致性 | **4** |
-| `src/test_build_table1.py` 表 1 生成器（池化口径/作废局过滤） | **5** |
-| `src/test_sanitize_official_run.py` 脱敏完整性与复核独立性 | **6** |
-| `src/test_run_official_crash_safety.py` 崩溃仍落盘与 None 指标护栏 | **5** |
-| `src/test_zip_reproducible.py` 交付 zip 字节可复现 | **3** |
-| `src/test_boundary_matrix.py` 边界矩阵池化口径与表-数据一致 | **6** |
-| `src/test_paper_answers_all_subquestions.py` 题目子问覆盖 | **3** |
-| `src/test_abstract_traceable.py` 摘要数字可溯源 | **4** |
-| `src/test_paper_citations.py` 论文引用文件存在与成绩可复算 | **4** |
-| 合计 | **358，全绿（487.4 s）** |
-
-`test_q4_outer_radius.py` 是把 `outer_radius >= 1800/cos(π/12)` 这条几何下界写成断言，
-防止再有人凭随机场景的均值指标把外环缩回 1800（详见 PR #9 与论文 7.1 节）。
-
-**提交前一条命令跑完全部闸门**：
-
-```bash
-python scripts/raceday_preflight.py           # 五闸门，含 8 min 全量回归
-python scripts/raceday_preflight.py --quick   # 跳过回归，约 1.5 s
-```
-
-它串起交付包同步、zip 同步、论文匿名与附录覆盖、四组一致性断言、全量回归，
-任一不过即非零退出，并说明该闸门挡的是什么错。
-
-**跑法**：`pytest src` 现在可直接全量跑（358 项、约 8 分钟），前提是仓库根目录的 `pytest.ini` 在位。
-
-删掉那个文件就会退回旧行为：收集阶段挂死，20 分钟无输出。根源是 `src/` 混有非 B 题脚本在
-模块级执行重活（如 `src/c_q1.py` 第 55 行直接 `pd.read_excel` 并往下算，无 `if __name__` 保护）。
-显式列文件的老跑法仍然可用，见 `OPTIMIZE_HERE.md`。
-完整命令见 [`OPTIMIZE_HERE.md`](OPTIMIZE_HERE.md) 的「环境」一节。测试依赖 `pytest` /
-`hypothesis` / `numpy` / `scipy`（`requirements.txt`），交付的策略代码本身仍是纯标准库。
-
 ---
 
-## 现在做出来的东西是什么水准
+## 项目状态
 
-**方法与工程层面已经是国一梯队的底座；剩下的变数在论文成稿与正式测试的现场执行，不在代码。**
+**代码与交付包已冻结，论文已成稿，剩下的变数在正式测试现场执行。**
 
 已经拿到的：
 
-- **评分指标有硬提升且可复现**：问题 3 T̄ −44.9%、问题 4 −44.0%，清除率 100% 不降；调参集与留出集
-  降幅一致，排除了对种子过拟合。绕路倍数 2.58× → 1.27× 给出了"为什么快"的单一可读数解释。
-- **优化是归因驱动的，不是试出来的**：先用 `timeline.py` / `phase_probe.py` 定位到"移动占 80%、
-  一进一出的乒乓占绕路的大头"，再逐条动刀，每条机制都有消融数据支撑。
-- **结论边界诚实**：明确给出"完全认证在问题 4 不可行（47 站位 / 21.5 km 仍剩 120 格）"，并说明
-  为什么必须借总数下界 10 止损；不掩盖 99.81% 而不是 100%。
-- **问题 1 / 问题 2 的理论被真正用进了策略**：定位区域覆盖半径 ≤ 20 m 给出可证明的直接清除判据，
-  交会角与相对基线的关系决定了 dog-leg 长度按距离比例取。
+- **评分指标有硬提升且可复现**：Q3 T̄ −44.9%、Q4 −44.0%，清除率不降。调参集与
+  留出集降幅一致，排除对种子过拟合；独立留出集 260 局 3347 源全清（7.2 节）。
+- **优化是归因驱动的**：先用 `timeline.py` / `phase_probe.py` 定位「移动占 80%、
+  一进一出的乒乓占绕路大头」，再逐条动刀，每条机制都有消融数据。
+- **结论边界诚实**：明确写出「完全认证在问题 4 不可行」（47 站位 / 21.5 km 仍剩
+  120 格），不掩盖 99.81% 而非 100%；被数据否决的方案单独成章（第 6 章）。
+- **问题 1 / 2 的理论真正用进了策略**：最小外接圆半径 ≤ 20 m 是可证明的直接清除
+  判据；交会角与基线的关系决定 dog-leg 长度按距离比例取。
+- **提交链路全脚本化**：论文构建、表 1 生成、脱敏、哈希冻结各有脚本与回归，
+  358 项测试里三分之一是防「文档与代码脱节」的断言。
 
-还差的（决定名次，且不在代码）：
+还差的，且都不在代码里：
 
-1. **论文成稿**：目前是 `paper/*.md` 章节 + 配图脚本，还不是一篇按格式规范排版、有摘要/假设/符号表/
-   灵敏度/优缺点的完整论文。国赛评审看论文。
-2. **正式测试现场执行**：问题 3/4 各 3 次机会，9/13 17:30 后不能开新测试；`paper/q3q4_official_results.md`
-   的表 1 仍是占位骨架。
-3. **参数灵敏度成文**：`tune.py` 已能一键产出扫描与消融数据，但需要在论文里成节，否则会被质疑
-   "是不是过拟合到自建仿真器"。
-
----
-
-## 交付包
-
-当前版本 **[v1.0.5](https://github.com/JohnnyGanYu/cumcm-2026/releases/tag/v1.0.5)**，MD5 `20d5a2ff97ae8201bedf415b8f3e8a40`，14 个文件，纯 Python 标准库。
-含 `q3-fast-v2` / `q4-fast-v3`，Q4 外环 1870 m。
-v1.0.2 已弃用：那版外环 1800 m 会漏清贴边朝外的定向源（见 PR #9）。
-
-v1.0.1（MD5 `bd90df7b406a66921afe8cfaec556f03`）为上一代基线，其官方六局实测成绩见上文「官方模拟器演练（2026-09-12）」，仅在需要对照时使用。
-
-```
-python run_official.py --robot-id 你的参赛队号                 # 问题 3
-python run_official.py --robot-id 你的参赛队号 --directional    # 问题 4
-```
-
-出意外要回退到优化前策略时加 `--legacy-q3` / `--legacy-q4`。日志的 `strategy_class`
-字段记录了这一局实际跑的策略类，赛后凭它归因成绩。
-
-根目录那份同名 zip 是构建产物，由 `python -m src.build_windows_zip` 生成、
-`--check` 校验它与 `dist_windows/` 一致。**它存在的唯一目的是防版本漂移**：
-此前它曾停留在旧版本，当天若直接解压会拿到慢约 24% 的策略（见 `RACEDAY.md`）。
-正式分发时以对应 Release 的策略版本及 MD5 为准；当前分支构建包的信息见上方。
-## 怎么跑
-
-离线演练（本机，无需官方模拟器）：
-
-```bash
-python -m src.b_sim.rehearse --episodes 60 --seed-start 5000                  # 问题 3
-python -m src.b_sim.rehearse --episodes 40 --seed-start 7001 --directional 5   # 问题 4
-python -m pytest src/b_sim/test_b_sim.py -q                                    # 172 项单元/回归
-python -m pytest src/b_sim/test_b_pbt.py -q                                    # 33 项性质测试
-```
-
-优化诊断与调参：
-
-```bash
-python -m src.b_sim.timeline    --episodes 20                    # 四项耗时分解 + 绕路倍数
-python -m src.b_sim.phase_probe --episodes 20                    # 按阶段归因移动距离
-python -m src.b_sim.coverage_audit --episodes 12                 # 顺路覆盖审计
-python -m src.b_sim.tune --episodes 200                          # 单点评估（并行）
-python -m src.b_sim.tune --episodes 200 --ablation               # 消融实验
-python -m src.b_sim.tune --episodes 200 --sweep dogleg_offset_deg=8,13,18,24
-```
-
-生成论文配图：
-
-```bash
-python -m src.b_q1_figures          # Q1 定位区域直径 + 外接圆覆盖/反例
-python src/b_q2_figures.py          # Q2 候选区域 + 交会角 + 精度-耗时权衡
-python -m src.b_sim.coverage_design # 覆盖站位数值依据
-python -m src.b_coverage_figures    # 覆盖站位散点 + 最坏间隙条形图
-```
-
-对接官方模拟器（Windows）：先同步交付包，再见 `dist_windows/README_WINDOWS.md`。
-
-```bash
-python -m src.pack_dist_windows           # 同步 src/b_sim -> dist_windows/b_sim
-python -m src.pack_dist_windows --check   # 提交前自检是否已同步
-```
-
-测试依赖（`pytest` + `hypothesis`，仅离线测试/彩排用；提交给官方模拟器的机器狗程序本身只用标准库）：
-
-```bash
-python -m pip install -r requirements-dev.txt
-```
+1. **正式测试尚未进行。** Q3 / Q4 各 3 次机会，9-13 17:30 后不能开新测试。
+   `paper/q3q4_official_results.md` 的表 1 仍是骨架，打完用
+   `python -m src.build_table1 --kind formal` 生成，不要手抄。
+2. **论文缺灵敏度与优缺点两节。** `tune.py` 能一键产出扫描与消融数据，但未在
+   论文里成节；不写会被质疑「是否过拟合到自建仿真器」。正文页数只剩 3 页余量
+   （27/30），补这两节需同步压缩第 6 章消融表。
+3. **`near` 分支未经真实验证。** 逻辑正确（收到 `near` 立即清除，全仓单一
+   `_measure` 调用点），但官方演练 2415 次检测里 `near` 出现 **0 次**，
+   只在离线 mock 走到过。
+4. **沉默覆盖认证（PR #6）未采纳。** 自建蒙特卡洛显示定向档判空误判率偏高
+   （12 站位全沉默时 11.43%），故未纳入交付版；`silence_coverage.py` 不在
+   `src/b_sim/` 内。若能把误判率压到 1% 以下则有实质收益 —— 实测空频道
+   占检测总数 62%–79%。
 
 ## 匿名性
 
-提交物全程不得出现学校、姓名、队号、指导教师。官方产出的 `.jlog` / `.json` 内嵌真实
-队号与 server_ticket，控制台日志含 Windows 用户名，**入库前必须脱敏**：
+提交物全程不得出现学校、姓名、队号、指导教师。官方产出的 `.jlog` / `.json`
+内嵌真实队号与 `server_ticket`，控制台输出含 Windows 用户名，**只有脱敏件可入库**：
 
-```bash
+```
 python src/sanitize_official_run.py <文件...> --team-no <真实队号>
 ```
 
-`official_runs/` 采用白名单式 `.gitignore`：默认忽略全部，仅放行 `README.md` 与
-`*.sanitized.*`。
-
-## 待补缺口
-
-**已解决**：干扰源总数的记录。`run_official.py` 已支持 `--total-jammers N`（演练结束时
-模拟器界面会告示该数），据此算出「被清除干扰源个数的比例」并写入日志的
-`paper_table1_row`；未传该参数时也会在输出里提示抄录。
-
-**仍未闭环**：
-
-- **正式测试尚未进行。** Q3 / Q4 各 3 次机会，9 月 13 日 17:30 后不能开启新测试。
-  当日流程与判断依据见 [`RACEDAY.md`](RACEDAY.md)。
-- **`near` 分支未经真实验证。** 逻辑正确（收到 `near` 立即清除，全仓只有一处 `_measure`
-  调用点），但六局官方演练共 2415 次检测里 `near` 出现 **0 次**，只在离线 mock 里走到过。
-- **`silence_coverage`（沉默覆盖认证）未评估。** 见 PR #6；我们自己的蒙特卡洛显示定向档
-  判空误判率偏高（12 站位全沉默时 11.43%），故 `empty_verdict_stations` 目前设为 999
-  等于关闭。若能把定向档误判率压到 1% 以下则有实质收益 —— 实测空频道占检测总数 62%–79%。
-
-原始件由 `.gitignore` 白名单式排除，只提交 `*.sanitized.*`。支撑材料清单与匿名检查见
-`supporting/README.md`。
+脚本替换队号与 Windows 用户名、把 7 个服务端密钥字段置零，并用**独立清单**
+复核（不复用替换清单，否则摘掉一个字段就自动跳过检查）。原始件由 `.gitignore`
+白名单式排除。论文与 PDF 的匿名由 `build_paper.py` 自检，含 DOCX 元数据里的
+作者字段。详见 [`supporting/README.md`](supporting/README.md)。
