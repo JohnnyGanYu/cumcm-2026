@@ -297,9 +297,9 @@ python scripts/raceday_preflight.py --quick   # 跳过回归，约 1.5 s
 
 **跑法**：`pytest src` 现在可直接全量跑（358 项、约 8 分钟），前提是仓库根目录的 `pytest.ini` 在位。
 
-删掉那个文件就会退回旧行为：收集阶段挂死，20 分钟无输出。根源是 `src/` 混有非 B 题脚本在
-模块级执行重活（如 `src/c_q1.py` 第 55 行直接 `pd.read_excel` 并往下算，无 `if __name__` 保护）。
-显式列文件的老跑法仍然可用，见 `OPTIMIZE_HERE.md`。
+删除该文件会退回旧行为：收集阶段挂死，20 分钟无输出。根源曾是 `src/` 混有非 B 题脚本在
+模块级执行重活（无 `if __name__` 保护）；这些脚本已清理（2026-09-13），但 `pytest.ini`
+仍保留，作为收集根锚定，避免回归。
 完整命令见 [`OPTIMIZE_HERE.md`](OPTIMIZE_HERE.md) 的「环境」一节。测试依赖 `pytest` /
 `hypothesis` / `numpy` / `scipy`（`requirements.txt`），交付的策略代码本身仍是纯标准库。
 
