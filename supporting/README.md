@@ -14,7 +14,7 @@
 | # | 材料 | 来源 / 生成方式 | 去标识方式 | 归档位置 |
 |---|---|---|---|---|
 | 1 | **Q3 / Q4 正式测试导出日志（各 3 次）** | 比赛当天官方 Windows 客户端产出的 `.jlog` / `.json`（含协议序列、结果指标） | `src/sanitize_official_run.py` 脱敏（队号→占位、票据→置零、用户名→占位） | `official_runs/*.sanitized.{jlog,json}`（比赛日追加） |
-| 2 | **正式测试控制台输出（各 3 次）** | 官方客户端 stdout（含队号、结果摘要、日志落盘路径含 Windows 用户名） | 同上脚本（`robot_id`→`TTT…`、`C:\Users\<user>`→`C:\Users\UUU…`） | `official_runs/*_console.sanitized.txt` |
+| 2 | **演练测试控制台输出（若运行演练）** | 官方客户端 stdout（含队号、结果摘要、日志落盘路径含 Windows 用户名）；正式测试跑 `run_official.py` 时输出即协议日志（第 3 项），无独立重定向 | 同上脚本（`robot_id`→`TTT…`、`C:\Users\<user>`→`C:\Users\UUU…`） | `official_runs/*_console.sanitized.txt` |
 | 3 | **客户端自记协议日志（`client.dump_log`，R5.9）** | `src/b_sim/client.py` 的 `RobotClient.dump_log()`：把完整、有序的 `(request, http_status, response)` 序列（每条含 `request_id` 与时间戳）写为 JSON | 由本队程序生成、不含服务端机密；仍按同一脚本复核队号/用户名 | 与官方日志同目录（`*.sanitized.json`） |
 | 4 | **离线彩排结果** | `python -m src.b_sim.rehearse`（Q3 ≥60 局、Q4 ≥40 局）聚合的评分项（`T̄`、清除率、运行时长） | 纯仿真数据，无 PII | `results/*.json` |
 | 5 | **论文配图** | `src/b_q1_figures.py` / `b_q2_*` / `coverage_design` 等生成 | 纯算法配图，无 PII | `figures/*.png` |

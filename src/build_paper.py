@@ -42,7 +42,8 @@ APPENDIX_SOURCES = [
 SUPPORTING_LIST = """\
 1. `official_runs/*.sanitized.{json,jlog}` —— 问题 3、问题 4 正式测试导出日志各 3 次，
    经 `sanitize_official_run.py` 去标识（队号、服务端票据、本机用户名均替换为等长占位）。
-2. `official_runs/*_console.sanitized.txt` —— 正式测试控制台输出，同法去标识。
+2. `official_runs/*_console.sanitized.txt` —— 演练测试控制台输出（正式局无独立 console 重定向，
+   以第 1 项协议日志为准），同法去标识。
 3. `results/*.json` —— 离线彩排与假设检验的聚合结果，纯仿真数据。
 4. `figures/*.png` —— 论文全部配图及其生成脚本。
 5. `dist_windows/` —— 提交给官方模拟器的完整可运行程序（仅依赖 Python 标准库）。
