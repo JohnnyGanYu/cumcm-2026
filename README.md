@@ -553,6 +553,31 @@ Q3 无法做同样拆解：只留了官方二进制 `.jlog`，缺 `run_official.
    `src/b_sim/` 内。若能把误判率压到 1% 以下则有实质收益 —— 实测空频道
    占检测总数 62%–79%。
 
+## 支撑材料文件清单（提交件逐项对应）
+
+以下全部路径相对仓库根目录；**提交物 = 论文 PDF + 附件说明表（附录 A）所列文件**，
+打包时按下表逐项核对存在性。
+
+| # | 材料 | 路径 |
+|---|---|---|
+| 1 | **论文成稿 PDF**（最终提交件，含摘要页首） | `paper/build/submission.pdf` |
+| 2 | 论文源（可复现构建） | `paper/main.md` + `src/build_paper.py` |
+| 3 | **AI 工具使用详情**（文件名按规定钉死，勿改名） | `paper/build/AI工具使用详情.pdf`（源 `state/ai_usage_log.csv` + `src/build_ai_usage_pdf.py`） |
+| 4 | 正式测试官方日志（Q3/Q4 各 3 次，脱敏） | `official_runs/formal-p3-{1,2,3}-{编码}.sanitized.jlog`、`official_runs/formal-p4-{1,2,3}-{编码}.sanitized.jlog` |
+| 5 | 正式测试客户端协议日志（脱敏） | `official_runs/q3_formal_20260913_{090030,133127,134515}.sanitized.json`、`official_runs/q4_formal_20260913_{090154,133414,134657}.sanitized.json` |
+| 6 | 正式测试控制台输出（脱敏） | `official_runs/*_console.sanitized.txt` |
+| 7 | 离线彩排与实验聚合结果（正文数字可复算） | `results/b_*.json`（240+ 个） |
+| 8 | 论文配图（13 张，含 5 张流程图） | `figures/*.png`（生成脚本 `src/b_problem_analysis_flow.py`、`b_q1_figures.py` 等） |
+| 9 | 提交给官方模拟器的完整程序（纯标准库） | `dist_windows/`（`run_official.py` + `b_sim/`） |
+| 10 | 交付 zip（与 `dist_windows/` 字节一致，`build_windows_zip --check` 验证） | `CUMCM2026B_robot_windows.zip`（MD5 `20d5a2ff97ae8201bedf415b8f3e8a40`） |
+
+**正式测试六局对应关系**（表 7-14 / 表 1）：Q3 `XXGQ-5ASG-XBGT-4UJT` →
+`formal-p3-1`，`JR95-ZFS4-E7GX-CMM2` → `formal-p3-2`，`UJWN-YJCB-4EKD-5535` →
+`formal-p3-3`；Q4 `2TAA-DXZ6-TYVZ-25YX` → `formal-p4-1`，`7GMK-C5YS-AP87-8858` →
+`formal-p4-2`，`5ZFU-A2JM-4RFW-89SN` → `formal-p4-3`。
+
+打包检查（逐项 `test -f` 或见 `scripts/raceday_preflight.py` 五闸门之一）。
+
 ## 匿名性
 
 提交物全程不得出现学校、姓名、队号、指导教师。官方产出的 `.jlog` / `.json`
