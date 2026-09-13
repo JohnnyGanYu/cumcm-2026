@@ -128,6 +128,40 @@ def scan_identity(text: str) -> list[str]:
     return hits
 
 
+def make_headings_black_centered(docx: Path) -> None:
+    """AI 使用说明排版要求：所有字体纯黑、大标题（Heading1）居中。
+
+    pandoc 默认 reference.docx 给标题/代码/链接灌了主题色（标题蓝 4F81BD、
+    代码绿 007020、链接蓝 4070a0 等），soffice 转 PDF 后出现彩色字体块，
+    不合「打印/纯黑」惯例。这里直接把 styles.xml 与 document.xml 中所有
+    <w:color …/> 置为纯黑 000000，并把大标题段落（第一个 Heading1）加居中。
+    与论文构建互不影响（本函数只作用于 ai_usage_details.docx）。
+    """
+    import zipfile
+
+    tmp = docx.with_suffix(".tmp_black.docx")
+    with zipfile.ZipFile(docx) as zin, \
+            zipfile.ZipFile(tmp, "w", zipfile.ZIP_DEFLATED) as zout:
+        for item in zin.infolist():
+            data = zin.read(item.filename)
+            if item.filename in ("word/styles.xml", "word/document.xml"):
+                txt = data.decode("utf-8")
+                # 所有字体/边框颜色一律纯黑（去掉 themeColor/themeShade 引用）
+                txt = re.sub(r'<w:color[^>]*/>',
+                             '<w:color w:val="000000" />', txt)
+                if item.filename == "word/document.xml":
+                    # 第一个 Heading1 段落：在 pPr 里插入居中
+                    m = re.search(r'<w:p><w:pPr><w:pStyle w:val="Heading1"\s*/>',
+                                  txt)
+                    if m and '<w:jc ' not in m.group(0):
+                        txt = txt.replace(
+                            m.group(0),
+                            m.group(0) + '<w:jc w:val="center" />', 1)
+                data = txt.encode("utf-8")
+            zout.writestr(item, data)
+    tmp.replace(docx)
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--check", action="store_true", help="只做合规检查")
@@ -162,6 +196,9 @@ def main() -> None:
     # 与论文一致：A4 + 2.5 cm 边距。复用论文构建脚本的实现，避免两处逻辑漂移。
     from src.build_paper import enforce_page_setup
     enforce_page_setup(docx)
+
+    # 标题纯黑 + 大标题居中（pandoc 默认 accent1 蓝，不合要求）
+    make_headings_black_centered(docx)
 
     # 规定要求 PDF 格式且文件名固定，soffice 按输入名产出，故先转再改名。
     res = subprocess.run(
