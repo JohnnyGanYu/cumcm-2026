@@ -40,10 +40,10 @@ def test_every_subquestion_is_addressed():
 def test_diameter_circle_answer_is_in_body_not_only_caption():
     """覆盖性结论必须在正文小节里，只写在图注里评审可能判未答。"""
     text = _paper()
-    assert "### 2.2 以定位区域直径为直径的圆不能覆盖该区域" in text, (
+    assert "### 5.2 以定位区域直径为直径的圆不能覆盖该区域" in text, (
         "缺少专门回答直径圆覆盖性的小节"
     )
-    section = text.split("### 2.2")[1].split("### 2.3")[0]
+    section = text.split("### 5.2")[1].split("### 5.3")[0]
     assert "不能" in section and "Jung" in section, (
         "该节须给出否定结论并引用 Jung 定理的紧上界"
     )
@@ -55,8 +55,8 @@ def test_diameter_circle_answer_is_in_body_not_only_caption():
 def test_second_point_region_is_a_region_not_a_parameter():
     """题目要的是区域；只给偏转角与基线长度等于没答。"""
     text = _paper()
-    assert "### 3.3 第二个检测点的候选区域" in text
-    section = text.split("### 3.3")[1].split("### 3.4")[0]
+    assert "### 6.3 第二个检测点的候选区域" in text
+    section = text.split("### 6.3")[1].split("### 6.4")[0]
     for token in ("m²", "格点", "候选区"):
         assert token in section, f"候选区域一节缺少 {token}（须量化面积与范围）"
     assert "in_second_point_region" in section, (
