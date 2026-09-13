@@ -307,6 +307,87 @@ def shrink_code_font(docx: Path, half_points: int = 14) -> None:
     print(f"代码字号已压至 {half_points / 2:g} pt（命中 {changed} 个样式），减少长行折断")
 
 
+def shrink_table_font(docx: Path, sz=17) -> None:
+    """正文表格统一缩至 8.5pt（sz 17 半磅）并收紧行距，缓解表格占版。
+
+    本机表格继承 BodyText 的 10.5pt；19 张表全表缩小可回收约 1-2 页。
+    只作用于 <w:tbl> 内部 run，不动正文主样式。
+    """
+    import zipfile
+
+    tmp = docx.with_suffix(".tmp4.docx")
+    with zipfile.ZipFile(docx) as zin, \
+            zipfile.ZipFile(tmp, "w", zipfile.ZIP_DEFLATED) as zout:
+        for item in zin.infolist():
+            data = zin.read(item.filename)
+            if item.filename != "word/document.xml":
+                zout.writestr(item, data)
+                continue
+            txt = data.decode("utf-8")
+            n = [0]
+
+            def shrink_tbl(m):
+                tbl = m.group(0)
+                # 已有 rPr 的 run：在 rPr 开头插字号
+                tbl = re.sub(r'<w:rPr>',
+                             f'<w:rPr><w:sz w:val="{sz}"/><w:szCs w:val="{sz}"/>',
+                             tbl)
+                # 无 rPr 的 run（<w:r><w:t ...）：补 rPr（仅表格内，oMath 的 m:r 不在此列）
+                tbl = re.sub(r'<w:r><w:t\b', f'<w:r><w:rPr><w:sz w:val="{sz}"/>'
+                                            f'<w:szCs w:val="{sz}"/></w:rPr><w:t', tbl)
+                n[0] += 1
+                return tbl
+
+            # 对每个表格整体处理
+            txt = re.sub(r'<w:tbl>.*?</w:tbl>', shrink_tbl, txt, flags=re.S)
+            data = txt.encode("utf-8")
+            zout.writestr(item, data)
+    tmp.replace(docx)
+    print(f"表格字号: 已缩至 {sz/2}pt（{n[0]} 张表）")
+
+
+def unbold_symbol_table_header(docx: Path) -> None:
+    """表 4-1 符号说明的列名不加粗（自检表要求；Markdown 表头默认加粗）。
+
+    pandoc 对表格表头不加 run 级 <w:b/>，而是用 tblLook w:firstRow="1" 让表格样式
+    对首行做特殊化（reference.docx 的 Table 样式首行默认加粗）。因此对本表格把
+    tblLook 的 firstRow 置 0，并兜底删除 run 级 b 标记。
+    """
+    import zipfile
+
+    tmp = docx.with_suffix(".tmp3.docx")
+    fixed = 0
+    with zipfile.ZipFile(docx) as zin, \
+            zipfile.ZipFile(tmp, "w", zipfile.ZIP_DEFLATED) as zout:
+        for item in zin.infolist():
+            data = zin.read(item.filename)
+            if item.filename != "word/document.xml":
+                zout.writestr(item, data)
+                continue
+            txt = data.decode("utf-8")
+            # 找出含「符号」「含义」「单位」的表格（表 4-1，首个符号表）
+            m = re.search(r'(<w:tbl>.*?</w:tbl>)', txt, flags=re.S)
+            while m:
+                tbl = m.group(1)
+                if "符号" in tbl and "含义" in tbl and "单位" in tbl:
+                    new = re.sub(r'w:firstRow="1"', 'w:firstRow="0"', tbl, count=1)
+                    # 兜底：表头行残留的 run 级加粗也去掉
+                    row_m = re.search(r'(<w:tr\b.*?</w:tr>)', new, flags=re.S)
+                    if row_m:
+                        row = row_m.group(1)
+                        new_row = re.sub(r'<w:b\s*/?>', '', row)
+                        new = new.replace(row, new_row, 1)
+                    if new != tbl:
+                        txt = txt.replace(tbl, new, 1)
+                        fixed += 1
+                    break
+                m = re.search(r'(<w:tbl>.*?</w:tbl>)', txt[m.end():], flags=re.S)
+            data = txt.encode("utf-8")
+            zout.writestr(item, data)
+    tmp.replace(docx)
+    print(f"表 4-1 表头去粗: {'已去除' if fixed else '未命中（检查表格定位条件）'}")
+
+
 def scan_identity(text: str) -> list[str]:
     hits = []
     for pattern, why in IDENTITY_PATTERNS:
@@ -371,6 +452,8 @@ def main() -> None:
     # 故在成品上直接落一次页面设置，并自查生效。
     enforce_page_setup(docx)
     shrink_code_font(docx)
+    shrink_table_font(docx)
+    unbold_symbol_table_header(docx)
     assert_clean_metadata(docx)
     print(f"已生成: {docx}  ({docx.stat().st_size / 1e6:.2f} MB)")
 
