@@ -1,0 +1,238 @@
+{
+  "report": {
+    "episodes": 8,
+    "mean_clear_time_s": 465.4,
+    "virtual_s_mean": 5536.4,
+    "move_m_mean": 21808,
+    "phase_move_m": {
+      "sweep_origin": 0,
+      "walk_ring": 6856,
+      "home_all": 14951,
+      "revive_nearby": 0,
+      "inner_retry": 0,
+      "belief_search": 0,
+      "blind_clear": 0,
+      "other": 0
+    },
+    "phase_time_s": {
+      "sweep_origin": 119,
+      "walk_ring": 2086,
+      "home_all": 3331,
+      "revive_nearby": 0,
+      "inner_retry": 0,
+      "belief_search": 0,
+      "blind_clear": 0,
+      "other": 0
+    },
+    "phase_time_share": {
+      "sweep_origin": 0.0215,
+      "walk_ring": 0.3768,
+      "home_all": 0.6017,
+      "revive_nearby": 0.0,
+      "inner_retry": 0.0,
+      "belief_search": 0.0,
+      "blind_clear": 0.0,
+      "other": 0.0
+    },
+    "calls_mean": {
+      "home_all:clear": 14.5,
+      "home_all:measure": 52.4,
+      "sweep_origin:measure": 20.0,
+      "walk_ring:measure": 119.1
+    }
+  },
+  "rows": [
+    {
+      "seed": 5000,
+      "cleared": 11,
+      "total": 11,
+      "mean_clear_time_s": 462.7530801818182,
+      "virtual_s": 5090.283882,
+      "move_m": 19571.419397952945,
+      "by_phase_move_m": {
+        "sweep_origin": 0,
+        "home_all": 12840,
+        "walk_ring": 6731
+      },
+      "by_phase_time_s": {
+        "sweep_origin": 119,
+        "home_all": 2869,
+        "walk_ring": 2102
+      },
+      "calls": {
+        "sweep_origin:measure": 20,
+        "home_all:measure": 47,
+        "home_all:clear": 11,
+        "walk_ring:measure": 126
+      }
+    },
+    {
+      "seed": 5001,
+      "cleared": 14,
+      "total": 14,
+      "mean_clear_time_s": 419.7140213571429,
+      "virtual_s": 5875.996299,
+      "move_m": 23819.981470003393,
+      "by_phase_move_m": {
+        "sweep_origin": 0,
+        "home_all": 18325,
+        "walk_ring": 5495
+      },
+      "by_phase_time_s": {
+        "sweep_origin": 119,
+        "home_all": 4064,
+        "walk_ring": 1693
+      },
+      "calls": {
+        "sweep_origin:measure": 20,
+        "home_all:measure": 63,
+        "home_all:clear": 14,
+        "walk_ring:measure": 99
+      }
+    },
+    {
+      "seed": 5002,
+      "cleared": 15,
+      "total": 15,
+      "mean_clear_time_s": 403.0617536666667,
+      "virtual_s": 6045.926305,
+      "move_m": 25104.631504636527,
+      "by_phase_move_m": {
+        "sweep_origin": 0,
+        "home_all": 18206,
+        "walk_ring": 6898
+      },
+      "by_phase_time_s": {
+        "sweep_origin": 119,
+        "home_all": 4061,
+        "walk_ring": 1866
+      },
+      "calls": {
+        "sweep_origin:measure": 20,
+        "home_all:measure": 66,
+        "home_all:clear": 15,
+        "walk_ring:measure": 81
+      }
+    },
+    {
+      "seed": 5003,
+      "cleared": 11,
+      "total": 11,
+      "mean_clear_time_s": 527.705268090909,
+      "virtual_s": 5804.757949,
+      "move_m": 22398.789715202238,
+      "by_phase_move_m": {
+        "sweep_origin": 0,
+        "home_all": 15324,
+        "walk_ring": 7075
+      },
+      "by_phase_time_s": {
+        "sweep_origin": 119,
+        "home_all": 3425,
+        "walk_ring": 2261
+      },
+      "calls": {
+        "sweep_origin:measure": 20,
+        "home_all:measure": 47,
+        "home_all:clear": 31,
+        "walk_ring:measure": 141
+      }
+    },
+    {
+      "seed": 5004,
+      "cleared": 12,
+      "total": 12,
+      "mean_clear_time_s": 460.09557674999996,
+      "virtual_s": 5521.146921,
+      "move_m": 21515.734608472572,
+      "by_phase_move_m": {
+        "sweep_origin": 0,
+        "home_all": 13996,
+        "walk_ring": 7520
+      },
+      "by_phase_time_s": {
+        "sweep_origin": 119,
+        "home_all": 3136,
+        "walk_ring": 2266
+      },
+      "calls": {
+        "sweep_origin:measure": 20,
+        "home_all:measure": 53,
+        "home_all:clear": 12,
+        "walk_ring:measure": 127
+      }
+    },
+    {
+      "seed": 5005,
+      "cleared": 11,
+      "total": 11,
+      "mean_clear_time_s": 429.2651149090909,
+      "virtual_s": 4721.916264,
+      "move_m": 17549.581312660168,
+      "by_phase_move_m": {
+        "sweep_origin": 0,
+        "home_all": 10584,
+        "walk_ring": 6966
+      },
+      "by_phase_time_s": {
+        "sweep_origin": 119,
+        "home_all": 2388,
+        "walk_ring": 2215
+      },
+      "calls": {
+        "sweep_origin:measure": 20,
+        "home_all:measure": 41,
+        "home_all:clear": 11,
+        "walk_ring:measure": 137
+      }
+    },
+    {
+      "seed": 5006,
+      "cleared": 11,
+      "total": 11,
+      "mean_clear_time_s": 540.3437379090909,
+      "virtual_s": 5943.781117,
+      "move_m": 23853.905571096635,
+      "by_phase_move_m": {
+        "sweep_origin": 0,
+        "home_all": 16855,
+        "walk_ring": 6999
+      },
+      "by_phase_time_s": {
+        "sweep_origin": 119,
+        "home_all": 3717,
+        "walk_ring": 2108
+      },
+      "calls": {
+        "sweep_origin:measure": 20,
+        "home_all:measure": 56,
+        "home_all:clear": 11,
+        "walk_ring:measure": 118
+      }
+    },
+    {
+      "seed": 5007,
+      "cleared": 11,
+      "total": 11,
+      "mean_clear_time_s": 480.66001981818187,
+      "virtual_s": 5287.260218,
+      "move_m": 20646.301085032705,
+      "by_phase_move_m": {
+        "sweep_origin": 0,
+        "home_all": 13480,
+        "walk_ring": 7167
+      },
+      "by_phase_time_s": {
+        "sweep_origin": 119,
+        "home_all": 2991,
+        "walk_ring": 2177
+      },
+      "calls": {
+        "sweep_origin:measure": 20,
+        "home_all:measure": 46,
+        "home_all:clear": 11,
+        "walk_ring:measure": 124
+      }
+    }
+  ]
+}

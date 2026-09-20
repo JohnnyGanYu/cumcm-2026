@@ -1,0 +1,50 @@
+{
+ "config": {
+  "episodes": 60,
+  "seed_start": 5000,
+  "directional": 0,
+  "count": null,
+  "real_limit_s": 1200.0,
+  "strategy": {
+   "sweep_origin": true,
+   "probe_ring_radius": 1250.0,
+   "probe_ring_stations": 12,
+   "outer_ring_radius": 1560.0,
+   "outer_ring_stations": 14,
+   "use_outer_ring": false,
+   "directional_ring_stations": 18,
+   "dogleg_offset_deg": 32.0,
+   "dogleg_length_m": 380.0,
+   "approach_fraction": 0.62,
+   "lateral_fraction": 0.16,
+   "clear_distance_m": 55.0,
+   "spiral_radius_m": 15.0,
+   "spiral_points": 6,
+   "max_measures_per_channel": 40,
+   "max_homing_measures": 14,
+   "max_clear_attempts": 9,
+   "real_time_reserve_s": 15.0,
+   "virtual_time_budget_s": 324000.0,
+   "directional_probe": false
+  }
+ },
+ "summary": {
+  "episodes": 60,
+  "full_clear_episodes": 60,
+  "full_clear_rate": 1.0,
+  "cleared_ratio_mean": 1.0,
+  "cleared_ratio_min": 1.0,
+  "mean_clear_time_s_mean": 464.28,
+  "mean_clear_time_s_max": 632.43,
+  "total_virtual_time_s_mean": 5866.3,
+  "total_virtual_time_s_max": 7590.8,
+  "program_wall_s_mean": 0.64,
+  "program_wall_s_max": 0.68
+ },
+ "episodes": [],
+ "_stripped_episodes": {
+  "original_count": 60,
+  "kept_with_issues": 0,
+  "note": "逐局明细已剥离控体积；只留有漏失/报错的条目，聚合字段未动"
+ }
+}

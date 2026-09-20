@@ -1,0 +1,152 @@
+{
+  "config": {
+    "plan": "paired",
+    "variants": "baseline,r1_raygap",
+    "episodes": 200,
+    "seed_start": 7000,
+    "directional": 5,
+    "count": null,
+    "workers": 4,
+    "out": "results/b_miss_paired_d5.json"
+  },
+  "paired": {
+    "baseline": {
+      "paired_episodes": 200,
+      "clear_rate_raw": "2595/2599",
+      "clear_rate": 0.99846,
+      "full_clear_episodes": 196,
+      "d_cleared_sources": 0,
+      "metric_mean_s": 1203.0,
+      "d_metric_s": 0.0,
+      "d_metric_pct": 0.0,
+      "better_episodes": 0,
+      "worse_episodes": 0,
+      "measure_calls_mean": 469.9,
+      "clear_calls_mean": 20.2,
+      "still_missed": [
+        [
+          5,
+          7047,
+          15
+        ],
+        [
+          5,
+          7053,
+          18
+        ],
+        [
+          5,
+          7126,
+          4
+        ],
+        [
+          5,
+          7171,
+          13
+        ]
+      ]
+    },
+    "r1_raygap": {
+      "paired_episodes": 200,
+      "clear_rate_raw": "2598/2599",
+      "clear_rate": 0.99962,
+      "full_clear_episodes": 199,
+      "d_cleared_sources": 3,
+      "metric_mean_s": 1198.1,
+      "d_metric_s": -5.0,
+      "d_metric_pct": -0.41,
+      "better_episodes": 70,
+      "worse_episodes": 97,
+      "measure_calls_mean": 446.2,
+      "clear_calls_mean": 43.9,
+      "still_missed": [
+        [
+          5,
+          7126,
+          4
+        ]
+      ]
+    }
+  },
+  "aggregate": {
+    "baseline": {
+      "episodes": 200,
+      "errors": [],
+      "error_count": 0,
+      "sources": 2599,
+      "cleared": 2595,
+      "clear_rate_raw": "2595/2599",
+      "clear_rate": 0.99846,
+      "missed": 4,
+      "cause_distribution": {
+        "C_homing_failed": 3,
+        "B1_layout_gap": 1
+      },
+      "u_hard_bound_sources": 2599,
+      "u_hard_bound_raw": "2599/2599",
+      "missed_with_u_hard": 4,
+      "missed_with_u_layout": 1,
+      "missed_with_u_traj": 3,
+      "gap_to_hard_bound_sources": 4,
+      "gap_to_hard_bound_pct": 0.1539,
+      "mean_clear_time_s": 1203.0
+    },
+    "r1_raygap": {
+      "episodes": 200,
+      "errors": [],
+      "error_count": 0,
+      "sources": 2599,
+      "cleared": 2598,
+      "clear_rate_raw": "2598/2599",
+      "clear_rate": 0.99962,
+      "missed": 1,
+      "cause_distribution": {
+        "B1_layout_gap": 1
+      },
+      "u_hard_bound_sources": 2599,
+      "u_hard_bound_raw": "2599/2599",
+      "missed_with_u_hard": 1,
+      "missed_with_u_layout": 0,
+      "missed_with_u_traj": 0,
+      "gap_to_hard_bound_sources": 1,
+      "gap_to_hard_bound_pct": 0.0385,
+      "mean_clear_time_s": 1198.1
+    }
+  },
+  "rows": {
+    "_stripped": true,
+    "n": 400,
+    "_note": "逐局明细已剥离以控体积，可用同名脚本复现",
+    "sample": [
+      {
+        "seed": 7000,
+        "directional": 5,
+        "total": 12,
+        "cleared": 12,
+        "mean_clear_time_s": 1245.0,
+        "virtual_s": 14939.9,
+        "measure_calls": 455,
+        "clear_calls": 12,
+        "missed_channels": [],
+        "budget_hit": false,
+        "missed_detail": [],
+        "variant": "baseline"
+      },
+      {
+        "seed": 7002,
+        "directional": 5,
+        "total": 14,
+        "cleared": 14,
+        "mean_clear_time_s": 1121.0,
+        "virtual_s": 15693.4,
+        "measure_calls": 450,
+        "clear_calls": 14,
+        "missed_channels": [],
+        "budget_hit": false,
+        "missed_detail": [],
+        "variant": "baseline"
+      }
+    ]
+  },
+  "elapsed_s": 304.7
+}

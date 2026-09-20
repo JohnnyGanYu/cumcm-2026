@@ -1,0 +1,131 @@
+{
+  "meta": {
+    "episodes": 3,
+    "seed_start": 20000,
+    "directional": 0
+  },
+  "episodes": [
+    {
+      "seed": 20000,
+      "total_jammers": 13,
+      "cleared": 13,
+      "cleared_ratio": 1.0,
+      "total_virtual_time_s": 6051.23986,
+      "mean_clear_time_s": 465.4799892307692,
+      "measure_calls": 185,
+      "clear_calls": 13,
+      "move_distance_m": 24616.19928250174,
+      "records": 66,
+      "missed_channels": [],
+      "wall_s": 0.64
+    },
+    {
+      "seed": 20001,
+      "total_jammers": 12,
+      "cleared": 12,
+      "cleared_ratio": 1.0,
+      "total_virtual_time_s": 5370.508686,
+      "mean_clear_time_s": 447.5423905,
+      "measure_calls": 199,
+      "clear_calls": 12,
+      "move_distance_m": 20772.54341236378,
+      "records": 60,
+      "missed_channels": [],
+      "wall_s": 0.64
+    },
+    {
+      "seed": 20002,
+      "total_jammers": 12,
+      "cleared": 12,
+      "cleared_ratio": 1.0,
+      "total_virtual_time_s": 5237.086221,
+      "mean_clear_time_s": 436.42385175,
+      "measure_calls": 192,
+      "clear_calls": 12,
+      "move_distance_m": 20315.43106323439,
+      "records": 59,
+      "missed_channels": [],
+      "wall_s": 0.64
+    }
+  ],
+  "records": {
+    "_stripped": true,
+    "n": 185,
+    "_note": "逐局明细已剥离以控体积，可用同名脚本复现",
+    "sample": [
+      {
+        "seed": 20000,
+        "kind": "estimate",
+        "channel": 6,
+        "directional": false,
+        "truth": [
+          538.1117436704839,
+          -98.11527241091507
+        ],
+        "reception_radius_m": 1219.4583921678648,
+        "bearings": [
+          [
+            0.0,
+            0.0,
+            349.58
+          ],
+          [
+            353.36387300117303,
+            139.76399127676214,
+            307.43
+          ]
+        ],
+        "estimate": [
+          536.2315011671827,
+          -98.94940303181501
+        ],
+        "reported_diameter": 41.34625472460658,
+        "dog_pos": [
+          353.36387300117303,
+          139.76399127676214
+        ],
+        "n_bearings": 2,
+        "n_silent": 0
+      },
+      {
+        "seed": 20000,
+        "kind": "estimate",
+        "channel": 6,
+        "directional": false,
+        "truth": [
+          538.1117436704839,
+          -98.11527241091507
+        ],
+        "reception_radius_m": 1219.4583921678648,
+        "bearings": [
+          [
+            0.0,
+            0.0,
+            349.58
+          ],
+          [
+            353.36387300117303,
+            139.76399127676214,
+            307.43
+          ],
+          [
+            504.9359455534714,
+            21.02050731200585,
+            286.35
+          ]
+        ],
+        "estimate": [
+          540.8106893181553,
+          -101.75528789671918
+        ],
+        "reported_diameter": 23.362450556386346,
+        "dog_pos": [
+          504.9359455534714,
+          21.02050731200585
+        ],
+        "n_bearings": 3,
+        "n_silent": 0
+      }
+    ]
+  }
+}

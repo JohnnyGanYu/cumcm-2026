@@ -1,0 +1,198 @@
+{
+  "method": "Evaluate every true source against each complete fixed station set including origin using Arena Jammer.covers and reception radius. No strategy episodes executed. This is generator-distribution coverage comparison, not performance validation and not a continuous geometric guarantee.",
+  "seed_start": 263112001,
+  "seed_end": 263122000,
+  "case_count": 10000,
+  "total_source_count": 160000,
+  "total_per_case": 16,
+  "directional_per_case": 16,
+  "configurations": {
+    "baseline": {
+      "inner_radius": 950,
+      "inner_count": 6,
+      "outer_radius": 1900,
+      "outer_count": 14,
+      "outer_phase_deg": 0
+    },
+    "full1850": {
+      "inner_radius": 950,
+      "inner_count": 6,
+      "outer_radius": 1850,
+      "outer_count": 14,
+      "outer_phase_deg": 0
+    },
+    "layout19": {
+      "inner_radius": 1000,
+      "inner_count": 6,
+      "outer_radius": 1870,
+      "outer_count": 12,
+      "outer_phase_deg": 15
+    },
+    "layout20": {
+      "inner_radius": 1000,
+      "inner_count": 7,
+      "outer_radius": 1870,
+      "outer_count": 12,
+      "outer_phase_deg": 15
+    }
+  },
+  "arena_sha256": "618113bcab45950d766ff7c70fcd98a294b0f895deeae3888f1277e1f8dc5335",
+  "elapsed_s": 11.09023599998909,
+  "metrics": {
+    "baseline": {
+      "covered_sources": 159992,
+      "uncovered_sources": 8,
+      "fully_covered_cases": 9992,
+      "miss_cases": 8,
+      "receptions": 442580,
+      "max_missed_per_case": 1,
+      "miss_examples": [
+        {
+          "seed": 263112589,
+          "channels": [
+            16
+          ]
+        },
+        {
+          "seed": 263113578,
+          "channels": [
+            12
+          ]
+        },
+        {
+          "seed": 263114067,
+          "channels": [
+            8
+          ]
+        },
+        {
+          "seed": 263115250,
+          "channels": [
+            9
+          ]
+        },
+        {
+          "seed": 263115476,
+          "channels": [
+            19
+          ]
+        },
+        {
+          "seed": 263116477,
+          "channels": [
+            13
+          ]
+        },
+        {
+          "seed": 263117961,
+          "channels": [
+            7
+          ]
+        },
+        {
+          "seed": 263119872,
+          "channels": [
+            4
+          ]
+        }
+      ],
+      "source_coverage_rate": 0.99995,
+      "full_fixed_layout_coverage_rate": 0.9992,
+      "mean_visible_stations_per_source": 2.766125
+    },
+    "full1850": {
+      "covered_sources": 159999,
+      "uncovered_sources": 1,
+      "fully_covered_cases": 9999,
+      "miss_cases": 1,
+      "receptions": 455196,
+      "max_missed_per_case": 1,
+      "miss_examples": [
+        {
+          "seed": 263112589,
+          "channels": [
+            16
+          ]
+        }
+      ],
+      "source_coverage_rate": 0.99999375,
+      "full_fixed_layout_coverage_rate": 0.9999,
+      "mean_visible_stations_per_source": 2.844975
+    },
+    "layout19": {
+      "covered_sources": 159996,
+      "uncovered_sources": 4,
+      "fully_covered_cases": 9996,
+      "miss_cases": 4,
+      "receptions": 414391,
+      "max_missed_per_case": 1,
+      "miss_examples": [
+        {
+          "seed": 263116200,
+          "channels": [
+            13
+          ]
+        },
+        {
+          "seed": 263116391,
+          "channels": [
+            11
+          ]
+        },
+        {
+          "seed": 263116696,
+          "channels": [
+            12
+          ]
+        },
+        {
+          "seed": 263116862,
+          "channels": [
+            5
+          ]
+        }
+      ],
+      "source_coverage_rate": 0.999975,
+      "full_fixed_layout_coverage_rate": 0.9996,
+      "mean_visible_stations_per_source": 2.58994375
+    },
+    "layout20": {
+      "covered_sources": 160000,
+      "uncovered_sources": 0,
+      "fully_covered_cases": 10000,
+      "miss_cases": 0,
+      "receptions": 446432,
+      "max_missed_per_case": 0,
+      "miss_examples": [],
+      "source_coverage_rate": 1.0,
+      "full_fixed_layout_coverage_rate": 1.0,
+      "mean_visible_stations_per_source": 2.7902
+    }
+  },
+  "paired_to_baseline": {
+    "full1850": {
+      "covered_by_baseline_missed_by_variant": 0,
+      "missed_by_baseline_covered_by_variant": 7,
+      "cases_with_any_source_coverage_regression": 0,
+      "cases_with_any_source_coverage_rescue": 7,
+      "full_baseline_to_incomplete_variant": 0,
+      "incomplete_baseline_to_full_variant": 7
+    },
+    "layout19": {
+      "covered_by_baseline_missed_by_variant": 4,
+      "missed_by_baseline_covered_by_variant": 8,
+      "cases_with_any_source_coverage_regression": 4,
+      "cases_with_any_source_coverage_rescue": 8,
+      "full_baseline_to_incomplete_variant": 4,
+      "incomplete_baseline_to_full_variant": 8
+    },
+    "layout20": {
+      "covered_by_baseline_missed_by_variant": 0,
+      "missed_by_baseline_covered_by_variant": 8,
+      "cases_with_any_source_coverage_regression": 0,
+      "cases_with_any_source_coverage_rescue": 8,
+      "full_baseline_to_incomplete_variant": 0,
+      "incomplete_baseline_to_full_variant": 8
+    }
+  }
+}

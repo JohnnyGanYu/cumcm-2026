@@ -1,0 +1,40 @@
+{
+  "phase": "independent holdout, fixed before execution",
+  "seeds": [
+    261212001,
+    261212002,
+    261212003,
+    261212004,
+    261212005,
+    261212006,
+    261212007,
+    261212008,
+    261212009,
+    261212010,
+    261212011,
+    261212012,
+    261212013,
+    261212014,
+    261212015,
+    261212016
+  ],
+  "directional_counts": [
+    5,
+    10,
+    16
+  ],
+  "episodes_per_arm": 48,
+  "arms": [
+    "baseline",
+    "candidate"
+  ],
+  "primary_metric": "arithmetic mean of episode virtual time / cleared count",
+  "secondary_metric": "pooled total virtual time / total cleared",
+  "acceptance": "candidate must clear every source in all 48 episodes; report time without discarding failures",
+  "physics_unchanged": true,
+  "sha256": {
+    "src/b_sim/q4_fast.py": "700dc2f086970a77e426a549beaed7e489c8d1b1e697c17a4d414355a22b851b",
+    "src/b_sim/strategy.py": "c8d1ebfdfc67563d801a958285e18dc5642f92fb1abc035242b4854bcdcdf08d",
+    "src/b_sim/arena.py": "618113bcab45950d766ff7c70fcd98a294b0f895deeae3888f1277e1f8dc5335"
+  }
+}

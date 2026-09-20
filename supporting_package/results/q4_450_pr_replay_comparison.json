@@ -1,0 +1,751 @@
+{
+  "original_path": "results/q4_450_final_validation.json",
+  "replay_path": "results/q4_450_pr_candidate_replay.json",
+  "comparison": "exact equality of decoded JSON values; wall-clock runtime excluded",
+  "fields": [
+    "cleared",
+    "total_virtual_time_s",
+    "mean_clear_time_s",
+    "measure_calls",
+    "clear_calls",
+    "move_distance_m"
+  ],
+  "expected_cases": 48,
+  "original_candidate_records": 48,
+  "replay_records": 48,
+  "replay_expected_records": 48,
+  "replay_completed_records": 48,
+  "replay_source_unchanged": true,
+  "replay_errors": 0,
+  "matched_cases": 48,
+  "field_matched_cases": {
+    "cleared": 48,
+    "total_virtual_time_s": 48,
+    "mean_clear_time_s": 48,
+    "measure_calls": 48,
+    "clear_calls": 48,
+    "move_distance_m": 48
+  },
+  "cases": [
+    {
+      "seed": 261212101,
+      "directional": 5,
+      "variant": "candidate",
+      "matched": true,
+      "field_matches": {
+        "cleared": true,
+        "total_virtual_time_s": true,
+        "mean_clear_time_s": true,
+        "measure_calls": true,
+        "clear_calls": true,
+        "move_distance_m": true
+      },
+      "differences": {}
+    },
+    {
+      "seed": 261212101,
+      "directional": 10,
+      "variant": "candidate",
+      "matched": true,
+      "field_matches": {
+        "cleared": true,
+        "total_virtual_time_s": true,
+        "mean_clear_time_s": true,
+        "measure_calls": true,
+        "clear_calls": true,
+        "move_distance_m": true
+      },
+      "differences": {}
+    },
+    {
+      "seed": 261212101,
+      "directional": 16,
+      "variant": "candidate",
+      "matched": true,
+      "field_matches": {
+        "cleared": true,
+        "total_virtual_time_s": true,
+        "mean_clear_time_s": true,
+        "measure_calls": true,
+        "clear_calls": true,
+        "move_distance_m": true
+      },
+      "differences": {}
+    },
+    {
+      "seed": 261212102,
+      "directional": 5,
+      "variant": "candidate",
+      "matched": true,
+      "field_matches": {
+        "cleared": true,
+        "total_virtual_time_s": true,
+        "mean_clear_time_s": true,
+        "measure_calls": true,
+        "clear_calls": true,
+        "move_distance_m": true
+      },
+      "differences": {}
+    },
+    {
+      "seed": 261212102,
+      "directional": 10,
+      "variant": "candidate",
+      "matched": true,
+      "field_matches": {
+        "cleared": true,
+        "total_virtual_time_s": true,
+        "mean_clear_time_s": true,
+        "measure_calls": true,
+        "clear_calls": true,
+        "move_distance_m": true
+      },
+      "differences": {}
+    },
+    {
+      "seed": 261212102,
+      "directional": 16,
+      "variant": "candidate",
+      "matched": true,
+      "field_matches": {
+        "cleared": true,
+        "total_virtual_time_s": true,
+        "mean_clear_time_s": true,
+        "measure_calls": true,
+        "clear_calls": true,
+        "move_distance_m": true
+      },
+      "differences": {}
+    },
+    {
+      "seed": 261212103,
+      "directional": 5,
+      "variant": "candidate",
+      "matched": true,
+      "field_matches": {
+        "cleared": true,
+        "total_virtual_time_s": true,
+        "mean_clear_time_s": true,
+        "measure_calls": true,
+        "clear_calls": true,
+        "move_distance_m": true
+      },
+      "differences": {}
+    },
+    {
+      "seed": 261212103,
+      "directional": 10,
+      "variant": "candidate",
+      "matched": true,
+      "field_matches": {
+        "cleared": true,
+        "total_virtual_time_s": true,
+        "mean_clear_time_s": true,
+        "measure_calls": true,
+        "clear_calls": true,
+        "move_distance_m": true
+      },
+      "differences": {}
+    },
+    {
+      "seed": 261212103,
+      "directional": 16,
+      "variant": "candidate",
+      "matched": true,
+      "field_matches": {
+        "cleared": true,
+        "total_virtual_time_s": true,
+        "mean_clear_time_s": true,
+        "measure_calls": true,
+        "clear_calls": true,
+        "move_distance_m": true
+      },
+      "differences": {}
+    },
+    {
+      "seed": 261212104,
+      "directional": 5,
+      "variant": "candidate",
+      "matched": true,
+      "field_matches": {
+        "cleared": true,
+        "total_virtual_time_s": true,
+        "mean_clear_time_s": true,
+        "measure_calls": true,
+        "clear_calls": true,
+        "move_distance_m": true
+      },
+      "differences": {}
+    },
+    {
+      "seed": 261212104,
+      "directional": 10,
+      "variant": "candidate",
+      "matched": true,
+      "field_matches": {
+        "cleared": true,
+        "total_virtual_time_s": true,
+        "mean_clear_time_s": true,
+        "measure_calls": true,
+        "clear_calls": true,
+        "move_distance_m": true
+      },
+      "differences": {}
+    },
+    {
+      "seed": 261212104,
+      "directional": 16,
+      "variant": "candidate",
+      "matched": true,
+      "field_matches": {
+        "cleared": true,
+        "total_virtual_time_s": true,
+        "mean_clear_time_s": true,
+        "measure_calls": true,
+        "clear_calls": true,
+        "move_distance_m": true
+      },
+      "differences": {}
+    },
+    {
+      "seed": 261212105,
+      "directional": 5,
+      "variant": "candidate",
+      "matched": true,
+      "field_matches": {
+        "cleared": true,
+        "total_virtual_time_s": true,
+        "mean_clear_time_s": true,
+        "measure_calls": true,
+        "clear_calls": true,
+        "move_distance_m": true
+      },
+      "differences": {}
+    },
+    {
+      "seed": 261212105,
+      "directional": 10,
+      "variant": "candidate",
+      "matched": true,
+      "field_matches": {
+        "cleared": true,
+        "total_virtual_time_s": true,
+        "mean_clear_time_s": true,
+        "measure_calls": true,
+        "clear_calls": true,
+        "move_distance_m": true
+      },
+      "differences": {}
+    },
+    {
+      "seed": 261212105,
+      "directional": 16,
+      "variant": "candidate",
+      "matched": true,
+      "field_matches": {
+        "cleared": true,
+        "total_virtual_time_s": true,
+        "mean_clear_time_s": true,
+        "measure_calls": true,
+        "clear_calls": true,
+        "move_distance_m": true
+      },
+      "differences": {}
+    },
+    {
+      "seed": 261212106,
+      "directional": 5,
+      "variant": "candidate",
+      "matched": true,
+      "field_matches": {
+        "cleared": true,
+        "total_virtual_time_s": true,
+        "mean_clear_time_s": true,
+        "measure_calls": true,
+        "clear_calls": true,
+        "move_distance_m": true
+      },
+      "differences": {}
+    },
+    {
+      "seed": 261212106,
+      "directional": 10,
+      "variant": "candidate",
+      "matched": true,
+      "field_matches": {
+        "cleared": true,
+        "total_virtual_time_s": true,
+        "mean_clear_time_s": true,
+        "measure_calls": true,
+        "clear_calls": true,
+        "move_distance_m": true
+      },
+      "differences": {}
+    },
+    {
+      "seed": 261212106,
+      "directional": 16,
+      "variant": "candidate",
+      "matched": true,
+      "field_matches": {
+        "cleared": true,
+        "total_virtual_time_s": true,
+        "mean_clear_time_s": true,
+        "measure_calls": true,
+        "clear_calls": true,
+        "move_distance_m": true
+      },
+      "differences": {}
+    },
+    {
+      "seed": 261212107,
+      "directional": 5,
+      "variant": "candidate",
+      "matched": true,
+      "field_matches": {
+        "cleared": true,
+        "total_virtual_time_s": true,
+        "mean_clear_time_s": true,
+        "measure_calls": true,
+        "clear_calls": true,
+        "move_distance_m": true
+      },
+      "differences": {}
+    },
+    {
+      "seed": 261212107,
+      "directional": 10,
+      "variant": "candidate",
+      "matched": true,
+      "field_matches": {
+        "cleared": true,
+        "total_virtual_time_s": true,
+        "mean_clear_time_s": true,
+        "measure_calls": true,
+        "clear_calls": true,
+        "move_distance_m": true
+      },
+      "differences": {}
+    },
+    {
+      "seed": 261212107,
+      "directional": 16,
+      "variant": "candidate",
+      "matched": true,
+      "field_matches": {
+        "cleared": true,
+        "total_virtual_time_s": true,
+        "mean_clear_time_s": true,
+        "measure_calls": true,
+        "clear_calls": true,
+        "move_distance_m": true
+      },
+      "differences": {}
+    },
+    {
+      "seed": 261212108,
+      "directional": 5,
+      "variant": "candidate",
+      "matched": true,
+      "field_matches": {
+        "cleared": true,
+        "total_virtual_time_s": true,
+        "mean_clear_time_s": true,
+        "measure_calls": true,
+        "clear_calls": true,
+        "move_distance_m": true
+      },
+      "differences": {}
+    },
+    {
+      "seed": 261212108,
+      "directional": 10,
+      "variant": "candidate",
+      "matched": true,
+      "field_matches": {
+        "cleared": true,
+        "total_virtual_time_s": true,
+        "mean_clear_time_s": true,
+        "measure_calls": true,
+        "clear_calls": true,
+        "move_distance_m": true
+      },
+      "differences": {}
+    },
+    {
+      "seed": 261212108,
+      "directional": 16,
+      "variant": "candidate",
+      "matched": true,
+      "field_matches": {
+        "cleared": true,
+        "total_virtual_time_s": true,
+        "mean_clear_time_s": true,
+        "measure_calls": true,
+        "clear_calls": true,
+        "move_distance_m": true
+      },
+      "differences": {}
+    },
+    {
+      "seed": 261212109,
+      "directional": 5,
+      "variant": "candidate",
+      "matched": true,
+      "field_matches": {
+        "cleared": true,
+        "total_virtual_time_s": true,
+        "mean_clear_time_s": true,
+        "measure_calls": true,
+        "clear_calls": true,
+        "move_distance_m": true
+      },
+      "differences": {}
+    },
+    {
+      "seed": 261212109,
+      "directional": 10,
+      "variant": "candidate",
+      "matched": true,
+      "field_matches": {
+        "cleared": true,
+        "total_virtual_time_s": true,
+        "mean_clear_time_s": true,
+        "measure_calls": true,
+        "clear_calls": true,
+        "move_distance_m": true
+      },
+      "differences": {}
+    },
+    {
+      "seed": 261212109,
+      "directional": 16,
+      "variant": "candidate",
+      "matched": true,
+      "field_matches": {
+        "cleared": true,
+        "total_virtual_time_s": true,
+        "mean_clear_time_s": true,
+        "measure_calls": true,
+        "clear_calls": true,
+        "move_distance_m": true
+      },
+      "differences": {}
+    },
+    {
+      "seed": 261212110,
+      "directional": 5,
+      "variant": "candidate",
+      "matched": true,
+      "field_matches": {
+        "cleared": true,
+        "total_virtual_time_s": true,
+        "mean_clear_time_s": true,
+        "measure_calls": true,
+        "clear_calls": true,
+        "move_distance_m": true
+      },
+      "differences": {}
+    },
+    {
+      "seed": 261212110,
+      "directional": 10,
+      "variant": "candidate",
+      "matched": true,
+      "field_matches": {
+        "cleared": true,
+        "total_virtual_time_s": true,
+        "mean_clear_time_s": true,
+        "measure_calls": true,
+        "clear_calls": true,
+        "move_distance_m": true
+      },
+      "differences": {}
+    },
+    {
+      "seed": 261212110,
+      "directional": 16,
+      "variant": "candidate",
+      "matched": true,
+      "field_matches": {
+        "cleared": true,
+        "total_virtual_time_s": true,
+        "mean_clear_time_s": true,
+        "measure_calls": true,
+        "clear_calls": true,
+        "move_distance_m": true
+      },
+      "differences": {}
+    },
+    {
+      "seed": 261212111,
+      "directional": 5,
+      "variant": "candidate",
+      "matched": true,
+      "field_matches": {
+        "cleared": true,
+        "total_virtual_time_s": true,
+        "mean_clear_time_s": true,
+        "measure_calls": true,
+        "clear_calls": true,
+        "move_distance_m": true
+      },
+      "differences": {}
+    },
+    {
+      "seed": 261212111,
+      "directional": 10,
+      "variant": "candidate",
+      "matched": true,
+      "field_matches": {
+        "cleared": true,
+        "total_virtual_time_s": true,
+        "mean_clear_time_s": true,
+        "measure_calls": true,
+        "clear_calls": true,
+        "move_distance_m": true
+      },
+      "differences": {}
+    },
+    {
+      "seed": 261212111,
+      "directional": 16,
+      "variant": "candidate",
+      "matched": true,
+      "field_matches": {
+        "cleared": true,
+        "total_virtual_time_s": true,
+        "mean_clear_time_s": true,
+        "measure_calls": true,
+        "clear_calls": true,
+        "move_distance_m": true
+      },
+      "differences": {}
+    },
+    {
+      "seed": 261212112,
+      "directional": 5,
+      "variant": "candidate",
+      "matched": true,
+      "field_matches": {
+        "cleared": true,
+        "total_virtual_time_s": true,
+        "mean_clear_time_s": true,
+        "measure_calls": true,
+        "clear_calls": true,
+        "move_distance_m": true
+      },
+      "differences": {}
+    },
+    {
+      "seed": 261212112,
+      "directional": 10,
+      "variant": "candidate",
+      "matched": true,
+      "field_matches": {
+        "cleared": true,
+        "total_virtual_time_s": true,
+        "mean_clear_time_s": true,
+        "measure_calls": true,
+        "clear_calls": true,
+        "move_distance_m": true
+      },
+      "differences": {}
+    },
+    {
+      "seed": 261212112,
+      "directional": 16,
+      "variant": "candidate",
+      "matched": true,
+      "field_matches": {
+        "cleared": true,
+        "total_virtual_time_s": true,
+        "mean_clear_time_s": true,
+        "measure_calls": true,
+        "clear_calls": true,
+        "move_distance_m": true
+      },
+      "differences": {}
+    },
+    {
+      "seed": 261212113,
+      "directional": 5,
+      "variant": "candidate",
+      "matched": true,
+      "field_matches": {
+        "cleared": true,
+        "total_virtual_time_s": true,
+        "mean_clear_time_s": true,
+        "measure_calls": true,
+        "clear_calls": true,
+        "move_distance_m": true
+      },
+      "differences": {}
+    },
+    {
+      "seed": 261212113,
+      "directional": 10,
+      "variant": "candidate",
+      "matched": true,
+      "field_matches": {
+        "cleared": true,
+        "total_virtual_time_s": true,
+        "mean_clear_time_s": true,
+        "measure_calls": true,
+        "clear_calls": true,
+        "move_distance_m": true
+      },
+      "differences": {}
+    },
+    {
+      "seed": 261212113,
+      "directional": 16,
+      "variant": "candidate",
+      "matched": true,
+      "field_matches": {
+        "cleared": true,
+        "total_virtual_time_s": true,
+        "mean_clear_time_s": true,
+        "measure_calls": true,
+        "clear_calls": true,
+        "move_distance_m": true
+      },
+      "differences": {}
+    },
+    {
+      "seed": 261212114,
+      "directional": 5,
+      "variant": "candidate",
+      "matched": true,
+      "field_matches": {
+        "cleared": true,
+        "total_virtual_time_s": true,
+        "mean_clear_time_s": true,
+        "measure_calls": true,
+        "clear_calls": true,
+        "move_distance_m": true
+      },
+      "differences": {}
+    },
+    {
+      "seed": 261212114,
+      "directional": 10,
+      "variant": "candidate",
+      "matched": true,
+      "field_matches": {
+        "cleared": true,
+        "total_virtual_time_s": true,
+        "mean_clear_time_s": true,
+        "measure_calls": true,
+        "clear_calls": true,
+        "move_distance_m": true
+      },
+      "differences": {}
+    },
+    {
+      "seed": 261212114,
+      "directional": 16,
+      "variant": "candidate",
+      "matched": true,
+      "field_matches": {
+        "cleared": true,
+        "total_virtual_time_s": true,
+        "mean_clear_time_s": true,
+        "measure_calls": true,
+        "clear_calls": true,
+        "move_distance_m": true
+      },
+      "differences": {}
+    },
+    {
+      "seed": 261212115,
+      "directional": 5,
+      "variant": "candidate",
+      "matched": true,
+      "field_matches": {
+        "cleared": true,
+        "total_virtual_time_s": true,
+        "mean_clear_time_s": true,
+        "measure_calls": true,
+        "clear_calls": true,
+        "move_distance_m": true
+      },
+      "differences": {}
+    },
+    {
+      "seed": 261212115,
+      "directional": 10,
+      "variant": "candidate",
+      "matched": true,
+      "field_matches": {
+        "cleared": true,
+        "total_virtual_time_s": true,
+        "mean_clear_time_s": true,
+        "measure_calls": true,
+        "clear_calls": true,
+        "move_distance_m": true
+      },
+      "differences": {}
+    },
+    {
+      "seed": 261212115,
+      "directional": 16,
+      "variant": "candidate",
+      "matched": true,
+      "field_matches": {
+        "cleared": true,
+        "total_virtual_time_s": true,
+        "mean_clear_time_s": true,
+        "measure_calls": true,
+        "clear_calls": true,
+        "move_distance_m": true
+      },
+      "differences": {}
+    },
+    {
+      "seed": 261212116,
+      "directional": 5,
+      "variant": "candidate",
+      "matched": true,
+      "field_matches": {
+        "cleared": true,
+        "total_virtual_time_s": true,
+        "mean_clear_time_s": true,
+        "measure_calls": true,
+        "clear_calls": true,
+        "move_distance_m": true
+      },
+      "differences": {}
+    },
+    {
+      "seed": 261212116,
+      "directional": 10,
+      "variant": "candidate",
+      "matched": true,
+      "field_matches": {
+        "cleared": true,
+        "total_virtual_time_s": true,
+        "mean_clear_time_s": true,
+        "measure_calls": true,
+        "clear_calls": true,
+        "move_distance_m": true
+      },
+      "differences": {}
+    },
+    {
+      "seed": 261212116,
+      "directional": 16,
+      "variant": "candidate",
+      "matched": true,
+      "field_matches": {
+        "cleared": true,
+        "total_virtual_time_s": true,
+        "mean_clear_time_s": true,
+        "measure_calls": true,
+        "clear_calls": true,
+        "move_distance_m": true
+      },
+      "differences": {}
+    }
+  ]
+}

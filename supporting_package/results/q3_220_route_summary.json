@@ -1,0 +1,167 @@
+{
+  "variants": {
+    "anchors": {
+      "cases": 4,
+      "cleared": 50,
+      "total": 50,
+      "full_clear_cases": 4,
+      "mean_clear_time_s": 269.5661669004329,
+      "total_virtual_time_s": 3299.39856675,
+      "move_distance_m": 12804.492837414766,
+      "measure_calls": 112.5,
+      "clear_calls": 15,
+      "cover_visits": 7.75
+    },
+    "baseline": {
+      "cases": 12,
+      "cleared": 158,
+      "total": 158,
+      "full_clear_cases": 12,
+      "mean_clear_time_s": 258.55680939485586,
+      "total_virtual_time_s": 3348.7017645,
+      "move_distance_m": 13028.092161279379,
+      "measure_calls": 111.58333333333333,
+      "clear_calls": 17.75,
+      "cover_visits": 7.416666666666667
+    },
+    "fixed8": {
+      "cases": 4,
+      "cleared": 50,
+      "total": 50,
+      "full_clear_cases": 4,
+      "mean_clear_time_s": 279.3714606939394,
+      "total_virtual_time_s": 3394.31101075,
+      "move_distance_m": 12920.305065117303,
+      "measure_calls": 125,
+      "clear_calls": 13.75,
+      "cover_visits": 8.5
+    },
+    "fixed8plain": {
+      "cases": 4,
+      "cleared": 50,
+      "total": 50,
+      "full_clear_cases": 4,
+      "mean_clear_time_s": 269.4567820964286,
+      "total_virtual_time_s": 3260.3231180000002,
+      "move_distance_m": 12431.61558874983,
+      "measure_calls": 118.5,
+      "clear_calls": 14.5,
+      "cover_visits": 8.5
+    },
+    "fixed9": {
+      "cases": 4,
+      "cleared": 50,
+      "total": 50,
+      "full_clear_cases": 4,
+      "mean_clear_time_s": 275.6340857677489,
+      "total_virtual_time_s": 3334.1053985,
+      "move_distance_m": 12274.276991698513,
+      "measure_calls": 135.75,
+      "clear_calls": 15.75,
+      "cover_visits": 9.25
+    },
+    "pig150": {
+      "cases": 12,
+      "cleared": 158,
+      "total": 158,
+      "full_clear_cases": 12,
+      "mean_clear_time_s": 253.63838127831508,
+      "total_virtual_time_s": 3277.684358,
+      "move_distance_m": 12315.088458101804,
+      "measure_calls": 124.41666666666667,
+      "clear_calls": 15.916666666666666,
+      "cover_visits": 7.166666666666667
+    },
+    "relocate300": {
+      "cases": 4,
+      "cleared": 50,
+      "total": 50,
+      "full_clear_cases": 4,
+      "mean_clear_time_s": 272.2066684670996,
+      "total_virtual_time_s": 3326.53937925,
+      "move_distance_m": 12720.196901167385,
+      "measure_calls": 120,
+      "clear_calls": 15,
+      "cover_visits": 8.75
+    },
+    "relocate500": {
+      "cases": 4,
+      "cleared": 50,
+      "total": 50,
+      "full_clear_cases": 4,
+      "mean_clear_time_s": 270.64791810032466,
+      "total_virtual_time_s": 3299.9526502500003,
+      "move_distance_m": 12396.013258626579,
+      "measure_calls": 126,
+      "clear_calls": 15.75,
+      "cover_visits": 9.25
+    },
+    "relocate700": {
+      "cases": 4,
+      "cleared": 50,
+      "total": 50,
+      "full_clear_cases": 4,
+      "mean_clear_time_s": 295.87051493051945,
+      "total_virtual_time_s": 3638.70630875,
+      "move_distance_m": 13636.031552593242,
+      "measure_calls": 141,
+      "clear_calls": 16.25,
+      "cover_visits": 11
+    },
+    "scan150": {
+      "cases": 4,
+      "cleared": 50,
+      "total": 50,
+      "full_clear_cases": 4,
+      "mean_clear_time_s": 269.8356824004329,
+      "total_virtual_time_s": 3299.393802,
+      "move_distance_m": 12684.469014585398,
+      "measure_calls": 116.5,
+      "clear_calls": 15,
+      "cover_visits": 7
+    },
+    "scan80": {
+      "cases": 4,
+      "cleared": 50,
+      "total": 50,
+      "full_clear_cases": 4,
+      "mean_clear_time_s": 270.66091485119046,
+      "total_virtual_time_s": 3299.29612275,
+      "move_distance_m": 12168.980622745245,
+      "measure_calls": 134,
+      "clear_calls": 14.25,
+      "cover_visits": 6.5
+    },
+    "steer": {
+      "cases": 4,
+      "cleared": 50,
+      "total": 50,
+      "full_clear_cases": 4,
+      "mean_clear_time_s": 278.9260846254329,
+      "total_virtual_time_s": 3381.8807,
+      "move_distance_m": 13199.40350491414,
+      "measure_calls": 112.5,
+      "clear_calls": 15.75,
+      "cover_visits": 8
+    },
+    "tol80": {
+      "cases": 12,
+      "cleared": 158,
+      "total": 158,
+      "full_clear_cases": 12,
+      "mean_clear_time_s": 256.44532616251456,
+      "total_virtual_time_s": 3321.36361525,
+      "move_distance_m": 12924.318082048994,
+      "measure_calls": 111.66666666666667,
+      "clear_calls": 15.333333333333334,
+      "cover_visits": 7.416666666666667
+    }
+  },
+  "source_data": [
+    "results/q3_220_route_small.json",
+    "results/q3_220_route_expand.json",
+    "results/q3_220_route_relocate_pilot.json",
+    "results/q3_220_route_fixed_pilot.json"
+  ],
+  "recommendation": "pig150 is the only route candidate selected for combination testing: 1.90 percent reduction on 12 development cases; not independently validated."
+}

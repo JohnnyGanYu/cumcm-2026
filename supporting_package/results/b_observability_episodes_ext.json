@@ -1,0 +1,270 @@
+{
+  "report": {
+    "episodes_total": 1200,
+    "step_m": 25.0,
+    "scenarios": {
+      "Q4_d5": {
+        "episodes": 400,
+        "sources": 5215,
+        "cleared": 5203,
+        "clear_rate_pct": 99.77,
+        "full_clear_episodes_pct": 97.25,
+        "mean_clear_time_s": 1201.5,
+        "missed_total": 12,
+        "missed_per_episode": 0.03,
+        "miss_attribution": {
+          "observability_failure_never_observed": 3,
+          "strategy_failure_observed_not_cleared": 9,
+          "never_observed_pct_of_misses": 25.0,
+          "strategy_pct_of_misses": 75.0
+        },
+        "never_observed_directional_share_pct": 100.0,
+        "never_observed_vis_frac_pct": {
+          "p50": 0.1601,
+          "p90": 0.2537,
+          "max": 0.2771,
+          "mean": 0.1786,
+          "n_zero_unobservable": 0,
+          "n_below_0p5pct": 3
+        },
+        "strategy_failure_vis_frac_pct": {
+          "p50": 0.2401,
+          "mean": 0.5152
+        },
+        "worst_misses": [
+          {
+            "channel": 20,
+            "directional": true,
+            "bearings_obtained": 0,
+            "never_observed": true,
+            "vis_frac_pct": 0.09852,
+            "observable": true,
+            "rho": 1786.2,
+            "r": 1111.1
+          },
+          {
+            "channel": 3,
+            "directional": true,
+            "bearings_obtained": 0,
+            "never_observed": true,
+            "vis_frac_pct": 0.16009,
+            "observable": true,
+            "rho": 1764.5,
+            "r": 1313.5
+          },
+          {
+            "channel": 8,
+            "directional": true,
+            "bearings_obtained": 0,
+            "never_observed": true,
+            "vis_frac_pct": 0.27708,
+            "observable": true,
+            "rho": 1782.1,
+            "r": 1455.3
+          }
+        ]
+      },
+      "Q4_d10": {
+        "episodes": 400,
+        "sources": 5215,
+        "cleared": 5193,
+        "clear_rate_pct": 99.578,
+        "full_clear_episodes_pct": 94.5,
+        "mean_clear_time_s": 1267.1,
+        "missed_total": 22,
+        "missed_per_episode": 0.055,
+        "miss_attribution": {
+          "observability_failure_never_observed": 4,
+          "strategy_failure_observed_not_cleared": 18,
+          "never_observed_pct_of_misses": 18.18,
+          "strategy_pct_of_misses": 81.82
+        },
+        "never_observed_directional_share_pct": 100.0,
+        "never_observed_vis_frac_pct": {
+          "p50": 0.1509,
+          "p90": 0.3368,
+          "max": 0.3941,
+          "mean": 0.1786,
+          "n_zero_unobservable": 0,
+          "n_below_0p5pct": 4
+        },
+        "strategy_failure_vis_frac_pct": {
+          "p50": 0.3233,
+          "mean": 2.6791
+        },
+        "worst_misses": [
+          {
+            "channel": 9,
+            "directional": true,
+            "bearings_obtained": 0,
+            "never_observed": true,
+            "vis_frac_pct": 0.01847,
+            "observable": true,
+            "rho": 1796.7,
+            "r": 1206.5
+          },
+          {
+            "channel": 20,
+            "directional": true,
+            "bearings_obtained": 0,
+            "never_observed": true,
+            "vis_frac_pct": 0.09852,
+            "observable": true,
+            "rho": 1786.2,
+            "r": 1111.1
+          },
+          {
+            "channel": 5,
+            "directional": true,
+            "bearings_obtained": 0,
+            "never_observed": true,
+            "vis_frac_pct": 0.20319,
+            "observable": true,
+            "rho": 1759.2,
+            "r": 1290.0
+          },
+          {
+            "channel": 14,
+            "directional": true,
+            "bearings_obtained": 0,
+            "never_observed": true,
+            "vis_frac_pct": 0.39406,
+            "observable": true,
+            "rho": 1799.4,
+            "r": 1477.9
+          }
+        ]
+      },
+      "Q4_d16": {
+        "episodes": 400,
+        "sources": 6400,
+        "cleared": 6378,
+        "clear_rate_pct": 99.656,
+        "full_clear_episodes_pct": 94.5,
+        "mean_clear_time_s": 1074.2,
+        "missed_total": 22,
+        "missed_per_episode": 0.055,
+        "miss_attribution": {
+          "observability_failure_never_observed": 7,
+          "strategy_failure_observed_not_cleared": 15,
+          "never_observed_pct_of_misses": 31.82,
+          "strategy_pct_of_misses": 68.18
+        },
+        "never_observed_directional_share_pct": 100.0,
+        "never_observed_vis_frac_pct": {
+          "p50": 0.0985,
+          "p90": 0.1256,
+          "max": 0.1478,
+          "mean": 0.0941,
+          "n_zero_unobservable": 0,
+          "n_below_0p5pct": 7
+        },
+        "strategy_failure_vis_frac_pct": {
+          "p50": 0.6835,
+          "mean": 3.4087
+        },
+        "worst_misses": [
+          {
+            "channel": 14,
+            "directional": true,
+            "bearings_obtained": 0,
+            "never_observed": true,
+            "vis_frac_pct": 0.0431,
+            "observable": true,
+            "rho": 1799.8,
+            "r": 1337.6
+          },
+          {
+            "channel": 12,
+            "directional": true,
+            "bearings_obtained": 0,
+            "never_observed": true,
+            "vis_frac_pct": 0.05542,
+            "observable": true,
+            "rho": 1781.7,
+            "r": 1104.5
+          },
+          {
+            "channel": 7,
+            "directional": true,
+            "bearings_obtained": 0,
+            "never_observed": true,
+            "vis_frac_pct": 0.09852,
+            "observable": true,
+            "rho": 1778.5,
+            "r": 1123.3
+          },
+          {
+            "channel": 14,
+            "directional": true,
+            "bearings_obtained": 0,
+            "never_observed": true,
+            "vis_frac_pct": 0.09852,
+            "observable": true,
+            "rho": 1785.0,
+            "r": 1163.5
+          },
+          {
+            "channel": 12,
+            "directional": true,
+            "bearings_obtained": 0,
+            "never_observed": true,
+            "vis_frac_pct": 0.10467,
+            "observable": true,
+            "rho": 1772.8,
+            "r": 1366.1
+          },
+          {
+            "channel": 10,
+            "directional": true,
+            "bearings_obtained": 0,
+            "never_observed": true,
+            "vis_frac_pct": 0.11083,
+            "observable": true,
+            "rho": 1772.1,
+            "r": 1039.8
+          },
+          {
+            "channel": 6,
+            "directional": true,
+            "bearings_obtained": 0,
+            "never_observed": true,
+            "vis_frac_pct": 0.14777,
+            "observable": true,
+            "rho": 1792.3,
+            "r": 1246.0
+          }
+        ]
+      }
+    }
+  },
+  "rows": {
+    "_stripped": true,
+    "n": 1200,
+    "_note": "逐局明细已剥离以控体积，可用同名脚本复现",
+    "sample": [
+      {
+        "seed": 640000,
+        "dcount": 5,
+        "total": 16,
+        "cleared": 16,
+        "ratio": 1.0,
+        "mean_clear_time_s": 955.80260925,
+        "measure_calls": 363,
+        "missed": [],
+        "scenario": "Q4_d5"
+      },
+      {
+        "seed": 640001,
+        "dcount": 5,
+        "total": 12,
+        "cleared": 12,
+        "ratio": 1.0,
+        "mean_clear_time_s": 1211.8636335833332,
+        "measure_calls": 500,
+        "missed": [],
+        "scenario": "Q4_d5"
+      }
+    ]
+  }
+}

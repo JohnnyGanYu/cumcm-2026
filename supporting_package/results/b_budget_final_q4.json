@@ -1,0 +1,460 @@
+{
+  "plan": "custom",
+  "episodes": 300,
+  "seed_start": 9000,
+  "directional": 5,
+  "total_elapsed_s": 680.9,
+  "rows": [
+    {
+      "name": "baseline",
+      "overrides": {},
+      "directional": 5,
+      "episodes": 300,
+      "error_count": 0,
+      "errors": [],
+      "metric_mean_s": 1211.67,
+      "metric_median_s": 1190.05,
+      "metric_max_s": 1674.58,
+      "pooled_metric_s": 1183.54,
+      "cleared_ratio_mean": 0.9987,
+      "cleared_ratio_min": 0.9,
+      "cleared_total": 3867,
+      "jammers_total": 3872,
+      "cleared_per_episode": 12.89,
+      "full_clear_episodes": 295,
+      "full_clear_rate": 0.9833,
+      "virtual_time_mean_s": 15255.9,
+      "virtual_time_max_s": 19232.8,
+      "virtual_budget_used_pct": 5.34,
+      "measure_calls_mean": 475.8,
+      "clear_calls_mean": 19.2,
+      "wall_s_mean": 1.55,
+      "wall_s_max": 2.04,
+      "wall_s_p95": 1.86,
+      "sweep_elapsed_s": 116.9,
+      "missed_episodes": [
+        {
+          "seed": 9005,
+          "total": 12,
+          "cleared": 11,
+          "missed_channels": [
+            16
+          ]
+        },
+        {
+          "seed": 9054,
+          "total": 15,
+          "cleared": 14,
+          "missed_channels": [
+            8
+          ]
+        },
+        {
+          "seed": 9158,
+          "total": 10,
+          "cleared": 9,
+          "missed_channels": [
+            8
+          ]
+        },
+        {
+          "seed": 9164,
+          "total": 11,
+          "cleared": 10,
+          "missed_channels": [
+            3
+          ]
+        },
+        {
+          "seed": 9176,
+          "total": 16,
+          "cleared": 15,
+          "missed_channels": [
+            13
+          ]
+        }
+      ]
+    },
+    {
+      "name": "inner8_dirring30",
+      "overrides": {
+        "probe_ring_stations": 8,
+        "directional_ring_stations": 30
+      },
+      "directional": 5,
+      "episodes": 300,
+      "error_count": 0,
+      "errors": [],
+      "metric_mean_s": 1170.25,
+      "metric_median_s": 1150.77,
+      "metric_max_s": 1987.23,
+      "pooled_metric_s": 1141.44,
+      "cleared_ratio_mean": 0.9987,
+      "cleared_ratio_min": 0.9,
+      "cleared_total": 3867,
+      "jammers_total": 3872,
+      "cleared_per_episode": 12.89,
+      "full_clear_episodes": 295,
+      "full_clear_rate": 0.9833,
+      "virtual_time_mean_s": 14713.1,
+      "virtual_time_max_s": 21859.5,
+      "virtual_budget_used_pct": 6.07,
+      "measure_calls_mean": 539.4,
+      "clear_calls_mean": 19.4,
+      "wall_s_mean": 1.51,
+      "wall_s_max": 2.0,
+      "wall_s_p95": 1.79,
+      "sweep_elapsed_s": 114.2,
+      "missed_episodes": [
+        {
+          "seed": 9005,
+          "total": 12,
+          "cleared": 11,
+          "missed_channels": [
+            16
+          ]
+        },
+        {
+          "seed": 9158,
+          "total": 10,
+          "cleared": 9,
+          "missed_channels": [
+            8
+          ]
+        },
+        {
+          "seed": 9164,
+          "total": 11,
+          "cleared": 10,
+          "missed_channels": [
+            3
+          ]
+        },
+        {
+          "seed": 9176,
+          "total": 16,
+          "cleared": 15,
+          "missed_channels": [
+            13
+          ]
+        },
+        {
+          "seed": 9193,
+          "total": 16,
+          "cleared": 15,
+          "missed_channels": [
+            15
+          ]
+        }
+      ]
+    },
+    {
+      "name": "inner10_dirring30",
+      "overrides": {
+        "probe_ring_stations": 10,
+        "directional_ring_stations": 30
+      },
+      "directional": 5,
+      "episodes": 300,
+      "error_count": 0,
+      "errors": [],
+      "metric_mean_s": 1178.0,
+      "metric_median_s": 1161.61,
+      "metric_max_s": 1645.18,
+      "pooled_metric_s": 1147.86,
+      "cleared_ratio_mean": 0.9984,
+      "cleared_ratio_min": 0.9,
+      "cleared_total": 3866,
+      "jammers_total": 3872,
+      "cleared_per_episode": 12.887,
+      "full_clear_episodes": 294,
+      "full_clear_rate": 0.98,
+      "virtual_time_mean_s": 14792.0,
+      "virtual_time_max_s": 18006.7,
+      "virtual_budget_used_pct": 5.0,
+      "measure_calls_mean": 548.3,
+      "clear_calls_mean": 19.0,
+      "wall_s_mean": 1.49,
+      "wall_s_max": 1.93,
+      "wall_s_p95": 1.76,
+      "sweep_elapsed_s": 112.8,
+      "missed_episodes": [
+        {
+          "seed": 9005,
+          "total": 12,
+          "cleared": 11,
+          "missed_channels": [
+            16
+          ]
+        },
+        {
+          "seed": 9058,
+          "total": 14,
+          "cleared": 13,
+          "missed_channels": [
+            11
+          ]
+        },
+        {
+          "seed": 9158,
+          "total": 10,
+          "cleared": 9,
+          "missed_channels": [
+            8
+          ]
+        },
+        {
+          "seed": 9164,
+          "total": 11,
+          "cleared": 10,
+          "missed_channels": [
+            3
+          ]
+        },
+        {
+          "seed": 9176,
+          "total": 16,
+          "cleared": 15,
+          "missed_channels": [
+            13
+          ]
+        },
+        {
+          "seed": 9193,
+          "total": 16,
+          "cleared": 15,
+          "missed_channels": [
+            15
+          ]
+        }
+      ]
+    },
+    {
+      "name": "inner8_dirring26",
+      "overrides": {
+        "probe_ring_stations": 8,
+        "directional_ring_stations": 26
+      },
+      "directional": 5,
+      "episodes": 300,
+      "error_count": 0,
+      "errors": [],
+      "metric_mean_s": 1168.23,
+      "metric_median_s": 1144.83,
+      "metric_max_s": 1919.01,
+      "pooled_metric_s": 1139.21,
+      "cleared_ratio_mean": 0.9981,
+      "cleared_ratio_min": 0.8,
+      "cleared_total": 3865,
+      "jammers_total": 3872,
+      "cleared_per_episode": 12.883,
+      "full_clear_episodes": 294,
+      "full_clear_rate": 0.98,
+      "virtual_time_mean_s": 14676.9,
+      "virtual_time_max_s": 20476.4,
+      "virtual_budget_used_pct": 5.69,
+      "measure_calls_mean": 507.3,
+      "clear_calls_mean": 18.4,
+      "wall_s_mean": 1.43,
+      "wall_s_max": 1.84,
+      "wall_s_p95": 1.7,
+      "sweep_elapsed_s": 108.5,
+      "missed_episodes": [
+        {
+          "seed": 9058,
+          "total": 14,
+          "cleared": 13,
+          "missed_channels": [
+            11
+          ]
+        },
+        {
+          "seed": 9158,
+          "total": 10,
+          "cleared": 8,
+          "missed_channels": [
+            8,
+            9
+          ]
+        },
+        {
+          "seed": 9164,
+          "total": 11,
+          "cleared": 10,
+          "missed_channels": [
+            3
+          ]
+        },
+        {
+          "seed": 9176,
+          "total": 16,
+          "cleared": 15,
+          "missed_channels": [
+            13
+          ]
+        },
+        {
+          "seed": 9193,
+          "total": 16,
+          "cleared": 15,
+          "missed_channels": [
+            15
+          ]
+        },
+        {
+          "seed": 9251,
+          "total": 11,
+          "cleared": 10,
+          "missed_channels": [
+            18
+          ]
+        }
+      ]
+    },
+    {
+      "name": "inner10_dirring26",
+      "overrides": {
+        "probe_ring_stations": 10,
+        "directional_ring_stations": 26
+      },
+      "directional": 5,
+      "episodes": 300,
+      "error_count": 0,
+      "errors": [],
+      "metric_mean_s": 1191.49,
+      "metric_median_s": 1172.8,
+      "metric_max_s": 1633.81,
+      "pooled_metric_s": 1161.79,
+      "cleared_ratio_mean": 0.9987,
+      "cleared_ratio_min": 0.9,
+      "cleared_total": 3867,
+      "jammers_total": 3872,
+      "cleared_per_episode": 12.89,
+      "full_clear_episodes": 295,
+      "full_clear_rate": 0.9833,
+      "virtual_time_mean_s": 14975.5,
+      "virtual_time_max_s": 19080.1,
+      "virtual_budget_used_pct": 5.3,
+      "measure_calls_mean": 518.4,
+      "clear_calls_mean": 18.4,
+      "wall_s_mean": 1.46,
+      "wall_s_max": 1.9,
+      "wall_s_p95": 1.72,
+      "sweep_elapsed_s": 110.3,
+      "missed_episodes": [
+        {
+          "seed": 9110,
+          "total": 14,
+          "cleared": 13,
+          "missed_channels": [
+            18
+          ]
+        },
+        {
+          "seed": 9158,
+          "total": 10,
+          "cleared": 9,
+          "missed_channels": [
+            8
+          ]
+        },
+        {
+          "seed": 9164,
+          "total": 11,
+          "cleared": 10,
+          "missed_channels": [
+            3
+          ]
+        },
+        {
+          "seed": 9176,
+          "total": 16,
+          "cleared": 15,
+          "missed_channels": [
+            13
+          ]
+        },
+        {
+          "seed": 9193,
+          "total": 16,
+          "cleared": 15,
+          "missed_channels": [
+            15
+          ]
+        }
+      ]
+    },
+    {
+      "name": "dirring30",
+      "overrides": {
+        "directional_ring_stations": 30
+      },
+      "directional": 5,
+      "episodes": 300,
+      "error_count": 0,
+      "errors": [],
+      "metric_mean_s": 1201.22,
+      "metric_median_s": 1177.75,
+      "metric_max_s": 1691.24,
+      "pooled_metric_s": 1171.45,
+      "cleared_ratio_mean": 0.9987,
+      "cleared_ratio_min": 0.9,
+      "cleared_total": 3867,
+      "jammers_total": 3872,
+      "cleared_per_episode": 12.89,
+      "full_clear_episodes": 295,
+      "full_clear_rate": 0.9833,
+      "virtual_time_mean_s": 15100.0,
+      "virtual_time_max_s": 18603.7,
+      "virtual_budget_used_pct": 5.17,
+      "measure_calls_mean": 568.1,
+      "clear_calls_mean": 19.4,
+      "wall_s_mean": 1.56,
+      "wall_s_max": 2.0,
+      "wall_s_p95": 1.87,
+      "sweep_elapsed_s": 118.1,
+      "missed_episodes": [
+        {
+          "seed": 9005,
+          "total": 12,
+          "cleared": 11,
+          "missed_channels": [
+            16
+          ]
+        },
+        {
+          "seed": 9158,
+          "total": 10,
+          "cleared": 9,
+          "missed_channels": [
+            8
+          ]
+        },
+        {
+          "seed": 9164,
+          "total": 11,
+          "cleared": 10,
+          "missed_channels": [
+            3
+          ]
+        },
+        {
+          "seed": 9176,
+          "total": 16,
+          "cleared": 15,
+          "missed_channels": [
+            13
+          ]
+        },
+        {
+          "seed": 9193,
+          "total": 16,
+          "cleared": 15,
+          "missed_channels": [
+            15
+          ]
+        }
+      ]
+    }
+  ]
+}

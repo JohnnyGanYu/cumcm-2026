@@ -1,0 +1,104 @@
+{
+  "offline_only": true,
+  "production_modified": false,
+  "changed_parameter_only": "piggyback_min_baseline_m; all existing guards retained",
+  "experiments": [
+    {
+      "path": "results/q3_200_piggyback_pilot.json",
+      "records": 30,
+      "expected": 30,
+      "source_unchanged": true,
+      "results": [
+        {
+          "variant": "src.b_q3_200_piggyback_experiments:Piggyback100",
+          "baseline_mean_s": 257.66783164764956,
+          "variant_mean_s": 258.5359222574786,
+          "paired_mean_delta_s": 0.8680906098290487,
+          "paired_mean_delta_percent": 0.33690298252524453,
+          "baseline_pooled_s": 255.25880428767124,
+          "variant_pooled_s": 256.09807656164384,
+          "wins": 1,
+          "ties": 2,
+          "losses": 3,
+          "cleared": 73,
+          "total": 73,
+          "errors": 0,
+          "worst_pair_regression_s": 3.018420666666657
+        },
+        {
+          "variant": "src.b_q3_200_piggyback_experiments:Piggyback400",
+          "baseline_mean_s": 257.66783164764956,
+          "variant_mean_s": 255.67244212294094,
+          "paired_mean_delta_s": -1.995389524708628,
+          "paired_mean_delta_percent": -0.7744038174843815,
+          "baseline_pooled_s": 255.25880428767124,
+          "variant_pooled_s": 252.77395895890413,
+          "wins": 3,
+          "ties": 2,
+          "losses": 1,
+          "cleared": 73,
+          "total": 73,
+          "errors": 0,
+          "worst_pair_regression_s": 2.4104716153846084
+        },
+        {
+          "variant": "src.b_q3_200_piggyback_experiments:Piggyback600",
+          "baseline_mean_s": 257.66783164764956,
+          "variant_mean_s": 263.8453432850233,
+          "paired_mean_delta_s": 6.177511637373731,
+          "paired_mean_delta_percent": 2.3974710377588915,
+          "baseline_pooled_s": 255.25880428767124,
+          "variant_pooled_s": 261.2706544109589,
+          "wins": 2,
+          "ties": 0,
+          "losses": 4,
+          "cleared": 73,
+          "total": 73,
+          "errors": 0,
+          "worst_pair_regression_s": 13.979493750000017
+        },
+        {
+          "variant": "src.b_q3_200_piggyback_experiments:PiggybackZero",
+          "baseline_mean_s": 257.66783164764956,
+          "variant_mean_s": 266.6019395848679,
+          "paired_mean_delta_s": 8.934107937218348,
+          "paired_mean_delta_percent": 3.4672965888250307,
+          "baseline_pooled_s": 255.25880428767124,
+          "variant_pooled_s": 263.79537679452056,
+          "wins": 1,
+          "ties": 0,
+          "losses": 5,
+          "cleared": 73,
+          "total": 73,
+          "errors": 0,
+          "worst_pair_regression_s": 33.356956833333356
+        }
+      ]
+    },
+    {
+      "path": "results/q3_200_piggyback_confirmation.json",
+      "records": 24,
+      "expected": 24,
+      "source_unchanged": true,
+      "results": [
+        {
+          "variant": "src.b_q3_200_piggyback_experiments:Piggyback400",
+          "baseline_mean_s": 261.9874388894786,
+          "variant_mean_s": 261.85952145016375,
+          "paired_mean_delta_s": -0.12791743931484234,
+          "paired_mean_delta_percent": -0.04882579098336448,
+          "baseline_pooled_s": 258.0335831586207,
+          "variant_pooled_s": 258.0961286896552,
+          "wins": 8,
+          "ties": 2,
+          "losses": 2,
+          "cleared": 145,
+          "total": 145,
+          "errors": 0,
+          "worst_pair_regression_s": 11.448277928571457
+        }
+      ]
+    }
+  ],
+  "decision": "Reject all four parameter-only candidates for production. The best pilot threshold 400 m improved 6-case mean by 1.995 s, but on 12 new development cases its arithmetic gain shrank to 0.128 s (0.049%), pooled metric worsened by 0.063 s, and movement increased. All cases fully cleared, but this is insufficient evidence of a robust speed improvement."
+}

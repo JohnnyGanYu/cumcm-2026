@@ -1,0 +1,449 @@
+{
+ "config": {
+  "plan": "paired",
+  "variants": "baseline,baseline@ring1150x7,r1_raygap,r1_raygap@ring1150x7",
+  "episodes": 200,
+  "seed_start": 9000,
+  "directional": 10,
+  "count": null,
+  "workers": 4,
+  "overrides": "{\"r1_raygap@ring1150x7\":{\"probe_ring_radius\":1150.0,\"probe_ring_stations\":7},\"baseline@ring1150x7\":{\"probe_ring_radius\":1150.0,\"probe_ring_stations\":7}}",
+  "out": "results/b_joint_d10.json"
+ },
+ "paired": {
+  "baseline": {
+   "paired_episodes": 200,
+   "clear_rate_raw": "2570/2571",
+   "clear_rate": 0.99961,
+   "full_clear_episodes": 199,
+   "d_cleared_sources": 0,
+   "metric_mean_s": 1287.1,
+   "d_metric_s": 0.0,
+   "d_metric_pct": 0.0,
+   "better_episodes": 0,
+   "worse_episodes": 0,
+   "measure_calls_mean": 470.9,
+   "clear_calls_mean": 72.6,
+   "still_missed": [
+    [
+     10,
+     9158,
+     13
+    ]
+   ]
+  },
+  "baseline@ring1150x7": {
+   "paired_episodes": 200,
+   "clear_rate_raw": "2570/2571",
+   "clear_rate": 0.99961,
+   "full_clear_episodes": 199,
+   "d_cleared_sources": 0,
+   "metric_mean_s": 1234.7,
+   "d_metric_s": -52.4,
+   "d_metric_pct": -4.07,
+   "better_episodes": 153,
+   "worse_episodes": 46,
+   "measure_calls_mean": 418.8,
+   "clear_calls_mean": 77.4,
+   "still_missed": [
+    [
+     10,
+     9158,
+     13
+    ]
+   ]
+  },
+  "r1_raygap": {
+   "paired_episodes": 200,
+   "clear_rate_raw": "2570/2571",
+   "clear_rate": 0.99961,
+   "full_clear_episodes": 199,
+   "d_cleared_sources": 0,
+   "metric_mean_s": 1287.1,
+   "d_metric_s": 0.0,
+   "d_metric_pct": 0.0,
+   "better_episodes": 0,
+   "worse_episodes": 0,
+   "measure_calls_mean": 470.9,
+   "clear_calls_mean": 72.6,
+   "still_missed": [
+    [
+     10,
+     9158,
+     13
+    ]
+   ]
+  },
+  "r1_raygap@ring1150x7": {
+   "paired_episodes": 200,
+   "clear_rate_raw": "2570/2571",
+   "clear_rate": 0.99961,
+   "full_clear_episodes": 199,
+   "d_cleared_sources": 0,
+   "metric_mean_s": 1234.7,
+   "d_metric_s": -52.4,
+   "d_metric_pct": -4.07,
+   "better_episodes": 153,
+   "worse_episodes": 46,
+   "measure_calls_mean": 418.8,
+   "clear_calls_mean": 77.4,
+   "still_missed": [
+    [
+     10,
+     9158,
+     13
+    ]
+   ]
+  }
+ },
+ "aggregate": {
+  "baseline": {
+   "episodes": 200,
+   "errors": [],
+   "error_count": 0,
+   "sources": 2571,
+   "cleared": 2570,
+   "clear_rate_raw": "2570/2571",
+   "clear_rate": 0.99961,
+   "missed": 1,
+   "cause_distribution": {
+    "B1_layout_gap": 1
+   },
+   "u_hard_bound_sources": 2571,
+   "u_hard_bound_raw": "2571/2571",
+   "missed_with_u_hard": 1,
+   "missed_with_u_layout": 0,
+   "missed_with_u_traj": 0,
+   "gap_to_hard_bound_sources": 1,
+   "gap_to_hard_bound_pct": 0.0389,
+   "mean_clear_time_s": 1287.1
+  },
+  "baseline@ring1150x7": {
+   "episodes": 200,
+   "errors": [],
+   "error_count": 0,
+   "sources": 2571,
+   "cleared": 2570,
+   "clear_rate_raw": "2570/2571",
+   "clear_rate": 0.99961,
+   "missed": 1,
+   "cause_distribution": {
+    "B1_layout_gap": 1
+   },
+   "u_hard_bound_sources": 2571,
+   "u_hard_bound_raw": "2571/2571",
+   "missed_with_u_hard": 1,
+   "missed_with_u_layout": 0,
+   "missed_with_u_traj": 0,
+   "gap_to_hard_bound_sources": 1,
+   "gap_to_hard_bound_pct": 0.0389,
+   "mean_clear_time_s": 1234.7
+  },
+  "r1_raygap": {
+   "episodes": 200,
+   "errors": [],
+   "error_count": 0,
+   "sources": 2571,
+   "cleared": 2570,
+   "clear_rate_raw": "2570/2571",
+   "clear_rate": 0.99961,
+   "missed": 1,
+   "cause_distribution": {
+    "B1_layout_gap": 1
+   },
+   "u_hard_bound_sources": 2571,
+   "u_hard_bound_raw": "2571/2571",
+   "missed_with_u_hard": 1,
+   "missed_with_u_layout": 0,
+   "missed_with_u_traj": 0,
+   "gap_to_hard_bound_sources": 1,
+   "gap_to_hard_bound_pct": 0.0389,
+   "mean_clear_time_s": 1287.1
+  },
+  "r1_raygap@ring1150x7": {
+   "episodes": 200,
+   "errors": [],
+   "error_count": 0,
+   "sources": 2571,
+   "cleared": 2570,
+   "clear_rate_raw": "2570/2571",
+   "clear_rate": 0.99961,
+   "missed": 1,
+   "cause_distribution": {
+    "B1_layout_gap": 1
+   },
+   "u_hard_bound_sources": 2571,
+   "u_hard_bound_raw": "2571/2571",
+   "missed_with_u_hard": 1,
+   "missed_with_u_layout": 0,
+   "missed_with_u_traj": 0,
+   "gap_to_hard_bound_sources": 1,
+   "gap_to_hard_bound_pct": 0.0389,
+   "mean_clear_time_s": 1234.7
+  }
+ },
+ "rows": [
+  {
+   "seed": 9158,
+   "directional": 10,
+   "total": 10,
+   "cleared": 9,
+   "mean_clear_time_s": 1893.8,
+   "virtual_s": 17043.9,
+   "measure_calls": 652,
+   "clear_calls": 55,
+   "missed_channels": [
+    13
+   ],
+   "budget_hit": false,
+   "missed_detail": [
+    {
+     "seed": 9158,
+     "channel": 13,
+     "cause": "B1_layout_gap",
+     "x": 759.1,
+     "y": -1630.4,
+     "r_from_origin": 1798.4,
+     "r_recv": 1447.9,
+     "directional": true,
+     "directional_deg": 285.8,
+     "dist_to_edge_m": 1.6,
+     "aim_outward_gap_deg": 9.2,
+     "u_hard": true,
+     "u_layout": false,
+     "u_traj": false,
+     "nearest_visible_m": 0.5,
+     "visible_area_frac": 0.00094,
+     "measures_on_ch": 47,
+     "measures_in_range": 11,
+     "measures_receivable": 0,
+     "got_signal": false,
+     "got_bearing": false,
+     "bearings": 0,
+     "silent_points": 47,
+     "clear_calls": 0,
+     "min_clear_dist_m": null,
+     "min_measure_dist_m": 111.1,
+     "min_visited_dist_m": 111.1,
+     "belief_alive": false,
+     "belief_positions": 0,
+     "truth_in_belief": {
+      "pos_cell_alive": false,
+      "pos_heading_alive": false,
+      "truth_cell_dist_m": 80.5
+     },
+     "state_exhausted": false,
+     "verdict_empty": false,
+     "path_tail": [],
+     "phases_measured": [
+      "belief",
+      "ring",
+      "sweep"
+     ],
+     "phases_cleared": [],
+     "t_first_signal": null,
+     "events": []
+    }
+   ],
+   "variant": "baseline"
+  },
+  {
+   "seed": 9158,
+   "directional": 10,
+   "total": 10,
+   "cleared": 9,
+   "mean_clear_time_s": 1716.3,
+   "virtual_s": 15446.9,
+   "measure_calls": 579,
+   "clear_calls": 34,
+   "missed_channels": [
+    13
+   ],
+   "budget_hit": false,
+   "missed_detail": [
+    {
+     "seed": 9158,
+     "channel": 13,
+     "cause": "B1_layout_gap",
+     "x": 759.1,
+     "y": -1630.4,
+     "r_from_origin": 1798.4,
+     "r_recv": 1447.9,
+     "directional": true,
+     "directional_deg": 285.8,
+     "dist_to_edge_m": 1.6,
+     "aim_outward_gap_deg": 9.2,
+     "u_hard": true,
+     "u_layout": false,
+     "u_traj": false,
+     "nearest_visible_m": 0.5,
+     "visible_area_frac": 0.00094,
+     "measures_on_ch": 42,
+     "measures_in_range": 10,
+     "measures_receivable": 0,
+     "got_signal": false,
+     "got_bearing": false,
+     "bearings": 0,
+     "silent_points": 42,
+     "clear_calls": 0,
+     "min_clear_dist_m": null,
+     "min_measure_dist_m": 111.1,
+     "min_visited_dist_m": 111.1,
+     "belief_alive": false,
+     "belief_positions": 0,
+     "truth_in_belief": {
+      "pos_cell_alive": false,
+      "pos_heading_alive": false,
+      "truth_cell_dist_m": 80.5
+     },
+     "state_exhausted": false,
+     "verdict_empty": false,
+     "path_tail": [],
+     "phases_measured": [
+      "belief",
+      "ring",
+      "sweep"
+     ],
+     "phases_cleared": [],
+     "t_first_signal": null,
+     "events": []
+    }
+   ],
+   "variant": "baseline@ring1150x7"
+  },
+  {
+   "seed": 9158,
+   "directional": 10,
+   "total": 10,
+   "cleared": 9,
+   "mean_clear_time_s": 1893.8,
+   "virtual_s": 17043.9,
+   "measure_calls": 652,
+   "clear_calls": 55,
+   "missed_channels": [
+    13
+   ],
+   "budget_hit": false,
+   "missed_detail": [
+    {
+     "seed": 9158,
+     "channel": 13,
+     "cause": "B1_layout_gap",
+     "x": 759.1,
+     "y": -1630.4,
+     "r_from_origin": 1798.4,
+     "r_recv": 1447.9,
+     "directional": true,
+     "directional_deg": 285.8,
+     "dist_to_edge_m": 1.6,
+     "aim_outward_gap_deg": 9.2,
+     "u_hard": true,
+     "u_layout": false,
+     "u_traj": false,
+     "nearest_visible_m": 0.5,
+     "visible_area_frac": 0.00094,
+     "measures_on_ch": 47,
+     "measures_in_range": 11,
+     "measures_receivable": 0,
+     "got_signal": false,
+     "got_bearing": false,
+     "bearings": 0,
+     "silent_points": 47,
+     "clear_calls": 0,
+     "min_clear_dist_m": null,
+     "min_measure_dist_m": 111.1,
+     "min_visited_dist_m": 111.1,
+     "belief_alive": false,
+     "belief_positions": 0,
+     "truth_in_belief": {
+      "pos_cell_alive": false,
+      "pos_heading_alive": false,
+      "truth_cell_dist_m": 80.5
+     },
+     "state_exhausted": false,
+     "verdict_empty": false,
+     "path_tail": [],
+     "phases_measured": [
+      "belief",
+      "ring",
+      "sweep"
+     ],
+     "phases_cleared": [],
+     "t_first_signal": null,
+     "events": []
+    }
+   ],
+   "variant": "r1_raygap"
+  },
+  {
+   "seed": 9158,
+   "directional": 10,
+   "total": 10,
+   "cleared": 9,
+   "mean_clear_time_s": 1716.3,
+   "virtual_s": 15446.9,
+   "measure_calls": 579,
+   "clear_calls": 34,
+   "missed_channels": [
+    13
+   ],
+   "budget_hit": false,
+   "missed_detail": [
+    {
+     "seed": 9158,
+     "channel": 13,
+     "cause": "B1_layout_gap",
+     "x": 759.1,
+     "y": -1630.4,
+     "r_from_origin": 1798.4,
+     "r_recv": 1447.9,
+     "directional": true,
+     "directional_deg": 285.8,
+     "dist_to_edge_m": 1.6,
+     "aim_outward_gap_deg": 9.2,
+     "u_hard": true,
+     "u_layout": false,
+     "u_traj": false,
+     "nearest_visible_m": 0.5,
+     "visible_area_frac": 0.00094,
+     "measures_on_ch": 42,
+     "measures_in_range": 10,
+     "measures_receivable": 0,
+     "got_signal": false,
+     "got_bearing": false,
+     "bearings": 0,
+     "silent_points": 42,
+     "clear_calls": 0,
+     "min_clear_dist_m": null,
+     "min_measure_dist_m": 111.1,
+     "min_visited_dist_m": 111.1,
+     "belief_alive": false,
+     "belief_positions": 0,
+     "truth_in_belief": {
+      "pos_cell_alive": false,
+      "pos_heading_alive": false,
+      "truth_cell_dist_m": 80.5
+     },
+     "state_exhausted": false,
+     "verdict_empty": false,
+     "path_tail": [],
+     "phases_measured": [
+      "belief",
+      "ring",
+      "sweep"
+     ],
+     "phases_cleared": [],
+     "t_first_signal": null,
+     "events": []
+    }
+   ],
+   "variant": "r1_raygap@ring1150x7"
+  }
+ ],
+ "elapsed_s": 317.9,
+ "_stripped_rows": {
+  "original_count": 800,
+  "kept_with_issues": 4,
+  "note": "逐局明细已剥离控体积；只留有漏失/报错的条目，聚合字段未动"
+ }
+}

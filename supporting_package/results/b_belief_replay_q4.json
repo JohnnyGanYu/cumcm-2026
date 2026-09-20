@@ -1,0 +1,229 @@
+{
+  "report": {
+    "label": "q4",
+    "overall": {
+      "n": 500,
+      "hit_rate_current": 0.816,
+      "hit_rate_posterior": 0.996,
+      "hit_rate_posterior_allobs": 1.0,
+      "mean_calls_current": 2.3,
+      "mean_calls_posterior": 1.78,
+      "mean_calls_posterior_allobs": 1.74,
+      "mean_seconds_current": 19.4,
+      "mean_seconds_posterior": 66.6,
+      "mean_seconds_posterior_allobs": 60.8,
+      "current_miss_count": 92,
+      "posterior_rescues_of_current_miss": 90,
+      "posterior_loses_where_current_hit": 0
+    },
+    "directional": {
+      "n": 259,
+      "hit_rate_current": 0.6448,
+      "hit_rate_posterior": 0.9923,
+      "hit_rate_posterior_allobs": 1.0,
+      "mean_calls_current": 3.52,
+      "mean_calls_posterior": 2.51,
+      "mean_calls_posterior_allobs": 2.43,
+      "mean_seconds_current": 32.8,
+      "mean_seconds_posterior": 123.6,
+      "mean_seconds_posterior_allobs": 112.4,
+      "current_miss_count": 92,
+      "posterior_rescues_of_current_miss": 90,
+      "posterior_loses_where_current_hit": 0
+    },
+    "omnidirectional": {
+      "n": 241,
+      "hit_rate_current": 1.0,
+      "hit_rate_posterior": 1.0,
+      "hit_rate_posterior_allobs": 1.0,
+      "mean_calls_current": 1.0,
+      "mean_calls_posterior": 1.0,
+      "mean_calls_posterior_allobs": 1.0,
+      "mean_seconds_current": 5.0,
+      "mean_seconds_posterior": 5.3,
+      "mean_seconds_posterior_allobs": 5.3,
+      "current_miss_count": 0,
+      "posterior_rescues_of_current_miss": 0,
+      "posterior_loses_where_current_hit": 0
+    },
+    "by_caller": {
+      "_home_channel": {
+        "n": 322,
+        "hit_rate_current": 1.0,
+        "hit_rate_posterior": 1.0,
+        "hit_rate_posterior_allobs": 1.0,
+        "mean_calls_current": 1.0,
+        "mean_calls_posterior": 1.0,
+        "mean_calls_posterior_allobs": 1.0,
+        "mean_seconds_current": 5.0,
+        "mean_seconds_posterior": 5.3,
+        "mean_seconds_posterior_allobs": 5.3,
+        "current_miss_count": 0,
+        "posterior_rescues_of_current_miss": 0,
+        "posterior_loses_where_current_hit": 0
+      },
+      "_ray_blind_clear": {
+        "n": 34,
+        "hit_rate_current": 0.0,
+        "hit_rate_posterior": 1.0,
+        "hit_rate_posterior_allobs": 1.0,
+        "mean_calls_current": 7.0,
+        "mean_calls_posterior": 1.82,
+        "mean_calls_posterior_allobs": 2.15,
+        "mean_seconds_current": 135.3,
+        "mean_seconds_posterior": 117.7,
+        "mean_seconds_posterior_allobs": 125.3,
+        "current_miss_count": 34,
+        "posterior_rescues_of_current_miss": 34,
+        "posterior_loses_where_current_hit": 0
+      },
+      "_spiral": {
+        "n": 68,
+        "hit_rate_current": 0.2794,
+        "hit_rate_posterior": 0.9706,
+        "hit_rate_posterior_allobs": 1.0,
+        "mean_calls_current": 6.51,
+        "mean_calls_posterior": 5.88,
+        "mean_calls_posterior_allobs": 5.25,
+        "mean_seconds_current": 39.6,
+        "mean_seconds_posterior": 378.6,
+        "mean_seconds_posterior_allobs": 303.6,
+        "current_miss_count": 49,
+        "posterior_rescues_of_current_miss": 47,
+        "posterior_loses_where_current_hit": 0
+      },
+      "_step_closer": {
+        "n": 76,
+        "hit_rate_current": 0.8816,
+        "hit_rate_posterior": 1.0,
+        "hit_rate_posterior_allobs": 1.0,
+        "mean_calls_current": 1.96,
+        "mean_calls_posterior": 1.42,
+        "mean_calls_posterior_allobs": 1.57,
+        "mean_seconds_current": 10.5,
+        "mean_seconds_posterior": 24.2,
+        "mean_seconds_posterior_allobs": 49.7,
+        "current_miss_count": 9,
+        "posterior_rescues_of_current_miss": 9,
+        "posterior_loses_where_current_hit": 0
+      }
+    },
+    "uncertainty_gate": {
+      "auc_post_diameter_predicts_observed_fail": 0.9907,
+      "auc_est_err_predicts_fail_oracle": 0.9978,
+      "auc_neg_phit_predicts_fail": 0.9877
+    },
+    "gate_threshold_scan": [
+      {
+        "diameter_threshold_m": 40,
+        "decisions_deferred": 143,
+        "failed_clears_avoided": 109,
+        "successful_clears_wrongly_deferred": 34,
+        "precision": 0.7622,
+        "recall_of_all_fails": 0.9909,
+        "net_seconds_saved_est": 327.0
+      },
+      {
+        "diameter_threshold_m": 60,
+        "decisions_deferred": 121,
+        "failed_clears_avoided": 106,
+        "successful_clears_wrongly_deferred": 15,
+        "precision": 0.876,
+        "recall_of_all_fails": 0.9636,
+        "net_seconds_saved_est": 318.0
+      },
+      {
+        "diameter_threshold_m": 80,
+        "decisions_deferred": 109,
+        "failed_clears_avoided": 101,
+        "successful_clears_wrongly_deferred": 8,
+        "precision": 0.9266,
+        "recall_of_all_fails": 0.9182,
+        "net_seconds_saved_est": 303.0
+      },
+      {
+        "diameter_threshold_m": 120,
+        "decisions_deferred": 98,
+        "failed_clears_avoided": 92,
+        "successful_clears_wrongly_deferred": 6,
+        "precision": 0.9388,
+        "recall_of_all_fails": 0.8364,
+        "net_seconds_saved_est": 276.0
+      },
+      {
+        "diameter_threshold_m": 200,
+        "decisions_deferred": 87,
+        "failed_clears_avoided": 84,
+        "successful_clears_wrongly_deferred": 3,
+        "precision": 0.9655,
+        "recall_of_all_fails": 0.7636,
+        "net_seconds_saved_est": 252.0
+      },
+      {
+        "diameter_threshold_m": 400,
+        "decisions_deferred": 21,
+        "failed_clears_avoided": 21,
+        "successful_clears_wrongly_deferred": 0,
+        "precision": 1.0,
+        "recall_of_all_fails": 0.1909,
+        "net_seconds_saved_est": 63.0
+      }
+    ],
+    "observed_fail_rate": 0.22,
+    "note_current_plan": "[estimate] + spiral(6 点 @ 15.0 m)",
+    "note_posterior_plan": "20 m 圆盘贪心集合覆盖，上限 40 个点"
+  },
+  "rows": {
+    "_stripped": true,
+    "n": 500,
+    "_note": "逐局明细已剥离以控体积，可用同名脚本复现",
+    "sample": [
+      {
+        "seed": 30000,
+        "channel": 2,
+        "directional": false,
+        "caller": "_home_channel",
+        "n_bearings": 5,
+        "observed_clear_ok": true,
+        "est_err_m": 2.4813415256446456,
+        "post_diam_m": 9.968812949976666,
+        "post_diam_all_m": 4.907223661934059,
+        "p_hit_best": 1.0,
+        "cur_hit": true,
+        "cur_calls": 1,
+        "cur_seconds": 5.0,
+        "post_hit": true,
+        "post_calls": 1,
+        "post_seconds": 5.7745340547435715,
+        "post_plan_len": 1,
+        "postall_hit": true,
+        "postall_calls": 1,
+        "postall_seconds": 5.840914025720859,
+        "postall_plan_len": 1
+      },
+      {
+        "seed": 30000,
+        "channel": 4,
+        "directional": false,
+        "caller": "_home_channel",
+        "n_bearings": 6,
+        "observed_clear_ok": true,
+        "est_err_m": 3.3504634980915795,
+        "post_diam_m": 9.036649088564962,
+        "post_diam_all_m": 9.03664908856453,
+        "p_hit_best": 1.0,
+        "cur_hit": true,
+        "cur_calls": 1,
+        "cur_seconds": 5.0,
+        "post_hit": true,
+        "post_calls": 1,
+        "post_seconds": 5.214476348063162,
+        "post_plan_len": 1,
+        "postall_hit": true,
+        "postall_calls": 1,
+        "postall_seconds": 5.542820048866574,
+        "postall_plan_len": 1
+      }
+    ]
+  }
+}

@@ -1,0 +1,214 @@
+{
+ "report": {
+  "config": {
+   "directional": 10,
+   "count": null,
+   "seed_start": 9103,
+   "episodes": 1,
+   "baseline_variant": "prod"
+  },
+  "per_variant": {
+   "prod": {
+    "episodes": 1,
+    "clear_rate": 0.9375,
+    "full_clear": 0,
+    "total_missed": 1,
+    "meanT": 944.0,
+    "move_m": 60793.0,
+    "measures": 328.0,
+    "guard_skipped_total": 0,
+    "colo_new_estimates_total": 7
+   },
+   "guard_budget": {
+    "episodes": 1,
+    "clear_rate": 0.9375,
+    "full_clear": 0,
+    "total_missed": 1,
+    "meanT": 943.7,
+    "move_m": 60806.1,
+    "measures": 327.0,
+    "guard_skipped_total": 4,
+    "colo_new_estimates_total": 6
+   },
+   "guard_accept": {
+    "episodes": 1,
+    "clear_rate": 0.9375,
+    "full_clear": 0,
+    "total_missed": 1,
+    "meanT": 944.0,
+    "move_m": 60793.0,
+    "measures": 328.0,
+    "guard_skipped_total": 0,
+    "colo_new_estimates_total": 7
+   },
+   "guard_both": {
+    "episodes": 1,
+    "clear_rate": 1.0,
+    "full_clear": 1,
+    "total_missed": 0,
+    "meanT": 868.3,
+    "move_m": 59081.7,
+    "measures": 322.0,
+    "guard_skipped_total": 3,
+    "colo_new_estimates_total": 6
+   },
+   "colo_off": {
+    "episodes": 1,
+    "clear_rate": 1.0,
+    "full_clear": 1,
+    "total_missed": 0,
+    "meanT": 943.6,
+    "move_m": 65354.4,
+    "measures": 301.0,
+    "guard_skipped_total": 0,
+    "colo_new_estimates_total": 0
+   }
+  },
+  "paired_vs_baseline": {
+   "guard_budget": {
+    "mean_clear_time_s": {
+     "n_pairs": 1
+    },
+    "move_m": {
+     "n_pairs": 1
+    },
+    "cleared": {
+     "n_pairs": 1
+    },
+    "measures": {
+     "n_pairs": 1
+    }
+   },
+   "guard_accept": {
+    "mean_clear_time_s": {
+     "n_pairs": 1
+    },
+    "move_m": {
+     "n_pairs": 1
+    },
+    "cleared": {
+     "n_pairs": 1
+    },
+    "measures": {
+     "n_pairs": 1
+    }
+   },
+   "guard_both": {
+    "mean_clear_time_s": {
+     "n_pairs": 1
+    },
+    "move_m": {
+     "n_pairs": 1
+    },
+    "cleared": {
+     "n_pairs": 1
+    },
+    "measures": {
+     "n_pairs": 1
+    }
+   },
+   "colo_off": {
+    "mean_clear_time_s": {
+     "n_pairs": 1
+    },
+    "move_m": {
+     "n_pairs": 1
+    },
+    "cleared": {
+     "n_pairs": 1
+    },
+    "measures": {
+     "n_pairs": 1
+    }
+   }
+  }
+ },
+ "runs": {
+  "prod": [
+   {
+    "seed": 9103,
+    "variant": "prod",
+    "cleared": 15,
+    "total": 16,
+    "clear_ratio": 0.9375,
+    "mean_clear_time_s": 943.9736440666667,
+    "move_m": 60793.023334334765,
+    "measures": 328,
+    "missed": [
+     13
+    ],
+    "guard_skipped": 0,
+    "colo_stops": 5,
+    "colo_new_estimates": 7
+   }
+  ],
+  "guard_budget": [
+   {
+    "seed": 9103,
+    "variant": "guard_budget",
+    "cleared": 15,
+    "total": 16,
+    "clear_ratio": 0.9375,
+    "mean_clear_time_s": 943.6819304666666,
+    "move_m": 60806.144803700896,
+    "measures": 327,
+    "missed": [
+     13
+    ],
+    "guard_skipped": 4,
+    "colo_stops": 5,
+    "colo_new_estimates": 6
+   }
+  ],
+  "guard_accept": [
+   {
+    "seed": 9103,
+    "variant": "guard_accept",
+    "cleared": 15,
+    "total": 16,
+    "clear_ratio": 0.9375,
+    "mean_clear_time_s": 943.9736440666667,
+    "move_m": 60793.023334334765,
+    "measures": 328,
+    "missed": [
+     13
+    ],
+    "guard_skipped": 0,
+    "colo_stops": 5,
+    "colo_new_estimates": 7
+   }
+  ],
+  "guard_both": [
+   {
+    "seed": 9103,
+    "variant": "guard_both",
+    "cleared": 16,
+    "total": 16,
+    "clear_ratio": 1.0,
+    "mean_clear_time_s": 868.33425225,
+    "move_m": 59081.74018370566,
+    "measures": 322,
+    "missed": [],
+    "guard_skipped": 3,
+    "colo_stops": 6,
+    "colo_new_estimates": 6
+   }
+  ],
+  "colo_off": [
+   {
+    "seed": 9103,
+    "variant": "colo_off",
+    "cleared": 16,
+    "total": 16,
+    "clear_ratio": 1.0,
+    "mean_clear_time_s": 943.554440375,
+    "move_m": 65354.35525421647,
+    "measures": 301,
+    "missed": [],
+    "guard_skipped": 0,
+    "colo_stops": 0,
+    "colo_new_estimates": 0
+   }
+  ]
+ }
+}

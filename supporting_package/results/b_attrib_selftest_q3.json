@@ -1,0 +1,135 @@
+{
+  "all_identical": true,
+  "checks": [
+    {
+      "seed": 320000,
+      "identical": true,
+      "DogStrategy": {
+        "cleared": 10,
+        "virtual_s": 5339.590357,
+        "measure_calls": 226,
+        "clear_calls": 10,
+        "cleared_channels": [
+          1,
+          3,
+          4,
+          7,
+          11,
+          14,
+          15,
+          17,
+          19,
+          20
+        ]
+      },
+      "AttribStrategy": {
+        "cleared": 10,
+        "virtual_s": 5339.590357,
+        "measure_calls": 226,
+        "clear_calls": 10,
+        "cleared_channels": [
+          1,
+          3,
+          4,
+          7,
+          11,
+          14,
+          15,
+          17,
+          19,
+          20
+        ]
+      }
+    },
+    {
+      "seed": 320001,
+      "identical": true,
+      "DogStrategy": {
+        "cleared": 13,
+        "virtual_s": 6025.473645,
+        "measure_calls": 186,
+        "clear_calls": 13,
+        "cleared_channels": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          9,
+          10,
+          12,
+          14,
+          15,
+          16,
+          17
+        ]
+      },
+      "AttribStrategy": {
+        "cleared": 13,
+        "virtual_s": 6025.473645,
+        "measure_calls": 186,
+        "clear_calls": 13,
+        "cleared_channels": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          9,
+          10,
+          12,
+          14,
+          15,
+          16,
+          17
+        ]
+      }
+    },
+    {
+      "seed": 320002,
+      "identical": true,
+      "DogStrategy": {
+        "cleared": 12,
+        "virtual_s": 5112.581367,
+        "measure_calls": 201,
+        "clear_calls": 12,
+        "cleared_channels": [
+          1,
+          4,
+          5,
+          6,
+          10,
+          12,
+          14,
+          15,
+          16,
+          17,
+          18,
+          20
+        ]
+      },
+      "AttribStrategy": {
+        "cleared": 12,
+        "virtual_s": 5112.581367,
+        "measure_calls": 201,
+        "clear_calls": 12,
+        "cleared_channels": [
+          1,
+          4,
+          5,
+          6,
+          10,
+          12,
+          14,
+          15,
+          16,
+          17,
+          18,
+          20
+        ]
+      }
+    }
+  ]
+}

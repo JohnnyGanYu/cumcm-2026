@@ -1,0 +1,713 @@
+{
+  "config": {
+    "episodes": 200,
+    "seed_start": 5000,
+    "directional": 0,
+    "arms": [
+      "TUNED",
+      "r1150x6",
+      "r1150x7",
+      "r1200x6",
+      "r1250x6",
+      "r1000x7",
+      "r1100x6",
+      "r1100x7",
+      "r1300x6",
+      "r1150x6_ph"
+    ],
+    "baseline": "TUNED",
+    "workers": 4
+  },
+  "arms": {
+    "TUNED": {
+      "layers": [
+        [
+          1250.0,
+          9,
+          0.0
+        ]
+      ],
+      "summary": {
+        "episodes": 200,
+        "errors": 0,
+        "sources_total": 2585,
+        "sources_cleared": 2585,
+        "clear_rate_fraction": "2585/2585",
+        "pooled_clear_rate": 1.0,
+        "full_clear_episodes": 200,
+        "pooled_mean_clear_time_s": 420.95,
+        "mean_of_means_s": 424.59,
+        "median_of_means_s": 417.55,
+        "measure_calls_mean": 168.7,
+        "move_distance_m_mean": 22044.0
+      },
+      "episodes": {
+        "_stripped": true,
+        "n": 200,
+        "_note": "逐局明细已剥离以控体积，可用同名脚本复现",
+        "sample": [
+          {
+            "seed": 5000,
+            "total_jammers": 11,
+            "cleared": 11,
+            "cleared_ratio": 1.0,
+            "total_virtual_time_s": 5103.066,
+            "mean_clear_time_s": 463.915,
+            "measure_calls": 165,
+            "clear_calls": 11,
+            "move_distance_m": 20475.3,
+            "program_wall_s": 0.97,
+            "missed_channels": [],
+            "events": []
+          },
+          {
+            "seed": 5001,
+            "total_jammers": 14,
+            "cleared": 14,
+            "cleared_ratio": 1.0,
+            "total_virtual_time_s": 5745.666,
+            "mean_clear_time_s": 410.405,
+            "measure_calls": 186,
+            "clear_calls": 14,
+            "move_distance_m": 23053.3,
+            "program_wall_s": 1.02,
+            "missed_channels": [],
+            "events": []
+          }
+        ]
+      },
+      "wall_s": 44.2,
+      "paired_vs_baseline": {
+        "paired_n": 200,
+        "paired_mean_diff_s": 0.0,
+        "paired_se_s": 0.0,
+        "paired_ci95_s": [
+          0.0,
+          0.0
+        ],
+        "paired_win_frac": 0.0
+      }
+    },
+    "r1150x6": {
+      "layers": [
+        [
+          1150.0,
+          6,
+          0.0
+        ]
+      ],
+      "summary": {
+        "episodes": 200,
+        "errors": 0,
+        "sources_total": 2585,
+        "sources_cleared": 2584,
+        "clear_rate_fraction": "2584/2585",
+        "pooled_clear_rate": 0.99961,
+        "full_clear_episodes": 199,
+        "pooled_mean_clear_time_s": 415.31,
+        "mean_of_means_s": 417.74,
+        "median_of_means_s": 416.15,
+        "measure_calls_mean": 143.2,
+        "move_distance_m_mean": 22440.0
+      },
+      "episodes": {
+        "_stripped": true,
+        "n": 200,
+        "_note": "逐局明细已剥离以控体积，可用同名脚本复现",
+        "sample": [
+          {
+            "seed": 5000,
+            "total_jammers": 11,
+            "cleared": 11,
+            "cleared_ratio": 1.0,
+            "total_virtual_time_s": 4840.695,
+            "mean_clear_time_s": 440.063,
+            "measure_calls": 136,
+            "clear_calls": 11,
+            "move_distance_m": 20038.5,
+            "program_wall_s": 0.88,
+            "missed_channels": [],
+            "events": []
+          },
+          {
+            "seed": 5001,
+            "total_jammers": 14,
+            "cleared": 14,
+            "cleared_ratio": 1.0,
+            "total_virtual_time_s": 5483.061,
+            "mean_clear_time_s": 391.647,
+            "measure_calls": 146,
+            "clear_calls": 14,
+            "move_distance_m": 22945.3,
+            "program_wall_s": 0.96,
+            "missed_channels": [],
+            "events": []
+          }
+        ]
+      },
+      "wall_s": 62.3,
+      "paired_vs_baseline": {
+        "paired_n": 200,
+        "paired_mean_diff_s": -6.85,
+        "paired_se_s": 2.67,
+        "paired_ci95_s": [
+          -12.09,
+          -1.61
+        ],
+        "paired_win_frac": 0.655
+      }
+    },
+    "r1150x7": {
+      "layers": [
+        [
+          1150.0,
+          7,
+          0.0
+        ]
+      ],
+      "summary": {
+        "episodes": 200,
+        "errors": 0,
+        "sources_total": 2585,
+        "sources_cleared": 2584,
+        "clear_rate_fraction": "2584/2585",
+        "pooled_clear_rate": 0.99961,
+        "full_clear_episodes": 199,
+        "pooled_mean_clear_time_s": 412.09,
+        "mean_of_means_s": 414.61,
+        "median_of_means_s": 409.43,
+        "measure_calls_mean": 151.7,
+        "move_distance_m_mean": 21974.0
+      },
+      "episodes": {
+        "_stripped": true,
+        "n": 200,
+        "_note": "逐局明细已剥离以控体积，可用同名脚本复现",
+        "sample": [
+          {
+            "seed": 5000,
+            "total_jammers": 11,
+            "cleared": 11,
+            "cleared_ratio": 1.0,
+            "total_virtual_time_s": 4989.044,
+            "mean_clear_time_s": 453.549,
+            "measure_calls": 146,
+            "clear_calls": 11,
+            "move_distance_m": 20495.2,
+            "program_wall_s": 0.83,
+            "missed_channels": [],
+            "events": []
+          },
+          {
+            "seed": 5001,
+            "total_jammers": 14,
+            "cleared": 14,
+            "cleared_ratio": 1.0,
+            "total_virtual_time_s": 5590.769,
+            "mean_clear_time_s": 399.341,
+            "measure_calls": 165,
+            "clear_calls": 14,
+            "move_distance_m": 22903.8,
+            "program_wall_s": 0.98,
+            "missed_channels": [],
+            "events": []
+          }
+        ]
+      },
+      "wall_s": 38.6,
+      "paired_vs_baseline": {
+        "paired_n": 200,
+        "paired_mean_diff_s": -9.99,
+        "paired_se_s": 2.08,
+        "paired_ci95_s": [
+          -14.06,
+          -5.91
+        ],
+        "paired_win_frac": 0.675
+      }
+    },
+    "r1200x6": {
+      "layers": [
+        [
+          1200.0,
+          6,
+          0.0
+        ]
+      ],
+      "summary": {
+        "episodes": 200,
+        "errors": 0,
+        "sources_total": 2585,
+        "sources_cleared": 2582,
+        "clear_rate_fraction": "2582/2585",
+        "pooled_clear_rate": 0.99884,
+        "full_clear_episodes": 197,
+        "pooled_mean_clear_time_s": 415.13,
+        "mean_of_means_s": 417.44,
+        "median_of_means_s": 413.67,
+        "measure_calls_mean": 142.6,
+        "move_distance_m_mean": 22425.0
+      },
+      "episodes": {
+        "_stripped": true,
+        "n": 200,
+        "_note": "逐局明细已剥离以控体积，可用同名脚本复现",
+        "sample": [
+          {
+            "seed": 5000,
+            "total_jammers": 11,
+            "cleared": 11,
+            "cleared_ratio": 1.0,
+            "total_virtual_time_s": 4985.059,
+            "mean_clear_time_s": 453.187,
+            "measure_calls": 140,
+            "clear_calls": 11,
+            "move_distance_m": 20630.3,
+            "program_wall_s": 0.28,
+            "missed_channels": [],
+            "events": []
+          },
+          {
+            "seed": 5001,
+            "total_jammers": 14,
+            "cleared": 14,
+            "cleared_ratio": 1.0,
+            "total_virtual_time_s": 5494.462,
+            "mean_clear_time_s": 392.462,
+            "measure_calls": 145,
+            "clear_calls": 14,
+            "move_distance_m": 23027.3,
+            "program_wall_s": 0.81,
+            "missed_channels": [],
+            "events": []
+          }
+        ]
+      },
+      "wall_s": 35.8,
+      "paired_vs_baseline": {
+        "paired_n": 200,
+        "paired_mean_diff_s": -7.15,
+        "paired_se_s": 2.74,
+        "paired_ci95_s": [
+          -12.52,
+          -1.79
+        ],
+        "paired_win_frac": 0.65
+      }
+    },
+    "r1250x6": {
+      "layers": [
+        [
+          1250.0,
+          6,
+          0.0
+        ]
+      ],
+      "summary": {
+        "episodes": 200,
+        "errors": 0,
+        "sources_total": 2585,
+        "sources_cleared": 2582,
+        "clear_rate_fraction": "2582/2585",
+        "pooled_clear_rate": 0.99884,
+        "full_clear_episodes": 197,
+        "pooled_mean_clear_time_s": 417.5,
+        "mean_of_means_s": 419.89,
+        "median_of_means_s": 417.07,
+        "measure_calls_mean": 142.8,
+        "move_distance_m_mean": 22571.0
+      },
+      "episodes": {
+        "_stripped": true,
+        "n": 200,
+        "_note": "逐局明细已剥离以控体积，可用同名脚本复现",
+        "sample": [
+          {
+            "seed": 5000,
+            "total_jammers": 11,
+            "cleared": 11,
+            "cleared_ratio": 1.0,
+            "total_virtual_time_s": 4846.105,
+            "mean_clear_time_s": 440.555,
+            "measure_calls": 134,
+            "clear_calls": 11,
+            "move_distance_m": 20115.5,
+            "program_wall_s": 0.72,
+            "missed_channels": [],
+            "events": []
+          },
+          {
+            "seed": 5001,
+            "total_jammers": 14,
+            "cleared": 14,
+            "cleared_ratio": 1.0,
+            "total_virtual_time_s": 5503.646,
+            "mean_clear_time_s": 393.118,
+            "measure_calls": 138,
+            "clear_calls": 14,
+            "move_distance_m": 23273.2,
+            "program_wall_s": 0.8,
+            "missed_channels": [],
+            "events": []
+          }
+        ]
+      },
+      "wall_s": 57.3,
+      "paired_vs_baseline": {
+        "paired_n": 200,
+        "paired_mean_diff_s": -4.7,
+        "paired_se_s": 2.71,
+        "paired_ci95_s": [
+          -10.01,
+          0.61
+        ],
+        "paired_win_frac": 0.615
+      }
+    },
+    "r1000x7": {
+      "layers": [
+        [
+          1000.0,
+          7,
+          0.0
+        ]
+      ],
+      "summary": {
+        "episodes": 200,
+        "errors": 0,
+        "sources_total": 2585,
+        "sources_cleared": 2583,
+        "clear_rate_fraction": "2583/2585",
+        "pooled_clear_rate": 0.99923,
+        "full_clear_episodes": 198,
+        "pooled_mean_clear_time_s": 418.57,
+        "mean_of_means_s": 420.97,
+        "median_of_means_s": 417.0,
+        "measure_calls_mean": 153.0,
+        "move_distance_m_mean": 22347.0
+      },
+      "episodes": {
+        "_stripped": true,
+        "n": 200,
+        "_note": "逐局明细已剥离以控体积，可用同名脚本复现",
+        "sample": [
+          {
+            "seed": 5000,
+            "total_jammers": 11,
+            "cleared": 11,
+            "cleared_ratio": 1.0,
+            "total_virtual_time_s": 4965.81,
+            "mean_clear_time_s": 451.437,
+            "measure_calls": 146,
+            "clear_calls": 11,
+            "move_distance_m": 20379.0,
+            "program_wall_s": 0.93,
+            "missed_channels": [],
+            "events": []
+          },
+          {
+            "seed": 5001,
+            "total_jammers": 14,
+            "cleared": 14,
+            "cleared_ratio": 1.0,
+            "total_virtual_time_s": 5484.578,
+            "mean_clear_time_s": 391.756,
+            "measure_calls": 164,
+            "clear_calls": 14,
+            "move_distance_m": 22387.9,
+            "program_wall_s": 0.94,
+            "missed_channels": [],
+            "events": []
+          }
+        ]
+      },
+      "wall_s": 58.5,
+      "paired_vs_baseline": {
+        "paired_n": 200,
+        "paired_mean_diff_s": -3.63,
+        "paired_se_s": 2.27,
+        "paired_ci95_s": [
+          -8.07,
+          0.82
+        ],
+        "paired_win_frac": 0.59
+      }
+    },
+    "r1100x6": {
+      "layers": [
+        [
+          1100.0,
+          6,
+          0.0
+        ]
+      ],
+      "summary": {
+        "episodes": 200,
+        "errors": 0,
+        "sources_total": 2585,
+        "sources_cleared": 2584,
+        "clear_rate_fraction": "2584/2585",
+        "pooled_clear_rate": 0.99961,
+        "full_clear_episodes": 199,
+        "pooled_mean_clear_time_s": 414.96,
+        "mean_of_means_s": 417.24,
+        "median_of_means_s": 415.66,
+        "measure_calls_mean": 143.4,
+        "move_distance_m_mean": 22414.0
+      },
+      "episodes": {
+        "_stripped": true,
+        "n": 200,
+        "_note": "逐局明细已剥离以控体积，可用同名脚本复现",
+        "sample": [
+          {
+            "seed": 5000,
+            "total_jammers": 11,
+            "cleared": 11,
+            "cleared_ratio": 1.0,
+            "total_virtual_time_s": 4832.475,
+            "mean_clear_time_s": 439.316,
+            "measure_calls": 136,
+            "clear_calls": 11,
+            "move_distance_m": 19997.4,
+            "program_wall_s": 0.86,
+            "missed_channels": [],
+            "events": []
+          },
+          {
+            "seed": 5001,
+            "total_jammers": 14,
+            "cleared": 14,
+            "cleared_ratio": 1.0,
+            "total_virtual_time_s": 5467.01,
+            "mean_clear_time_s": 390.501,
+            "measure_calls": 146,
+            "clear_calls": 14,
+            "move_distance_m": 22865.0,
+            "program_wall_s": 0.94,
+            "missed_channels": [],
+            "events": []
+          }
+        ]
+      },
+      "wall_s": 45.4,
+      "paired_vs_baseline": {
+        "paired_n": 200,
+        "paired_mean_diff_s": -7.35,
+        "paired_se_s": 2.67,
+        "paired_ci95_s": [
+          -12.58,
+          -2.12
+        ],
+        "paired_win_frac": 0.67
+      }
+    },
+    "r1100x7": {
+      "layers": [
+        [
+          1100.0,
+          7,
+          0.0
+        ]
+      ],
+      "summary": {
+        "episodes": 200,
+        "errors": 0,
+        "sources_total": 2585,
+        "sources_cleared": 2584,
+        "clear_rate_fraction": "2584/2585",
+        "pooled_clear_rate": 0.99961,
+        "full_clear_episodes": 199,
+        "pooled_mean_clear_time_s": 414.26,
+        "mean_of_means_s": 416.91,
+        "median_of_means_s": 413.0,
+        "measure_calls_mean": 152.6,
+        "move_distance_m_mean": 22090.0
+      },
+      "episodes": {
+        "_stripped": true,
+        "n": 200,
+        "_note": "逐局明细已剥离以控体积，可用同名脚本复现",
+        "sample": [
+          {
+            "seed": 5000,
+            "total_jammers": 11,
+            "cleared": 11,
+            "cleared_ratio": 1.0,
+            "total_virtual_time_s": 4971.71,
+            "mean_clear_time_s": 451.974,
+            "measure_calls": 145,
+            "clear_calls": 11,
+            "move_distance_m": 20433.5,
+            "program_wall_s": 0.83,
+            "missed_channels": [],
+            "events": []
+          },
+          {
+            "seed": 5001,
+            "total_jammers": 14,
+            "cleared": 14,
+            "cleared_ratio": 1.0,
+            "total_virtual_time_s": 5974.421,
+            "mean_clear_time_s": 426.744,
+            "measure_calls": 163,
+            "clear_calls": 14,
+            "move_distance_m": 24877.1,
+            "program_wall_s": 17.15,
+            "missed_channels": [],
+            "events": []
+          }
+        ]
+      },
+      "wall_s": 73.9,
+      "paired_vs_baseline": {
+        "paired_n": 200,
+        "paired_mean_diff_s": -7.68,
+        "paired_se_s": 2.06,
+        "paired_ci95_s": [
+          -11.73,
+          -3.64
+        ],
+        "paired_win_frac": 0.62
+      }
+    },
+    "r1300x6": {
+      "layers": [
+        [
+          1300.0,
+          6,
+          0.0
+        ]
+      ],
+      "summary": {
+        "episodes": 200,
+        "errors": 0,
+        "sources_total": 2585,
+        "sources_cleared": 2583,
+        "clear_rate_fraction": "2583/2585",
+        "pooled_clear_rate": 0.99923,
+        "full_clear_episodes": 198,
+        "pooled_mean_clear_time_s": 419.53,
+        "mean_of_means_s": 421.95,
+        "median_of_means_s": 416.27,
+        "measure_calls_mean": 142.3,
+        "move_distance_m_mean": 22727.0
+      },
+      "episodes": {
+        "_stripped": true,
+        "n": 200,
+        "_note": "逐局明细已剥离以控体积，可用同名脚本复现",
+        "sample": [
+          {
+            "seed": 5000,
+            "total_jammers": 11,
+            "cleared": 11,
+            "cleared_ratio": 1.0,
+            "total_virtual_time_s": 4508.404,
+            "mean_clear_time_s": 409.855,
+            "measure_calls": 131,
+            "clear_calls": 11,
+            "move_distance_m": 18507.0,
+            "program_wall_s": 0.85,
+            "missed_channels": [],
+            "events": []
+          },
+          {
+            "seed": 5001,
+            "total_jammers": 14,
+            "cleared": 14,
+            "cleared_ratio": 1.0,
+            "total_virtual_time_s": 5600.789,
+            "mean_clear_time_s": 400.056,
+            "measure_calls": 145,
+            "clear_calls": 14,
+            "move_distance_m": 23553.9,
+            "program_wall_s": 0.93,
+            "missed_channels": [],
+            "events": []
+          }
+        ]
+      },
+      "wall_s": 43.1,
+      "paired_vs_baseline": {
+        "paired_n": 200,
+        "paired_mean_diff_s": -2.64,
+        "paired_se_s": 2.87,
+        "paired_ci95_s": [
+          -8.27,
+          2.98
+        ],
+        "paired_win_frac": 0.595
+      }
+    },
+    "r1150x6_ph": {
+      "layers": [
+        [
+          1150.0,
+          6,
+          0.5235987755982988
+        ]
+      ],
+      "summary": {
+        "episodes": 200,
+        "errors": 0,
+        "sources_total": 2585,
+        "sources_cleared": 2582,
+        "clear_rate_fraction": "2582/2585",
+        "pooled_clear_rate": 0.99884,
+        "full_clear_episodes": 197,
+        "pooled_mean_clear_time_s": 414.38,
+        "mean_of_means_s": 417.42,
+        "median_of_means_s": 411.75,
+        "measure_calls_mean": 142.8,
+        "move_distance_m_mean": 22371.0
+      },
+      "episodes": {
+        "_stripped": true,
+        "n": 200,
+        "_note": "逐局明细已剥离以控体积，可用同名脚本复现",
+        "sample": [
+          {
+            "seed": 5000,
+            "total_jammers": 11,
+            "cleared": 11,
+            "cleared_ratio": 1.0,
+            "total_virtual_time_s": 5164.292,
+            "mean_clear_time_s": 469.481,
+            "measure_calls": 141,
+            "clear_calls": 11,
+            "move_distance_m": 21526.5,
+            "program_wall_s": 0.9,
+            "missed_channels": [],
+            "events": []
+          },
+          {
+            "seed": 5001,
+            "total_jammers": 14,
+            "cleared": 14,
+            "cleared_ratio": 1.0,
+            "total_virtual_time_s": 5642.211,
+            "mean_clear_time_s": 403.015,
+            "measure_calls": 155,
+            "clear_calls": 14,
+            "move_distance_m": 23466.1,
+            "program_wall_s": 0.92,
+            "missed_channels": [],
+            "events": []
+          }
+        ]
+      },
+      "wall_s": 79.7,
+      "paired_vs_baseline": {
+        "paired_n": 200,
+        "paired_mean_diff_s": -7.18,
+        "paired_se_s": 2.66,
+        "paired_ci95_s": [
+          -12.39,
+          -1.96
+        ],
+        "paired_win_frac": 0.66
+      }
+    }
+  }
+}

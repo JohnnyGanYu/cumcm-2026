@@ -1,0 +1,407 @@
+{
+ "config": {
+  "episodes": 40,
+  "seed_start": 7001,
+  "directional": 5,
+  "arms": [
+   "base",
+   "r1150x8",
+   "r1150x7",
+   "r1250x9",
+   "q4_outer1650",
+   "q4_outer1700",
+   "q4_in1150x8_out1750x20",
+   "q4_tri_1100x7_1450x12_1750x18"
+  ]
+ },
+ "arms": {
+  "base": {
+   "layers": [
+    [
+     1250.0,
+     12,
+     0.0
+    ],
+    [
+     1750.0,
+     18,
+     0.17453292519943295
+    ]
+   ],
+   "summary": {
+    "episodes": 40,
+    "errors": 0,
+    "full_clear_episodes": 40,
+    "full_clear_rate": 1.0,
+    "cleared_ratio_mean": 1.0,
+    "cleared_ratio_min": 1.0,
+    "sources_total": 514,
+    "sources_cleared": 514,
+    "pooled_clear_rate": 1.0,
+    "pooled_mean_clear_time_s": 1224.56,
+    "mean_clear_time_s_mean": 1256.86,
+    "mean_clear_time_s_median": 1229.89,
+    "mean_clear_time_s_max": 1761.05,
+    "total_virtual_time_s_mean": 15735.6,
+    "measure_calls_mean": 516.9,
+    "clear_calls_mean": 18.4,
+    "move_distance_m_mean": 63003.0,
+    "program_wall_s_max": 30.78
+   },
+   "episodes": [],
+   "wall_s": 69.7,
+   "_stripped_episodes": {
+    "original_count": 40,
+    "kept_with_issues": 0,
+    "note": "逐局明细已剥离控体积；只留有漏失/报错的条目"
+   }
+  },
+  "r1150x8": {
+   "layers": [
+    [
+     1150.0,
+     8,
+     0.0
+    ],
+    [
+     1750.0,
+     18,
+     0.17453292519943295
+    ]
+   ],
+   "summary": {
+    "episodes": 40,
+    "errors": 0,
+    "full_clear_episodes": 40,
+    "full_clear_rate": 1.0,
+    "cleared_ratio_mean": 1.0,
+    "cleared_ratio_min": 1.0,
+    "sources_total": 514,
+    "sources_cleared": 514,
+    "pooled_clear_rate": 1.0,
+    "pooled_mean_clear_time_s": 1164.97,
+    "mean_clear_time_s_mean": 1196.18,
+    "mean_clear_time_s_median": 1177.01,
+    "mean_clear_time_s_max": 1675.4,
+    "total_virtual_time_s_mean": 14969.8,
+    "measure_calls_mean": 464.6,
+    "clear_calls_mean": 17.3,
+    "move_distance_m_mean": 60753.0,
+    "program_wall_s_max": 3.97
+   },
+   "episodes": [],
+   "wall_s": 36.1,
+   "_stripped_episodes": {
+    "original_count": 40,
+    "kept_with_issues": 0,
+    "note": "逐局明细已剥离控体积；只留有漏失/报错的条目"
+   }
+  },
+  "r1150x7": {
+   "layers": [
+    [
+     1150.0,
+     7,
+     0.0
+    ],
+    [
+     1750.0,
+     18,
+     0.17453292519943295
+    ]
+   ],
+   "summary": {
+    "episodes": 40,
+    "errors": 0,
+    "full_clear_episodes": 40,
+    "full_clear_rate": 1.0,
+    "cleared_ratio_mean": 1.0,
+    "cleared_ratio_min": 1.0,
+    "sources_total": 514,
+    "sources_cleared": 514,
+    "pooled_clear_rate": 1.0,
+    "pooled_mean_clear_time_s": 1145.36,
+    "mean_clear_time_s_mean": 1175.68,
+    "mean_clear_time_s_median": 1144.43,
+    "mean_clear_time_s_max": 1683.3,
+    "total_virtual_time_s_mean": 14717.9,
+    "measure_calls_mean": 453.4,
+    "clear_calls_mean": 17.3,
+    "move_distance_m_mean": 59829.0,
+    "program_wall_s_max": 3.63
+   },
+   "episodes": [],
+   "wall_s": 32.2,
+   "_stripped_episodes": {
+    "original_count": 40,
+    "kept_with_issues": 0,
+    "note": "逐局明细已剥离控体积；只留有漏失/报错的条目"
+   }
+  },
+  "r1250x9": {
+   "layers": [
+    [
+     1250.0,
+     9,
+     0.0
+    ],
+    [
+     1750.0,
+     18,
+     0.17453292519943295
+    ]
+   ],
+   "summary": {
+    "episodes": 40,
+    "errors": 0,
+    "full_clear_episodes": 39,
+    "full_clear_rate": 0.975,
+    "cleared_ratio_mean": 0.9983,
+    "cleared_ratio_min": 0.9333,
+    "sources_total": 514,
+    "sources_cleared": 513,
+    "pooled_clear_rate": 0.9981,
+    "pooled_mean_clear_time_s": 1191.51,
+    "mean_clear_time_s_mean": 1220.14,
+    "mean_clear_time_s_median": 1224.8,
+    "mean_clear_time_s_max": 1620.77,
+    "total_virtual_time_s_mean": 15281.1,
+    "measure_calls_mean": 481.9,
+    "clear_calls_mean": 17.0,
+    "move_distance_m_mean": 61797.0,
+    "program_wall_s_max": 21.12
+   },
+   "episodes": [
+    {
+     "seed": 7003,
+     "total_jammers": 15,
+     "cleared": 14,
+     "cleared_ratio": 0.9333333333333333,
+     "total_virtual_time_s": 17164.29,
+     "mean_clear_time_s": 1226.021,
+     "measure_calls": 378,
+     "clear_calls": 68,
+     "move_distance_m": 73561.5,
+     "program_wall_s": 5.91,
+     "missed_channels": [
+      5
+     ],
+     "events": []
+    }
+   ],
+   "wall_s": 58.6,
+   "_stripped_episodes": {
+    "original_count": 40,
+    "kept_with_issues": 1,
+    "note": "逐局明细已剥离控体积；只留有漏失/报错的条目"
+   }
+  },
+  "q4_outer1650": {
+   "layers": [
+    [
+     1150.0,
+     8,
+     0.0
+    ],
+    [
+     1650.0,
+     18,
+     0.17453292519943295
+    ]
+   ],
+   "summary": {
+    "episodes": 40,
+    "errors": 0,
+    "full_clear_episodes": 40,
+    "full_clear_rate": 1.0,
+    "cleared_ratio_mean": 1.0,
+    "cleared_ratio_min": 1.0,
+    "sources_total": 514,
+    "sources_cleared": 514,
+    "pooled_clear_rate": 1.0,
+    "pooled_mean_clear_time_s": 1289.8,
+    "mean_clear_time_s_mean": 1321.54,
+    "mean_clear_time_s_median": 1322.07,
+    "mean_clear_time_s_max": 2183.06,
+    "total_virtual_time_s_mean": 16574.0,
+    "measure_calls_mean": 522.4,
+    "clear_calls_mean": 26.5,
+    "move_distance_m_mean": 66902.0,
+    "program_wall_s_max": 4.63
+   },
+   "episodes": [],
+   "wall_s": 42.4,
+   "_stripped_episodes": {
+    "original_count": 40,
+    "kept_with_issues": 0,
+    "note": "逐局明细已剥离控体积；只留有漏失/报错的条目"
+   }
+  },
+  "q4_outer1700": {
+   "layers": [
+    [
+     1150.0,
+     8,
+     0.0
+    ],
+    [
+     1700.0,
+     18,
+     0.17453292519943295
+    ]
+   ],
+   "summary": {
+    "episodes": 40,
+    "errors": 0,
+    "full_clear_episodes": 40,
+    "full_clear_rate": 1.0,
+    "cleared_ratio_mean": 1.0,
+    "cleared_ratio_min": 1.0,
+    "sources_total": 514,
+    "sources_cleared": 514,
+    "pooled_clear_rate": 1.0,
+    "pooled_mean_clear_time_s": 1165.16,
+    "mean_clear_time_s_mean": 1195.55,
+    "mean_clear_time_s_median": 1238.85,
+    "mean_clear_time_s_max": 1496.76,
+    "total_virtual_time_s_mean": 14972.3,
+    "measure_calls_mean": 494.8,
+    "clear_calls_mean": 18.1,
+    "move_distance_m_mean": 59846.0,
+    "program_wall_s_max": 4.67
+   },
+   "episodes": [],
+   "wall_s": 38.6,
+   "_stripped_episodes": {
+    "original_count": 40,
+    "kept_with_issues": 0,
+    "note": "逐局明细已剥离控体积；只留有漏失/报错的条目"
+   }
+  },
+  "q4_in1150x8_out1750x20": {
+   "layers": [
+    [
+     1150.0,
+     8,
+     0.0
+    ],
+    [
+     1750.0,
+     20,
+     0.15707963267948966
+    ]
+   ],
+   "summary": {
+    "episodes": 40,
+    "errors": 0,
+    "full_clear_episodes": 39,
+    "full_clear_rate": 0.975,
+    "cleared_ratio_mean": 0.9953,
+    "cleared_ratio_min": 0.8125,
+    "sources_total": 514,
+    "sources_cleared": 511,
+    "pooled_clear_rate": 0.9942,
+    "pooled_mean_clear_time_s": 1120.9,
+    "mean_clear_time_s_mean": 1149.7,
+    "mean_clear_time_s_median": 1159.09,
+    "mean_clear_time_s_max": 1589.4,
+    "total_virtual_time_s_mean": 14319.5,
+    "measure_calls_mean": 477.3,
+    "clear_calls_mean": 18.2,
+    "move_distance_m_mean": 57107.0,
+    "program_wall_s_max": 33.37
+   },
+   "episodes": [
+    {
+     "seed": 7028,
+     "total_jammers": 16,
+     "cleared": 13,
+     "cleared_ratio": 0.8125,
+     "total_virtual_time_s": 9588.444,
+     "mean_clear_time_s": 737.573,
+     "measure_calls": 291,
+     "clear_calls": 20,
+     "move_distance_m": 39057.2,
+     "program_wall_s": 19.08,
+     "missed_channels": [
+      2,
+      4,
+      14
+     ],
+     "events": [
+      "measure stopped: /measure 连接失败（接口可能未开放或测试已结束）: <urlopen error timed out>"
+     ]
+    }
+   ],
+   "wall_s": 63.6,
+   "_stripped_episodes": {
+    "original_count": 40,
+    "kept_with_issues": 1,
+    "note": "逐局明细已剥离控体积；只留有漏失/报错的条目"
+   }
+  },
+  "q4_tri_1100x7_1450x12_1750x18": {
+   "layers": [
+    [
+     1100.0,
+     7,
+     0.0
+    ],
+    [
+     1450.0,
+     12,
+     0.2617993877991494
+    ],
+    [
+     1750.0,
+     18,
+     0.17453292519943295
+    ]
+   ],
+   "summary": {
+    "episodes": 40,
+    "errors": 0,
+    "full_clear_episodes": 39,
+    "full_clear_rate": 0.975,
+    "cleared_ratio_mean": 0.9979,
+    "cleared_ratio_min": 0.9167,
+    "sources_total": 514,
+    "sources_cleared": 513,
+    "pooled_clear_rate": 0.9981,
+    "pooled_mean_clear_time_s": 1291.44,
+    "mean_clear_time_s_mean": 1327.83,
+    "mean_clear_time_s_median": 1298.42,
+    "mean_clear_time_s_max": 1893.42,
+    "total_virtual_time_s_mean": 16562.7,
+    "measure_calls_mean": 542.5,
+    "clear_calls_mean": 17.9,
+    "move_distance_m_mean": 66363.0,
+    "program_wall_s_max": 4.45
+   },
+   "episodes": [
+    {
+     "seed": 7032,
+     "total_jammers": 12,
+     "cleared": 11,
+     "cleared_ratio": 0.9166666666666666,
+     "total_virtual_time_s": 20827.581,
+     "mean_clear_time_s": 1893.416,
+     "measure_calls": 689,
+     "clear_calls": 63,
+     "move_distance_m": 82637.9,
+     "program_wall_s": 4.31,
+     "missed_channels": [
+      5
+     ],
+     "events": []
+    }
+   ],
+   "wall_s": 36.8,
+   "_stripped_episodes": {
+    "original_count": 40,
+    "kept_with_issues": 1,
+    "note": "逐局明细已剥离控体积；只留有漏失/报错的条目"
+   }
+  }
+ }
+}

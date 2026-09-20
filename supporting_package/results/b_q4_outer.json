@@ -1,0 +1,495 @@
+{
+ "config": {
+  "episodes": 40,
+  "seed_start": 7001,
+  "directional": 5,
+  "count": null,
+  "real_limit_s": 1200.0,
+  "strategy": {
+   "sweep_origin": true,
+   "probe_ring_radius": 1250.0,
+   "probe_ring_stations": 12,
+   "outer_ring_radius": 1560.0,
+   "outer_ring_stations": 14,
+   "use_outer_ring": true,
+   "directional_ring_stations": 18,
+   "dogleg_offset_deg": 32.0,
+   "dogleg_length_m": 380.0,
+   "approach_fraction": 0.62,
+   "lateral_fraction": 0.16,
+   "clear_distance_m": 55.0,
+   "spiral_radius_m": 15.0,
+   "spiral_points": 6,
+   "max_measures_per_channel": 40,
+   "max_homing_measures": 14,
+   "max_clear_attempts": 9,
+   "real_time_reserve_s": 15.0,
+   "virtual_time_budget_s": 324000.0,
+   "directional_probe": true
+  }
+ },
+ "summary": {
+  "episodes": 40,
+  "full_clear_episodes": 36,
+  "full_clear_rate": 0.9,
+  "cleared_ratio_mean": 0.9906,
+  "cleared_ratio_min": 0.9,
+  "mean_clear_time_s_mean": 1531.44,
+  "mean_clear_time_s_max": 2314.31,
+  "total_virtual_time_s_mean": 18851.0,
+  "total_virtual_time_s_max": 23143.1,
+  "program_wall_s_mean": 1.68,
+  "program_wall_s_max": 2.21
+ },
+ "episodes": [
+  {
+   "seed": 7001,
+   "total_jammers": 10,
+   "directional_jammers": 5,
+   "cleared": 9,
+   "cleared_ratio": 0.9,
+   "total_virtual_time_s": 20242.924,
+   "mean_clear_time_s": 2249.214,
+   "measure_calls": 746,
+   "clear_calls": 50,
+   "move_distance_m": 78139.6,
+   "program_wall_s": 2.21,
+   "missed_channels": [
+    11
+   ],
+   "events": [
+    "ch11: measure budget exhausted",
+    "ch11: measure budget exhausted",
+    "ch11: measure budget exhausted",
+    "ch11: measure budget exhausted",
+    "ch11: measure budget exhausted"
+   ],
+   "truth": [
+    {
+     "channel": 4,
+     "x": 733.239,
+     "y": 351.248,
+     "reception_radius_m": 1485.685,
+     "directional_deg": 348.821,
+     "cleared": true
+    },
+    {
+     "channel": 5,
+     "x": -1021.257,
+     "y": -45.014,
+     "reception_radius_m": 1444.261,
+     "directional_deg": null,
+     "cleared": true
+    },
+    {
+     "channel": 6,
+     "x": -210.883,
+     "y": 1484.138,
+     "reception_radius_m": 1138.434,
+     "directional_deg": null,
+     "cleared": true
+    },
+    {
+     "channel": 8,
+     "x": -325.534,
+     "y": 129.956,
+     "reception_radius_m": 1228.043,
+     "directional_deg": null,
+     "cleared": true
+    },
+    {
+     "channel": 11,
+     "x": 1050.722,
+     "y": 1415.831,
+     "reception_radius_m": 1143.918,
+     "directional_deg": 10.046,
+     "cleared": false
+    },
+    {
+     "channel": 12,
+     "x": -538.493,
+     "y": 1549.445,
+     "reception_radius_m": 1248.685,
+     "directional_deg": 294.417,
+     "cleared": true
+    },
+    {
+     "channel": 14,
+     "x": -1451.825,
+     "y": -614.026,
+     "reception_radius_m": 1200.554,
+     "directional_deg": 162.0,
+     "cleared": true
+    },
+    {
+     "channel": 16,
+     "x": -120.813,
+     "y": -279.116,
+     "reception_radius_m": 1076.759,
+     "directional_deg": null,
+     "cleared": true
+    },
+    {
+     "channel": 19,
+     "x": 1468.032,
+     "y": 107.843,
+     "reception_radius_m": 1366.779,
+     "directional_deg": 155.347,
+     "cleared": true
+    },
+    {
+     "channel": 20,
+     "x": 1085.61,
+     "y": -344.143,
+     "reception_radius_m": 1108.352,
+     "directional_deg": null,
+     "cleared": true
+    }
+   ]
+  },
+  {
+   "seed": 7015,
+   "total_jammers": 11,
+   "directional_jammers": 5,
+   "cleared": 10,
+   "cleared_ratio": 0.9090909090909091,
+   "total_virtual_time_s": 23143.063,
+   "mean_clear_time_s": 2314.306,
+   "measure_calls": 739,
+   "clear_calls": 29,
+   "move_distance_m": 93175.3,
+   "program_wall_s": 1.87,
+   "missed_channels": [
+    20
+   ],
+   "events": [
+    "ch10: measure budget exhausted",
+    "ch11: measure budget exhausted",
+    "ch17: measure budget exhausted",
+    "ch10: measure budget exhausted",
+    "ch20: lost signal, defer to ring probe",
+    "ch10: measure budget exhausted",
+    "ch10: measure budget exhausted",
+    "ch20: lost signal, defer to ring probe",
+    "ch10: measure budget exhausted",
+    "ch20: measure budget exhausted"
+   ],
+   "truth": [
+    {
+     "channel": 2,
+     "x": 1200.358,
+     "y": 673.934,
+     "reception_radius_m": 1175.916,
+     "directional_deg": 101.263,
+     "cleared": true
+    },
+    {
+     "channel": 3,
+     "x": 650.144,
+     "y": 1581.725,
+     "reception_radius_m": 1417.369,
+     "directional_deg": 223.661,
+     "cleared": true
+    },
+    {
+     "channel": 6,
+     "x": 81.944,
+     "y": 1181.313,
+     "reception_radius_m": 1393.259,
+     "directional_deg": null,
+     "cleared": true
+    },
+    {
+     "channel": 9,
+     "x": 1118.587,
+     "y": 548.443,
+     "reception_radius_m": 1044.127,
+     "directional_deg": null,
+     "cleared": true
+    },
+    {
+     "channel": 10,
+     "x": -967.789,
+     "y": -131.38,
+     "reception_radius_m": 1005.782,
+     "directional_deg": 359.998,
+     "cleared": true
+    },
+    {
+     "channel": 11,
+     "x": -484.555,
+     "y": 760.45,
+     "reception_radius_m": 1270.869,
+     "directional_deg": null,
+     "cleared": true
+    },
+    {
+     "channel": 13,
+     "x": -1519.799,
+     "y": 226.615,
+     "reception_radius_m": 1312.953,
+     "directional_deg": null,
+     "cleared": true
+    },
+    {
+     "channel": 17,
+     "x": 1419.352,
+     "y": 809.775,
+     "reception_radius_m": 1177.614,
+     "directional_deg": 151.036,
+     "cleared": true
+    },
+    {
+     "channel": 18,
+     "x": 1598.732,
+     "y": -555.498,
+     "reception_radius_m": 1272.721,
+     "directional_deg": null,
+     "cleared": true
+    },
+    {
+     "channel": 19,
+     "x": 293.068,
+     "y": -725.468,
+     "reception_radius_m": 1448.818,
+     "directional_deg": null,
+     "cleared": true
+    },
+    {
+     "channel": 20,
+     "x": 1122.488,
+     "y": 1344.319,
+     "reception_radius_m": 1476.937,
+     "directional_deg": 9.004,
+     "cleared": false
+    }
+   ]
+  },
+  {
+   "seed": 7032,
+   "total_jammers": 12,
+   "directional_jammers": 5,
+   "cleared": 11,
+   "cleared_ratio": 0.9166666666666666,
+   "total_virtual_time_s": 19318.429,
+   "mean_clear_time_s": 1756.221,
+   "measure_calls": 710,
+   "clear_calls": 19,
+   "move_distance_m": 75072.1,
+   "program_wall_s": 1.89,
+   "missed_channels": [
+    5
+   ],
+   "events": [
+    "ch12: measure budget exhausted",
+    "ch2: measure budget exhausted",
+    "ch18: measure budget exhausted"
+   ],
+   "truth": [
+    {
+     "channel": 2,
+     "x": -1296.683,
+     "y": -854.862,
+     "reception_radius_m": 1131.947,
+     "directional_deg": 188.382,
+     "cleared": true
+    },
+    {
+     "channel": 3,
+     "x": 1685.8,
+     "y": -105.139,
+     "reception_radius_m": 1229.302,
+     "directional_deg": null,
+     "cleared": true
+    },
+    {
+     "channel": 4,
+     "x": -1211.853,
+     "y": 183.915,
+     "reception_radius_m": 1426.063,
+     "directional_deg": null,
+     "cleared": true
+    },
+    {
+     "channel": 5,
+     "x": -981.6,
+     "y": 1439.92,
+     "reception_radius_m": 1380.501,
+     "directional_deg": 129.323,
+     "cleared": false
+    },
+    {
+     "channel": 7,
+     "x": -189.896,
+     "y": 608.13,
+     "reception_radius_m": 1447.194,
+     "directional_deg": null,
+     "cleared": true
+    },
+    {
+     "channel": 8,
+     "x": 137.439,
+     "y": -955.759,
+     "reception_radius_m": 1363.238,
+     "directional_deg": null,
+     "cleared": true
+    },
+    {
+     "channel": 10,
+     "x": 92.715,
+     "y": 208.955,
+     "reception_radius_m": 1168.939,
+     "directional_deg": 27.978,
+     "cleared": true
+    },
+    {
+     "channel": 11,
+     "x": -1567.18,
+     "y": -382.669,
+     "reception_radius_m": 1254.965,
+     "directional_deg": null,
+     "cleared": true
+    },
+    {
+     "channel": 12,
+     "x": -1613.168,
+     "y": 75.57,
+     "reception_radius_m": 1391.347,
+     "directional_deg": null,
+     "cleared": true
+    },
+    {
+     "channel": 13,
+     "x": -942.536,
+     "y": -1293.493,
+     "reception_radius_m": 1074.751,
+     "directional_deg": 263.69,
+     "cleared": true
+    },
+    {
+     "channel": 17,
+     "x": -460.865,
+     "y": 1580.631,
+     "reception_radius_m": 1349.297,
+     "directional_deg": null,
+     "cleared": true
+    },
+    {
+     "channel": 18,
+     "x": 1149.127,
+     "y": 993.013,
+     "reception_radius_m": 1181.022,
+     "directional_deg": 5.042,
+     "cleared": true
+    }
+   ]
+  },
+  {
+   "seed": 7039,
+   "total_jammers": 10,
+   "directional_jammers": 5,
+   "cleared": 9,
+   "cleared_ratio": 0.9,
+   "total_virtual_time_s": 19255.624,
+   "mean_clear_time_s": 2139.514,
+   "measure_calls": 798,
+   "clear_calls": 22,
+   "move_distance_m": 72053.1,
+   "program_wall_s": 2.08,
+   "missed_channels": [
+    4
+   ],
+   "events": [
+    "ch18: measure budget exhausted",
+    "ch14: measure budget exhausted"
+   ],
+   "truth": [
+    {
+     "channel": 2,
+     "x": -896.428,
+     "y": 795.615,
+     "reception_radius_m": 1046.514,
+     "directional_deg": null,
+     "cleared": true
+    },
+    {
+     "channel": 4,
+     "x": -344.207,
+     "y": 1582.383,
+     "reception_radius_m": 1296.005,
+     "directional_deg": 90.681,
+     "cleared": false
+    },
+    {
+     "channel": 7,
+     "x": 1015.909,
+     "y": -440.953,
+     "reception_radius_m": 1311.875,
+     "directional_deg": 45.446,
+     "cleared": true
+    },
+    {
+     "channel": 8,
+     "x": -915.921,
+     "y": -398.007,
+     "reception_radius_m": 1324.769,
+     "directional_deg": 79.833,
+     "cleared": true
+    },
+    {
+     "channel": 9,
+     "x": 1248.805,
+     "y": 720.88,
+     "reception_radius_m": 1082.424,
+     "directional_deg": 355.834,
+     "cleared": true
+    },
+    {
+     "channel": 10,
+     "x": 1001.105,
+     "y": 1174.052,
+     "reception_radius_m": 1216.115,
+     "directional_deg": null,
+     "cleared": true
+    },
+    {
+     "channel": 11,
+     "x": 912.259,
+     "y": -1321.552,
+     "reception_radius_m": 1151.518,
+     "directional_deg": null,
+     "cleared": true
+    },
+    {
+     "channel": 14,
+     "x": 742.893,
+     "y": 310.197,
+     "reception_radius_m": 1262.757,
+     "directional_deg": null,
+     "cleared": true
+    },
+    {
+     "channel": 15,
+     "x": 1489.841,
+     "y": -304.742,
+     "reception_radius_m": 1409.491,
+     "directional_deg": null,
+     "cleared": true
+    },
+    {
+     "channel": 18,
+     "x": -717.372,
+     "y": -1073.146,
+     "reception_radius_m": 1308.987,
+     "directional_deg": 61.76,
+     "cleared": true
+    }
+   ]
+  }
+ ],
+ "_stripped_episodes": {
+  "original_count": 40,
+  "kept_with_issues": 4,
+  "note": "逐局明细已剥离控体积；只留有漏失/报错的条目，聚合字段未动"
+ }
+}

@@ -1,0 +1,183 @@
+{
+ "report": {
+  "config": {
+   "directional": 10,
+   "count": null,
+   "seed_start": 9000,
+   "episodes": 200,
+   "baseline_variant": "prod"
+  },
+  "per_variant": {
+   "prod": {
+    "episodes": 200,
+    "clear_rate": 0.99919,
+    "full_clear": 198,
+    "total_missed": 2,
+    "meanT": 1165.9,
+    "move_m": 59701.8,
+    "measures": 412.3,
+    "guard_skipped_total": 0,
+    "colo_new_estimates_total": 759
+   },
+   "guard_both": {
+    "episodes": 200,
+    "clear_rate": 0.999,
+    "full_clear": 198,
+    "total_missed": 2,
+    "meanT": 1162.7,
+    "move_m": 59452.3,
+    "measures": 412.3,
+    "guard_skipped_total": 222,
+    "colo_new_estimates_total": 784
+   }
+  },
+  "paired_vs_baseline": {
+   "guard_both": {
+    "mean_clear_time_s": {
+     "n_pairs": 200,
+     "baseline_mean": 1165.9,
+     "d_mean": -3.2,
+     "d_pct": -0.27,
+     "ci95": [
+      -11.6,
+      5.2
+     ],
+     "t": -0.743,
+     "p_ttest": 0.458,
+     "p_wilcoxon": 0.00428,
+     "better": 64,
+     "worse": 30,
+     "tie": 106
+    },
+    "move_m": {
+     "n_pairs": 200,
+     "baseline_mean": 59701.8,
+     "d_mean": -249.5,
+     "d_pct": -0.42,
+     "ci95": [
+      -598.3,
+      99.2
+     ],
+     "t": -1.402,
+     "p_ttest": 0.162,
+     "p_wilcoxon": 0.0174,
+     "better": 50,
+     "worse": 33,
+     "tie": 117
+    },
+    "cleared": {
+     "n_pairs": 200,
+     "baseline_mean": 12.8,
+     "d_mean": 0.0,
+     "d_pct": 0.0,
+     "ci95": [
+      -0.0,
+      0.0
+     ],
+     "t": 0.0,
+     "p_ttest": 1.0,
+     "p_wilcoxon": 1.0,
+     "better": 1,
+     "worse": 1,
+     "tie": 198
+    },
+    "measures": {
+     "n_pairs": 200,
+     "baseline_mean": 412.3,
+     "d_mean": 0.0,
+     "d_pct": 0.0,
+     "ci95": [
+      -0.9,
+      0.9
+     ],
+     "t": 0.033,
+     "p_ttest": 0.974,
+     "p_wilcoxon": 0.637,
+     "better": 40,
+     "worse": 47,
+     "tie": 113
+    }
+   }
+  }
+ },
+ "runs": {
+  "prod": [
+   {
+    "seed": 9103,
+    "variant": "prod",
+    "cleared": 15,
+    "total": 16,
+    "clear_ratio": 0.9375,
+    "mean_clear_time_s": 943.9736440666667,
+    "move_m": 60793.023334334765,
+    "measures": 328,
+    "missed": [
+     13
+    ],
+    "guard_skipped": 0,
+    "colo_stops": 5,
+    "colo_new_estimates": 7
+   },
+   {
+    "seed": 9158,
+    "variant": "prod",
+    "cleared": 9,
+    "total": 10,
+    "clear_ratio": 0.9,
+    "mean_clear_time_s": 1846.5153055555556,
+    "move_m": 65958.18878979594,
+    "measures": 551,
+    "missed": [
+     13
+    ],
+    "guard_skipped": 0,
+    "colo_stops": 2,
+    "colo_new_estimates": 0
+   }
+  ],
+  "guard_both": [
+   {
+    "seed": 9147,
+    "variant": "guard_both",
+    "cleared": 9,
+    "total": 10,
+    "clear_ratio": 0.9,
+    "mean_clear_time_s": 2270.962524111111,
+    "move_m": 83758.3136457039,
+    "measures": 523,
+    "missed": [
+     13
+    ],
+    "guard_skipped": 1,
+    "colo_stops": 4,
+    "colo_new_estimates": 4
+   },
+   {
+    "seed": 9158,
+    "variant": "guard_both",
+    "cleared": 9,
+    "total": 10,
+    "clear_ratio": 0.9,
+    "mean_clear_time_s": 1846.5153055555556,
+    "move_m": 65958.18878979594,
+    "measures": 551,
+    "missed": [
+     13
+    ],
+    "guard_skipped": 0,
+    "colo_stops": 2,
+    "colo_new_estimates": 0
+   }
+  ],
+  "_stripped_prod": {
+   "original_count": 200,
+   "kept_with_issues": 2,
+   "note": "逐局明细已剥离控体积；只留有漏失/报错的条目"
+  },
+  "_stripped_guard_both": {
+   "original_count": 200,
+   "kept_with_issues": 2,
+   "note": "逐局明细已剥离控体积；只留有漏失/报错的条目"
+  }
+ }
+}

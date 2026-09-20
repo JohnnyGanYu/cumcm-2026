@@ -1,0 +1,301 @@
+{
+  "report": {
+    "label": "smoke",
+    "n_records_total": 185,
+    "n_analysed": 185,
+    "n_support_empty": 0,
+    "episode_baseline": {
+      "episodes": 3,
+      "full_clear_rate": 1.0,
+      "cleared_ratio_mean": 1.0,
+      "mean_clear_time_s": 449.8,
+      "clear_calls_mean": 12.3,
+      "measure_calls_mean": 192.0,
+      "cleared_mean": 12.33
+    },
+    "sanity": {
+      "truth_in_support_used_rate": 1.0,
+      "truth_in_support_all_rate": 1.0
+    },
+    "A_point_estimate_error": {
+      "all_snapshots": {
+        "n": 185,
+        "mean": 9.894,
+        "p50": 2.18,
+        "p75": 8.34,
+        "p90": 18.77,
+        "p95": 23.24,
+        "p99": 111.07,
+        "max": 351.29
+      },
+      "at_clear_decisions": {
+        "n": 37,
+        "mean": 1.503,
+        "p50": 1.33,
+        "p75": 1.81,
+        "p90": 2.89,
+        "p95": 3.41,
+        "p99": 6.64,
+        "max": 6.64
+      },
+      "frac_err_gt_clear_radius": 0.0811,
+      "frac_err_gt_clear_radius_at_clear": 0.0,
+      "by_n_bearings": {
+        "2": {
+          "n": 37,
+          "mean": 34.393,
+          "p50": 15.69,
+          "p75": 21.2,
+          "p90": 70.78,
+          "p95": 111.07,
+          "p99": 351.29,
+          "max": 351.29
+        },
+        "3": {
+          "n": 38,
+          "mean": 8.524,
+          "p50": 5.82,
+          "p75": 15.54,
+          "p90": 19.11,
+          "p95": 20.68,
+          "p99": 24.32,
+          "max": 24.32
+        },
+        "4": {
+          "n": 45,
+          "mean": 2.888,
+          "p50": 1.88,
+          "p75": 3.41,
+          "p90": 7.07,
+          "p95": 9.44,
+          "p99": 10.44,
+          "max": 10.44
+        },
+        "5": {
+          "n": 43,
+          "mean": 1.793,
+          "p50": 1.53,
+          "p75": 2.17,
+          "p90": 3.75,
+          "p95": 4.97,
+          "p99": 5.68,
+          "max": 5.68
+        },
+        "6": {
+          "n": 22,
+          "mean": 1.218,
+          "p50": 0.74,
+          "p75": 1.81,
+          "p90": 1.98,
+          "p95": 4.34,
+          "p99": 4.34,
+          "max": 4.34
+        }
+      }
+    },
+    "posterior_scale": {
+      "diameter_last4_m": {
+        "n": 185,
+        "mean": 42.653,
+        "p50": 16.17,
+        "p75": 48.23,
+        "p90": 85.95,
+        "p95": 166.62,
+        "p99": 403.52,
+        "max": 739.13
+      },
+      "diameter_allobs_m": {
+        "n": 185,
+        "mean": 42.486,
+        "p50": 16.17,
+        "p75": 48.23,
+        "p90": 85.95,
+        "p95": 166.62,
+        "p99": 403.52,
+        "max": 739.13
+      },
+      "frac_diameter_le_40m_last4": 0.7027,
+      "frac_diameter_le_40m_allobs": 0.7027
+    },
+    "B_hit_probability": {
+      "point_estimate": {
+        "n": 185,
+        "mean": 0.905,
+        "p50": 1.0,
+        "p75": 1.0,
+        "p90": 1.0,
+        "p95": 1.0,
+        "p99": 1.0,
+        "max": 1.0
+      },
+      "best_single_disc_last4": {
+        "n": 185,
+        "mean": 0.907,
+        "p50": 1.0,
+        "p75": 1.0,
+        "p90": 1.0,
+        "p95": 1.0,
+        "p99": 1.0,
+        "max": 1.0
+      },
+      "best_single_disc_allobs": {
+        "n": 185,
+        "mean": 0.906,
+        "p50": 1.0,
+        "p75": 1.0,
+        "p90": 1.0,
+        "p95": 1.0,
+        "p99": 1.0,
+        "max": 1.0
+      },
+      "mean_gain_best_vs_point": 0.0023,
+      "mean_gain_allobs_vs_point": 0.0017,
+      "at_clear_decisions": {
+        "actual_clear_point": {
+          "n": 37,
+          "mean": 1.0,
+          "p50": 1.0,
+          "p75": 1.0,
+          "p90": 1.0,
+          "p95": 1.0,
+          "p99": 1.0,
+          "max": 1.0
+        },
+        "best_single_disc": {
+          "n": 37,
+          "mean": 1.0,
+          "p50": 1.0,
+          "p75": 1.0,
+          "p90": 1.0,
+          "p95": 1.0,
+          "p99": 1.0,
+          "max": 1.0
+        }
+      }
+    },
+    "C_clear_call_breakdown": {
+      "clear_records_analysed": 37,
+      "post_clear_redundant": 0,
+      "fresh": 37,
+      "fresh_success": 37,
+      "fresh_fail": 0,
+      "fresh_fail_rate": 0.0,
+      "fail_with_posterior_phit_lt_5pct": 0,
+      "frac_of_fails_predictable": null,
+      "mean_phit_of_failed_calls": null,
+      "mean_phit_of_successful_calls": 1.0,
+      "wasted_seconds_post_clear": 0,
+      "wasted_seconds_failed_fresh": 0
+    },
+    "D_coverage_plan": {
+      "discs_to_cover_95pct_last4": {
+        "n": 185,
+        "mean": 1.757,
+        "p50": 1,
+        "p75": 2,
+        "p90": 3,
+        "p95": 5,
+        "p99": 10,
+        "max": 23
+      },
+      "discs_to_cover_100pct_last4": {
+        "n": 184,
+        "mean": 2.207,
+        "p50": 1,
+        "p75": 3,
+        "p90": 3,
+        "p95": 7,
+        "p99": 11,
+        "max": 40
+      },
+      "discs_to_cover_95pct_allobs": {
+        "n": 185,
+        "mean": 1.762,
+        "p50": 1,
+        "p75": 1,
+        "p90": 3,
+        "p95": 5,
+        "p99": 11,
+        "max": 24
+      },
+      "discs_to_cover_100pct_allobs": {
+        "n": 183,
+        "mean": 2.137,
+        "p50": 1,
+        "p75": 3,
+        "p90": 3,
+        "p95": 7,
+        "p99": 9,
+        "max": 43
+      },
+      "frac_needing_le_6_discs_last4": 0.9784,
+      "frac_needing_le_6_discs_allobs": 0.9784,
+      "note": "现状 _spiral 固定 6 点 / 半径 15 m，只能覆盖直径 <= ~70 m 的后验"
+    },
+    "E_decision_value": {
+      "observed_fresh_clear_success_rate": 1.0,
+      "mean_phit_current_clear_point": 1.0,
+      "mean_phit_posterior_best_point": 1.0,
+      "mean_phit_posterior_best_point_allobs": 1.0,
+      "relative_phit_gain_best_vs_current": 0.0,
+      "relative_phit_gain_allobs_vs_current": 0.0,
+      "expected_clear_calls_current_1_over_p": 1.0,
+      "expected_clear_calls_posterior_plan_median": 1
+    }
+  },
+  "rows": {
+    "_stripped": true,
+    "n": 185,
+    "_note": "逐局明细已剥离以控体积，可用同名脚本复现",
+    "sample": [
+      {
+        "seed": 20000,
+        "channel": 6,
+        "kind": "estimate",
+        "directional": false,
+        "n_bearings": 2,
+        "truth_in_support": true,
+        "truth_in_support_all": true,
+        "post_diam_used_m": 41.34625472460677,
+        "post_diam_all_m": 41.34625472460677,
+        "post_area_used_m2": 297.4228285151512,
+        "post_area_all_m2": 297.4228285151512,
+        "est_err_m": 2.056960321431367,
+        "reported_diameter_m": 41.34625472460658,
+        "p_hit_point_est": 0.9988,
+        "p_hit_best_single": 0.9996,
+        "best_single_err_m": 3.6966047288725954,
+        "p_hit_best_single_allobs": 0.9984,
+        "best_single_allobs_err_m": 1.9668804343073623,
+        "discs_95": 1,
+        "discs_100": 2,
+        "discs_95_allobs": 1,
+        "discs_100_allobs": 2
+      },
+      {
+        "seed": 20000,
+        "channel": 6,
+        "kind": "estimate",
+        "directional": false,
+        "n_bearings": 3,
+        "truth_in_support": true,
+        "truth_in_support_all": true,
+        "post_diam_used_m": 23.362450556387056,
+        "post_diam_all_m": 23.362450556387056,
+        "post_area_used_m2": 74.3502344416047,
+        "post_area_all_m2": 74.3502344416047,
+        "est_err_m": 4.531447930405702,
+        "reported_diameter_m": 23.362450556386346,
+        "p_hit_point_est": 1.0,
+        "p_hit_best_single": 1.0,
+        "best_single_err_m": 7.359889363567895,
+        "p_hit_best_single_allobs": 1.0,
+        "best_single_allobs_err_m": 10.108967256851189,
+        "discs_95": 1,
+        "discs_100": 1,
+        "discs_95_allobs": 1,
+        "discs_100_allobs": 1
+      }
+    ]
+  }
+}

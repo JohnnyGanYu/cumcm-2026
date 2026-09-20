@@ -1,0 +1,39 @@
+{
+  "purpose": "PR #7 (Fast 策略) 合入后的清除失败率审计 —— 供后续优化定位攻击面",
+  "method": "真值插桩：包装生产策略的 _clear_at，记录每次调用时的真值距离与示向度条数",
+  "seeds": {
+    "Q3": "51000-51029",
+    "Q4_d5": "52000-52029"
+  },
+  "episodes_per_arm": 30,
+  "Q3": {
+    "clear_calls": 446,
+    "failed": 77,
+    "fail_rate_pct": 17.3,
+    "fail_true_dist_median_m": 27.9,
+    "fail_over_100m": 0,
+    "fail_single_bearing": 0,
+    "verdict": "失败均属必要微调，无攻击面"
+  },
+  "Q4_d5": {
+    "clear_calls": 720,
+    "failed": 336,
+    "fail_rate_pct": 46.7,
+    "fail_true_dist_median_m": 91.0,
+    "fail_over_100m": 160,
+    "fail_single_bearing": 91,
+    "verdict": "160 次清除打在 100m 开外，属空驶，是剩余最大攻击面"
+  },
+  "comparison_to_pre_pr7": {
+    "note": "同样方法在 DogStrategy 上测得 Q3 19.7% / Q4 66.9%（Q4 失败距离中位 217.9m）",
+    "Q4_fail_rate_pct": {
+      "before": 66.9,
+      "after": 46.7
+    },
+    "Q4_fail_dist_median_m": {
+      "before": 217.9,
+      "after": 91.0
+    }
+  },
+  "raw_output": "=== Q3 (30 局, Fast 版) ===\n  /clear 446 次: 成功 369 失败 77 失败率 17.3%\n    成功: 真值距离 中位=    7.0m | 示向度中位=3\n    失败: 真值距离 中位=   27.9m | 示向度中位=2\n    失败且>100m: 0/77 (0%) | 失败且单示向度: 0/77 (0%)\n=== Q4 d5 (30 局, Fast 版) ===\n  /clear 720 次: 成功 384 失败 336 失败率 46.7%\n    成功: 真值距离 中位=    8.4m | 示向度中位=2\n    失败: 真值距离 中位=   91.0m | 示向度中位=2\n    失败且>100m: 160/336 (48%) | 失败且单示向度: 91/336 (27%)\nPOSTPR7_DONE\n"
+}

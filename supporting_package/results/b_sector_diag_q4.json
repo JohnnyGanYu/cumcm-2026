@@ -1,0 +1,277 @@
+{
+  "report": {
+    "episodes": 8,
+    "mean_clear_time_s": 1255.9,
+    "virtual_s_mean": 15034.5,
+    "move_m_mean": 60123,
+    "phase_move_m": {
+      "sweep_origin": 0,
+      "walk_ring": 17647,
+      "home_all": 16324,
+      "revive_nearby": 642,
+      "inner_retry": 0,
+      "belief_search": 25510,
+      "blind_clear": 0,
+      "other": 0
+    },
+    "phase_time_s": {
+      "sweep_origin": 119,
+      "walk_ring": 5272,
+      "home_all": 3641,
+      "revive_nearby": 157,
+      "inner_retry": 0,
+      "belief_search": 5846,
+      "blind_clear": 0,
+      "other": 0
+    },
+    "phase_time_share": {
+      "sweep_origin": 0.0079,
+      "walk_ring": 0.3506,
+      "home_all": 0.2422,
+      "revive_nearby": 0.0104,
+      "inner_retry": 0.0,
+      "belief_search": 0.3888,
+      "blind_clear": 0.0,
+      "other": 0.0
+    },
+    "calls_mean": {
+      "belief_search:measure": 124.0,
+      "home_all:clear": 29.8,
+      "home_all:measure": 50.1,
+      "revive_nearby:clear": 5.6,
+      "revive_nearby:measure": 2.1,
+      "sweep_origin:measure": 20.0,
+      "walk_ring:measure": 290.4
+    }
+  },
+  "rows": [
+    {
+      "seed": 6000,
+      "cleared": 11,
+      "total": 11,
+      "mean_clear_time_s": 1500.1326576363638,
+      "virtual_s": 16501.459234,
+      "move_m": 64392.29619988887,
+      "by_phase_move_m": {
+        "sweep_origin": 0,
+        "home_all": 18682,
+        "walk_ring": 18539,
+        "revive_nearby": 2270,
+        "belief_search": 24900
+      },
+      "by_phase_time_s": {
+        "sweep_origin": 119,
+        "home_all": 4123,
+        "walk_ring": 5856,
+        "revive_nearby": 559,
+        "belief_search": 5844
+      },
+      "calls": {
+        "sweep_origin:measure": 20,
+        "home_all:measure": 50,
+        "home_all:clear": 35,
+        "walk_ring:measure": 358,
+        "revive_nearby:clear": 22,
+        "revive_nearby:measure": 7,
+        "belief_search:measure": 144
+      }
+    },
+    {
+      "seed": 6001,
+      "cleared": 12,
+      "total": 12,
+      "mean_clear_time_s": 1207.0014764999999,
+      "virtual_s": 14484.017718,
+      "move_m": 56790.08862443212,
+      "by_phase_move_m": {
+        "sweep_origin": 0,
+        "home_all": 14946,
+        "walk_ring": 16130,
+        "belief_search": 25714
+      },
+      "by_phase_time_s": {
+        "sweep_origin": 119,
+        "home_all": 3338,
+        "walk_ring": 5116,
+        "belief_search": 5911
+      },
+      "calls": {
+        "sweep_origin:measure": 20,
+        "home_all:measure": 47,
+        "home_all:clear": 26,
+        "walk_ring:measure": 315,
+        "belief_search:measure": 128
+      }
+    },
+    {
+      "seed": 6002,
+      "cleared": 16,
+      "total": 16,
+      "mean_clear_time_s": 945.503685875,
+      "virtual_s": 15128.058974,
+      "move_m": 65560.2949066975,
+      "by_phase_move_m": {
+        "sweep_origin": 0,
+        "home_all": 22724,
+        "walk_ring": 17175,
+        "belief_search": 25662
+      },
+      "by_phase_time_s": {
+        "sweep_origin": 119,
+        "home_all": 5068,
+        "walk_ring": 4425,
+        "belief_search": 5516
+      },
+      "calls": {
+        "sweep_origin:measure": 20,
+        "home_all:measure": 70,
+        "home_all:clear": 42,
+        "walk_ring:measure": 165,
+        "belief_search:measure": 64
+      }
+    },
+    {
+      "seed": 6003,
+      "cleared": 12,
+      "total": 12,
+      "mean_clear_time_s": 1209.8677310833334,
+      "virtual_s": 14518.412773,
+      "move_m": 58417.06386383731,
+      "by_phase_move_m": {
+        "sweep_origin": 0,
+        "home_all": 13999,
+        "walk_ring": 18958,
+        "belief_search": 25460
+      },
+      "by_phase_time_s": {
+        "sweep_origin": 119,
+        "home_all": 3122,
+        "walk_ring": 5418,
+        "belief_search": 5860
+      },
+      "calls": {
+        "sweep_origin:measure": 20,
+        "home_all:measure": 47,
+        "home_all:clear": 17,
+        "walk_ring:measure": 271,
+        "belief_search:measure": 128
+      }
+    },
+    {
+      "seed": 6004,
+      "cleared": 14,
+      "total": 14,
+      "mean_clear_time_s": 995.4337307142857,
+      "virtual_s": 13936.07223,
+      "move_m": 57050.361180170636,
+      "by_phase_move_m": {
+        "sweep_origin": 0,
+        "home_all": 14728,
+        "walk_ring": 16661,
+        "belief_search": 25662
+      },
+      "by_phase_time_s": {
+        "sweep_origin": 119,
+        "home_all": 3343,
+        "walk_ring": 4766,
+        "belief_search": 5708
+      },
+      "calls": {
+        "sweep_origin:measure": 20,
+        "home_all:measure": 55,
+        "home_all:clear": 27,
+        "walk_ring:measure": 239,
+        "belief_search:measure": 96
+      }
+    },
+    {
+      "seed": 6005,
+      "cleared": 11,
+      "total": 11,
+      "mean_clear_time_s": 1419.9904355454546,
+      "virtual_s": 15619.894791,
+      "move_m": 61199.473977264795,
+      "by_phase_move_m": {
+        "sweep_origin": 0,
+        "home_all": 16163,
+        "walk_ring": 18523,
+        "revive_nearby": 915,
+        "belief_search": 25599
+      },
+      "by_phase_time_s": {
+        "sweep_origin": 119,
+        "home_all": 3587,
+        "walk_ring": 5727,
+        "revive_nearby": 204,
+        "belief_search": 5984
+      },
+      "calls": {
+        "sweep_origin:measure": 20,
+        "home_all:measure": 37,
+        "home_all:clear": 46,
+        "walk_ring:measure": 337,
+        "revive_nearby:measure": 3,
+        "revive_nearby:clear": 1,
+        "belief_search:measure": 144
+      }
+    },
+    {
+      "seed": 6006,
+      "cleared": 10,
+      "total": 10,
+      "mean_clear_time_s": 1572.5690227999999,
+      "virtual_s": 15725.690228,
+      "move_m": 60183.45116585079,
+      "by_phase_move_m": {
+        "sweep_origin": 0,
+        "home_all": 16230,
+        "walk_ring": 16580,
+        "revive_nearby": 1949,
+        "belief_search": 25424
+      },
+      "by_phase_time_s": {
+        "sweep_origin": 119,
+        "home_all": 3604,
+        "walk_ring": 5462,
+        "revive_nearby": 496,
+        "belief_search": 6045
+      },
+      "calls": {
+        "sweep_origin:measure": 20,
+        "home_all:measure": 46,
+        "home_all:clear": 33,
+        "walk_ring:measure": 358,
+        "revive_nearby:clear": 22,
+        "revive_nearby:measure": 7,
+        "belief_search:measure": 160
+      }
+    },
+    {
+      "seed": 6007,
+      "cleared": 12,
+      "total": 12,
+      "mean_clear_time_s": 1196.86472525,
+      "virtual_s": 14362.376703,
+      "move_m": 57391.88352804236,
+      "by_phase_move_m": {
+        "sweep_origin": 0,
+        "home_all": 13122,
+        "walk_ring": 18609,
+        "belief_search": 25662
+      },
+      "by_phase_time_s": {
+        "sweep_origin": 119,
+        "home_all": 2941,
+        "walk_ring": 5402,
+        "belief_search": 5900
+      },
+      "calls": {
+        "sweep_origin:measure": 20,
+        "home_all:measure": 49,
+        "home_all:clear": 12,
+        "walk_ring:measure": 280,
+        "belief_search:measure": 128
+      }
+    }
+  ]
+}

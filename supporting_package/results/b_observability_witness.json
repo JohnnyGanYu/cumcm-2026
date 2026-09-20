@@ -1,0 +1,593 @@
+{
+  "Q4_d5": [
+    {
+      "seed": 701674,
+      "ch": 4,
+      "exact_vis_area_pct": 0.01302,
+      "rho": 1796.5,
+      "r": 1047.6,
+      "witness_point": [
+        -487.44,
+        -1729.37,
+        1796.8
+      ],
+      "witness_found": true
+    },
+    {
+      "seed": 700709,
+      "ch": 10,
+      "exact_vis_area_pct": 0.024551,
+      "rho": 1790.6,
+      "r": 1061.5,
+      "witness_point": [
+        1742.89,
+        -442.21,
+        1798.1
+      ],
+      "witness_found": true
+    },
+    {
+      "seed": 701110,
+      "ch": 17,
+      "exact_vis_area_pct": 0.02618,
+      "rho": 1792.3,
+      "r": 1032.5,
+      "witness_point": [
+        -1435.48,
+        1074.26,
+        1792.9
+      ],
+      "witness_found": true
+    },
+    {
+      "seed": 700368,
+      "ch": 5,
+      "exact_vis_area_pct": 0.040543,
+      "rho": 1786.7,
+      "r": 1203.0,
+      "witness_point": [
+        1643.39,
+        726.51,
+        1796.8
+      ],
+      "witness_found": true
+    },
+    {
+      "seed": 700556,
+      "ch": 7,
+      "exact_vis_area_pct": 0.040687,
+      "rho": 1799.2,
+      "r": 1270.3,
+      "witness_point": [
+        -1164.59,
+        1354.83,
+        1786.6
+      ],
+      "witness_found": true
+    },
+    {
+      "seed": 700813,
+      "ch": 19,
+      "exact_vis_area_pct": 0.054529,
+      "rho": 1795.1,
+      "r": 1263.5,
+      "witness_point": [
+        -1075.54,
+        -1441.35,
+        1798.4
+      ],
+      "witness_found": true
+    },
+    {
+      "seed": 700276,
+      "ch": 18,
+      "exact_vis_area_pct": 0.05755,
+      "rho": 1784.8,
+      "r": 1284.8,
+      "witness_point": [
+        -1525.95,
+        -935.92,
+        1790.1
+      ],
+      "witness_found": true
+    },
+    {
+      "seed": 700267,
+      "ch": 7,
+      "exact_vis_area_pct": 0.089772,
+      "rho": 1776.4,
+      "r": 1127.6,
+      "witness_point": [
+        706.82,
+        1646.37,
+        1791.7
+      ],
+      "witness_found": true
+    },
+    {
+      "seed": 701275,
+      "ch": 11,
+      "exact_vis_area_pct": 0.092274,
+      "rho": 1778.4,
+      "r": 1031.7,
+      "witness_point": [
+        1781.84,
+        6.91,
+        1781.8
+      ],
+      "witness_found": true
+    },
+    {
+      "seed": 700221,
+      "ch": 20,
+      "exact_vis_area_pct": 0.10125,
+      "rho": 1778.5,
+      "r": 1034.5,
+      "witness_point": [
+        -1645.8,
+        -699.68,
+        1788.4
+      ],
+      "witness_found": true
+    },
+    {
+      "seed": 700187,
+      "ch": 1,
+      "exact_vis_area_pct": 0.103117,
+      "rho": 1797.8,
+      "r": 1019.2,
+      "witness_point": [
+        -922.87,
+        -1544.83,
+        1799.5
+      ],
+      "witness_found": true
+    },
+    {
+      "seed": 700884,
+      "ch": 13,
+      "exact_vis_area_pct": 0.1165,
+      "rho": 1772.0,
+      "r": 1182.9,
+      "witness_point": [
+        -632.31,
+        1672.98,
+        1788.5
+      ],
+      "witness_found": true
+    },
+    {
+      "seed": 701155,
+      "ch": 14,
+      "exact_vis_area_pct": 0.123217,
+      "rho": 1774.9,
+      "r": 1184.9,
+      "witness_point": [
+        1446.51,
+        -1062.96,
+        1795.1
+      ],
+      "witness_found": true
+    },
+    {
+      "seed": 701481,
+      "ch": 9,
+      "exact_vis_area_pct": 0.138175,
+      "rho": 1775.2,
+      "r": 1094.6,
+      "witness_point": [
+        -888.16,
+        -1546.6,
+        1783.5
+      ],
+      "witness_found": true
+    },
+    {
+      "seed": 701858,
+      "ch": 4,
+      "exact_vis_area_pct": 0.139338,
+      "rho": 1774.0,
+      "r": 1475.3,
+      "witness_point": [
+        717.24,
+        1623.57,
+        1774.9
+      ],
+      "witness_found": true
+    }
+  ],
+  "Q4_d10": [
+    {
+      "seed": 700799,
+      "ch": 6,
+      "exact_vis_area_pct": 0.002526,
+      "rho": 1799.9,
+      "r": 1143.0,
+      "witness_point": [
+        -1135.27,
+        1394.32,
+        1798.0
+      ],
+      "witness_found": true
+    },
+    {
+      "seed": 701678,
+      "ch": 9,
+      "exact_vis_area_pct": 0.010755,
+      "rho": 1794.5,
+      "r": 1292.9,
+      "witness_point": [
+        -1710.99,
+        -547.68,
+        1796.5
+      ],
+      "witness_found": true
+    },
+    {
+      "seed": 701012,
+      "ch": 7,
+      "exact_vis_area_pct": 0.012284,
+      "rho": 1796.8,
+      "r": 1406.2,
+      "witness_point": [
+        -1208.09,
+        1332.64,
+        1798.7
+      ],
+      "witness_found": true
+    },
+    {
+      "seed": 701539,
+      "ch": 17,
+      "exact_vis_area_pct": 0.017425,
+      "rho": 1799.7,
+      "r": 1088.8,
+      "witness_point": [
+        -1545.83,
+        -907.99,
+        1792.8
+      ],
+      "witness_found": true
+    },
+    {
+      "seed": 701193,
+      "ch": 12,
+      "exact_vis_area_pct": 0.017549,
+      "rho": 1798.3,
+      "r": 1263.5,
+      "witness_point": [
+        -115.0,
+        -1791.5,
+        1795.2
+      ],
+      "witness_found": true
+    },
+    {
+      "seed": 701824,
+      "ch": 2,
+      "exact_vis_area_pct": 0.027589,
+      "rho": 1797.9,
+      "r": 1344.3,
+      "witness_point": [
+        -948.14,
+        1520.39,
+        1791.8
+      ],
+      "witness_found": true
+    },
+    {
+      "seed": 700347,
+      "ch": 10,
+      "exact_vis_area_pct": 0.02797,
+      "rho": 1791.7,
+      "r": 1479.7,
+      "witness_point": [
+        -627.02,
+        1676.41,
+        1789.8
+      ],
+      "witness_found": true
+    },
+    {
+      "seed": 700230,
+      "ch": 19,
+      "exact_vis_area_pct": 0.030024,
+      "rho": 1788.9,
+      "r": 1005.0,
+      "witness_point": [
+        -1467.55,
+        -1022.72,
+        1788.8
+      ],
+      "witness_found": true
+    },
+    {
+      "seed": 700628,
+      "ch": 7,
+      "exact_vis_area_pct": 0.032687,
+      "rho": 1789.0,
+      "r": 1173.1,
+      "witness_point": [
+        -1213.02,
+        -1325.05,
+        1796.4
+      ],
+      "witness_found": true
+    },
+    {
+      "seed": 700368,
+      "ch": 5,
+      "exact_vis_area_pct": 0.040543,
+      "rho": 1786.7,
+      "r": 1203.0,
+      "witness_point": [
+        1643.39,
+        726.51,
+        1796.8
+      ],
+      "witness_found": true
+    },
+    {
+      "seed": 701512,
+      "ch": 15,
+      "exact_vis_area_pct": 0.040992,
+      "rho": 1788.2,
+      "r": 1114.7,
+      "witness_point": [
+        -1770.73,
+        269.1,
+        1791.1
+      ],
+      "witness_found": true
+    },
+    {
+      "seed": 701859,
+      "ch": 13,
+      "exact_vis_area_pct": 0.050297,
+      "rho": 1793.9,
+      "r": 1425.8,
+      "witness_point": [
+        -1782.82,
+        -171.99,
+        1791.1
+      ],
+      "witness_found": true
+    },
+    {
+      "seed": 700394,
+      "ch": 12,
+      "exact_vis_area_pct": 0.053304,
+      "rho": 1793.9,
+      "r": 1202.2,
+      "witness_point": [
+        -1768.33,
+        323.14,
+        1797.6
+      ],
+      "witness_found": true
+    },
+    {
+      "seed": 700813,
+      "ch": 19,
+      "exact_vis_area_pct": 0.054529,
+      "rho": 1795.1,
+      "r": 1263.5,
+      "witness_point": [
+        -1075.54,
+        -1441.35,
+        1798.4
+      ],
+      "witness_found": true
+    },
+    {
+      "seed": 700496,
+      "ch": 11,
+      "exact_vis_area_pct": 0.065478,
+      "rho": 1782.8,
+      "r": 1226.0,
+      "witness_point": [
+        -1787.41,
+        51.8,
+        1788.2
+      ],
+      "witness_found": true
+    }
+  ],
+  "Q4_d16": [
+    {
+      "seed": 700950,
+      "ch": 1,
+      "exact_vis_area_pct": 0.002024,
+      "rho": 1798.7,
+      "r": 1328.1,
+      "witness_point": [
+        -616.89,
+        1689.19,
+        1798.3
+      ],
+      "witness_found": true
+    },
+    {
+      "seed": 701534,
+      "ch": 7,
+      "exact_vis_area_pct": 0.003394,
+      "rho": 1799.4,
+      "r": 1228.3,
+      "witness_point": [
+        764.65,
+        -1629.2,
+        1799.7
+      ],
+      "witness_found": true
+    },
+    {
+      "seed": 700575,
+      "ch": 6,
+      "exact_vis_area_pct": 0.003568,
+      "rho": 1798.2,
+      "r": 1160.1,
+      "witness_point": [
+        742.5,
+        1638.15,
+        1798.6
+      ],
+      "witness_found": true
+    },
+    {
+      "seed": 701473,
+      "ch": 4,
+      "exact_vis_area_pct": 0.005384,
+      "rho": 1796.9,
+      "r": 1270.1,
+      "witness_point": [
+        -938.0,
+        -1533.53,
+        1797.6
+      ],
+      "witness_found": true
+    },
+    {
+      "seed": 700707,
+      "ch": 10,
+      "exact_vis_area_pct": 0.016295,
+      "rho": 1795.5,
+      "r": 1282.6,
+      "witness_point": [
+        -1769.49,
+        -313.91,
+        1797.1
+      ],
+      "witness_found": true
+    },
+    {
+      "seed": 700582,
+      "ch": 7,
+      "exact_vis_area_pct": 0.017452,
+      "rho": 1792.3,
+      "r": 1039.9,
+      "witness_point": [
+        980.25,
+        1500.34,
+        1792.2
+      ],
+      "witness_found": true
+    },
+    {
+      "seed": 700656,
+      "ch": 8,
+      "exact_vis_area_pct": 0.021184,
+      "rho": 1792.0,
+      "r": 1227.3,
+      "witness_point": [
+        1203.47,
+        1328.07,
+        1792.2
+      ],
+      "witness_found": true
+    },
+    {
+      "seed": 700251,
+      "ch": 1,
+      "exact_vis_area_pct": 0.021396,
+      "rho": 1795.8,
+      "r": 1111.6,
+      "witness_point": [
+        -1789.44,
+        160.88,
+        1796.7
+      ],
+      "witness_found": true
+    },
+    {
+      "seed": 700543,
+      "ch": 13,
+      "exact_vis_area_pct": 0.023819,
+      "rho": 1792.7,
+      "r": 1078.3,
+      "witness_point": [
+        786.47,
+        1612.95,
+        1794.5
+      ],
+      "witness_found": true
+    },
+    {
+      "seed": 700556,
+      "ch": 7,
+      "exact_vis_area_pct": 0.035894,
+      "rho": 1799.2,
+      "r": 1219.0,
+      "witness_point": [
+        -1350.25,
+        1190.18,
+        1799.9
+      ],
+      "witness_found": true
+    },
+    {
+      "seed": 700494,
+      "ch": 12,
+      "exact_vis_area_pct": 0.03636,
+      "rho": 1797.8,
+      "r": 1364.3,
+      "witness_point": [
+        -275.13,
+        -1767.58,
+        1788.9
+      ],
+      "witness_found": true
+    },
+    {
+      "seed": 701493,
+      "ch": 14,
+      "exact_vis_area_pct": 0.040493,
+      "rho": 1786.3,
+      "r": 1000.2,
+      "witness_point": [
+        1552.23,
+        901.11,
+        1794.8
+      ],
+      "witness_found": true
+    },
+    {
+      "seed": 701626,
+      "ch": 17,
+      "exact_vis_area_pct": 0.041393,
+      "rho": 1785.9,
+      "r": 1079.2,
+      "witness_point": [
+        -1666.32,
+        677.33,
+        1798.7
+      ],
+      "witness_found": true
+    },
+    {
+      "seed": 700276,
+      "ch": 17,
+      "exact_vis_area_pct": 0.043844,
+      "rho": 1787.9,
+      "r": 1241.8,
+      "witness_point": [
+        -297.0,
+        1760.69,
+        1785.6
+      ],
+      "witness_found": true
+    },
+    {
+      "seed": 701605,
+      "ch": 13,
+      "exact_vis_area_pct": 0.045869,
+      "rho": 1785.0,
+      "r": 1090.6,
+      "witness_point": [
+        1767.31,
+        327.29,
+        1797.4
+      ],
+      "witness_found": true
+    }
+  ]
+}

@@ -1,0 +1,365 @@
+{
+ "config": {
+  "episodes": 40,
+  "seed_start": 7001,
+  "directional": 5,
+  "count": null,
+  "real_limit_s": 1200.0,
+  "strategy": {
+   "sweep_origin": true,
+   "probe_ring_radius": 1250.0,
+   "probe_ring_stations": 12,
+   "outer_ring_radius": 1560.0,
+   "outer_ring_stations": 14,
+   "use_outer_ring": false,
+   "directional_ring_stations": 18,
+   "dogleg_offset_deg": 32.0,
+   "dogleg_length_m": 380.0,
+   "approach_fraction": 0.62,
+   "lateral_fraction": 0.16,
+   "clear_distance_m": 55.0,
+   "spiral_radius_m": 15.0,
+   "spiral_points": 6,
+   "max_measures_per_channel": 40,
+   "max_homing_measures": 14,
+   "max_clear_attempts": 9,
+   "real_time_reserve_s": 15.0,
+   "virtual_time_budget_s": 324000.0,
+   "directional_probe": true
+  }
+ },
+ "summary": {
+  "episodes": 40,
+  "full_clear_episodes": 37,
+  "full_clear_rate": 0.925,
+  "cleared_ratio_mean": 0.9927,
+  "cleared_ratio_min": 0.9,
+  "mean_clear_time_s_mean": 1476.71,
+  "mean_clear_time_s_max": 2130.48,
+  "total_virtual_time_s_mean": 18236.3,
+  "total_virtual_time_s_max": 25416.7,
+  "program_wall_s_mean": 2.06,
+  "program_wall_s_max": 2.61
+ },
+ "episodes": [
+  {
+   "seed": 7001,
+   "total_jammers": 10,
+   "directional_jammers": 5,
+   "cleared": 9,
+   "cleared_ratio": 0.9,
+   "total_virtual_time_s": 17719.757,
+   "mean_clear_time_s": 1968.862,
+   "measure_calls": 692,
+   "clear_calls": 45,
+   "move_distance_m": 67218.8,
+   "program_wall_s": 2.57,
+   "missed_channels": [
+    11
+   ],
+   "events": [
+    "ch11: measure budget exhausted"
+   ],
+   "truth": [
+    {
+     "channel": 4,
+     "x": 733.239,
+     "y": 351.248,
+     "reception_radius_m": 1485.685,
+     "directional_deg": 348.821,
+     "cleared": true
+    },
+    {
+     "channel": 5,
+     "x": -1021.257,
+     "y": -45.014,
+     "reception_radius_m": 1444.261,
+     "directional_deg": null,
+     "cleared": true
+    },
+    {
+     "channel": 6,
+     "x": -210.883,
+     "y": 1484.138,
+     "reception_radius_m": 1138.434,
+     "directional_deg": null,
+     "cleared": true
+    },
+    {
+     "channel": 8,
+     "x": -325.534,
+     "y": 129.956,
+     "reception_radius_m": 1228.043,
+     "directional_deg": null,
+     "cleared": true
+    },
+    {
+     "channel": 11,
+     "x": 1050.722,
+     "y": 1415.831,
+     "reception_radius_m": 1143.918,
+     "directional_deg": 10.046,
+     "cleared": false
+    },
+    {
+     "channel": 12,
+     "x": -538.493,
+     "y": 1549.445,
+     "reception_radius_m": 1248.685,
+     "directional_deg": 294.417,
+     "cleared": true
+    },
+    {
+     "channel": 14,
+     "x": -1451.825,
+     "y": -614.026,
+     "reception_radius_m": 1200.554,
+     "directional_deg": 162.0,
+     "cleared": true
+    },
+    {
+     "channel": 16,
+     "x": -120.813,
+     "y": -279.116,
+     "reception_radius_m": 1076.759,
+     "directional_deg": null,
+     "cleared": true
+    },
+    {
+     "channel": 19,
+     "x": 1468.032,
+     "y": 107.843,
+     "reception_radius_m": 1366.779,
+     "directional_deg": 155.347,
+     "cleared": true
+    },
+    {
+     "channel": 20,
+     "x": 1085.61,
+     "y": -344.143,
+     "reception_radius_m": 1108.352,
+     "directional_deg": null,
+     "cleared": true
+    }
+   ]
+  },
+  {
+   "seed": 7015,
+   "total_jammers": 11,
+   "directional_jammers": 5,
+   "cleared": 10,
+   "cleared_ratio": 0.9090909090909091,
+   "total_virtual_time_s": 20529.96,
+   "mean_clear_time_s": 2052.996,
+   "measure_calls": 676,
+   "clear_calls": 108,
+   "move_distance_m": 80809.8,
+   "program_wall_s": 2.39,
+   "missed_channels": [
+    20
+   ],
+   "events": [
+    "ch10: measure budget exhausted",
+    "ch11: measure budget exhausted",
+    "ch17: measure budget exhausted"
+   ],
+   "truth": [
+    {
+     "channel": 2,
+     "x": 1200.358,
+     "y": 673.934,
+     "reception_radius_m": 1175.916,
+     "directional_deg": 101.263,
+     "cleared": true
+    },
+    {
+     "channel": 3,
+     "x": 650.144,
+     "y": 1581.725,
+     "reception_radius_m": 1417.369,
+     "directional_deg": 223.661,
+     "cleared": true
+    },
+    {
+     "channel": 6,
+     "x": 81.944,
+     "y": 1181.313,
+     "reception_radius_m": 1393.259,
+     "directional_deg": null,
+     "cleared": true
+    },
+    {
+     "channel": 9,
+     "x": 1118.587,
+     "y": 548.443,
+     "reception_radius_m": 1044.127,
+     "directional_deg": null,
+     "cleared": true
+    },
+    {
+     "channel": 10,
+     "x": -967.789,
+     "y": -131.38,
+     "reception_radius_m": 1005.782,
+     "directional_deg": 359.998,
+     "cleared": true
+    },
+    {
+     "channel": 11,
+     "x": -484.555,
+     "y": 760.45,
+     "reception_radius_m": 1270.869,
+     "directional_deg": null,
+     "cleared": true
+    },
+    {
+     "channel": 13,
+     "x": -1519.799,
+     "y": 226.615,
+     "reception_radius_m": 1312.953,
+     "directional_deg": null,
+     "cleared": true
+    },
+    {
+     "channel": 17,
+     "x": 1419.352,
+     "y": 809.775,
+     "reception_radius_m": 1177.614,
+     "directional_deg": 151.036,
+     "cleared": true
+    },
+    {
+     "channel": 18,
+     "x": 1598.732,
+     "y": -555.498,
+     "reception_radius_m": 1272.721,
+     "directional_deg": null,
+     "cleared": true
+    },
+    {
+     "channel": 19,
+     "x": 293.068,
+     "y": -725.468,
+     "reception_radius_m": 1448.818,
+     "directional_deg": null,
+     "cleared": true
+    },
+    {
+     "channel": 20,
+     "x": 1122.488,
+     "y": 1344.319,
+     "reception_radius_m": 1476.937,
+     "directional_deg": 9.004,
+     "cleared": false
+    }
+   ]
+  },
+  {
+   "seed": 7039,
+   "total_jammers": 10,
+   "directional_jammers": 5,
+   "cleared": 9,
+   "cleared_ratio": 0.9,
+   "total_virtual_time_s": 19174.338,
+   "mean_clear_time_s": 2130.482,
+   "measure_calls": 767,
+   "clear_calls": 22,
+   "move_distance_m": 72576.7,
+   "program_wall_s": 2.61,
+   "missed_channels": [
+    4
+   ],
+   "events": [
+    "ch18: measure budget exhausted",
+    "ch14: measure budget exhausted"
+   ],
+   "truth": [
+    {
+     "channel": 2,
+     "x": -896.428,
+     "y": 795.615,
+     "reception_radius_m": 1046.514,
+     "directional_deg": null,
+     "cleared": true
+    },
+    {
+     "channel": 4,
+     "x": -344.207,
+     "y": 1582.383,
+     "reception_radius_m": 1296.005,
+     "directional_deg": 90.681,
+     "cleared": false
+    },
+    {
+     "channel": 7,
+     "x": 1015.909,
+     "y": -440.953,
+     "reception_radius_m": 1311.875,
+     "directional_deg": 45.446,
+     "cleared": true
+    },
+    {
+     "channel": 8,
+     "x": -915.921,
+     "y": -398.007,
+     "reception_radius_m": 1324.769,
+     "directional_deg": 79.833,
+     "cleared": true
+    },
+    {
+     "channel": 9,
+     "x": 1248.805,
+     "y": 720.88,
+     "reception_radius_m": 1082.424,
+     "directional_deg": 355.834,
+     "cleared": true
+    },
+    {
+     "channel": 10,
+     "x": 1001.105,
+     "y": 1174.052,
+     "reception_radius_m": 1216.115,
+     "directional_deg": null,
+     "cleared": true
+    },
+    {
+     "channel": 11,
+     "x": 912.259,
+     "y": -1321.552,
+     "reception_radius_m": 1151.518,
+     "directional_deg": null,
+     "cleared": true
+    },
+    {
+     "channel": 14,
+     "x": 742.893,
+     "y": 310.197,
+     "reception_radius_m": 1262.757,
+     "directional_deg": null,
+     "cleared": true
+    },
+    {
+     "channel": 15,
+     "x": 1489.841,
+     "y": -304.742,
+     "reception_radius_m": 1409.491,
+     "directional_deg": null,
+     "cleared": true
+    },
+    {
+     "channel": 18,
+     "x": -717.372,
+     "y": -1073.146,
+     "reception_radius_m": 1308.987,
+     "directional_deg": 61.76,
+     "cleared": true
+    }
+   ]
+  }
+ ],
+ "_stripped_episodes": {
+  "original_count": 40,
+  "kept_with_issues": 3,
+  "note": "逐局明细已剥离控体积；只留有漏失/报错的条目，聚合字段未动"
+ }
+}

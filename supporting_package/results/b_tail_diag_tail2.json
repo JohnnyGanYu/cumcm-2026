@@ -1,0 +1,2094 @@
+{
+  "report": {
+    "episodes": 8,
+    "mean_clear_time_s": 1174.0,
+    "tail_slowest3": {
+      "group": "tail_slowest3",
+      "n": 24,
+      "mean_t_clear": 8430,
+      "mean_t_first_bearing": 3842,
+      "mean_homing_lag_s": 4588,
+      "pct_of_t_clear_spent_before_first_bearing": 45.6,
+      "mean_dist_from_origin": 1270,
+      "directional_share": 0.0,
+      "mean_silent_measures": 21.7,
+      "mean_bearings": 5.7,
+      "never_got_bearing_share": 0.0
+    },
+    "head_rest": {
+      "group": "head_rest",
+      "n": 86,
+      "mean_t_clear": 2571,
+      "mean_t_first_bearing": 1705,
+      "mean_homing_lag_s": 866,
+      "pct_of_t_clear_spent_before_first_bearing": 66.3,
+      "mean_dist_from_origin": 1214,
+      "directional_share": 0.0,
+      "mean_silent_measures": 3.1,
+      "mean_bearings": 5.1,
+      "never_got_bearing_share": 0.0
+    },
+    "interpretation": "若尾部的 pct_before_first_bearing 高 => 瓶颈是**发现**（站位/覆盖），而不是归航；若 mean_homing_lag_s 高 => 瓶颈是归航"
+  },
+  "rows": [
+    {
+      "seed": 81000,
+      "mean_clear_time_s": 937.7666260625,
+      "cleared": 16,
+      "total": 16,
+      "sources": [
+        {
+          "channel": 1,
+          "dist_from_origin": 1777,
+          "directional": false,
+          "r_recv": 1408,
+          "t_first_bearing": 2690,
+          "t_clear": 2950,
+          "homing_lag_s": 260,
+          "silent_measures": 1,
+          "bearings": 5,
+          "cleared": true,
+          "home_attempts": [
+            2762
+          ],
+          "home_failures": 0,
+          "t_first_home_attempt": 2762,
+          "n_home_attempts": 1
+        },
+        {
+          "channel": 2,
+          "dist_from_origin": 1235,
+          "directional": false,
+          "r_recv": 1427,
+          "t_first_bearing": 11,
+          "t_clear": 441,
+          "homing_lag_s": 430,
+          "silent_measures": 2,
+          "bearings": 3,
+          "cleared": true,
+          "home_attempts": [
+            119
+          ],
+          "home_failures": 0,
+          "t_first_home_attempt": 119,
+          "n_home_attempts": 1
+        },
+        {
+          "channel": 3,
+          "dist_from_origin": 1726,
+          "directional": false,
+          "r_recv": 1020,
+          "t_first_bearing": 4108,
+          "t_clear": 4322,
+          "homing_lag_s": 214,
+          "silent_measures": 3,
+          "bearings": 4,
+          "cleared": true,
+          "home_attempts": [
+            4162
+          ],
+          "home_failures": 0,
+          "t_first_home_attempt": 4162,
+          "n_home_attempts": 1
+        },
+        {
+          "channel": 4,
+          "dist_from_origin": 1716,
+          "directional": false,
+          "r_recv": 1012,
+          "t_first_bearing": 2702,
+          "t_clear": 3197,
+          "homing_lag_s": 496,
+          "silent_measures": 1,
+          "bearings": 5,
+          "cleared": true,
+          "home_attempts": [
+            2950
+          ],
+          "home_failures": 0,
+          "t_first_home_attempt": 2950,
+          "n_home_attempts": 1
+        },
+        {
+          "channel": 8,
+          "dist_from_origin": 744,
+          "directional": false,
+          "r_recv": 1451,
+          "t_first_bearing": 47,
+          "t_clear": 799,
+          "homing_lag_s": 752,
+          "silent_measures": 0,
+          "bearings": 6,
+          "cleared": true,
+          "home_attempts": [
+            441
+          ],
+          "home_failures": 0,
+          "t_first_home_attempt": 441,
+          "n_home_attempts": 1
+        },
+        {
+          "channel": 9,
+          "dist_from_origin": 604,
+          "directional": false,
+          "r_recv": 1284,
+          "t_first_bearing": 53,
+          "t_clear": 994,
+          "homing_lag_s": 941,
+          "silent_measures": 0,
+          "bearings": 5,
+          "cleared": true,
+          "home_attempts": [
+            799
+          ],
+          "home_failures": 0,
+          "t_first_home_attempt": 799,
+          "n_home_attempts": 1
+        },
+        {
+          "channel": 10,
+          "dist_from_origin": 716,
+          "directional": false,
+          "r_recv": 1231,
+          "t_first_bearing": 59,
+          "t_clear": 9731,
+          "homing_lag_s": 9672,
+          "silent_measures": 29,
+          "bearings": 9,
+          "cleared": true,
+          "home_attempts": [
+            994,
+            9477
+          ],
+          "home_failures": 1,
+          "t_first_home_attempt": 994,
+          "n_home_attempts": 2
+        },
+        {
+          "channel": 11,
+          "dist_from_origin": 970,
+          "directional": false,
+          "r_recv": 1196,
+          "t_first_bearing": 65,
+          "t_clear": 1596,
+          "homing_lag_s": 1531,
+          "silent_measures": 0,
+          "bearings": 5,
+          "cleared": true,
+          "home_attempts": [
+            1366
+          ],
+          "home_failures": 0,
+          "t_first_home_attempt": 1366,
+          "n_home_attempts": 1
+        },
+        {
+          "channel": 12,
+          "dist_from_origin": 1753,
+          "directional": false,
+          "r_recv": 1036,
+          "t_first_bearing": 4742,
+          "t_clear": 4986,
+          "homing_lag_s": 244,
+          "silent_measures": 5,
+          "bearings": 5,
+          "cleared": true,
+          "home_attempts": [
+            4760
+          ],
+          "home_failures": 0,
+          "t_first_home_attempt": 4760,
+          "n_home_attempts": 1
+        },
+        {
+          "channel": 13,
+          "dist_from_origin": 1414,
+          "directional": false,
+          "r_recv": 1005,
+          "t_first_bearing": 5668,
+          "t_clear": 5889,
+          "homing_lag_s": 221,
+          "silent_measures": 8,
+          "bearings": 2,
+          "cleared": true,
+          "home_attempts": [
+            5674
+          ],
+          "home_failures": 0,
+          "t_first_home_attempt": 5674,
+          "n_home_attempts": 1
+        },
+        {
+          "channel": 14,
+          "dist_from_origin": 1723,
+          "directional": false,
+          "r_recv": 1257,
+          "t_first_bearing": 2744,
+          "t_clear": 3578,
+          "homing_lag_s": 834,
+          "silent_measures": 1,
+          "bearings": 6,
+          "cleared": true,
+          "home_attempts": [
+            3197
+          ],
+          "home_failures": 0,
+          "t_first_home_attempt": 3197,
+          "n_home_attempts": 1
+        },
+        {
+          "channel": 15,
+          "dist_from_origin": 1639,
+          "directional": false,
+          "r_recv": 1340,
+          "t_first_bearing": 4754,
+          "t_clear": 5352,
+          "homing_lag_s": 598,
+          "silent_measures": 5,
+          "bearings": 6,
+          "cleared": true,
+          "home_attempts": [
+            4986
+          ],
+          "home_failures": 0,
+          "t_first_home_attempt": 4986,
+          "n_home_attempts": 1
+        },
+        {
+          "channel": 16,
+          "dist_from_origin": 575,
+          "directional": false,
+          "r_recv": 1330,
+          "t_first_bearing": 95,
+          "t_clear": 1942,
+          "homing_lag_s": 1847,
+          "silent_measures": 0,
+          "bearings": 6,
+          "cleared": true,
+          "home_attempts": [
+            1596
+          ],
+          "home_failures": 0,
+          "t_first_home_attempt": 1596,
+          "n_home_attempts": 1
+        },
+        {
+          "channel": 17,
+          "dist_from_origin": 948,
+          "directional": false,
+          "r_recv": 1200,
+          "t_first_bearing": 101,
+          "t_clear": 2319,
+          "homing_lag_s": 2218,
+          "silent_measures": 1,
+          "bearings": 5,
+          "cleared": true,
+          "home_attempts": [
+            1942
+          ],
+          "home_failures": 0,
+          "t_first_home_attempt": 1942,
+          "n_home_attempts": 1
+        },
+        {
+          "channel": 18,
+          "dist_from_origin": 784,
+          "directional": false,
+          "r_recv": 1256,
+          "t_first_bearing": 107,
+          "t_clear": 2585,
+          "homing_lag_s": 2478,
+          "silent_measures": 0,
+          "bearings": 6,
+          "cleared": true,
+          "home_attempts": [
+            2319
+          ],
+          "home_failures": 0,
+          "t_first_home_attempt": 2319,
+          "n_home_attempts": 1
+        },
+        {
+          "channel": 20,
+          "dist_from_origin": 1521,
+          "directional": false,
+          "r_recv": 1205,
+          "t_first_bearing": 4162,
+          "t_clear": 4465,
+          "homing_lag_s": 302,
+          "silent_measures": 3,
+          "bearings": 4,
+          "cleared": true,
+          "home_attempts": [
+            4322
+          ],
+          "home_failures": 0,
+          "t_first_home_attempt": 4322,
+          "n_home_attempts": 1
+        }
+      ]
+    },
+    {
+      "seed": 81001,
+      "mean_clear_time_s": 940.0753189375,
+      "cleared": 16,
+      "total": 16,
+      "sources": [
+        {
+          "channel": 1,
+          "dist_from_origin": 1424,
+          "directional": false,
+          "r_recv": 1189,
+          "t_first_bearing": 5945,
+          "t_clear": 6223,
+          "homing_lag_s": 278,
+          "silent_measures": 15,
+          "bearings": 2,
+          "cleared": true,
+          "home_attempts": [
+            5987
+          ],
+          "home_failures": 0,
+          "t_first_home_attempt": 5987,
+          "n_home_attempts": 1
+        },
+        {
+          "channel": 2,
+          "dist_from_origin": 1006,
+          "directional": false,
+          "r_recv": 1181,
+          "t_first_bearing": 11,
+          "t_clear": 375,
+          "homing_lag_s": 364,
+          "silent_measures": 0,
+          "bearings": 5,
+          "cleared": true,
+          "home_attempts": [
+            119
+          ],
+          "home_failures": 0,
+          "t_first_home_attempt": 119,
+          "n_home_attempts": 1
+        },
+        {
+          "channel": 3,
+          "dist_from_origin": 663,
+          "directional": false,
+          "r_recv": 1359,
+          "t_first_bearing": 17,
+          "t_clear": 617,
+          "homing_lag_s": 600,
+          "silent_measures": 0,
+          "bearings": 5,
+          "cleared": true,
+          "home_attempts": [
+            375
+          ],
+          "home_failures": 0,
+          "t_first_home_attempt": 375,
+          "n_home_attempts": 1
+        },
+        {
+          "channel": 4,
+          "dist_from_origin": 1254,
+          "directional": false,
+          "r_recv": 1384,
+          "t_first_bearing": 23,
+          "t_clear": 1072,
+          "homing_lag_s": 1049,
+          "silent_measures": 1,
+          "bearings": 6,
+          "cleared": true,
+          "home_attempts": [
+            617
+          ],
+          "home_failures": 0,
+          "t_first_home_attempt": 617,
+          "n_home_attempts": 1
+        },
+        {
+          "channel": 6,
+          "dist_from_origin": 1531,
+          "directional": false,
+          "r_recv": 1124,
+          "t_first_bearing": 3366,
+          "t_clear": 3609,
+          "homing_lag_s": 242,
+          "silent_measures": 4,
+          "bearings": 2,
+          "cleared": true,
+          "home_attempts": [
+            3414
+          ],
+          "home_failures": 0,
+          "t_first_home_attempt": 3414,
+          "n_home_attempts": 1
+        },
+        {
+          "channel": 10,
+          "dist_from_origin": 1045,
+          "directional": false,
+          "r_recv": 1247,
+          "t_first_bearing": 59,
+          "t_clear": 1300,
+          "homing_lag_s": 1241,
+          "silent_measures": 0,
+          "bearings": 5,
+          "cleared": true,
+          "home_attempts": [
+            1072
+          ],
+          "home_failures": 0,
+          "t_first_home_attempt": 1072,
+          "n_home_attempts": 1
+        },
+        {
+          "channel": 11,
+          "dist_from_origin": 1258,
+          "directional": false,
+          "r_recv": 1106,
+          "t_first_bearing": 6510,
+          "t_clear": 6776,
+          "homing_lag_s": 266,
+          "silent_measures": 17,
+          "bearings": 2,
+          "cleared": true,
+          "home_attempts": [
+            6522
+          ],
+          "home_failures": 0,
+          "t_first_home_attempt": 6522,
+          "n_home_attempts": 1
+        },
+        {
+          "channel": 12,
+          "dist_from_origin": 1793,
+          "directional": false,
+          "r_recv": 1196,
+          "t_first_bearing": 2557,
+          "t_clear": 2780,
+          "homing_lag_s": 223,
+          "silent_measures": 1,
+          "bearings": 5,
+          "cleared": true,
+          "home_attempts": [
+            2593
+          ],
+          "home_failures": 0,
+          "t_first_home_attempt": 2593,
+          "n_home_attempts": 1
+        },
+        {
+          "channel": 13,
+          "dist_from_origin": 1511,
+          "directional": false,
+          "r_recv": 1224,
+          "t_first_bearing": 2563,
+          "t_clear": 2932,
+          "homing_lag_s": 368,
+          "silent_measures": 1,
+          "bearings": 4,
+          "cleared": true,
+          "home_attempts": [
+            2780
+          ],
+          "home_failures": 0,
+          "t_first_home_attempt": 2780,
+          "n_home_attempts": 1
+        },
+        {
+          "channel": 14,
+          "dist_from_origin": 728,
+          "directional": false,
+          "r_recv": 1252,
+          "t_first_bearing": 83,
+          "t_clear": 1578,
+          "homing_lag_s": 1495,
+          "silent_measures": 0,
+          "bearings": 5,
+          "cleared": true,
+          "home_attempts": [
+            1300
+          ],
+          "home_failures": 0,
+          "t_first_home_attempt": 1300,
+          "n_home_attempts": 1
+        },
+        {
+          "channel": 15,
+          "dist_from_origin": 1417,
+          "directional": false,
+          "r_recv": 1363,
+          "t_first_bearing": 5112,
+          "t_clear": 5365,
+          "homing_lag_s": 253,
+          "silent_measures": 9,
+          "bearings": 5,
+          "cleared": true,
+          "home_attempts": [
+            5124
+          ],
+          "home_failures": 0,
+          "t_first_home_attempt": 5124,
+          "n_home_attempts": 1
+        },
+        {
+          "channel": 16,
+          "dist_from_origin": 1095,
+          "directional": false,
+          "r_recv": 1379,
+          "t_first_bearing": 95,
+          "t_clear": 1895,
+          "homing_lag_s": 1800,
+          "silent_measures": 0,
+          "bearings": 6,
+          "cleared": true,
+          "home_attempts": [
+            1578
+          ],
+          "home_failures": 0,
+          "t_first_home_attempt": 1578,
+          "n_home_attempts": 1
+        },
+        {
+          "channel": 17,
+          "dist_from_origin": 729,
+          "directional": false,
+          "r_recv": 1219,
+          "t_first_bearing": 101,
+          "t_clear": 9716,
+          "homing_lag_s": 9615,
+          "silent_measures": 29,
+          "bearings": 8,
+          "cleared": true,
+          "home_attempts": [
+            1895,
+            9398
+          ],
+          "home_failures": 1,
+          "t_first_home_attempt": 1895,
+          "n_home_attempts": 2
+        },
+        {
+          "channel": 18,
+          "dist_from_origin": 1421,
+          "directional": false,
+          "r_recv": 1152,
+          "t_first_bearing": 2581,
+          "t_clear": 3311,
+          "homing_lag_s": 730,
+          "silent_measures": 2,
+          "bearings": 5,
+          "cleared": true,
+          "home_attempts": [
+            2932
+          ],
+          "home_failures": 0,
+          "t_first_home_attempt": 2932,
+          "n_home_attempts": 1
+        },
+        {
+          "channel": 19,
+          "dist_from_origin": 635,
+          "directional": false,
+          "r_recv": 1132,
+          "t_first_bearing": 4287,
+          "t_clear": 4495,
+          "homing_lag_s": 208,
+          "silent_measures": 6,
+          "bearings": 5,
+          "cleared": true,
+          "home_attempts": [
+            4293
+          ],
+          "home_failures": 0,
+          "t_first_home_attempt": 4293,
+          "n_home_attempts": 1
+        },
+        {
+          "channel": 20,
+          "dist_from_origin": 911,
+          "directional": false,
+          "r_recv": 1464,
+          "t_first_bearing": 119,
+          "t_clear": 9398,
+          "homing_lag_s": 9279,
+          "silent_measures": 22,
+          "bearings": 17,
+          "cleared": true,
+          "home_attempts": [
+            2058,
+            9136
+          ],
+          "home_failures": 1,
+          "t_first_home_attempt": 2058,
+          "n_home_attempts": 2
+        }
+      ]
+    },
+    {
+      "seed": 81002,
+      "mean_clear_time_s": 1099.3660847142858,
+      "cleared": 14,
+      "total": 14,
+      "sources": [
+        {
+          "channel": 1,
+          "dist_from_origin": 1477,
+          "directional": false,
+          "r_recv": 1431,
+          "t_first_bearing": 1528,
+          "t_clear": 1926,
+          "homing_lag_s": 398,
+          "silent_measures": 3,
+          "bearings": 5,
+          "cleared": true,
+          "home_attempts": [
+            1618
+          ],
+          "home_failures": 0,
+          "t_first_home_attempt": 1618,
+          "n_home_attempts": 1
+        },
+        {
+          "channel": 2,
+          "dist_from_origin": 1798,
+          "directional": false,
+          "r_recv": 1156,
+          "t_first_bearing": 1102,
+          "t_clear": 1404,
+          "homing_lag_s": 303,
+          "silent_measures": 2,
+          "bearings": 5,
+          "cleared": true,
+          "home_attempts": [
+            1192
+          ],
+          "home_failures": 0,
+          "t_first_home_attempt": 1192,
+          "n_home_attempts": 1
+        },
+        {
+          "channel": 3,
+          "dist_from_origin": 1031,
+          "directional": false,
+          "r_recv": 1233,
+          "t_first_bearing": 2548,
+          "t_clear": 9832,
+          "homing_lag_s": 7285,
+          "silent_measures": 34,
+          "bearings": 4,
+          "cleared": true,
+          "home_attempts": [
+            2626,
+            9477
+          ],
+          "home_failures": 1,
+          "t_first_home_attempt": 2626,
+          "n_home_attempts": 2
+        },
+        {
+          "channel": 5,
+          "dist_from_origin": 219,
+          "directional": false,
+          "r_recv": 1187,
+          "t_first_bearing": 4964,
+          "t_clear": 5277,
+          "homing_lag_s": 313,
+          "silent_measures": 11,
+          "bearings": 3,
+          "cleared": true,
+          "home_attempts": [
+            5000
+          ],
+          "home_failures": 0,
+          "t_first_home_attempt": 5000,
+          "n_home_attempts": 1
+        },
+        {
+          "channel": 6,
+          "dist_from_origin": 1725,
+          "directional": false,
+          "r_recv": 1013,
+          "t_first_bearing": 1126,
+          "t_clear": 9477,
+          "homing_lag_s": 8351,
+          "silent_measures": 25,
+          "bearings": 11,
+          "cleared": true,
+          "home_attempts": [
+            1404,
+            8931
+          ],
+          "home_failures": 1,
+          "t_first_home_attempt": 1404,
+          "n_home_attempts": 2
+        },
+        {
+          "channel": 8,
+          "dist_from_origin": 1281,
+          "directional": false,
+          "r_recv": 1216,
+          "t_first_bearing": 2077,
+          "t_clear": 2300,
+          "homing_lag_s": 223,
+          "silent_measures": 4,
+          "bearings": 4,
+          "cleared": true,
+          "home_attempts": [
+            2131
+          ],
+          "home_failures": 0,
+          "t_first_home_attempt": 2131,
+          "n_home_attempts": 1
+        },
+        {
+          "channel": 9,
+          "dist_from_origin": 1708,
+          "directional": false,
+          "r_recv": 1026,
+          "t_first_bearing": 3456,
+          "t_clear": 3703,
+          "homing_lag_s": 247,
+          "silent_measures": 6,
+          "bearings": 5,
+          "cleared": true,
+          "home_attempts": [
+            3504
+          ],
+          "home_failures": 0,
+          "t_first_home_attempt": 3504,
+          "n_home_attempts": 1
+        },
+        {
+          "channel": 10,
+          "dist_from_origin": 204,
+          "directional": false,
+          "r_recv": 1169,
+          "t_first_bearing": 59,
+          "t_clear": 266,
+          "homing_lag_s": 207,
+          "silent_measures": 0,
+          "bearings": 4,
+          "cleared": true,
+          "home_attempts": [
+            119
+          ],
+          "home_failures": 0,
+          "t_first_home_attempt": 119,
+          "n_home_attempts": 1
+        },
+        {
+          "channel": 12,
+          "dist_from_origin": 1275,
+          "directional": false,
+          "r_recv": 1027,
+          "t_first_bearing": 4504,
+          "t_clear": 4690,
+          "homing_lag_s": 185,
+          "silent_measures": 8,
+          "bearings": 4,
+          "cleared": true,
+          "home_attempts": [
+            4528
+          ],
+          "home_failures": 0,
+          "t_first_home_attempt": 4528,
+          "n_home_attempts": 1
+        },
+        {
+          "channel": 13,
+          "dist_from_origin": 506,
+          "directional": false,
+          "r_recv": 1399,
+          "t_first_bearing": 77,
+          "t_clear": 377,
+          "homing_lag_s": 300,
+          "silent_measures": 0,
+          "bearings": 3,
+          "cleared": true,
+          "home_attempts": [
+            266
+          ],
+          "home_failures": 0,
+          "t_first_home_attempt": 266,
+          "n_home_attempts": 1
+        },
+        {
+          "channel": 14,
+          "dist_from_origin": 1579,
+          "directional": false,
+          "r_recv": 1188,
+          "t_first_bearing": 4510,
+          "t_clear": 4862,
+          "homing_lag_s": 352,
+          "silent_measures": 9,
+          "bearings": 4,
+          "cleared": true,
+          "home_attempts": [
+            4690
+          ],
+          "home_failures": 0,
+          "t_first_home_attempt": 4690,
+          "n_home_attempts": 1
+        },
+        {
+          "channel": 16,
+          "dist_from_origin": 1278,
+          "directional": false,
+          "r_recv": 1168,
+          "t_first_bearing": 3486,
+          "t_clear": 3871,
+          "homing_lag_s": 385,
+          "silent_measures": 6,
+          "bearings": 5,
+          "cleared": true,
+          "home_attempts": [
+            3703
+          ],
+          "home_failures": 0,
+          "t_first_home_attempt": 3703,
+          "n_home_attempts": 1
+        },
+        {
+          "channel": 17,
+          "dist_from_origin": 167,
+          "directional": false,
+          "r_recv": 1343,
+          "t_first_bearing": 101,
+          "t_clear": 643,
+          "homing_lag_s": 542,
+          "silent_measures": 2,
+          "bearings": 3,
+          "cleared": true,
+          "home_attempts": [
+            377
+          ],
+          "home_failures": 0,
+          "t_first_home_attempt": 377,
+          "n_home_attempts": 1
+        },
+        {
+          "channel": 19,
+          "dist_from_origin": 1651,
+          "directional": false,
+          "r_recv": 1461,
+          "t_first_bearing": 3971,
+          "t_clear": 4316,
+          "homing_lag_s": 345,
+          "silent_measures": 7,
+          "bearings": 6,
+          "cleared": true,
+          "home_attempts": [
+            3977
+          ],
+          "home_failures": 0,
+          "t_first_home_attempt": 3977,
+          "n_home_attempts": 1
+        }
+      ]
+    },
+    {
+      "seed": 81003,
+      "mean_clear_time_s": 1315.9998871818182,
+      "cleared": 11,
+      "total": 11,
+      "sources": [
+        {
+          "channel": 4,
+          "dist_from_origin": 1744,
+          "directional": false,
+          "r_recv": 1341,
+          "t_first_bearing": 3308,
+          "t_clear": 3548,
+          "homing_lag_s": 240,
+          "silent_measures": 6,
+          "bearings": 5,
+          "cleared": true,
+          "home_attempts": [
+            3350
+          ],
+          "home_failures": 0,
+          "t_first_home_attempt": 3350,
+          "n_home_attempts": 1
+        },
+        {
+          "channel": 5,
+          "dist_from_origin": 1706,
+          "directional": false,
+          "r_recv": 1149,
+          "t_first_bearing": 454,
+          "t_clear": 688,
+          "homing_lag_s": 234,
+          "silent_measures": 1,
+          "bearings": 4,
+          "cleared": true,
+          "home_attempts": [
+            538
+          ],
+          "home_failures": 0,
+          "t_first_home_attempt": 538,
+          "n_home_attempts": 1
+        },
+        {
+          "channel": 6,
+          "dist_from_origin": 1451,
+          "directional": false,
+          "r_recv": 1047,
+          "t_first_bearing": 3873,
+          "t_clear": 8547,
+          "homing_lag_s": 4674,
+          "silent_measures": 33,
+          "bearings": 3,
+          "cleared": true,
+          "home_attempts": [
+            3909,
+            8114
+          ],
+          "home_failures": 1,
+          "t_first_home_attempt": 3909,
+          "n_home_attempts": 2
+        },
+        {
+          "channel": 9,
+          "dist_from_origin": 1676,
+          "directional": false,
+          "r_recv": 1462,
+          "t_first_bearing": 2778,
+          "t_clear": 2963,
+          "homing_lag_s": 185,
+          "silent_measures": 5,
+          "bearings": 4,
+          "cleared": true,
+          "home_attempts": [
+            2808
+          ],
+          "home_failures": 0,
+          "t_first_home_attempt": 2808,
+          "n_home_attempts": 1
+        },
+        {
+          "channel": 12,
+          "dist_from_origin": 1642,
+          "directional": false,
+          "r_recv": 1184,
+          "t_first_bearing": 2796,
+          "t_clear": 3202,
+          "homing_lag_s": 405,
+          "silent_measures": 5,
+          "bearings": 5,
+          "cleared": true,
+          "home_attempts": [
+            2963
+          ],
+          "home_failures": 0,
+          "t_first_home_attempt": 2963,
+          "n_home_attempts": 1
+        },
+        {
+          "channel": 13,
+          "dist_from_origin": 1598,
+          "directional": false,
+          "r_recv": 1168,
+          "t_first_bearing": 2081,
+          "t_clear": 2347,
+          "homing_lag_s": 265,
+          "silent_measures": 4,
+          "bearings": 5,
+          "cleared": true,
+          "home_attempts": [
+            2099
+          ],
+          "home_failures": 0,
+          "t_first_home_attempt": 2099,
+          "n_home_attempts": 1
+        },
+        {
+          "channel": 14,
+          "dist_from_origin": 1219,
+          "directional": false,
+          "r_recv": 1149,
+          "t_first_bearing": 1236,
+          "t_clear": 1452,
+          "homing_lag_s": 216,
+          "silent_measures": 2,
+          "bearings": 5,
+          "cleared": true,
+          "home_attempts": [
+            1260
+          ],
+          "home_failures": 0,
+          "t_first_home_attempt": 1260,
+          "n_home_attempts": 1
+        },
+        {
+          "channel": 17,
+          "dist_from_origin": 1799,
+          "directional": false,
+          "r_recv": 1372,
+          "t_first_bearing": 1254,
+          "t_clear": 1676,
+          "homing_lag_s": 422,
+          "silent_measures": 2,
+          "bearings": 5,
+          "cleared": true,
+          "home_attempts": [
+            1452
+          ],
+          "home_failures": 0,
+          "t_first_home_attempt": 1452,
+          "n_home_attempts": 1
+        },
+        {
+          "channel": 18,
+          "dist_from_origin": 996,
+          "directional": false,
+          "r_recv": 1040,
+          "t_first_bearing": 2099,
+          "t_clear": 2627,
+          "homing_lag_s": 527,
+          "silent_measures": 4,
+          "bearings": 6,
+          "cleared": true,
+          "home_attempts": [
+            2347
+          ],
+          "home_failures": 0,
+          "t_first_home_attempt": 2347,
+          "n_home_attempts": 1
+        },
+        {
+          "channel": 19,
+          "dist_from_origin": 777,
+          "directional": false,
+          "r_recv": 1412,
+          "t_first_bearing": 113,
+          "t_clear": 328,
+          "homing_lag_s": 215,
+          "silent_measures": 0,
+          "bearings": 5,
+          "cleared": true,
+          "home_attempts": [
+            119
+          ],
+          "home_failures": 0,
+          "t_first_home_attempt": 119,
+          "n_home_attempts": 1
+        },
+        {
+          "channel": 20,
+          "dist_from_origin": 1594,
+          "directional": false,
+          "r_recv": 1424,
+          "t_first_bearing": 538,
+          "t_clear": 1025,
+          "homing_lag_s": 487,
+          "silent_measures": 1,
+          "bearings": 6,
+          "cleared": true,
+          "home_attempts": [
+            688
+          ],
+          "home_failures": 0,
+          "t_first_home_attempt": 688,
+          "n_home_attempts": 1
+        }
+      ]
+    },
+    {
+      "seed": 81004,
+      "mean_clear_time_s": 1059.3360584666666,
+      "cleared": 15,
+      "total": 15,
+      "sources": [
+        {
+          "channel": 1,
+          "dist_from_origin": 1465,
+          "directional": false,
+          "r_recv": 1283,
+          "t_first_bearing": 5326,
+          "t_clear": 5546,
+          "homing_lag_s": 220,
+          "silent_measures": 8,
+          "bearings": 4,
+          "cleared": true,
+          "home_attempts": [
+            5386
+          ],
+          "home_failures": 0,
+          "t_first_home_attempt": 5386,
+          "n_home_attempts": 1
+        },
+        {
+          "channel": 2,
+          "dist_from_origin": 778,
+          "directional": false,
+          "r_recv": 1447,
+          "t_first_bearing": 11,
+          "t_clear": 329,
+          "homing_lag_s": 318,
+          "silent_measures": 0,
+          "bearings": 5,
+          "cleared": true,
+          "home_attempts": [
+            119
+          ],
+          "home_failures": 0,
+          "t_first_home_attempt": 119,
+          "n_home_attempts": 1
+        },
+        {
+          "channel": 3,
+          "dist_from_origin": 1284,
+          "directional": false,
+          "r_recv": 1006,
+          "t_first_bearing": 2520,
+          "t_clear": 2789,
+          "homing_lag_s": 269,
+          "silent_measures": 1,
+          "bearings": 5,
+          "cleared": true,
+          "home_attempts": [
+            2598
+          ],
+          "home_failures": 0,
+          "t_first_home_attempt": 2598,
+          "n_home_attempts": 1
+        },
+        {
+          "channel": 6,
+          "dist_from_origin": 972,
+          "directional": false,
+          "r_recv": 1173,
+          "t_first_bearing": 35,
+          "t_clear": 442,
+          "homing_lag_s": 407,
+          "silent_measures": 0,
+          "bearings": 3,
+          "cleared": true,
+          "home_attempts": [
+            329
+          ],
+          "home_failures": 0,
+          "t_first_home_attempt": 329,
+          "n_home_attempts": 1
+        },
+        {
+          "channel": 7,
+          "dist_from_origin": 961,
+          "directional": false,
+          "r_recv": 1291,
+          "t_first_bearing": 41,
+          "t_clear": 610,
+          "homing_lag_s": 569,
+          "silent_measures": 0,
+          "bearings": 4,
+          "cleared": true,
+          "home_attempts": [
+            442
+          ],
+          "home_failures": 0,
+          "t_first_home_attempt": 442,
+          "n_home_attempts": 1
+        },
+        {
+          "channel": 8,
+          "dist_from_origin": 1104,
+          "directional": false,
+          "r_recv": 1260,
+          "t_first_bearing": 47,
+          "t_clear": 1067,
+          "homing_lag_s": 1020,
+          "silent_measures": 1,
+          "bearings": 6,
+          "cleared": true,
+          "home_attempts": [
+            610
+          ],
+          "home_failures": 0,
+          "t_first_home_attempt": 610,
+          "n_home_attempts": 1
+        },
+        {
+          "channel": 9,
+          "dist_from_origin": 1745,
+          "directional": false,
+          "r_recv": 1484,
+          "t_first_bearing": 2538,
+          "t_clear": 3084,
+          "homing_lag_s": 546,
+          "silent_measures": 1,
+          "bearings": 6,
+          "cleared": true,
+          "home_attempts": [
+            2789
+          ],
+          "home_failures": 0,
+          "t_first_home_attempt": 2789,
+          "n_home_attempts": 1
+        },
+        {
+          "channel": 10,
+          "dist_from_origin": 1394,
+          "directional": false,
+          "r_recv": 1122,
+          "t_first_bearing": 2544,
+          "t_clear": 10129,
+          "homing_lag_s": 7585,
+          "silent_measures": 28,
+          "bearings": 8,
+          "cleared": true,
+          "home_attempts": [
+            3084,
+            9888
+          ],
+          "home_failures": 1,
+          "t_first_home_attempt": 3084,
+          "n_home_attempts": 2
+        },
+        {
+          "channel": 11,
+          "dist_from_origin": 1488,
+          "directional": false,
+          "r_recv": 1267,
+          "t_first_bearing": 4616,
+          "t_clear": 4878,
+          "homing_lag_s": 262,
+          "silent_measures": 5,
+          "bearings": 5,
+          "cleared": true,
+          "home_attempts": [
+            4658
+          ],
+          "home_failures": 0,
+          "t_first_home_attempt": 4658,
+          "n_home_attempts": 1
+        },
+        {
+          "channel": 12,
+          "dist_from_origin": 1269,
+          "directional": false,
+          "r_recv": 1011,
+          "t_first_bearing": 3508,
+          "t_clear": 10331,
+          "homing_lag_s": 6823,
+          "silent_measures": 32,
+          "bearings": 4,
+          "cleared": true,
+          "home_attempts": [
+            3550,
+            10129
+          ],
+          "home_failures": 1,
+          "t_first_home_attempt": 3550,
+          "n_home_attempts": 2
+        },
+        {
+          "channel": 14,
+          "dist_from_origin": 1313,
+          "directional": false,
+          "r_recv": 1434,
+          "t_first_bearing": 83,
+          "t_clear": 1637,
+          "homing_lag_s": 1554,
+          "silent_measures": 2,
+          "bearings": 6,
+          "cleared": true,
+          "home_attempts": [
+            1067
+          ],
+          "home_failures": 0,
+          "t_first_home_attempt": 1067,
+          "n_home_attempts": 1
+        },
+        {
+          "channel": 15,
+          "dist_from_origin": 1101,
+          "directional": false,
+          "r_recv": 1150,
+          "t_first_bearing": 89,
+          "t_clear": 9888,
+          "homing_lag_s": 9799,
+          "silent_measures": 27,
+          "bearings": 12,
+          "cleared": true,
+          "home_attempts": [
+            1637,
+            9702
+          ],
+          "home_failures": 1,
+          "t_first_home_attempt": 1637,
+          "n_home_attempts": 2
+        },
+        {
+          "channel": 17,
+          "dist_from_origin": 1025,
+          "directional": false,
+          "r_recv": 1402,
+          "t_first_bearing": 101,
+          "t_clear": 10407,
+          "homing_lag_s": 10306,
+          "silent_measures": 24,
+          "bearings": 15,
+          "cleared": true,
+          "home_attempts": [
+            2043,
+            10331
+          ],
+          "home_failures": 1,
+          "t_first_home_attempt": 2043,
+          "n_home_attempts": 2
+        },
+        {
+          "channel": 18,
+          "dist_from_origin": 1366,
+          "directional": false,
+          "r_recv": 1092,
+          "t_first_bearing": 6025,
+          "t_clear": 6271,
+          "homing_lag_s": 246,
+          "silent_measures": 10,
+          "bearings": 5,
+          "cleared": true,
+          "home_attempts": [
+            6031
+          ],
+          "home_failures": 0,
+          "t_first_home_attempt": 6031,
+          "n_home_attempts": 1
+        },
+        {
+          "channel": 20,
+          "dist_from_origin": 1590,
+          "directional": false,
+          "r_recv": 1446,
+          "t_first_bearing": 4203,
+          "t_clear": 4488,
+          "homing_lag_s": 285,
+          "silent_measures": 4,
+          "bearings": 6,
+          "cleared": true,
+          "home_attempts": [
+            4203
+          ],
+          "home_failures": 0,
+          "t_first_home_attempt": 4203,
+          "n_home_attempts": 1
+        }
+      ]
+    },
+    {
+      "seed": 81005,
+      "mean_clear_time_s": 1178.4298213333334,
+      "cleared": 12,
+      "total": 12,
+      "sources": [
+        {
+          "channel": 2,
+          "dist_from_origin": 1128,
+          "directional": false,
+          "r_recv": 1109,
+          "t_first_bearing": 2140,
+          "t_clear": 2419,
+          "homing_lag_s": 280,
+          "silent_measures": 3,
+          "bearings": 5,
+          "cleared": true,
+          "home_attempts": [
+            2212
+          ],
+          "home_failures": 0,
+          "t_first_home_attempt": 2212,
+          "n_home_attempts": 1
+        },
+        {
+          "channel": 3,
+          "dist_from_origin": 363,
+          "directional": false,
+          "r_recv": 1493,
+          "t_first_bearing": 17,
+          "t_clear": 260,
+          "homing_lag_s": 243,
+          "silent_measures": 0,
+          "bearings": 4,
+          "cleared": true,
+          "home_attempts": [
+            119
+          ],
+          "home_failures": 0,
+          "t_first_home_attempt": 119,
+          "n_home_attempts": 1
+        },
+        {
+          "channel": 4,
+          "dist_from_origin": 1593,
+          "directional": false,
+          "r_recv": 1372,
+          "t_first_bearing": 3730,
+          "t_clear": 4003,
+          "homing_lag_s": 273,
+          "silent_measures": 9,
+          "bearings": 4,
+          "cleared": true,
+          "home_attempts": [
+            3784
+          ],
+          "home_failures": 0,
+          "t_first_home_attempt": 3784,
+          "n_home_attempts": 1
+        },
+        {
+          "channel": 5,
+          "dist_from_origin": 1672,
+          "directional": false,
+          "r_recv": 1488,
+          "t_first_bearing": 2152,
+          "t_clear": 2637,
+          "homing_lag_s": 486,
+          "silent_measures": 3,
+          "bearings": 5,
+          "cleared": true,
+          "home_attempts": [
+            2419
+          ],
+          "home_failures": 0,
+          "t_first_home_attempt": 2419,
+          "n_home_attempts": 1
+        },
+        {
+          "channel": 7,
+          "dist_from_origin": 1466,
+          "directional": false,
+          "r_recv": 1184,
+          "t_first_bearing": 3022,
+          "t_clear": 3282,
+          "homing_lag_s": 260,
+          "silent_measures": 6,
+          "bearings": 4,
+          "cleared": true,
+          "home_attempts": [
+            3070
+          ],
+          "home_failures": 0,
+          "t_first_home_attempt": 3070,
+          "n_home_attempts": 1
+        },
+        {
+          "channel": 8,
+          "dist_from_origin": 407,
+          "directional": false,
+          "r_recv": 1003,
+          "t_first_bearing": 47,
+          "t_clear": 439,
+          "homing_lag_s": 392,
+          "silent_measures": 0,
+          "bearings": 5,
+          "cleared": true,
+          "home_attempts": [
+            260
+          ],
+          "home_failures": 0,
+          "t_first_home_attempt": 260,
+          "n_home_attempts": 1
+        },
+        {
+          "channel": 10,
+          "dist_from_origin": 1258,
+          "directional": false,
+          "r_recv": 1454,
+          "t_first_bearing": 59,
+          "t_clear": 667,
+          "homing_lag_s": 608,
+          "silent_measures": 0,
+          "bearings": 5,
+          "cleared": true,
+          "home_attempts": [
+            439
+          ],
+          "home_failures": 0,
+          "t_first_home_attempt": 439,
+          "n_home_attempts": 1
+        },
+        {
+          "channel": 12,
+          "dist_from_origin": 1564,
+          "directional": false,
+          "r_recv": 1328,
+          "t_first_bearing": 1628,
+          "t_clear": 1992,
+          "homing_lag_s": 365,
+          "silent_measures": 2,
+          "bearings": 6,
+          "cleared": true,
+          "home_attempts": [
+            1664
+          ],
+          "home_failures": 0,
+          "t_first_home_attempt": 1664,
+          "n_home_attempts": 1
+        },
+        {
+          "channel": 14,
+          "dist_from_origin": 1533,
+          "directional": false,
+          "r_recv": 1015,
+          "t_first_bearing": 4486,
+          "t_clear": 4663,
+          "homing_lag_s": 176,
+          "silent_measures": 11,
+          "bearings": 4,
+          "cleared": true,
+          "home_attempts": [
+            4510
+          ],
+          "home_failures": 0,
+          "t_first_home_attempt": 4510,
+          "n_home_attempts": 1
+        },
+        {
+          "channel": 15,
+          "dist_from_origin": 783,
+          "directional": false,
+          "r_recv": 1431,
+          "t_first_bearing": 89,
+          "t_clear": 1155,
+          "homing_lag_s": 1066,
+          "silent_measures": 1,
+          "bearings": 6,
+          "cleared": true,
+          "home_attempts": [
+            667
+          ],
+          "home_failures": 0,
+          "t_first_home_attempt": 667,
+          "n_home_attempts": 1
+        },
+        {
+          "channel": 16,
+          "dist_from_origin": 924,
+          "directional": false,
+          "r_recv": 1153,
+          "t_first_bearing": 95,
+          "t_clear": 1289,
+          "homing_lag_s": 1194,
+          "silent_measures": 0,
+          "bearings": 4,
+          "cleared": true,
+          "home_attempts": [
+            1155
+          ],
+          "home_failures": 0,
+          "t_first_home_attempt": 1155,
+          "n_home_attempts": 1
+        },
+        {
+          "channel": 18,
+          "dist_from_origin": 1745,
+          "directional": false,
+          "r_recv": 1211,
+          "t_first_bearing": 2200,
+          "t_clear": 8653,
+          "homing_lag_s": 6453,
+          "silent_measures": 30,
+          "bearings": 3,
+          "cleared": true,
+          "home_attempts": [
+            2637,
+            7943
+          ],
+          "home_failures": 1,
+          "t_first_home_attempt": 2637,
+          "n_home_attempts": 2
+        }
+      ]
+    },
+    {
+      "seed": 81006,
+      "mean_clear_time_s": 1234.3709208461537,
+      "cleared": 13,
+      "total": 13,
+      "sources": [
+        {
+          "channel": 2,
+          "dist_from_origin": 1124,
+          "directional": false,
+          "r_recv": 1432,
+          "t_first_bearing": 11,
+          "t_clear": 405,
+          "homing_lag_s": 394,
+          "silent_measures": 2,
+          "bearings": 4,
+          "cleared": true,
+          "home_attempts": [
+            119
+          ],
+          "home_failures": 0,
+          "t_first_home_attempt": 119,
+          "n_home_attempts": 1
+        },
+        {
+          "channel": 3,
+          "dist_from_origin": 1613,
+          "directional": false,
+          "r_recv": 1360,
+          "t_first_bearing": 5120,
+          "t_clear": 5339,
+          "homing_lag_s": 219,
+          "silent_measures": 7,
+          "bearings": 2,
+          "cleared": true,
+          "home_attempts": [
+            5174
+          ],
+          "home_failures": 0,
+          "t_first_home_attempt": 5174,
+          "n_home_attempts": 1
+        },
+        {
+          "channel": 5,
+          "dist_from_origin": 1172,
+          "directional": false,
+          "r_recv": 1191,
+          "t_first_bearing": 29,
+          "t_clear": 990,
+          "homing_lag_s": 961,
+          "silent_measures": 3,
+          "bearings": 6,
+          "cleared": true,
+          "home_attempts": [
+            405
+          ],
+          "home_failures": 0,
+          "t_first_home_attempt": 405,
+          "n_home_attempts": 1
+        },
+        {
+          "channel": 6,
+          "dist_from_origin": 802,
+          "directional": false,
+          "r_recv": 1217,
+          "t_first_bearing": 35,
+          "t_clear": 1496,
+          "homing_lag_s": 1461,
+          "silent_measures": 2,
+          "bearings": 6,
+          "cleared": true,
+          "home_attempts": [
+            990
+          ],
+          "home_failures": 0,
+          "t_first_home_attempt": 990,
+          "n_home_attempts": 1
+        },
+        {
+          "channel": 7,
+          "dist_from_origin": 1686,
+          "directional": false,
+          "r_recv": 1168,
+          "t_first_bearing": 3479,
+          "t_clear": 3769,
+          "homing_lag_s": 290,
+          "silent_measures": 1,
+          "bearings": 5,
+          "cleared": true,
+          "home_attempts": [
+            3527
+          ],
+          "home_failures": 0,
+          "t_first_home_attempt": 3527,
+          "n_home_attempts": 1
+        },
+        {
+          "channel": 8,
+          "dist_from_origin": 955,
+          "directional": false,
+          "r_recv": 1146,
+          "t_first_bearing": 47,
+          "t_clear": 1892,
+          "homing_lag_s": 1845,
+          "silent_measures": 1,
+          "bearings": 6,
+          "cleared": true,
+          "home_attempts": [
+            1496
+          ],
+          "home_failures": 0,
+          "t_first_home_attempt": 1496,
+          "n_home_attempts": 1
+        },
+        {
+          "channel": 9,
+          "dist_from_origin": 1443,
+          "directional": false,
+          "r_recv": 1478,
+          "t_first_bearing": 7087,
+          "t_clear": 7325,
+          "homing_lag_s": 238,
+          "silent_measures": 15,
+          "bearings": 3,
+          "cleared": true,
+          "home_attempts": [
+            7129
+          ],
+          "home_failures": 0,
+          "t_first_home_attempt": 7129,
+          "n_home_attempts": 1
+        },
+        {
+          "channel": 13,
+          "dist_from_origin": 1149,
+          "directional": false,
+          "r_recv": 1207,
+          "t_first_bearing": 77,
+          "t_clear": 2361,
+          "homing_lag_s": 2284,
+          "silent_measures": 2,
+          "bearings": 5,
+          "cleared": true,
+          "home_attempts": [
+            1892
+          ],
+          "home_failures": 0,
+          "t_first_home_attempt": 1892,
+          "n_home_attempts": 1
+        },
+        {
+          "channel": 15,
+          "dist_from_origin": 674,
+          "directional": false,
+          "r_recv": 1163,
+          "t_first_bearing": 89,
+          "t_clear": 2806,
+          "homing_lag_s": 2717,
+          "silent_measures": 2,
+          "bearings": 6,
+          "cleared": true,
+          "home_attempts": [
+            2361
+          ],
+          "home_failures": 0,
+          "t_first_home_attempt": 2361,
+          "n_home_attempts": 1
+        },
+        {
+          "channel": 16,
+          "dist_from_origin": 1371,
+          "directional": false,
+          "r_recv": 1422,
+          "t_first_bearing": 95,
+          "t_clear": 3015,
+          "homing_lag_s": 2920,
+          "silent_measures": 0,
+          "bearings": 5,
+          "cleared": true,
+          "home_attempts": [
+            2806
+          ],
+          "home_failures": 0,
+          "t_first_home_attempt": 2806,
+          "n_home_attempts": 1
+        },
+        {
+          "channel": 17,
+          "dist_from_origin": 1164,
+          "directional": false,
+          "r_recv": 1448,
+          "t_first_bearing": 101,
+          "t_clear": 3420,
+          "homing_lag_s": 3319,
+          "silent_measures": 0,
+          "bearings": 6,
+          "cleared": true,
+          "home_attempts": [
+            3015
+          ],
+          "home_failures": 0,
+          "t_first_home_attempt": 3015,
+          "n_home_attempts": 1
+        },
+        {
+          "channel": 19,
+          "dist_from_origin": 1570,
+          "directional": false,
+          "r_recv": 1045,
+          "t_first_bearing": 8314,
+          "t_clear": 8517,
+          "homing_lag_s": 202,
+          "silent_measures": 22,
+          "bearings": 2,
+          "cleared": true,
+          "home_attempts": [
+            8320
+          ],
+          "home_failures": 0,
+          "t_first_home_attempt": 8320,
+          "n_home_attempts": 1
+        },
+        {
+          "channel": 20,
+          "dist_from_origin": 943,
+          "directional": false,
+          "r_recv": 1199,
+          "t_first_bearing": 3527,
+          "t_clear": 10377,
+          "homing_lag_s": 6850,
+          "silent_measures": 30,
+          "bearings": 9,
+          "cleared": true,
+          "home_attempts": [
+            3769,
+            10139
+          ],
+          "home_failures": 1,
+          "t_first_home_attempt": 3769,
+          "n_home_attempts": 2
+        }
+      ]
+    },
+    {
+      "seed": 81007,
+      "mean_clear_time_s": 1626.684406,
+      "cleared": 13,
+      "total": 13,
+      "sources": [
+        {
+          "channel": 1,
+          "dist_from_origin": 1738,
+          "directional": false,
+          "r_recv": 1372,
+          "t_first_bearing": 1148,
+          "t_clear": 1423,
+          "homing_lag_s": 275,
+          "silent_measures": 1,
+          "bearings": 5,
+          "cleared": true,
+          "home_attempts": [
+            1244
+          ],
+          "home_failures": 0,
+          "t_first_home_attempt": 1244,
+          "n_home_attempts": 1
+        },
+        {
+          "channel": 3,
+          "dist_from_origin": 1577,
+          "directional": false,
+          "r_recv": 1249,
+          "t_first_bearing": 1160,
+          "t_clear": 1820,
+          "homing_lag_s": 660,
+          "silent_measures": 2,
+          "bearings": 6,
+          "cleared": true,
+          "home_attempts": [
+            1423
+          ],
+          "home_failures": 0,
+          "t_first_home_attempt": 1423,
+          "n_home_attempts": 1
+        },
+        {
+          "channel": 4,
+          "dist_from_origin": 1155,
+          "directional": false,
+          "r_recv": 1333,
+          "t_first_bearing": 23,
+          "t_clear": 412,
+          "homing_lag_s": 389,
+          "silent_measures": 0,
+          "bearings": 6,
+          "cleared": true,
+          "home_attempts": [
+            119
+          ],
+          "home_failures": 0,
+          "t_first_home_attempt": 119,
+          "n_home_attempts": 1
+        },
+        {
+          "channel": 5,
+          "dist_from_origin": 818,
+          "directional": false,
+          "r_recv": 1436,
+          "t_first_bearing": 3869,
+          "t_clear": 9559,
+          "homing_lag_s": 5690,
+          "silent_measures": 24,
+          "bearings": 13,
+          "cleared": true,
+          "home_attempts": [
+            3935,
+            9157
+          ],
+          "home_failures": 1,
+          "t_first_home_attempt": 3935,
+          "n_home_attempts": 2
+        },
+        {
+          "channel": 7,
+          "dist_from_origin": 67,
+          "directional": false,
+          "r_recv": 1031,
+          "t_first_bearing": 10451,
+          "t_clear": 21147,
+          "homing_lag_s": 10696,
+          "silent_measures": 31,
+          "bearings": 1,
+          "cleared": true,
+          "home_attempts": [
+            16843
+          ],
+          "home_failures": 1,
+          "t_first_home_attempt": 16843,
+          "n_home_attempts": 1
+        },
+        {
+          "channel": 8,
+          "dist_from_origin": 1656,
+          "directional": false,
+          "r_recv": 1177,
+          "t_first_bearing": 7506,
+          "t_clear": 9784,
+          "homing_lag_s": 2278,
+          "silent_measures": 32,
+          "bearings": 4,
+          "cleared": true,
+          "home_attempts": [
+            7542,
+            9559
+          ],
+          "home_failures": 1,
+          "t_first_home_attempt": 7542,
+          "n_home_attempts": 2
+        },
+        {
+          "channel": 9,
+          "dist_from_origin": 1371,
+          "directional": false,
+          "r_recv": 1275,
+          "t_first_bearing": 2573,
+          "t_clear": 2851,
+          "homing_lag_s": 278,
+          "silent_measures": 3,
+          "bearings": 5,
+          "cleared": true,
+          "home_attempts": [
+            2621
+          ],
+          "home_failures": 0,
+          "t_first_home_attempt": 2621,
+          "n_home_attempts": 1
+        },
+        {
+          "channel": 10,
+          "dist_from_origin": 1753,
+          "directional": false,
+          "r_recv": 1202,
+          "t_first_bearing": 2933,
+          "t_clear": 10245,
+          "homing_lag_s": 7312,
+          "silent_measures": 32,
+          "bearings": 4,
+          "cleared": true,
+          "home_attempts": [
+            2975,
+            9784
+          ],
+          "home_failures": 1,
+          "t_first_home_attempt": 2975,
+          "n_home_attempts": 2
+        },
+        {
+          "channel": 14,
+          "dist_from_origin": 1321,
+          "directional": false,
+          "r_recv": 1496,
+          "t_first_bearing": 4820,
+          "t_clear": 4998,
+          "homing_lag_s": 179,
+          "silent_measures": 10,
+          "bearings": 4,
+          "cleared": true,
+          "home_attempts": [
+            4832
+          ],
+          "home_failures": 0,
+          "t_first_home_attempt": 4832,
+          "n_home_attempts": 1
+        },
+        {
+          "channel": 16,
+          "dist_from_origin": 739,
+          "directional": false,
+          "r_recv": 1385,
+          "t_first_bearing": 95,
+          "t_clear": 737,
+          "homing_lag_s": 642,
+          "silent_measures": 0,
+          "bearings": 6,
+          "cleared": true,
+          "home_attempts": [
+            412
+          ],
+          "home_failures": 0,
+          "t_first_home_attempt": 412,
+          "n_home_attempts": 1
+        },
+        {
+          "channel": 18,
+          "dist_from_origin": 1726,
+          "directional": false,
+          "r_recv": 1092,
+          "t_first_bearing": 1238,
+          "t_clear": 2124,
+          "homing_lag_s": 885,
+          "silent_measures": 1,
+          "bearings": 6,
+          "cleared": true,
+          "home_attempts": [
+            1820
+          ],
+          "home_failures": 0,
+          "t_first_home_attempt": 1820,
+          "n_home_attempts": 1
+        },
+        {
+          "channel": 19,
+          "dist_from_origin": 1329,
+          "directional": false,
+          "r_recv": 1271,
+          "t_first_bearing": 3935,
+          "t_clear": 4341,
+          "homing_lag_s": 406,
+          "silent_measures": 7,
+          "bearings": 5,
+          "cleared": true,
+          "home_attempts": [
+            4098
+          ],
+          "home_failures": 0,
+          "t_first_home_attempt": 4098,
+          "n_home_attempts": 1
+        },
+        {
+          "channel": 20,
+          "dist_from_origin": 342,
+          "directional": false,
+          "r_recv": 1198,
+          "t_first_bearing": 119,
+          "t_clear": 961,
+          "homing_lag_s": 842,
+          "silent_measures": 0,
+          "bearings": 5,
+          "cleared": true,
+          "home_attempts": [
+            737
+          ],
+          "home_failures": 0,
+          "t_first_home_attempt": 737,
+          "n_home_attempts": 1
+        }
+      ]
+    }
+  ]
+}

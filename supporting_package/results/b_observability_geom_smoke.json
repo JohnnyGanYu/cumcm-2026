@@ -1,0 +1,203 @@
+{
+  "grid": {
+    "step_m": 20.0,
+    "points": 25445,
+    "arena_radius_m": 1800.0
+  },
+  "self_check": {
+    "pairs_checked": 40000,
+    "mismatches": 0
+  },
+  "layout_sizes": {
+    "L01_origin": 1,
+    "L13_origin+1250x12": 13,
+    "L27_Q3_+1750x14": 27,
+    "L31_Q4_+1750x18": 31,
+    "L60_4ring": 60,
+    "L100_5ring": 100
+  },
+  "scenarios": {
+    "Q3_omni": {
+      "sources": 242,
+      "directional": 0,
+      "omni": 242,
+      "observable_pct": 100.0,
+      "unobservable_pct": 0.0,
+      "coverage_pct": {
+        "L01_origin": 47.934,
+        "L13_origin+1250x12": 100.0,
+        "L27_Q3_+1750x14": 100.0,
+        "L31_Q4_+1750x18": 100.0,
+        "L60_4ring": 100.0,
+        "L100_5ring": 100.0
+      },
+      "uncovered_by_L13_origin+1250x12": {
+        "count": 0,
+        "pct_of_sources": 0.0,
+        "vis_frac_pct": {
+          "p10": NaN,
+          "p50": NaN,
+          "p90": NaN,
+          "max": null,
+          "mean": null,
+          "zero_count": 0
+        }
+      },
+      "all_sources_vis_frac_pct": {
+        "p10": 21.538,
+        "p50": 32.863,
+        "p90": 48.827,
+        "min": 15.339
+      },
+      "uncovered_examples": []
+    },
+    "Q4_d5": {
+      "sources": 242,
+      "directional": 100,
+      "omni": 142,
+      "observable_pct": 100.0,
+      "unobservable_pct": 0.0,
+      "coverage_pct": {
+        "L01_origin": 38.843,
+        "L13_origin+1250x12": 95.455,
+        "L27_Q3_+1750x14": 99.587,
+        "L31_Q4_+1750x18": 100.0,
+        "L60_4ring": 100.0,
+        "L100_5ring": 100.0
+      },
+      "directional_coverage_pct": {
+        "L01_origin": 26.0,
+        "L13_origin+1250x12": 89.0,
+        "L27_Q3_+1750x14": 99.0,
+        "L31_Q4_+1750x18": 100.0,
+        "L60_4ring": 100.0,
+        "L100_5ring": 100.0
+      },
+      "directional_observable_pct": 100.0,
+      "uncovered_by_L31_Q4_+1750x18": {
+        "count": 0,
+        "pct_of_sources": 0.0,
+        "vis_frac_pct": {
+          "p10": NaN,
+          "p50": NaN,
+          "p90": NaN,
+          "max": null,
+          "mean": null,
+          "zero_count": 0
+        }
+      },
+      "all_sources_vis_frac_pct": {
+        "p10": 11.822,
+        "p50": 25.467,
+        "p90": 46.096,
+        "min": 0.3419
+      },
+      "uncovered_examples": []
+    },
+    "Q4_d10": {
+      "sources": 242,
+      "directional": 200,
+      "omni": 42,
+      "observable_pct": 100.0,
+      "unobservable_pct": 0.0,
+      "coverage_pct": {
+        "L01_origin": 29.752,
+        "L13_origin+1250x12": 90.496,
+        "L27_Q3_+1750x14": 100.0,
+        "L31_Q4_+1750x18": 100.0,
+        "L60_4ring": 100.0,
+        "L100_5ring": 100.0
+      },
+      "directional_coverage_pct": {
+        "L01_origin": 26.0,
+        "L13_origin+1250x12": 88.5,
+        "L27_Q3_+1750x14": 100.0,
+        "L31_Q4_+1750x18": 100.0,
+        "L60_4ring": 100.0,
+        "L100_5ring": 100.0
+      },
+      "directional_observable_pct": 100.0,
+      "uncovered_by_L31_Q4_+1750x18": {
+        "count": 0,
+        "pct_of_sources": 0.0,
+        "vis_frac_pct": {
+          "p10": NaN,
+          "p50": NaN,
+          "p90": NaN,
+          "max": null,
+          "mean": null,
+          "zero_count": 0
+        }
+      },
+      "all_sources_vis_frac_pct": {
+        "p10": 6.789,
+        "p50": 18.334,
+        "p90": 33.162,
+        "min": 0.5856
+      },
+      "uncovered_examples": []
+    },
+    "Q4_d16": {
+      "sources": 320,
+      "directional": 320,
+      "omni": 0,
+      "observable_pct": 100.0,
+      "unobservable_pct": 0.0,
+      "coverage_pct": {
+        "L01_origin": 23.438,
+        "L13_origin+1250x12": 90.0,
+        "L27_Q3_+1750x14": 99.375,
+        "L31_Q4_+1750x18": 99.375,
+        "L60_4ring": 99.688,
+        "L100_5ring": 100.0
+      },
+      "directional_coverage_pct": {
+        "L01_origin": 23.438,
+        "L13_origin+1250x12": 90.0,
+        "L27_Q3_+1750x14": 99.375,
+        "L31_Q4_+1750x18": 99.375,
+        "L60_4ring": 99.688,
+        "L100_5ring": 100.0
+      },
+      "directional_observable_pct": 100.0,
+      "uncovered_by_L31_Q4_+1750x18": {
+        "count": 2,
+        "pct_of_sources": 0.625,
+        "vis_frac_pct": {
+          "p10": 0.1081,
+          "p50": 0.1159,
+          "p90": 0.1238,
+          "max": 0.1258,
+          "mean": 0.1159,
+          "zero_count": 0
+        }
+      },
+      "all_sources_vis_frac_pct": {
+        "p10": 6.468,
+        "p50": 16.691,
+        "p90": 26.084,
+        "min": 0.1061
+      },
+      "uncovered_examples": [
+        {
+          "seed": 700014,
+          "channel": 1,
+          "dir": 120.23,
+          "r": 1317.6,
+          "rho": 1778.8,
+          "vis_frac": 0.0010611122027903322,
+          "observable": true
+        },
+        {
+          "seed": 700001,
+          "channel": 3,
+          "dir": 282.25,
+          "r": 1084.5,
+          "rho": 1785.2,
+          "vis_frac": 0.0012576144625663194,
+          "observable": true
+        }
+      ]
+    }
+  }
+}

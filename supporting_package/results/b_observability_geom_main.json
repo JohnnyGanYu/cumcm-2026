@@ -1,0 +1,1267 @@
+{
+  "grid": {
+    "step_m": 20.0,
+    "points": 25445,
+    "arena_radius_m": 1800.0
+  },
+  "self_check": {
+    "pairs_checked": 40000,
+    "mismatches": 0
+  },
+  "layout_sizes": {
+    "L01_origin": 1,
+    "L13_origin+1250x12": 13,
+    "L27_Q3_+1750x14": 27,
+    "L31_Q4_+1750x18": 31,
+    "L60_4ring": 60,
+    "L100_5ring": 100
+  },
+  "scenarios": {
+    "Q3_omni": {
+      "sources": 26105,
+      "directional": 0,
+      "omni": 26105,
+      "observable_pct": 100.0,
+      "unobservable_pct": 0.0,
+      "coverage_pct": {
+        "L01_origin": 49.017,
+        "L13_origin+1250x12": 100.0,
+        "L27_Q3_+1750x14": 100.0,
+        "L31_Q4_+1750x18": 100.0,
+        "L60_4ring": 100.0,
+        "L100_5ring": 100.0
+      },
+      "uncovered_by_L13_origin+1250x12": {
+        "count": 0,
+        "pct_of_sources": 0.0,
+        "vis_frac_pct": {
+          "p10": NaN,
+          "p50": NaN,
+          "p90": NaN,
+          "max": null,
+          "mean": null,
+          "zero_count": 0
+        }
+      },
+      "all_sources_vis_frac_pct": {
+        "p10": 20.92,
+        "p50": 32.777,
+        "p90": 49.904,
+        "min": 13.7434
+      },
+      "uncovered_examples": []
+    },
+    "Q4_d5": {
+      "sources": 26105,
+      "directional": 10000,
+      "omni": 16105,
+      "observable_pct": 100.0,
+      "unobservable_pct": 0.0,
+      "coverage_pct": {
+        "L01_origin": 39.318,
+        "L13_origin+1250x12": 95.916,
+        "L27_Q3_+1750x14": 99.793,
+        "L31_Q4_+1750x18": 99.805,
+        "L60_4ring": 99.958,
+        "L100_5ring": 99.989
+      },
+      "directional_coverage_pct": {
+        "L01_origin": 24.73,
+        "L13_origin+1250x12": 89.34,
+        "L27_Q3_+1750x14": 99.46,
+        "L31_Q4_+1750x18": 99.49,
+        "L60_4ring": 99.89,
+        "L100_5ring": 99.97
+      },
+      "directional_observable_pct": 100.0,
+      "uncovered_by_L31_Q4_+1750x18": {
+        "count": 51,
+        "pct_of_sources": 0.195,
+        "vis_frac_pct": {
+          "p10": 0.059,
+          "p50": 0.2672,
+          "p90": 17.0643,
+          "max": 20.3105,
+          "mean": 4.2401,
+          "zero_count": 0
+        }
+      },
+      "all_sources_vis_frac_pct": {
+        "p10": 12.281,
+        "p50": 26.457,
+        "p90": 45.453,
+        "min": 0.0157
+      },
+      "uncovered_examples": [
+        {
+          "seed": 701674,
+          "channel": 4,
+          "dir": 257.68,
+          "r": 1047.6,
+          "rho": 1796.5,
+          "vis_frac": 0.00015720180782078993,
+          "observable": true
+        },
+        {
+          "seed": 700709,
+          "channel": 10,
+          "dir": 351.18,
+          "r": 1061.5,
+          "rho": 1790.6,
+          "vis_frac": 0.00019650225977598743,
+          "observable": true
+        },
+        {
+          "seed": 701110,
+          "channel": 17,
+          "dir": 146.66,
+          "r": 1032.5,
+          "rho": 1792.3,
+          "vis_frac": 0.00031440361564157986,
+          "observable": true
+        },
+        {
+          "seed": 700368,
+          "channel": 5,
+          "dir": 30.1,
+          "r": 1203.0,
+          "rho": 1786.7,
+          "vis_frac": 0.0004716054234623698,
+          "observable": true
+        },
+        {
+          "seed": 700556,
+          "channel": 7,
+          "dir": 131.9,
+          "r": 1270.3,
+          "rho": 1799.2,
+          "vis_frac": 0.0005109058754175673,
+          "observable": true
+        },
+        {
+          "seed": 700813,
+          "channel": 19,
+          "dir": 240.76,
+          "r": 1263.5,
+          "rho": 1795.1,
+          "vis_frac": 0.0005895067793279622,
+          "observable": true
+        },
+        {
+          "seed": 700276,
+          "channel": 18,
+          "dir": 216.83,
+          "r": 1284.8,
+          "rho": 1784.8,
+          "vis_frac": 0.0006288072312831597,
+          "observable": true
+        },
+        {
+          "seed": 701275,
+          "channel": 11,
+          "dir": 4.85,
+          "r": 1031.7,
+          "rho": 1778.4,
+          "vis_frac": 0.0007074081351935547,
+          "observable": true
+        },
+        {
+          "seed": 700267,
+          "channel": 7,
+          "dir": 74.25,
+          "r": 1127.6,
+          "rho": 1776.4,
+          "vis_frac": 0.0009432108469247396,
+          "observable": true
+        },
+        {
+          "seed": 700187,
+          "channel": 1,
+          "dir": 248.75,
+          "r": 1019.2,
+          "rho": 1797.8,
+          "vis_frac": 0.0010218117508351346,
+          "observable": true
+        },
+        {
+          "seed": 700221,
+          "channel": 20,
+          "dir": 210.17,
+          "r": 1034.5,
+          "rho": 1778.5,
+          "vis_frac": 0.0010611122027903322,
+          "observable": true
+        },
+        {
+          "seed": 700884,
+          "channel": 13,
+          "dir": 118.5,
+          "r": 1182.9,
+          "rho": 1772.0,
+          "vis_frac": 0.001218314010611122,
+          "observable": true
+        },
+        {
+          "seed": 701155,
+          "channel": 14,
+          "dir": 333.12,
+          "r": 1184.9,
+          "rho": 1774.9,
+          "vis_frac": 0.001296914914521517,
+          "observable": true
+        },
+        {
+          "seed": 701481,
+          "channel": 9,
+          "dir": 247.55,
+          "r": 1094.6,
+          "rho": 1775.2,
+          "vis_frac": 0.0014148162703871094,
+          "observable": true
+        },
+        {
+          "seed": 701817,
+          "channel": 8,
+          "dir": 140.41,
+          "r": 1407.8,
+          "rho": 1785.6,
+          "vis_frac": 0.001454116722342307,
+          "observable": true
+        },
+        {
+          "seed": 701858,
+          "channel": 4,
+          "dir": 71.12,
+          "r": 1475.3,
+          "rho": 1774.0,
+          "vis_frac": 0.0014934171742975045,
+          "observable": true
+        },
+        {
+          "seed": 701115,
+          "channel": 20,
+          "dir": 131.59,
+          "r": 1115.7,
+          "rho": 1776.7,
+          "vis_frac": 0.0016113185301630968,
+          "observable": true
+        },
+        {
+          "seed": 700504,
+          "channel": 20,
+          "dir": 122.37,
+          "r": 1366.4,
+          "rho": 1799.0,
+          "vis_frac": 0.002043623501670269,
+          "observable": true
+        },
+        {
+          "seed": 701196,
+          "channel": 10,
+          "dir": 18.16,
+          "r": 1256.7,
+          "rho": 1790.1,
+          "vis_frac": 0.002043623501670269,
+          "observable": true
+        },
+        {
+          "seed": 701177,
+          "channel": 4,
+          "dir": 122.32,
+          "r": 1464.4,
+          "rho": 1795.7,
+          "vis_frac": 0.0021222244055806644,
+          "observable": true
+        },
+        {
+          "seed": 700395,
+          "channel": 11,
+          "dir": 274.75,
+          "r": 1103.7,
+          "rho": 1755.3,
+          "vis_frac": 0.0022401257614462567,
+          "observable": true
+        },
+        {
+          "seed": 700291,
+          "channel": 1,
+          "dir": 13.36,
+          "r": 1011.1,
+          "rho": 1788.4,
+          "vis_frac": 0.0022794262134014543,
+          "observable": true
+        },
+        {
+          "seed": 700485,
+          "channel": 19,
+          "dir": 18.2,
+          "r": 1103.1,
+          "rho": 1754.9,
+          "vis_frac": 0.002593829829043034,
+          "observable": true
+        },
+        {
+          "seed": 700424,
+          "channel": 17,
+          "dir": 208.32,
+          "r": 1317.6,
+          "rho": 1756.6,
+          "vis_frac": 0.0026331302809982316,
+          "observable": true
+        },
+        {
+          "seed": 701490,
+          "channel": 12,
+          "dir": 98.97,
+          "r": 1134.9,
+          "rho": 1764.2,
+          "vis_frac": 0.0026331302809982316,
+          "observable": true
+        },
+        {
+          "seed": 700409,
+          "channel": 7,
+          "dir": 175.95,
+          "r": 1266.2,
+          "rho": 1757.2,
+          "vis_frac": 0.002672430732953429,
+          "observable": true
+        },
+        {
+          "seed": 700856,
+          "channel": 14,
+          "dir": 121.76,
+          "r": 1292.4,
+          "rho": 1779.4,
+          "vis_frac": 0.002672430732953429,
+          "observable": true
+        },
+        {
+          "seed": 701557,
+          "channel": 16,
+          "dir": 342.19,
+          "r": 1430.5,
+          "rho": 1787.5,
+          "vis_frac": 0.002672430732953429,
+          "observable": true
+        },
+        {
+          "seed": 701486,
+          "channel": 4,
+          "dir": 116.94,
+          "r": 1201.8,
+          "rho": 1748.1,
+          "vis_frac": 0.0029475338966398115,
+          "observable": true
+        },
+        {
+          "seed": 701098,
+          "channel": 17,
+          "dir": 241.93,
+          "r": 1166.8,
+          "rho": 1748.4,
+          "vis_frac": 0.002986834348595009,
+          "observable": true
+        },
+        {
+          "seed": 701665,
+          "channel": 4,
+          "dir": 305.57,
+          "r": 1245.2,
+          "rho": 1748.2,
+          "vis_frac": 0.0031047357044606014,
+          "observable": true
+        },
+        {
+          "seed": 701956,
+          "channel": 15,
+          "dir": 18.97,
+          "r": 1111.5,
+          "rho": 1797.5,
+          "vis_frac": 0.0032226370603261937,
+          "observable": true
+        },
+        {
+          "seed": 700383,
+          "channel": 3,
+          "dir": 16.73,
+          "r": 1200.8,
+          "rho": 1765.4,
+          "vis_frac": 0.0032619375122813913,
+          "observable": true
+        },
+        {
+          "seed": 701912,
+          "channel": 13,
+          "dir": 77.76,
+          "r": 1131.9,
+          "rho": 1743.7,
+          "vis_frac": 0.0032619375122813913,
+          "observable": true
+        },
+        {
+          "seed": 700168,
+          "channel": 8,
+          "dir": 41.64,
+          "r": 1107.1,
+          "rho": 1749.8,
+          "vis_frac": 0.003340538416191786,
+          "observable": true
+        },
+        {
+          "seed": 701107,
+          "channel": 7,
+          "dir": 257.01,
+          "r": 1451.0,
+          "rho": 1744.3,
+          "vis_frac": 0.003733542935743761,
+          "observable": true
+        },
+        {
+          "seed": 701682,
+          "channel": 12,
+          "dir": 158.56,
+          "r": 1025.7,
+          "rho": 1767.4,
+          "vis_frac": 0.003733542935743761,
+          "observable": true
+        },
+        {
+          "seed": 701681,
+          "channel": 4,
+          "dir": 341.78,
+          "r": 1417.3,
+          "rho": 1781.0,
+          "vis_frac": 0.004008646099430143,
+          "observable": true
+        },
+        {
+          "seed": 700650,
+          "channel": 4,
+          "dir": 338.52,
+          "r": 1416.2,
+          "rho": 1734.4,
+          "vis_frac": 0.004323049715071723,
+          "observable": true
+        },
+        {
+          "seed": 700940,
+          "channel": 9,
+          "dir": 338.43,
+          "r": 1004.0,
+          "rho": 218.6,
+          "vis_frac": 0.15559048929062685,
+          "observable": true
+        }
+      ]
+    },
+    "Q4_d10": {
+      "sources": 26105,
+      "directional": 20000,
+      "omni": 6105,
+      "observable_pct": 100.0,
+      "unobservable_pct": 0.0,
+      "coverage_pct": {
+        "L01_origin": 30.113,
+        "L13_origin+1250x12": 91.963,
+        "L27_Q3_+1750x14": 99.502,
+        "L31_Q4_+1750x18": 99.556,
+        "L60_4ring": 99.916,
+        "L100_5ring": 99.962
+      },
+      "directional_coverage_pct": {
+        "L01_origin": 24.63,
+        "L13_origin+1250x12": 89.51,
+        "L27_Q3_+1750x14": 99.35,
+        "L31_Q4_+1750x18": 99.42,
+        "L60_4ring": 99.89,
+        "L100_5ring": 99.95
+      },
+      "directional_observable_pct": 100.0,
+      "uncovered_by_L31_Q4_+1750x18": {
+        "count": 116,
+        "pct_of_sources": 0.444,
+        "vis_frac_pct": {
+          "p10": 0.0413,
+          "p50": 0.3006,
+          "p90": 18.1666,
+          "max": 22.3109,
+          "mean": 6.4223,
+          "zero_count": 0
+        }
+      },
+      "all_sources_vis_frac_pct": {
+        "p10": 7.905,
+        "p50": 19.709,
+        "p90": 34.74,
+        "min": 0.0039
+      },
+      "uncovered_examples": [
+        {
+          "seed": 700799,
+          "channel": 6,
+          "dir": 128.16,
+          "r": 1143.0,
+          "rho": 1799.9,
+          "vis_frac": 3.930045195519748e-05,
+          "observable": true
+        },
+        {
+          "seed": 701193,
+          "channel": 12,
+          "dir": 269.65,
+          "r": 1263.5,
+          "rho": 1798.3,
+          "vis_frac": 3.930045195519748e-05,
+          "observable": true
+        },
+        {
+          "seed": 701859,
+          "channel": 13,
+          "dir": 180.36,
+          "r": 1425.8,
+          "rho": 1793.9,
+          "vis_frac": 3.930045195519748e-05,
+          "observable": true
+        },
+        {
+          "seed": 701678,
+          "channel": 9,
+          "dir": 200.61,
+          "r": 1292.9,
+          "rho": 1794.5,
+          "vis_frac": 0.00011790135586559245,
+          "observable": true
+        },
+        {
+          "seed": 701539,
+          "channel": 17,
+          "dir": 212.09,
+          "r": 1088.8,
+          "rho": 1799.7,
+          "vis_frac": 0.00019650225977598743,
+          "observable": true
+        },
+        {
+          "seed": 701012,
+          "channel": 7,
+          "dir": 136.48,
+          "r": 1406.2,
+          "rho": 1796.8,
+          "vis_frac": 0.0002358027117311849,
+          "observable": true
+        },
+        {
+          "seed": 701824,
+          "channel": 2,
+          "dir": 124.96,
+          "r": 1344.3,
+          "rho": 1797.9,
+          "vis_frac": 0.0002358027117311849,
+          "observable": true
+        },
+        {
+          "seed": 700230,
+          "channel": 19,
+          "dir": 215.54,
+          "r": 1005.0,
+          "rho": 1788.9,
+          "vis_frac": 0.0002751031636863824,
+          "observable": true
+        },
+        {
+          "seed": 701512,
+          "channel": 15,
+          "dir": 175.65,
+          "r": 1114.7,
+          "rho": 1788.2,
+          "vis_frac": 0.0002751031636863824,
+          "observable": true
+        },
+        {
+          "seed": 700347,
+          "channel": 10,
+          "dir": 112.15,
+          "r": 1479.7,
+          "rho": 1791.7,
+          "vis_frac": 0.00035370406759677734,
+          "observable": true
+        },
+        {
+          "seed": 700394,
+          "channel": 12,
+          "dir": 176.87,
+          "r": 1202.2,
+          "rho": 1793.9,
+          "vis_frac": 0.00035370406759677734,
+          "observable": true
+        },
+        {
+          "seed": 700628,
+          "channel": 7,
+          "dir": 233.1,
+          "r": 1173.1,
+          "rho": 1789.0,
+          "vis_frac": 0.00039300451955197487,
+          "observable": true
+        },
+        {
+          "seed": 700496,
+          "channel": 11,
+          "dir": 183.52,
+          "r": 1226.0,
+          "rho": 1782.8,
+          "vis_frac": 0.00043230497150717234,
+          "observable": true
+        },
+        {
+          "seed": 700368,
+          "channel": 5,
+          "dir": 30.1,
+          "r": 1203.0,
+          "rho": 1786.7,
+          "vis_frac": 0.0004716054234623698,
+          "observable": true
+        },
+        {
+          "seed": 700813,
+          "channel": 19,
+          "dir": 240.76,
+          "r": 1263.5,
+          "rho": 1795.1,
+          "vis_frac": 0.0005895067793279622,
+          "observable": true
+        },
+        {
+          "seed": 701324,
+          "channel": 7,
+          "dir": 8.0,
+          "r": 1391.0,
+          "rho": 1788.7,
+          "vis_frac": 0.0007467085871487523,
+          "observable": true
+        },
+        {
+          "seed": 701438,
+          "channel": 16,
+          "dir": 116.79,
+          "r": 1494.5,
+          "rho": 1788.2,
+          "vis_frac": 0.0007467085871487523,
+          "observable": true
+        },
+        {
+          "seed": 700102,
+          "channel": 9,
+          "dir": 150.36,
+          "r": 1444.0,
+          "rho": 1793.3,
+          "vis_frac": 0.0009039103949695422,
+          "observable": true
+        },
+        {
+          "seed": 700342,
+          "channel": 8,
+          "dir": 63.09,
+          "r": 1450.4,
+          "rho": 1774.0,
+          "vis_frac": 0.0009825112988799372,
+          "observable": true
+        },
+        {
+          "seed": 701210,
+          "channel": 5,
+          "dir": 1.95,
+          "r": 1424.0,
+          "rho": 1786.4,
+          "vis_frac": 0.0009825112988799372,
+          "observable": true
+        },
+        {
+          "seed": 700221,
+          "channel": 20,
+          "dir": 210.17,
+          "r": 1034.5,
+          "rho": 1778.5,
+          "vis_frac": 0.0010611122027903322,
+          "observable": true
+        },
+        {
+          "seed": 700391,
+          "channel": 18,
+          "dir": 255.81,
+          "r": 1149.1,
+          "rho": 1776.8,
+          "vis_frac": 0.0011004126547455295,
+          "observable": true
+        },
+        {
+          "seed": 700936,
+          "channel": 13,
+          "dir": 273.91,
+          "r": 1239.1,
+          "rho": 1791.1,
+          "vis_frac": 0.0011004126547455295,
+          "observable": true
+        },
+        {
+          "seed": 700029,
+          "channel": 12,
+          "dir": 337.03,
+          "r": 1014.5,
+          "rho": 1776.9,
+          "vis_frac": 0.0011790135586559245,
+          "observable": true
+        },
+        {
+          "seed": 700884,
+          "channel": 13,
+          "dir": 118.5,
+          "r": 1182.9,
+          "rho": 1772.0,
+          "vis_frac": 0.001218314010611122,
+          "observable": true
+        },
+        {
+          "seed": 701115,
+          "channel": 20,
+          "dir": 128.69,
+          "r": 1182.8,
+          "rho": 1776.7,
+          "vis_frac": 0.001218314010611122,
+          "observable": true
+        },
+        {
+          "seed": 700488,
+          "channel": 19,
+          "dir": 52.52,
+          "r": 1194.9,
+          "rho": 1778.2,
+          "vis_frac": 0.0013362153664767144,
+          "observable": true
+        },
+        {
+          "seed": 700200,
+          "channel": 4,
+          "dir": 120.67,
+          "r": 1305.9,
+          "rho": 1798.5,
+          "vis_frac": 0.0014148162703871094,
+          "observable": true
+        },
+        {
+          "seed": 701481,
+          "channel": 9,
+          "dir": 247.55,
+          "r": 1094.6,
+          "rho": 1775.2,
+          "vis_frac": 0.0014148162703871094,
+          "observable": true
+        },
+        {
+          "seed": 701858,
+          "channel": 4,
+          "dir": 71.12,
+          "r": 1475.3,
+          "rho": 1774.0,
+          "vis_frac": 0.0014934171742975045,
+          "observable": true
+        },
+        {
+          "seed": 700035,
+          "channel": 20,
+          "dir": 206.83,
+          "r": 1176.8,
+          "rho": 1779.2,
+          "vis_frac": 0.0015720180782078995,
+          "observable": true
+        },
+        {
+          "seed": 701081,
+          "channel": 5,
+          "dir": 123.91,
+          "r": 1314.0,
+          "rho": 1779.7,
+          "vis_frac": 0.0015720180782078995,
+          "observable": true
+        },
+        {
+          "seed": 701784,
+          "channel": 14,
+          "dir": 211.82,
+          "r": 1189.9,
+          "rho": 1780.8,
+          "vis_frac": 0.0016113185301630968,
+          "observable": true
+        },
+        {
+          "seed": 700071,
+          "channel": 17,
+          "dir": 246.31,
+          "r": 1156.3,
+          "rho": 1784.8,
+          "vis_frac": 0.0017292198860286894,
+          "observable": true
+        },
+        {
+          "seed": 701928,
+          "channel": 17,
+          "dir": 23.97,
+          "r": 1456.4,
+          "rho": 1762.6,
+          "vis_frac": 0.0018864216938494793,
+          "observable": true
+        },
+        {
+          "seed": 701787,
+          "channel": 18,
+          "dir": 316.85,
+          "r": 1138.6,
+          "rho": 1774.0,
+          "vis_frac": 0.0019650225977598744,
+          "observable": true
+        },
+        {
+          "seed": 701801,
+          "channel": 2,
+          "dir": 354.84,
+          "r": 1446.4,
+          "rho": 1760.6,
+          "vis_frac": 0.0020043230497150716,
+          "observable": true
+        },
+        {
+          "seed": 701390,
+          "channel": 13,
+          "dir": 51.4,
+          "r": 1321.5,
+          "rho": 1796.6,
+          "vis_frac": 0.002043623501670269,
+          "observable": true
+        },
+        {
+          "seed": 700336,
+          "channel": 12,
+          "dir": 264.83,
+          "r": 1027.9,
+          "rho": 1760.1,
+          "vis_frac": 0.0021615248575358615,
+          "observable": true
+        },
+        {
+          "seed": 700337,
+          "channel": 19,
+          "dir": 147.57,
+          "r": 1242.5,
+          "rho": 1765.3,
+          "vis_frac": 0.0021615248575358615,
+          "observable": true
+        }
+      ]
+    },
+    "Q4_d16": {
+      "sources": 32000,
+      "directional": 32000,
+      "omni": 0,
+      "observable_pct": 99.997,
+      "unobservable_pct": 0.003,
+      "coverage_pct": {
+        "L01_origin": 24.425,
+        "L13_origin+1250x12": 89.372,
+        "L27_Q3_+1750x14": 99.463,
+        "L31_Q4_+1750x18": 99.478,
+        "L60_4ring": 99.9,
+        "L100_5ring": 99.966
+      },
+      "directional_coverage_pct": {
+        "L01_origin": 24.425,
+        "L13_origin+1250x12": 89.372,
+        "L27_Q3_+1750x14": 99.463,
+        "L31_Q4_+1750x18": 99.478,
+        "L60_4ring": 99.9,
+        "L100_5ring": 99.966
+      },
+      "directional_observable_pct": 99.997,
+      "uncovered_by_L31_Q4_+1750x18": {
+        "count": 167,
+        "pct_of_sources": 0.522,
+        "vis_frac_pct": {
+          "p10": 0.0511,
+          "p50": 0.2712,
+          "p90": 17.5288,
+          "max": 21.7646,
+          "mean": 5.3916,
+          "zero_count": 1
+        }
+      },
+      "all_sources_vis_frac_pct": {
+        "p10": 6.653,
+        "p50": 17.273,
+        "p90": 27.228,
+        "min": 0.0
+      },
+      "uncovered_examples": [
+        {
+          "seed": 700950,
+          "channel": 1,
+          "dir": 110.82,
+          "r": 1328.1,
+          "rho": 1798.7,
+          "vis_frac": 0.0,
+          "observable": false
+        },
+        {
+          "seed": 700251,
+          "channel": 1,
+          "dir": 179.45,
+          "r": 1111.6,
+          "rho": 1795.8,
+          "vis_frac": 3.930045195519748e-05,
+          "observable": true
+        },
+        {
+          "seed": 700575,
+          "channel": 6,
+          "dir": 67.78,
+          "r": 1160.1,
+          "rho": 1798.2,
+          "vis_frac": 3.930045195519748e-05,
+          "observable": true
+        },
+        {
+          "seed": 701473,
+          "channel": 4,
+          "dir": 240.69,
+          "r": 1270.1,
+          "rho": 1796.9,
+          "vis_frac": 7.860090391039497e-05,
+          "observable": true
+        },
+        {
+          "seed": 701534,
+          "channel": 7,
+          "dir": 298.08,
+          "r": 1228.3,
+          "rho": 1799.4,
+          "vis_frac": 7.860090391039497e-05,
+          "observable": true
+        },
+        {
+          "seed": 700582,
+          "channel": 7,
+          "dir": 56.31,
+          "r": 1039.9,
+          "rho": 1792.3,
+          "vis_frac": 0.00011790135586559245,
+          "observable": true
+        },
+        {
+          "seed": 700707,
+          "channel": 10,
+          "dir": 194.18,
+          "r": 1282.6,
+          "rho": 1795.5,
+          "vis_frac": 0.00015720180782078993,
+          "observable": true
+        },
+        {
+          "seed": 700656,
+          "channel": 8,
+          "dir": 49.91,
+          "r": 1227.3,
+          "rho": 1792.0,
+          "vis_frac": 0.0002358027117311849,
+          "observable": true
+        },
+        {
+          "seed": 700494,
+          "channel": 12,
+          "dir": 263.65,
+          "r": 1364.3,
+          "rho": 1797.8,
+          "vis_frac": 0.0002751031636863824,
+          "observable": true
+        },
+        {
+          "seed": 700543,
+          "channel": 13,
+          "dir": 67.91,
+          "r": 1078.3,
+          "rho": 1792.7,
+          "vis_frac": 0.0002751031636863824,
+          "observable": true
+        },
+        {
+          "seed": 700556,
+          "channel": 7,
+          "dir": 145.4,
+          "r": 1219.0,
+          "rho": 1799.2,
+          "vis_frac": 0.00035370406759677734,
+          "observable": true
+        },
+        {
+          "seed": 701493,
+          "channel": 14,
+          "dir": 35.78,
+          "r": 1000.2,
+          "rho": 1786.3,
+          "vis_frac": 0.00039300451955197487,
+          "observable": true
+        },
+        {
+          "seed": 701626,
+          "channel": 17,
+          "dir": 164.71,
+          "r": 1079.2,
+          "rho": 1785.9,
+          "vis_frac": 0.00039300451955197487,
+          "observable": true
+        },
+        {
+          "seed": 700276,
+          "channel": 17,
+          "dir": 100.48,
+          "r": 1241.8,
+          "rho": 1787.9,
+          "vis_frac": 0.00043230497150717234,
+          "observable": true
+        },
+        {
+          "seed": 700102,
+          "channel": 18,
+          "dir": 163.78,
+          "r": 1017.4,
+          "rho": 1793.3,
+          "vis_frac": 0.0004716054234623698,
+          "observable": true
+        },
+        {
+          "seed": 700196,
+          "channel": 10,
+          "dir": 278.45,
+          "r": 1461.1,
+          "rho": 1791.2,
+          "vis_frac": 0.0004716054234623698,
+          "observable": true
+        },
+        {
+          "seed": 700247,
+          "channel": 17,
+          "dir": 26.63,
+          "r": 1307.9,
+          "rho": 1783.3,
+          "vis_frac": 0.0005109058754175673,
+          "observable": true
+        },
+        {
+          "seed": 700419,
+          "channel": 7,
+          "dir": 276.58,
+          "r": 1142.4,
+          "rho": 1795.1,
+          "vis_frac": 0.0005109058754175673,
+          "observable": true
+        },
+        {
+          "seed": 701605,
+          "channel": 13,
+          "dir": 17.23,
+          "r": 1090.6,
+          "rho": 1785.0,
+          "vis_frac": 0.0005109058754175673,
+          "observable": true
+        },
+        {
+          "seed": 700072,
+          "channel": 20,
+          "dir": 137.75,
+          "r": 1018.6,
+          "rho": 1786.0,
+          "vis_frac": 0.0005502063273727648,
+          "observable": true
+        },
+        {
+          "seed": 700144,
+          "channel": 13,
+          "dir": 33.52,
+          "r": 1117.4,
+          "rho": 1790.1,
+          "vis_frac": 0.0005502063273727648,
+          "observable": true
+        },
+        {
+          "seed": 700380,
+          "channel": 18,
+          "dir": 221.18,
+          "r": 1243.1,
+          "rho": 1798.8,
+          "vis_frac": 0.0005895067793279622,
+          "observable": true
+        },
+        {
+          "seed": 701045,
+          "channel": 20,
+          "dir": 266.61,
+          "r": 1220.8,
+          "rho": 1779.2,
+          "vis_frac": 0.0005895067793279622,
+          "observable": true
+        },
+        {
+          "seed": 701653,
+          "channel": 15,
+          "dir": 49.17,
+          "r": 1443.3,
+          "rho": 1784.5,
+          "vis_frac": 0.0006288072312831597,
+          "observable": true
+        },
+        {
+          "seed": 700326,
+          "channel": 13,
+          "dir": 229.35,
+          "r": 1428.6,
+          "rho": 1785.3,
+          "vis_frac": 0.0007074081351935547,
+          "observable": true
+        },
+        {
+          "seed": 701055,
+          "channel": 6,
+          "dir": 262.28,
+          "r": 1489.5,
+          "rho": 1791.6,
+          "vis_frac": 0.0007467085871487523,
+          "observable": true
+        },
+        {
+          "seed": 701549,
+          "channel": 7,
+          "dir": 324.49,
+          "r": 1091.2,
+          "rho": 1780.8,
+          "vis_frac": 0.0007467085871487523,
+          "observable": true
+        },
+        {
+          "seed": 701907,
+          "channel": 2,
+          "dir": 106.29,
+          "r": 1377.5,
+          "rho": 1778.6,
+          "vis_frac": 0.0007860090391039497,
+          "observable": true
+        },
+        {
+          "seed": 700378,
+          "channel": 1,
+          "dir": 35.78,
+          "r": 1356.5,
+          "rho": 1778.5,
+          "vis_frac": 0.0008253094910591472,
+          "observable": true
+        },
+        {
+          "seed": 701600,
+          "channel": 2,
+          "dir": 97.26,
+          "r": 1262.0,
+          "rho": 1779.5,
+          "vis_frac": 0.0008646099430143447,
+          "observable": true
+        },
+        {
+          "seed": 701981,
+          "channel": 14,
+          "dir": 283.33,
+          "r": 1436.9,
+          "rho": 1789.9,
+          "vis_frac": 0.0009039103949695422,
+          "observable": true
+        },
+        {
+          "seed": 701134,
+          "channel": 15,
+          "dir": 95.92,
+          "r": 1213.6,
+          "rho": 1796.1,
+          "vis_frac": 0.0009432108469247396,
+          "observable": true
+        },
+        {
+          "seed": 701279,
+          "channel": 8,
+          "dir": 284.93,
+          "r": 1219.7,
+          "rho": 1777.1,
+          "vis_frac": 0.0010218117508351346,
+          "observable": true
+        },
+        {
+          "seed": 700014,
+          "channel": 1,
+          "dir": 120.23,
+          "r": 1317.6,
+          "rho": 1778.8,
+          "vis_frac": 0.0010611122027903322,
+          "observable": true
+        },
+        {
+          "seed": 700260,
+          "channel": 6,
+          "dir": 41.74,
+          "r": 1098.2,
+          "rho": 1782.0,
+          "vis_frac": 0.0010611122027903322,
+          "observable": true
+        },
+        {
+          "seed": 700635,
+          "channel": 16,
+          "dir": 224.97,
+          "r": 1418.2,
+          "rho": 1777.9,
+          "vis_frac": 0.0010611122027903322,
+          "observable": true
+        },
+        {
+          "seed": 701619,
+          "channel": 10,
+          "dir": 257.63,
+          "r": 1461.9,
+          "rho": 1772.5,
+          "vis_frac": 0.001218314010611122,
+          "observable": true
+        },
+        {
+          "seed": 701685,
+          "channel": 16,
+          "dir": 24.46,
+          "r": 1267.8,
+          "rho": 1771.7,
+          "vis_frac": 0.001218314010611122,
+          "observable": true
+        },
+        {
+          "seed": 700001,
+          "channel": 3,
+          "dir": 282.25,
+          "r": 1084.5,
+          "rho": 1785.2,
+          "vis_frac": 0.0012576144625663194,
+          "observable": true
+        },
+        {
+          "seed": 701534,
+          "channel": 6,
+          "dir": 188.74,
+          "r": 1333.7,
+          "rho": 1787.0,
+          "vis_frac": 0.0013362153664767144,
+          "observable": true
+        }
+      ]
+    }
+  }
+}

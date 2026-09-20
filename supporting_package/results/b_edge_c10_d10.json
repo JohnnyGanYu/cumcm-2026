@@ -1,0 +1,53 @@
+{
+ "config": {
+  "plan": "paired",
+  "variants": "baseline",
+  "episodes": 40,
+  "seed_start": 21000,
+  "directional": 10,
+  "count": 10,
+  "workers": 4,
+  "overrides": null,
+  "out": "results/b_edge_c10_d10.json"
+ },
+ "paired": {
+  "baseline": {
+   "paired_episodes": 40,
+   "clear_rate_raw": "400/400",
+   "total_sources_matches_ref": true,
+   "clear_regression": false,
+   "clear_rate": 1.0,
+   "full_clear_episodes": 40,
+   "d_cleared_sources": 0,
+   "metric_mean_s": 1168.4,
+   "d_metric_s": 0.0,
+   "d_metric_pct": 0.0,
+   "better_episodes": 0,
+   "worse_episodes": 0,
+   "measure_calls_mean": 511.1,
+   "clear_calls_mean": 59.2
+  }
+ },
+ "aggregate": {
+  "baseline": {
+   "episodes": 40,
+   "errors": [],
+   "error_count": 0,
+   "sources": 400,
+   "cleared": 400,
+   "clear_rate_raw": "400/400",
+   "clear_rate": 1.0,
+   "missed": 0,
+   "cause_distribution": {},
+   "u_hard_bound_sources": 400,
+   "u_hard_bound_raw": "400/400",
+   "missed_with_u_hard": 0,
+   "missed_with_u_layout": 0,
+   "missed_with_u_traj": 0,
+   "gap_to_hard_bound_sources": 0,
+   "gap_to_hard_bound_pct": 0.0,
+   "mean_clear_time_s": 1168.4
+  }
+ },
+ "elapsed_s": 287.5
+}

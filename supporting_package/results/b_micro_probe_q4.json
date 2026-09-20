@@ -1,0 +1,33 @@
+{
+ "summary": {
+  "episodes": 40,
+  "cleared_total": 508,
+  "jammers_total": 508,
+  "clear_calls_mean": 18.3,
+  "spiral_entries_total": 29,
+  "spiral_clear_calls_total": 121,
+  "post_success_clear_calls_total": 0,
+  "single_bearing_decision_points": 521,
+  "r_true_min": 38.3,
+  "r_true_median": 828.8,
+  "r_true_mean": 809.0,
+  "frac_r_true_le_573": 0.2284,
+  "frac_r_true_le_1146": 0.8369,
+  "rmax_provable_min": 1500.0,
+  "rmax_provable_median": 1500.0,
+  "frac_rmax_le_573": 0.0,
+  "frac_rmax_le_1146": 0.0,
+  "rmax_over_rtrue_median": 1.81,
+  "lateral_offset_median_m": 6.45,
+  "lateral_offset_max_m": 25.28,
+  "frac_lateral_le_20": 0.9789,
+  "frac_lateral_le_20_given_rtrue_le_573": 1.0,
+  "frac_lateral_le_20_given_rtrue_le_1146": 1.0
+ },
+ "episodes": [],
+ "_stripped_episodes": {
+  "original_count": 40,
+  "kept_with_issues": 0,
+  "note": "逐局明细已剥离控体积；只留有漏失/报错的条目，聚合字段未动"
+ }
+}

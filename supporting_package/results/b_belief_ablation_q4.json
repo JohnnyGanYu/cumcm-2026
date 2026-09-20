@@ -1,0 +1,112 @@
+{
+ "report": {
+  "label": "q4",
+  "grid": {
+   "A_cur": {
+    "n": 500,
+    "first_shot_hit_rate": 0.768,
+    "plan_hit_rate": 0.814,
+    "mean_calls": 2.31,
+    "mean_seconds": 22.7,
+    "mean_plan_len": 7.0,
+    "mean_first_point_err_m": 23.8,
+    "mean_p_hit_first_point": 0.8228
+   },
+   "B_post_last4": {
+    "n": 500,
+    "first_shot_hit_rate": 0.826,
+    "plan_hit_rate": 0.996,
+    "mean_calls": 1.72,
+    "mean_seconds": 63.6,
+    "mean_plan_len": 4.24,
+    "mean_first_point_err_m": 15.26,
+    "mean_p_hit_first_point": 0.826
+   },
+   "C_centroid_all": {
+    "n": 500,
+    "first_shot_hit_rate": 0.776,
+    "plan_hit_rate": 0.814,
+    "mean_calls": 2.29,
+    "mean_seconds": 22.7,
+    "mean_plan_len": 7.0,
+    "mean_first_point_err_m": 23.37,
+    "mean_p_hit_first_point": 0.8247
+   },
+   "D_post_all": {
+    "n": 500,
+    "first_shot_hit_rate": 0.834,
+    "plan_hit_rate": 0.996,
+    "mean_calls": 1.85,
+    "mean_seconds": 83.8,
+    "mean_plan_len": 4.2,
+    "mean_first_point_err_m": 15.06,
+    "mean_p_hit_first_point": 0.8281
+   }
+  },
+  "grid_directional_only": {
+   "A_cur": {
+    "n": 259,
+    "first_shot_hit_rate": 0.5521,
+    "plan_hit_rate": 0.6409,
+    "mean_calls": 3.53,
+    "mean_seconds": 39.2,
+    "mean_plan_len": 7.0,
+    "mean_first_point_err_m": 44.68,
+    "mean_p_hit_first_point": 0.6579
+   },
+   "B_post_last4": {
+    "n": 259,
+    "first_shot_hit_rate": 0.6641,
+    "plan_hit_rate": 0.9923,
+    "mean_calls": 2.39,
+    "mean_seconds": 117.9,
+    "mean_plan_len": 7.26,
+    "mean_first_point_err_m": 27.66,
+    "mean_p_hit_first_point": 0.6641
+   },
+   "C_centroid_all": {
+    "n": 259,
+    "first_shot_hit_rate": 0.5676,
+    "plan_hit_rate": 0.6409,
+    "mean_calls": 3.49,
+    "mean_seconds": 39.1,
+    "mean_plan_len": 7.0,
+    "mean_first_point_err_m": 44.0,
+    "mean_p_hit_first_point": 0.6616
+   },
+   "D_post_all": {
+    "n": 259,
+    "first_shot_hit_rate": 0.6795,
+    "plan_hit_rate": 0.9923,
+    "mean_calls": 2.65,
+    "mean_seconds": 156.9,
+    "mean_plan_len": 7.18,
+    "mean_first_point_err_m": 27.48,
+    "mean_p_hit_first_point": 0.6682
+   }
+  },
+  "factor_decomposition_plan_hit_rate": {
+   "baseline_A_current": 0.814,
+   "effect_of_posterior_planning_only_B_minus_A": 0.182,
+   "effect_of_all_observations_only_C_minus_A": 0.0,
+   "effect_of_both_D_minus_A": 0.182,
+   "interaction": 0.0
+  },
+  "window_effect": {
+   "mean_diam_last4_m": 115.7,
+   "mean_diam_all_m": 114.0,
+   "mean_est_err_last4_m": 23.8,
+   "mean_est_err_all_m": 23.37,
+   "median_diam_last4_m": 9.0,
+   "median_diam_all_m": 7.9,
+   "frac_all_strictly_tighter": 0.254,
+   "frac_est_err_improved_by_all": 0.172
+  }
+ },
+ "diag": [],
+ "_stripped_diag": {
+  "original_count": 500,
+  "kept_with_issues": 0,
+  "note": "逐局明细已剥离控体积；只留有漏失/报错的条目，聚合字段未动"
+ }
+}

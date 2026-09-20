@@ -1,0 +1,54 @@
+{
+  "config": {
+    "plan": "paired",
+    "variants": "baseline",
+    "episodes": 200,
+    "seed_start": 9000,
+    "directional": 0,
+    "count": null,
+    "workers": 4,
+    "overrides": null,
+    "out": "results/b_e2e_merged_d0.json"
+  },
+  "paired": {
+    "baseline": {
+      "paired_episodes": 200,
+      "clear_rate_raw": "2571/2571",
+      "clear_rate": 1.0,
+      "full_clear_episodes": 200,
+      "d_cleared_sources": 0,
+      "metric_mean_s": 451.5,
+      "d_metric_s": 0.0,
+      "d_metric_pct": 0.0,
+      "better_episodes": 0,
+      "worse_episodes": 0,
+      "measure_calls_mean": 189.7,
+      "clear_calls_mean": 22.3,
+      "still_missed": []
+    }
+  },
+  "aggregate": {
+    "baseline": {
+      "episodes": 200,
+      "errors": [],
+      "error_count": 0,
+      "sources": 2571,
+      "cleared": 2571,
+      "clear_rate_raw": "2571/2571",
+      "clear_rate": 1.0,
+      "missed": 0,
+      "cause_distribution": {},
+      "u_hard_bound_sources": 2571,
+      "u_hard_bound_raw": "2571/2571",
+      "missed_with_u_hard": 0,
+      "missed_with_u_layout": 0,
+      "missed_with_u_traj": 0,
+      "gap_to_hard_bound_sources": 0,
+      "gap_to_hard_bound_pct": 0.0,
+      "mean_clear_time_s": 451.5
+    }
+  },
+  "rows": [],
+  "elapsed_s": 34.2,
+  "rows_note": "逐局明细已剥离控体积(原 200 行),仅留有漏失或报错的局;聚合见 paired/aggregate"
+}

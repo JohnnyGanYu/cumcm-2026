@@ -1,0 +1,312 @@
+{
+ "config": {
+  "plan": "paired",
+  "variants": "baseline,baseline@r1150x7,baseline@r1200x7,baseline@r1100x8",
+  "episodes": 300,
+  "seed_start": 17000,
+  "directional": 0,
+  "count": null,
+  "workers": 4,
+  "overrides": "{\"baseline@r1150x7\":{\"probe_ring_radius\":1150.0,\"probe_ring_stations\":7},\"baseline@r1200x7\":{\"probe_ring_radius\":1200.0,\"probe_ring_stations\":7},\"baseline@r1100x8\":{\"probe_ring_radius\":1100.0,\"probe_ring_stations\":8}}",
+  "out": "results/b_margin_d0.json"
+ },
+ "paired": {
+  "baseline": {
+   "paired_episodes": 300,
+   "clear_rate_raw": "3890/3891",
+   "clear_rate": 0.99974,
+   "full_clear_episodes": 299,
+   "d_cleared_sources": 0,
+   "metric_mean_s": 329.1,
+   "d_metric_s": 0.0,
+   "d_metric_pct": 0.0,
+   "better_episodes": 0,
+   "worse_episodes": 0,
+   "measure_calls_mean": 137.9,
+   "clear_calls_mean": 22.4,
+   "still_missed": [
+    [
+     0,
+     17187,
+     13
+    ]
+   ]
+  },
+  "baseline@r1150x7": {
+   "paired_episodes": 300,
+   "clear_rate_raw": "3890/3891",
+   "clear_rate": 0.99974,
+   "full_clear_episodes": 299,
+   "d_cleared_sources": 0,
+   "metric_mean_s": 333.8,
+   "d_metric_s": 4.7,
+   "d_metric_pct": 1.43,
+   "better_episodes": 106,
+   "worse_episodes": 179,
+   "measure_calls_mean": 146.5,
+   "clear_calls_mean": 22.1,
+   "still_missed": [
+    [
+     0,
+     17145,
+     10
+    ]
+   ]
+  },
+  "baseline@r1200x7": {
+   "paired_episodes": 300,
+   "clear_rate_raw": "3891/3891",
+   "clear_rate": 1.0,
+   "full_clear_episodes": 300,
+   "d_cleared_sources": 1,
+   "metric_mean_s": 333.5,
+   "d_metric_s": 4.4,
+   "d_metric_pct": 1.34,
+   "better_episodes": 108,
+   "worse_episodes": 180,
+   "measure_calls_mean": 146.5,
+   "clear_calls_mean": 22.0,
+   "still_missed": []
+  },
+  "baseline@r1100x8": {
+   "paired_episodes": 300,
+   "clear_rate_raw": "3891/3891",
+   "clear_rate": 1.0,
+   "full_clear_episodes": 300,
+   "d_cleared_sources": 1,
+   "metric_mean_s": 340.8,
+   "d_metric_s": 11.8,
+   "d_metric_pct": 3.58,
+   "better_episodes": 71,
+   "worse_episodes": 214,
+   "measure_calls_mean": 155.8,
+   "clear_calls_mean": 22.0,
+   "still_missed": []
+  }
+ },
+ "aggregate": {
+  "baseline": {
+   "episodes": 300,
+   "errors": [],
+   "error_count": 0,
+   "sources": 3891,
+   "cleared": 3890,
+   "clear_rate_raw": "3890/3891",
+   "clear_rate": 0.99974,
+   "missed": 1,
+   "cause_distribution": {
+    "C_homing_failed": 1
+   },
+   "u_hard_bound_sources": 3891,
+   "u_hard_bound_raw": "3891/3891",
+   "missed_with_u_hard": 1,
+   "missed_with_u_layout": 1,
+   "missed_with_u_traj": 1,
+   "gap_to_hard_bound_sources": 1,
+   "gap_to_hard_bound_pct": 0.0257,
+   "mean_clear_time_s": 329.1
+  },
+  "baseline@r1150x7": {
+   "episodes": 300,
+   "errors": [],
+   "error_count": 0,
+   "sources": 3891,
+   "cleared": 3890,
+   "clear_rate_raw": "3890/3891",
+   "clear_rate": 0.99974,
+   "missed": 1,
+   "cause_distribution": {
+    "C_homing_failed": 1
+   },
+   "u_hard_bound_sources": 3891,
+   "u_hard_bound_raw": "3891/3891",
+   "missed_with_u_hard": 1,
+   "missed_with_u_layout": 1,
+   "missed_with_u_traj": 1,
+   "gap_to_hard_bound_sources": 1,
+   "gap_to_hard_bound_pct": 0.0257,
+   "mean_clear_time_s": 333.8
+  },
+  "baseline@r1200x7": {
+   "episodes": 300,
+   "errors": [],
+   "error_count": 0,
+   "sources": 3891,
+   "cleared": 3891,
+   "clear_rate_raw": "3891/3891",
+   "clear_rate": 1.0,
+   "missed": 0,
+   "cause_distribution": {},
+   "u_hard_bound_sources": 3891,
+   "u_hard_bound_raw": "3891/3891",
+   "missed_with_u_hard": 0,
+   "missed_with_u_layout": 0,
+   "missed_with_u_traj": 0,
+   "gap_to_hard_bound_sources": 0,
+   "gap_to_hard_bound_pct": 0.0,
+   "mean_clear_time_s": 333.5
+  },
+  "baseline@r1100x8": {
+   "episodes": 300,
+   "errors": [],
+   "error_count": 0,
+   "sources": 3891,
+   "cleared": 3891,
+   "clear_rate_raw": "3891/3891",
+   "clear_rate": 1.0,
+   "missed": 0,
+   "cause_distribution": {},
+   "u_hard_bound_sources": 3891,
+   "u_hard_bound_raw": "3891/3891",
+   "missed_with_u_hard": 0,
+   "missed_with_u_layout": 0,
+   "missed_with_u_traj": 0,
+   "gap_to_hard_bound_sources": 0,
+   "gap_to_hard_bound_pct": 0.0,
+   "mean_clear_time_s": 340.8
+  }
+ },
+ "rows": [
+  {
+   "seed": 17187,
+   "directional": 0,
+   "total": 14,
+   "cleared": 13,
+   "mean_clear_time_s": 371.8,
+   "virtual_s": 4833.9,
+   "measure_calls": 153,
+   "clear_calls": 13,
+   "missed_channels": [
+    13
+   ],
+   "budget_hit": false,
+   "missed_detail": [
+    {
+     "seed": 17187,
+     "channel": 13,
+     "cause": "C_homing_failed",
+     "x": 1658.2,
+     "y": -674.7,
+     "r_from_origin": 1790.2,
+     "r_recv": 1082.6,
+     "directional": false,
+     "directional_deg": null,
+     "dist_to_edge_m": 9.8,
+     "aim_outward_gap_deg": null,
+     "u_hard": true,
+     "u_layout": true,
+     "u_traj": true,
+     "nearest_visible_m": 0.0,
+     "visible_area_frac": 0.15956,
+     "measures_on_ch": 12,
+     "measures_in_range": 2,
+     "measures_receivable": 2,
+     "got_signal": true,
+     "got_bearing": true,
+     "bearings": 2,
+     "silent_points": 10,
+     "clear_calls": 0,
+     "min_clear_dist_m": null,
+     "min_measure_dist_m": 531.9,
+     "min_visited_dist_m": 260.9,
+     "belief_alive": false,
+     "belief_positions": null,
+     "truth_in_belief": null,
+     "state_exhausted": true,
+     "verdict_empty": false,
+     "path_tail": [
+      "home=GIVEUP",
+      "home=GIVEUP",
+      "home=GIVEUP",
+      "home=GIVEUP",
+      "home=GIVEUP",
+      "home=GIVEUP"
+     ],
+     "phases_measured": [
+      "post_ring",
+      "ring",
+      "sweep"
+     ],
+     "phases_cleared": [],
+     "t_first_signal": 4117,
+     "events": []
+    }
+   ],
+   "variant": "baseline"
+  },
+  {
+   "seed": 17145,
+   "directional": 0,
+   "total": 12,
+   "cleared": 11,
+   "mean_clear_time_s": 398.0,
+   "virtual_s": 4377.6,
+   "measure_calls": 150,
+   "clear_calls": 39,
+   "missed_channels": [
+    10
+   ],
+   "budget_hit": false,
+   "missed_detail": [
+    {
+     "seed": 17145,
+     "channel": 10,
+     "cause": "C_homing_failed",
+     "x": -610.2,
+     "y": -1686.5,
+     "r_from_origin": 1793.5,
+     "r_recv": 1159.5,
+     "directional": false,
+     "directional_deg": null,
+     "dist_to_edge_m": 6.5,
+     "aim_outward_gap_deg": null,
+     "u_hard": true,
+     "u_layout": true,
+     "u_traj": true,
+     "nearest_visible_m": 0.0,
+     "visible_area_frac": 0.18027,
+     "measures_on_ch": 13,
+     "measures_in_range": 2,
+     "measures_receivable": 2,
+     "got_signal": true,
+     "got_bearing": true,
+     "bearings": 2,
+     "silent_points": 11,
+     "clear_calls": 0,
+     "min_clear_dist_m": null,
+     "min_measure_dist_m": 203.3,
+     "min_visited_dist_m": 203.3,
+     "belief_alive": false,
+     "belief_positions": null,
+     "truth_in_belief": null,
+     "state_exhausted": true,
+     "verdict_empty": false,
+     "path_tail": [
+      "dogleg=ok",
+      "home=GIVEUP",
+      "home=GIVEUP",
+      "home=GIVEUP",
+      "home=GIVEUP",
+      "home=GIVEUP",
+      "home=GIVEUP"
+     ],
+     "phases_measured": [
+      "post_ring",
+      "ring",
+      "sweep"
+     ],
+     "phases_cleared": [],
+     "t_first_signal": 2606,
+     "events": []
+    }
+   ],
+   "variant": "baseline@r1150x7"
+  }
+ ],
+ "elapsed_s": 186.1,
+ "_stripped_rows": {
+  "original_count": 1200,
+  "kept_with_issues": 2,
+  "note": "逐局明细已剥离控体积；只留有漏失/报错的条目，aggregate/paired 未动"
+ }
+}
