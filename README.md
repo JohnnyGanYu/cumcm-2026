@@ -75,6 +75,10 @@ python -m src.b_q1_counterexample                            # Q1 覆盖反例�
 python -m src.b_boundary_matrix --seeds 21000                # 边界压力矩阵
 ```
 
+## 交付包
+
+`dist_windows/` 是提交给官方模拟器的完整程序，纯标准库。根目录的 `CUMCM2026B_robot_windows.zip` 与之字节一致，MD5 `20d5a2ff97ae8201bedf415b8f3e8a40`，由 `python -m src.build_windows_zip --check` 校验；对应 Release v1.0.5。
+
 ## 仓库结构
 
 ```
