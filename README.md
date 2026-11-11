@@ -9,6 +9,7 @@
 ![CUMCM 2026](https://img.shields.io/badge/CUMCM-2026%20B-1f6feb)
 ![Award](https://img.shields.io/badge/Award-National%20Second%20Prize-c0392b)
 ![Python](https://img.shields.io/badge/Python-3.10%2B-3776ab)
+[![tests](https://github.com/JohnnyGanYu/cumcm-2026/actions/workflows/tests.yml/badge.svg)](https://github.com/JohnnyGanYu/cumcm-2026/actions/workflows/tests.yml)
 
 ---
 
