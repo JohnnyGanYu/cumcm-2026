@@ -1,9 +1,33 @@
 """Guard against invalid comparisons and fast-transport scoring drift."""
+import subprocess
 from copy import deepcopy
+from pathlib import Path
+
+import pytest
 
 from .b_optimization_benchmark import (
     aggregate, frozen_versions, gate, local_client, overrides_for, paired_ci, regressions,
     run_episode, selected_configurations, resume_rows, write_report, failure_events,
+)
+
+_ROOT = Path(__file__).resolve().parent.parent
+
+
+def _has_commit(sha: str) -> bool:
+    """浅克隆（CI 默认 fetch-depth=1）取不到冻结基线，这些用例应跳过而非报错。"""
+    try:
+        subprocess.run(
+            ["git", "-C", str(_ROOT), "rev-parse", "--verify", f"{sha}^{{commit}}"],
+            check=True, capture_output=True,
+        )
+        return True
+    except (OSError, subprocess.CalledProcessError):
+        return False
+
+
+requires_frozen_baseline = pytest.mark.skipif(
+    not _has_commit("d83c40d"),
+    reason="需要完整 git 历史才能取到冻结基线 d83c40d（git fetch --unshallow）",
 )
 
 
@@ -45,6 +69,7 @@ def test_config_overrides_and_bootstrap_are_deterministic():
     assert paired_ci([-1, -5, 2]) == paired_ci([-1, -5, 2])
 
 
+@requires_frozen_baseline
 def test_local_dispatch_matches_http_action_sequence():
     import threading
     with frozen_versions("d83c40d") as (bundles, metadata):
@@ -74,6 +99,7 @@ def test_local_dispatch_matches_http_action_sequence():
             thread.join(timeout=2)
 
 
+@requires_frozen_baseline
 def test_frozen_modules_configs_and_concurrent_episodes_are_isolated():
     from concurrent.futures import ThreadPoolExecutor
     with frozen_versions("d83c40d") as (bundles, metadata):
@@ -96,6 +122,7 @@ def test_frozen_modules_configs_and_concurrent_episodes_are_isolated():
         assert all("completion_basis" in r and "unresolved_channels" in r for r in results)
 
 
+@requires_frozen_baseline
 def test_full_configuration_rejects_unknown_fields_before_any_run():
     import pytest
     with frozen_versions("d83c40d") as (bundles, _):

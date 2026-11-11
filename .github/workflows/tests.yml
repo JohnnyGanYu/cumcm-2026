@@ -12,6 +12,8 @@ jobs:
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # 冻结基线测试要按 commit 取历史文件
 
       - uses: actions/setup-python@v5
         with:
