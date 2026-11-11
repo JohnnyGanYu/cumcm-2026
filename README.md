@@ -101,7 +101,10 @@ figures/              论文配图 13 张
 paper/                论文源 main.md（1012 行）与各章推导稿
 state/                AI 使用台账、决策日志、主张-证据表、提交检查单
 supporting/           支撑材料清单与脱敏流程说明
+supporting_package/   提交给竞赛的支撑材料原件包（内容与主目录一致，另含 AI 使用详情 PDF）
 docs/design.md        设计文档：架构、模块划分、算法伪代码、性质测试
+docs/research/        赛前调研：bearing-only 主动定位的文献地图与架构候选评估
+archive/selection/    选题阶段其它赛题（A/C/D/E）与弃用脚本的存档
 problem/              B 题原文与附件（版权归竞赛组委会）
 ```
 
