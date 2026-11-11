@@ -18,7 +18,7 @@
 
 ## 0. 拿交付包
 
-**[Release v1.0.5](https://github.com/JohnnyGanYu/cumcm-2026/releases/tag/v1.0.5)** 下载 `CUMCM2026B_robot_windows.zip`（仓库私有，需登录），MD5 `20d5a2ff97ae8201bedf415b8f3e8a40`。
+**[Release v1.0.5](https://github.com/JohnnyGanYu/cumcm-2026/releases/tag/v1.0.5)** 下载 `CUMCM2026B_robot_windows.zip`（Release 附件），MD5 `20d5a2ff97ae8201bedf415b8f3e8a40`。
 解压后先核对 MD5，运行后检查日志：`strategy_class` 应为 `Q3FastStrategy` / `Q4FastStrategy`，`summary.search_layout.outer_radius_m` 应为 `1870.0`。
 
 **v1.0.2 已弃用**：那版外环为 1800 m，会漏清贴边且辐射轴径向朝外的定向源（60 局压力样本每局都漏），别拿错。

@@ -11,7 +11,7 @@
 - 610 次检测：official_runs/q4_practice_run1.sanitized.json（官方客户端实测）
 
 所有数值由本脚本实算，不使用预设常量以外的手写结果。
-运行：cd <workdir> && /home/opsuser/.venvs/cumcm-2026/bin/python -m src.b_info_bound
+运行：cd <workdir> && python -m src.b_info_bound
 """
 
 from __future__ import annotations

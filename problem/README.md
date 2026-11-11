@@ -1,4 +1,7 @@
-# Problem files
+# 赛题原文与附件
 
-Put the official problem statement and attachments here. Keep originals unchanged.
-Record filename, SHA-256, source URL, and acquisition time in `state/input_manifest.json`.
+- `B题/B题.pdf`：2026 年 CUMCM B 题题面，版权归全国大学生数学建模竞赛组委会，此处仅作复现存档。
+- `B题/附件/附件1.docx`、`附件2.docx`：官方提供的接口协议与数据说明，复现所必需。
+- `format2026.doc`：竞赛论文格式规范。
+
+原始文件的来源与哈希记录在 `state/input_manifest.json`。这些文件的许可不在本仓库的 MIT / CC BY 范围内。

@@ -219,11 +219,11 @@ rollout 拿到 ~22% 时间改进，但规划算力从 0.000s/步 涨到 2.117s/�
 ## 5. 复现方式
 
 ```bash
-cd /home/opsuser/cumcm2026b_research
-/home/opsuser/.venv/bin/python sizing.py          # 几何/覆盖/预算测算 (~3min)
-/home/opsuser/.venv/bin/python policy_bench.py    # 三策略端到端对比
-/home/opsuser/.venv/bin/python time_breakdown.py  # 时间去向分账
-/home/opsuser/.venv/bin/python station_sweep.py   # 站位 x 解算顺序扫描
+cd .
+python sizing.py          # 几何/覆盖/预算测算 (~3min)
+python policy_bench.py    # 三策略端到端对比
+python time_breakdown.py  # 时间去向分账
+python station_sweep.py   # 站位 x 解算顺序扫描
 ```
 （`.venv` 有 numpy 无 scipy；脚本只依赖 numpy）
 

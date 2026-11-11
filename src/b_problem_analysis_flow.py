@@ -35,7 +35,7 @@ plt.rcParams['font.sans-serif'] = [chosen, 'DejaVu Sans']
 plt.rcParams['axes.unicode_minus'] = False
 print(f'流程图中文字体: {chosen}')
 
-OUT = '/home/opsuser/.hermes/profiles/instance2/work/cumcm-2026/figures'
+OUT = str(__import__('pathlib').Path(__file__).resolve().parent.parent / 'figures')
 
 
 def box(ax, x, y, w, h, text, fs=8.2):

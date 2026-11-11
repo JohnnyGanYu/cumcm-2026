@@ -144,7 +144,7 @@
       "stage": "范围",
       "decision": "专精 B 题，A/C/D/E 相关文件从 Git 仓库移除但本机保留",
       "rationale": "集中剩余约66小时于B题；A/C 红队审查产物是选题决策证据，本机留存备查。",
-      "note": "仅停止 Git 跟踪，未改写历史；本机备份在 /home/opsuser/cumcm-2026-local-archive/",
+      "note": "仅停止 Git 跟踪，未改写历史；本机备份在 cumcm-2026-local-archive/",
       "evidence": [
         ".gitignore"
       ]

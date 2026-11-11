@@ -165,7 +165,7 @@ t=7.96，胜/负/平 = 1/19/0，且掉 1 个源。与 defer_far 同因：推迟�
 ## 5. 复现命令
 
 ```bash
-P=/home/opsuser/.venvs/cumcm-2026/bin/python
+P=python
 # 空驶量化（含与基线的一致性自检）
 $P -m src.b_deadhead_audit --episodes 30 --directional 0  --selfcheck --label q3
 $P -m src.b_deadhead_audit --episodes 30 --directional 5  --selfcheck --label q4d5

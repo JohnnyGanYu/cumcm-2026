@@ -1,7 +1,7 @@
 """b_sim 离线回归：物理规则、协议门禁、幂等、计时。
 
 不联网，不依赖官方模拟器。运行：
-  /home/opsuser/.venvs/cumcm-2026/bin/python -m pytest src/b_sim/test_b_sim.py -q
+  python -m pytest src/b_sim/test_b_sim.py -q
 """
 
 from __future__ import annotations

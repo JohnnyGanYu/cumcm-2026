@@ -1,14 +1,14 @@
-# CUMCM 2026 B 题 —— 运行与测试依赖（版本按本机实测环境钉住）
+# CUMCM 2026 B 题 —— 离线复现与测试依赖
 #
-#   uv pip install --python ~/.venvs/cumcm-2026/bin/python3 -r requirements.txt
+#   python -m venv .venv && source .venv/bin/activate
+#   pip install -r requirements.txt
 #
-# 本机既有环境：~/.venvs/cumcm-2026（Python 3.11.15），下方版本即取自该环境。
-# 新建环境用 uv venv --python 3.11 <路径> 后同样安装本文件。
+# 版本取自 2026 年参赛时的实测环境（Python 3.11）。Python 3.10+ 均可运行。
 #
-# 交付包 dist_windows/ 只依赖 Python 3.10+ 标准库，赛日现场无需安装任何包。
-# 本文件仅供离线自检与实验脚本使用。
+# 交付包 dist_windows/ 只依赖标准库，对接官方模拟器时无需安装任何包。
+# 本文件仅供离线自检、实验脚本与论文配图使用。
 
-# 测试套件（python -m pytest src 收集全部 test_*.py）
+# 测试套件（pytest src 收集全部 test_*.py，共 358 项）
 pytest==8.4.2
 hypothesis==6.112.1   # test_b_pbt.py 的 33 项面向性质测试，缺失则无法收集
 
@@ -16,5 +16,8 @@ hypothesis==6.112.1   # test_b_pbt.py 的 33 项面向性质测试，缺失则�
 numpy==2.4.6
 scipy==1.17.1
 
-# 以下仅 A/C 题脚本与作图用，B 题自检不需要，按需单独安装：
-#   pandas matplotlib cvxpy mpmath openai
+# 论文配图与 fig-参数一致性测试（test_figures_match_strategy.py 在收集阶段导入）
+matplotlib==3.10.8
+
+# 以下仅作图或个别脚本用，按需单独安装：
+#   pandas mpmath cvxpy

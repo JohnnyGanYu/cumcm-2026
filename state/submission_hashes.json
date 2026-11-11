@@ -1,12 +1,12 @@
 {
   "frozen_at": "2026-09-13T03:47:00+08:00",
   "files": {
-    "/home/opsuser/.hermes/profiles/instance2/work/cumcm-2026/paper/build/submission.pdf": {
+    "./paper/build/submission.pdf": {
       "md5": "e22bf3856214eff233457d4224af2a89",
       "sha256": "70ca07d9ea8e0f87a911e4a9352e3f02d523ed9be1072914cacce6ea57a93cce",
       "bytes": 6008358
     },
-    "/home/opsuser/.hermes/profiles/instance2/work/cumcm-2026/paper/build/AI工具使用详情.pdf": {
+    "./paper/build/AI工具使用详情.pdf": {
       "md5": "1f835325174819f0262b057d5097bf72",
       "sha256": "a43936582a5364b3f7f183c0f80ff50ce6bf6385f0a66980c49e0c6a2661c91f",
       "bytes": 259152

@@ -1,0 +1,24 @@
+cff-version: 1.2.0
+message: "如果本仓库的代码或结果对你有帮助，请按以下格式引用。"
+title: "无线电干扰源的快速自动定位与清除（CUMCM 2026 B 题）"
+abstract: >-
+  2026 年全国大学生数学建模竞赛 B 题的完整参赛工作：离线仿真器、覆盖设计与序贯决策策略、
+  论文源与构建脚本、官方模拟器实测日志与 358 项回归测试。官方正式测试六局全部清除，
+  获全国二等奖。
+authors:
+  - family-names: Gan
+    given-names: Yu
+    alias: JohnnyGanYu
+    affiliation: "CUMCM 2026 Team"
+  - name: "CUMCM 2026 B 题参赛队"
+version: 1.0.5
+date-released: "2026-11-17"
+license: MIT
+repository-code: "https://github.com/JohnnyGanYu/cumcm-2026"
+keywords:
+  - 数学建模
+  - CUMCM
+  - 无线电测向
+  - 覆盖设计
+  - 序贯决策
+  - 路径规划

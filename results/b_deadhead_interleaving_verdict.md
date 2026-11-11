@@ -257,7 +257,7 @@ colo 两次分别 −14.62% / −16.17%，方向与量级一致。）
 ## 5. 复现命令
 
 ```bash
-P=/home/opsuser/.venvs/cumcm-2026/bin/python
+P=python
 # 空驶量化（含与基线的一致性自检）
 $P -m src.b_deadhead_audit --episodes 30 --directional 0  --selfcheck --label q3
 $P -m src.b_deadhead_audit --episodes 30 --directional 5  --selfcheck --label q4d5

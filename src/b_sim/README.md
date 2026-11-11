@@ -20,7 +20,7 @@
 ## 运行
 
 ```bash
-PY=/home/opsuser/.venvs/cumcm-2026/bin/python
+PY=python
 $PY -m pytest src/b_sim/test_b_sim.py -q          # 回归
 $PY -m src.b_sim.coverage_design                  # 覆盖设计表
 $PY -m src.b_sim.rehearse --episodes 60           # 问题 3

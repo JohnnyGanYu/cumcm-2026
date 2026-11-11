@@ -5,8 +5,8 @@
 > `paper/main.md`，当前权威数字见根目录 `README.md`「当前成绩」节。** 不要再引用本文的数字。
 
 ## 环境
-- 仓库：/home/opsuser/.hermes/profiles/instance2/work/cumcm-2026
-- Python：/home/opsuser/.venvs/cumcm-2026/bin/python
+- 仓库：.
+- Python：python
   （该 venv 无 pip；装包用 uv pip install --python <该路径> <包>）
 - 机器 4 核，跑仿真 --workers 最多 4
 - 测试：python -m pytest src/b_sim/test_b_sim.py src/b_sim/test_b_pbt.py -q
